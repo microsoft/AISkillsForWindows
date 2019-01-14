@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <!-- Required elements-->
+        <id>FaceSentimentAnalyzer_CS</id>
+        <version>0.0.0.1</version>
+        <description>Face Sentiment Analyzer skill sample that extends the Microsoft.AI.Skills.SkillInterfacePreview APIs</description>
+        <authors>Contoso</authors>
+        <copyright>Copyright (c) Microsoft Corporation.  All rights reserved.</copyright>
+		<dependencies>
+            <dependency id="Microsoft.AI.Skills.SkillInterfacePreview" version="0.5.2.3" />
+        </dependencies>
+        <tags>ComputerVision AI VisionSkill</tags>
+    </metadata>
+  <files>
+
+<!-- WinMD and Intellisense files-->
+    <file src="..\cs\FaceSentimentAnalyzer\bin\x64\Release\FaceSentimentAnalyzer.winmd" target="lib\uap10.0.17763" />
+	<file src="..\cs\FaceSentimentAnalyzer\bin\x64\Release\FaceSentimentAnalyzer.xml" target="lib\uap10.0.17763" />
+	<file src="..\cs\FaceSentimentAnalyzer\bin\x64\Release\emotion_ferplus.onnx" target="lib\uap10.0.17763\FaceSentimentAnalyzer" />
+	<file src="..\cs\FaceSentimentAnalyzer\bin\x64\Release\FaceSentimentAnalyzer.pri" target="ref\uap10.0.17763" />
+
+  </files>
+</package>
