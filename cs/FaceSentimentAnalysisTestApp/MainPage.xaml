@@ -34,6 +34,9 @@ Copyright (C) Microsoft Corporation. All rights reserved.
         <TextBlock Text="Skill output2 description:" FontWeight="Bold"/>
         <TextBox Name="UISkillOutputDescription2" Text="Skill output var description" IsReadOnly="True" AcceptsReturn="True"/>
 
+        <TextBlock Text="Available execution devices:" FontWeight="Bold"/>
+        <ListBox Name="UISkillExecutionDevices" />
+        
         <TextBlock Text="Select an image to start!" HorizontalAlignment="Center"/>
 
         <Button Name="UIButtonFilePick"

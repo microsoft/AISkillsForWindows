@@ -29,12 +29,12 @@ namespace FaceSentimentAnalysisTestApp
     public sealed partial class MainPage : Page
     {
         // Skill-related variables
-        private FaceSentimentAnalyzerBinding m_binding = null;
-        private FaceSentimentAnalyzerSkill m_skill = null;
+        private FaceSentimentAnalyzerDescriptor m_skillDescriptor = null;
 
         // UI-related variables
         private SoftwareBitmapSource m_bitmapSource = new SoftwareBitmapSource();
         private FaceSentimentRenderer m_faceSentimentRenderer = null;
+        private IReadOnlyList<ISkillExecutionDevice> m_availableExecutionDevices = null;
 
         /// <summary>
         /// MainPage constructor
@@ -58,14 +58,9 @@ namespace FaceSentimentAnalysisTestApp
             {
                 try
                 {
-                    // Initialize skill with first supported device
-                    FaceSentimentAnalyzerDescriptor desc = new FaceSentimentAnalyzerDescriptor();
-                    var devices = await desc.GetSupportedExecutionDevicesAsync();
-                    var skill = await desc.CreateSkillAsync(devices.First());
-                    m_skill = skill as FaceSentimentAnalyzerSkill;
-
-                    // Instantiate a binding object that will hold the skill's input and output resource
-                    m_binding = await m_skill.CreateSkillBindingAsync() as FaceSentimentAnalyzerBinding;
+                    // Instatiate skill descriptor to display details about the skill and populate UI
+                    m_skillDescriptor = new FaceSentimentAnalyzerDescriptor();
+                    m_availableExecutionDevices = await m_skillDescriptor.GetSupportedExecutionDevicesAsync();
 
                     // Refresh UI
                     await Dispatcher.RunAsync(
@@ -73,15 +68,15 @@ namespace FaceSentimentAnalysisTestApp
                         () =>
                         {
                             // Show skill description members in UI
-                            UISkillName.Text = desc.Name;
+                            UISkillName.Text = m_skillDescriptor.Name;
 
-                            UISkillDescription.Text = $"{desc.Description}" +
-                            $"\n\tauthored by: {desc.Version.Author}" +
-                            $"\n\tpublished by: {desc.Version.Author}" +
-                            $"\n\tversion: {desc.Version.Major}.{desc.Version.Minor}" +
-                            $"\n\tunique ID: {desc.Id}";
+                            UISkillDescription.Text = $"{m_skillDescriptor.Description}" +
+                            $"\n\tauthored by: {m_skillDescriptor.Version.Author}" +
+                            $"\n\tpublished by: {m_skillDescriptor.Version.Author}" +
+                            $"\n\tversion: {m_skillDescriptor.Version.Major}.{m_skillDescriptor.Version.Minor}" +
+                            $"\n\tunique ID: {m_skillDescriptor.Id}";
 
-                            var inputDesc = desc.InputFeatureDescriptors[0] as SkillFeatureImageDescriptor;
+                            var inputDesc = m_skillDescriptor.InputFeatureDescriptors[0] as SkillFeatureImageDescriptor;
                             UISkillInputDescription.Text = $"\tName: {inputDesc.Name}" +
                             $"\n\tDescription: {inputDesc.Description}" +
                             $"\n\tType: {inputDesc.FeatureKind}" +
@@ -90,15 +85,26 @@ namespace FaceSentimentAnalysisTestApp
                             $"\n\tSupportedBitmapPixelFormat: {inputDesc.SupportedBitmapPixelFormat}" + 
                             $"\n\tSupportedBitmapAlphaMode: {inputDesc.SupportedBitmapAlphaMode}";
 
-                            var outputDesc1 = desc.OutputFeatureDescriptors[0] as SkillFeatureTensorDescriptor;
+                            var outputDesc1 = m_skillDescriptor.OutputFeatureDescriptors[0] as SkillFeatureTensorDescriptor;
                             UISkillOutputDescription1.Text = $"\tName: {outputDesc1.Name}, Description: {outputDesc1.Description} \n\tType: {outputDesc1.FeatureKind} of {outputDesc1.ElementKind} with shape [{outputDesc1.Shape.Select( i => i.ToString()).Aggregate((a, b) => a + ", " + b)}]";
 
-                            var outputDesc2 = desc.OutputFeatureDescriptors[1] as SkillFeatureTensorDescriptor;
+                            var outputDesc2 = m_skillDescriptor.OutputFeatureDescriptors[1] as SkillFeatureTensorDescriptor;
                             UISkillOutputDescription2.Text = $"\tName: {outputDesc2.Name} \n\tDescription: {outputDesc2.Description} \n\tType: {outputDesc2.FeatureKind} of {outputDesc2.ElementKind} with shape [{outputDesc2.Shape.Select(i => i.ToString()).Aggregate((a, b) => a + ", " + b)}]";
 
-                            // Alow user to interact with the app
-                            UIButtonFilePick.IsEnabled = true;
-                            UIButtonFilePick.Focus(FocusState.Keyboard);
+                            if (m_availableExecutionDevices.Count == 0)
+                            {
+                                UISkillOutputDetails.Text = "No execution devices available, this skill cannot run on this device";
+                            }
+                            else
+                            {
+                                // Display available execution devices
+                                UISkillExecutionDevices.ItemsSource = m_availableExecutionDevices.Select((device)=>device.Name);
+                                UISkillExecutionDevices.SelectedIndex = 0;
+
+                                // Alow user to interact with the app
+                                UIButtonFilePick.IsEnabled = true;
+                                UIButtonFilePick.Focus(FocusState.Keyboard);
+                            }
                         });
                 }
                 catch(Exception ex)
@@ -161,16 +167,22 @@ namespace FaceSentimentAnalysisTestApp
             UIButtonFilePick.IsEnabled = false;
             try
             {
+                // Initialize skill with the selected supported device
+                FaceSentimentAnalyzerSkill skill = await m_skillDescriptor.CreateSkillAsync(m_availableExecutionDevices[UISkillExecutionDevices.SelectedIndex]) as FaceSentimentAnalyzerSkill;
+
+                // Instantiate a binding object that will hold the skill's input and output resource
+                FaceSentimentAnalyzerBinding binding = await skill.CreateSkillBindingAsync() as FaceSentimentAnalyzerBinding;
+
                 var frame = await LoadVideoFrameFromFilePickedAsync();
                 await m_bitmapSource.SetBitmapAsync(frame.SoftwareBitmap);
                 UIImageViewer.Source = m_bitmapSource;
 
                 // Update input image and run the skill against it
-                await m_binding.SetInputImageAsync(frame);
-                await m_skill.EvaluateAsync(m_binding);
+                await binding.SetInputImageAsync(frame);
+                await skill.EvaluateAsync(binding);
 
                 // Retrieve result
-                if (!m_binding.IsFaceFound)
+                if (!binding.IsFaceFound)
                 {
                     // if no face found, hide the rectangle in the UI
                     m_faceSentimentRenderer.IsVisible = false;
@@ -178,9 +190,9 @@ namespace FaceSentimentAnalysisTestApp
                 }
                 else // Display the face rectangle abd sebtiment in the UI
                 {
-                    m_faceSentimentRenderer.Update(m_binding.FaceRectangle, m_binding.PredominantSentiment);
+                    m_faceSentimentRenderer.Update(binding.FaceRectangle, binding.PredominantSentiment);
                     m_faceSentimentRenderer.IsVisible = true;
-                    var scores = (m_binding["faceSentimentScores"].FeatureValue as SkillFeatureTensorFloatValue).GetAsVectorView();
+                    var scores = (binding["faceSentimentScores"].FeatureValue as SkillFeatureTensorFloatValue).GetAsVectorView();
                     UISkillOutputDetails.Text = "";
                     for(int i = 0; i < (int)SentimentType.contempt; i++)
                     {
