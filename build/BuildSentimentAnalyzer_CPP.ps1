@@ -25,6 +25,7 @@ function RunCommand($Command)
 
 # Restore packages
 RunCommand "$PSScriptRoot\RestorePackages.ps1"
+RunCommand "$PSScriptRoot\RestorePackages.ps1 -PackagesConfigPath $PSScriptRoot\..\cpp\FaceSentimentAnalyzer\packages.config -PackagesDirectory $PSScriptRoot\..\cpp\packages"
 
 # Setup the build environement
 RunCommand "$PSScriptRoot\SetBuildEnv.ps1"
