@@ -61,7 +61,8 @@ namespace FaceSentimentAnalysisTestApp
                     // Initialize skill with first supported device
                     FaceSentimentAnalyzerDescriptor desc = new FaceSentimentAnalyzerDescriptor();
                     var devices = await desc.GetSupportedExecutionDevicesAsync();
-                    m_skill = await desc.CreateSkillAsync(devices.First()) as FaceSentimentAnalyzerSkill;
+                    var skill = await desc.CreateSkillAsync(devices.First());
+                    m_skill = skill as FaceSentimentAnalyzerSkill;
 
                     // Instantiate a binding object that will hold the skill's input and output resource
                     m_binding = await m_skill.CreateSkillBindingAsync() as FaceSentimentAnalyzerBinding;
@@ -173,11 +174,18 @@ namespace FaceSentimentAnalysisTestApp
                 {
                     // if no face found, hide the rectangle in the UI
                     m_faceSentimentRenderer.IsVisible = false;
+                    UISkillOutputDetails.Text = "No face found";
                 }
                 else // Display the face rectangle abd sebtiment in the UI
                 {
                     m_faceSentimentRenderer.Update(m_binding.FaceRectangle, m_binding.PredominantSentiment);
                     m_faceSentimentRenderer.IsVisible = true;
+                    var scores = (m_binding["faceSentimentScores"].FeatureValue as SkillFeatureTensorFloatValue).GetAsVectorView();
+                    UISkillOutputDetails.Text = "";
+                    for(int i = 0; i < (int)SentimentType.contempt; i++)
+                    {
+                        UISkillOutputDetails.Text += $"{(SentimentType)i} : {scores[i]} \n";
+                    }
                 }
             }
             catch (Exception ex)
