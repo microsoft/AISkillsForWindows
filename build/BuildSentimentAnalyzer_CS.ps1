@@ -4,12 +4,12 @@ Performs all steps necessary to build the C# SentimentAnalysis WinRTComponent.
 #>
 <#
 .DESCRIPTION
--BuildArch: You can build for a specific architecture (i.e. "AnyCPU" or "x86" or "x64" or "ARM", "AnyCPU" is default)
+-BuildArch: You can build for a specific architecture (i.e. "All" or "x86" or "x64" or "ARM", "All" is default)
 #>
 Param
 (
-	# Specific architecture to build or all of them (i.e. "AnyCPU" or "x86" or "x64" or "ARM")
-    [string]$BuildArch = "AnyCPU"
+	# Specific architecture to build or all of them (i.e. "All" or "x86" or "x64" or "ARM")
+    [string]$BuildArch = "All"
 )
 
 function RunCommand($Command)
@@ -31,9 +31,9 @@ RunCommand "$PSScriptRoot\SetBuildEnv.ps1"
 
 $BuildCommandBase = @('msbuild', '--%', "$PSScriptRoot\..\cs\FaceSentimentAnalyzer\FaceSentimentAnalyzer.csproj")
 
-if($BuildArch -like "AnyCPU")
+if($BuildArch -like "All")
 {
-    $BuildArchs = @("AnyCPU")
+    $BuildArchs = @("x86", "x64", "ARM")
 }
 else
 {
