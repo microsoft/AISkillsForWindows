@@ -62,8 +62,8 @@ In order for local nuget packages to be available to your app project, you need 
 2. Click on the *+* sign to add a new nuget source and make sure the value of the source is the path to the folder where the *.nupkg* files are (i.e. in *./build/*)
 ![LocalNugetHowTo2](./doc/localNugetHowTo2.jpg)
 
-From your test app project, make sure you install the skill nuget package by right-clicking on your project \> *Manage Nuget Packages*, then make sure the *Package Source* points to your custom nuget source, then click *Install*
-3. ![LocalNugetHowTo3](./doc/localNugetHowTo3.jpg)
+3. From your test app project, make sure you install the skill nuget package by right-clicking on your project \> *Manage Nuget Packages*, then make sure the *Package Source* points to your custom nuget source, then click *Install*
+![LocalNugetHowTo3](./doc/localNugetHowTo3.jpg)
 
 
 # Contributing
