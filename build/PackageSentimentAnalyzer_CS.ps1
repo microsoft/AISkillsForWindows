@@ -25,5 +25,5 @@ function RunCommand($Command)
 $PackCommandBase = @($NugetPath)
 $PackCommandBase += "pack"
 
-$PackCommand = $PackCommandBase + "SentimentAnalyzer_CS.nuspec"
+$PackCommand = $PackCommandBase + "$PSScriptRoot\SentimentAnalyzer_CS.nuspec"
 RunCommand $PackCommand

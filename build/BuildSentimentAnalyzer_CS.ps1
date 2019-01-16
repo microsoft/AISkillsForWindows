@@ -8,7 +8,7 @@ Performs all steps necessary to build the C# SentimentAnalysis WinRTComponent.
 #>
 Param
 (
-	# Specific architecture to build or all of them (i.e. "All" or "x86" or "x64" or "ARM")
+    # Specific architecture to build or all of them (i.e. "All" or "x86" or "x64" or "ARM")
     [string]$BuildArch = "All"
 )
 
@@ -25,6 +25,7 @@ function RunCommand($Command)
 
 # Restore packages
 RunCommand "$PSScriptRoot\RestorePackages.ps1"
+RunCommand "$PSScriptRoot\RestorePackages.ps1 -PackagesConfigPath $PSScriptRoot\..\cs\FaceSentimentAnalysis_CS.sln"
 
 # Setup the build environement
 RunCommand "$PSScriptRoot\SetBuildEnv.ps1"
