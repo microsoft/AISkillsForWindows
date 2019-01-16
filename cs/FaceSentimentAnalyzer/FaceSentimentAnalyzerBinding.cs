@@ -35,7 +35,6 @@ namespace FaceSentimentAnalyzer
     {
         // WinML related
         internal LearningModelBinding m_winmlBinding = null;
-        private List<float> m_winmlOutputList = new List<float>();
         private VisionSkillBindingHelper m_bindingHelper = null;
 
         /// <summary>

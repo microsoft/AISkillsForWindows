@@ -1,0 +1,21 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+
+import "Common.idl";
+
+namespace FaceSentimentAnalyzer
+{
+    /// <summary>
+    /// FaceSentimentAnalyzerDescriptor class
+    /// Exposes information about the skill and its input/output variable requirements.
+    /// Also acts as a factory for FaceSentimentAnalyzerSkill
+    /// </summary>
+    [contract(FaceSentimentAnalyzer.FaceSentimentAnalyzerSkillAPI, 1)]
+    [interface_name("FaceSentimentAnalyzer.FaceSentimentAnalyzerDescriptor", 3B842354-A46B-46A0-9FE4-5D9FF07A4575)]
+    runtimeclass FaceSentimentAnalyzerDescriptor : Microsoft.AI.Skills.SkillInterfacePreview.ISkillDescriptor
+    {
+        /// <summary>
+        /// FaceSentimentAnalyzerDescriptor constructor
+        /// </summary>
+        FaceSentimentAnalyzerDescriptor();
+    }
+}

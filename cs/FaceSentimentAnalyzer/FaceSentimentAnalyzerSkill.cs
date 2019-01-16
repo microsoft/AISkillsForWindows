@@ -52,33 +52,32 @@ namespace FaceSentimentAnalyzer
         private FaceDetector m_faceDetector = null;
 
         // WinML related members
-        private LearningModel m_winmlModel = null;
         private LearningModelSession m_winmlSession = null;
 
         /// <summary>
         /// Creates and initializes a FaceSentimentAnalyzerSkill instance
         /// </summary>
-        /// <param name="description"></param>
+        /// <param name="descriptor"></param>
         /// <param name="device"></param>
         /// <returns></returns>
         internal static IAsyncOperation<FaceSentimentAnalyzerSkill> CreateAsync(
-            ISkillDescriptor description,
+            ISkillDescriptor descriptor,
             ISkillExecutionDevice device)
         {
             return AsyncInfo.Run(async (token) =>
             {
                 // Create instance
-                var skillInstance = new FaceSentimentAnalyzerSkill(description, device);
+                var skillInstance = new FaceSentimentAnalyzerSkill(descriptor, device);
 
                 // Instantiate the FaceDetector
                 skillInstance.m_faceDetector = await FaceDetector.CreateAsync();
 
                 // Load WinML model
                 var modelFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///FaceSentimentAnalyzer/{FaceSentimentAnalyzerConst.WINML_MODEL_FILENAME}"));
-                skillInstance.m_winmlModel = LearningModel.LoadFromFilePath(modelFile.Path);
+                var winmlModel = LearningModel.LoadFromFilePath(modelFile.Path);
 
                 // Create WinML session
-                skillInstance.m_winmlSession = new LearningModelSession(skillInstance.m_winmlModel, GetWinMLDevice(device));
+                skillInstance.m_winmlSession = new LearningModelSession(winmlModel, GetWinMLDevice(device));
 
                 return skillInstance;
             });
