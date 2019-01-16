@@ -34,7 +34,7 @@ namespace winrt::FaceSentimentAnalyzer::implementation
     }
 
     //
-    // Return the sentiment with the highest score
+    // Returns the sentiment with the highest score
     //
     FaceSentimentAnalyzer::SentimentType FaceSentimentAnalyzerBinding::PredominantSentiment()
     {
@@ -54,7 +54,7 @@ namespace winrt::FaceSentimentAnalyzer::implementation
     }
 
     //
-    // Return the face rectangle
+    // Returns the face rectangle
     //
     Windows::Foundation::Collections::IVectorView<float> FaceSentimentAnalyzerBinding::FaceRectangle()
     {

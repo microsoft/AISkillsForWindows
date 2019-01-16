@@ -136,18 +136,12 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AI.Skills.SkillInterfacePreview">
-      <Version>0.5.2.3</Version>
+    <PackageReference Include="FaceSentimentAnalyzer_CPP">
+      <Version>0.0.0.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.3</Version>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\cpp\FaceSentimentAnalyzer\FaceSentimentAnalyzer.vcxproj">
-      <Project>{e0320926-075f-46fc-9cc0-865b635bb1a1}</Project>
-      <Name>FaceSentimentAnalyzer</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

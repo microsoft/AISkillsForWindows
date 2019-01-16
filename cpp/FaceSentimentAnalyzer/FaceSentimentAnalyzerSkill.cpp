@@ -16,7 +16,7 @@ using namespace winrt::Windows::Media;
 namespace winrt::FaceSentimentAnalyzer::implementation
 {
     //
-    // If possible, retrieve a WinML LearningModelDevice that corresponds to an ISkillExecutionDevice
+    // If possible, retrieves a WinML LearningModelDevice that corresponds to an ISkillExecutionDevice
     //
     LearningModelDevice GetWinMLDevice(ISkillExecutionDevice executionDevice)
     {
@@ -37,7 +37,7 @@ namespace winrt::FaceSentimentAnalyzer::implementation
     }
 
     //
-    // Calculate SoftMax normalization over a set of data
+    // Calculates SoftMax normalization over a set of data
     //
     Windows::Foundation::Collections::IVector<float> SoftMax(Windows::Foundation::Collections::IVectorView<float> inputs)
     {
@@ -90,7 +90,7 @@ namespace winrt::FaceSentimentAnalyzer::implementation
     }
 
     //
-    // Run the skill against a binding object, executing the skill logic on the associated input features and populating the output ones
+    // Runs the skill against a binding object, executing the skill logic on the associated input features and populating the output ones
     // This skill proceeds in 2 steps: 
     // 1) Run FaceDetector against the image and populate the face bound feature in the binding object
     // 2) If a face was detected, proceeds with sentiment analysis of that portion fo the image using Windows ML then updating the score 

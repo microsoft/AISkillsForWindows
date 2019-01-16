@@ -12,7 +12,7 @@ using Windows.Graphics.Imaging;
 namespace FaceSentimentAnalyzer
 {
     /// <summary>
-    /// FaceSentimentAnalyzerDescriptor class
+    /// FaceSentimentAnalyzerDescriptor class.
     /// Exposes information about the skill and its input/output variable requirements.
     /// Also acts as a factory for FaceSentimentAnalyzerSkill
     /// </summary>

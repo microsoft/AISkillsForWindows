@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <!-- Required elements-->
+        <id>FaceSentimentAnalyzer_CPP</id>
+        <version>0.0.0.1</version>
+        <description>Face Sentiment Analyzer skill sample that extends the Microsoft.AI.Skills.SkillInterfacePreview APIs</description>
+        <authors>Contoso</authors>
+        <copyright>Copyright (c) Microsoft Corporation.  All rights reserved.</copyright>
+		<dependencies>
+            <dependency id="Microsoft.AI.Skills.SkillInterfacePreview" version="0.5.2.3" />
+        </dependencies>
+        <tags>ComputerVision AI VisionSkill</tags>
+    </metadata>
+  <files>
+
+    <!-- WinMD and Intellisense files-->
+    <file src="..\cpp\FaceSentimentAnalyzer\x64\Release\FaceSentimentAnalyzer\FaceSentimentAnalyzer.winmd" target="lib\uap10.0.17763" />
+	<file src="..\common\FaceSentimentAnalyzer.xml" target="lib\uap10.0.17763" />
+	
+	<!-- DLLs and resources -->
+    <file src="..\cpp\FaceSentimentAnalyzer\x64\Release\FaceSentimentAnalyzer\FaceSentimentAnalyzer.dll" target="runtimes\win10-x64\native" />
+    <file src="..\cpp\FaceSentimentAnalyzer\x64\Release\FaceSentimentAnalyzer\FaceSentimentAnalyzer.pri" target="runtimes\win10-x64\native" />
+	<file src="..\common\emotion_ferplus.onnx" target="runtimes\win10-x64\native\FaceSentimentAnalyzer" />
+	
+	<file src="..\cpp\FaceSentimentAnalyzer\Win32\Release\FaceSentimentAnalyzer\FaceSentimentAnalyzer.dll" target="runtimes\win10-x86\native" />
+    <file src="..\cpp\FaceSentimentAnalyzer\Win32\Release\FaceSentimentAnalyzer\FaceSentimentAnalyzer.pri" target="runtimes\win10-x86\native" />
+	<file src="..\common\emotion_ferplus.onnx" target="runtimes\win10-x86\native\FaceSentimentAnalyzer" />
+	
+	<file src="..\cpp\FaceSentimentAnalyzer\arm\Release\FaceSentimentAnalyzer\FaceSentimentAnalyzer.dll" target="runtimes\win10-arm\native" />
+    <file src="..\cpp\FaceSentimentAnalyzer\arm\Release\FaceSentimentAnalyzer\FaceSentimentAnalyzer.pri" target="runtimes\win10-arm\native" />
+	<file src="..\common\emotion_ferplus.onnx" target="runtimes\win10-arm\native\FaceSentimentAnalyzer" />
+
+	<!-- .targets -->
+    <file src="FaceSentimentAnalyzer_CPP.targets" target="build\native"/>
+	
+  </files>
+</package>
