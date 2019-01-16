@@ -13,7 +13,11 @@ Specifically, this sample shows how to:
 5. **Ingest a custom Windows Vision Skill** from a nuget package inside a C# UWP app to execute sentiment analysis againt images by binding VideoFrame instances and displaying binding outputs via adapter properties.
 
 ## Scenario
-A developer wants to expose a functionality to his/her users that infers the sentiment of a person from an image. In order to hide the complexity of the implementation and to ease the development of that functionality, the developer opts to leverage the SkillInterface APIs, extending the main classes to leverage the consistent API paradigm it introduces. This allows the developer to expose the compatible execution devices and deal internally with the complexity of the execution pipeline without imposing it to the consumer. A simplified view of a 2-step pipeline may look like this: 
+A developer wants to expose a functionality to his/her users that infers the sentiment of a person from an image.
+
+![TestApp1](./doc/TestApp1.jpg)
+
+In order to hide the complexity of the implementation and to ease the development of that functionality, the developer opts to leverage the SkillInterface APIs, extending the main classes to leverage the consistent API paradigm it introduces. This allows the developer to expose the compatible execution devices and deal internally with the complexity of the execution pipeline without imposing it to the consumer. A simplified view of a 2-step pipeline may look like this: 
  
  ![SkillLogic1](./doc/SkillLogic1.jpg)
 
@@ -36,15 +40,22 @@ However, some consumers may also want to tweak and optimize part of that pipelin
 ## Build the sample
 
 1. If you download the samples ZIP, be sure to unzip the entire archive, not just the folder with the sample you want to build.
-2. To build the C# version of the skill, you can run the included powershell script under *build\BuildSentimentAnalyzer_CS.ps1*
-3. Once the sample is built, to generate a nuget package from it, you can run the included powershell script under *build\PackageSentimentAnalyzer_CS.ps1*
+
+2. To build and package the **C# version** of the skill:
+    1. Run the included powershell script under *build\BuildSentimentAnalyzer_CS.ps1*
+    2. Once the sample is built, to generate a nuget package from it, you can run the included powershell script under *build\PackageSentimentAnalyzer_CS.ps1*. You should see a *FaceSentimentAnalyzer_CS**.nupkg file generated.
+
+3. To build and package the **C++/WinRT version** of the skill:
+    1. Run the included powershell script under *build\BuildSentimentAnalyzer_CPP.ps1*
+    2. Once the sample is built, to generate a nuget package from it, you can run the included powershell script under *build\PackageSentimentAnalyzer_CPP.ps1*. You should see a *FaceSentimentAnalyzer_CPP**.nupkg file generated.
 
 ## Run the sample
 
 To run the test app and visualize the sample code for the skill:
-- **For the c# sample**, open the solution file located at *cs\FaceSentimentAnalysis_CS.sln*
+- **For the C# sample**, open the solution file located at *cs\FaceSentimentAnalysis_CS.sln*
+- **For the C++/WinRT sample**, open the solution file located at *cpp\FaceSentimentAnalysis_Cpp.sln*
 
-in order for local nuget packages to be available to your app project, you need to add a local nuget repository pointing to where you built the skill nuget package and where the base API package resides (i.e. in ./*build*/). Follow the below steps to achieve this:
+In order for local nuget packages to be available to your app project, you need to add a local nuget repository pointing to where you built the skill nuget package and where the base API package resides (i.e. in ./*build*/). Follow the below steps to achieve this:
 1. In Visual Studio, go to *Tools* \> *Nuget Package Manager* \> *Package Manager Settings*
 ![LocalNugetHowTo1](./doc/localNugetHowTo1.jpg)
 
