@@ -32,6 +32,8 @@ However, some consumers may also want to tweak and optimize part of that pipelin
 - [Using the Face Detection effect](https://docs.microsoft.com/en-us/uwp/api/Windows.Media.FaceAnalysis.FaceDetector)
 - [Using Windows ML](https://docs.microsoft.com/en-us/windows/ai/)
 - [Acquiring the sentiment analysis ONNX model](https://github.com/onnx/models/tree/master/emotion_ferplus)
+- [C++/Winrt reference documentation](https://docs.microsoft.com/en-us/windows/uwp/cpp-and-winrt-apis/)
+- [MIDL 3.0 syntax reference guide for authoring .idl files](https://docs.microsoft.com/en-us/uwp/midl-3/intro)
 
 ## System requirements
 
