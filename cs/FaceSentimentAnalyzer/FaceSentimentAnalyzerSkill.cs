@@ -1,30 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved. 
 
-//! \file FaceSentimentAnalyzerSkill.cs
-//! \mainpage Windows Vision Skill Sample documentation
-//!
-//! \section summary_sec Summary
-//!
-//! # Sentiment analysis Windows Vision Skill sample
-//! 
-//! Provides an end-to-end sample to show how to write a Windows Vision Skill by extending the Microsoft.AI.Skills.SkillInterfacePreview base API.
-//! This skill's implementation leverages the Windows built-in FaceDetector and Windows.AI.MachineLearning APIs along a model in ONNX format to identify a human face in an image and infer its sentiment.
-//! This sample also contains a UWP application that ingests the skill's WindowsRuntimeComponent and put it to use against images.
-//! 
-//! 
-//! Specifically, this sample shows how to:
-//! 
-//! 1. **Create and implement a skill decriptor class** inherited from ISkillDescriptor that provides information on the skill, provides a list of supported execution devices(CPU, GPU) and acts as a factory object for the skill.
-//! 2. **Create and implement a skill class** inherited from ISkill that executes the skill logic and produces output given a set of input, and acts as a factory object for the skill binding.
-//! 3. **Create and implement a skill binding class** inherited from VisionSkillBinding runtimeclass that contains input and output features as well as expose adapter to ease usage by developers.
-//! 4. **Ingest a custom Windows Vision Skill** to execute againt images by binding VideoFrame instances and displaying binding outputs via adapter properties.
-//! 
-//! ## Related topics
-//! **Reference**
-//! [Using the Face Detection effect](https://docs.microsoft.com/en-us/uwp/api/Windows.Media.FaceAnalysis.FaceDetector)
-//! [Using Windows ML](https://docs.microsoft.com/en-us/windows/ai/)
-//! [Acquiring the sentiment analysis ONNX model](https://github.com/onnx/models/tree/master/emotion_ferplus)
-
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -111,7 +86,7 @@ namespace FaceSentimentAnalyzer
         }
 
         /// <summary>
-        /// Run the skill against a binding object, executing the skill logic on the associated input features and populating the output ones
+        /// Runs the skill against a binding object, executing the skill logic on the associated input features and populating the output ones
         /// This skill proceeds in 2 steps: 
         /// 1) Run FaceDetector against the image and populate the face bound feature in the binding object
         /// 2) If a face was detected, proceeds with sentiment analysis of that portion fo the image using Windows ML then updating the score 
@@ -203,7 +178,7 @@ namespace FaceSentimentAnalyzer
         }
 
         /// <summary>
-        /// Return the descriptor of this skill
+        /// Returns the descriptor of this skill
         /// </summary>
         public ISkillDescriptor SkillDescriptor { get; private set; }
 
@@ -213,7 +188,7 @@ namespace FaceSentimentAnalyzer
         public ISkillExecutionDevice Device { get; private set; }
 
         /// <summary>
-        /// Calculate SoftMax normalization over a set of data
+        /// Calculates SoftMax normalization over a set of data
         /// </summary>
         /// <param name="inputs"></param>
         /// <returns></returns>
@@ -236,7 +211,7 @@ namespace FaceSentimentAnalyzer
         }
 
         /// <summary>
-        /// If possible, retrieve a WinML LearningModelDevice that corresponds to an ISkillExecutionDevice
+        /// If possible, retrieves a WinML LearningModelDevice that corresponds to an ISkillExecutionDevice
         /// </summary>
         /// <param name="executionDevice"></param>
         /// <returns></returns>

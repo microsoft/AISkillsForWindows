@@ -9,6 +9,9 @@ using namespace winrt::Windows::AI::MachineLearning;
 
 namespace winrt::FaceSentimentAnalyzer::implementation
 {
+    //
+    // FaceSentimentAnalyzerBinding constructor
+    //
     FaceSentimentAnalyzerBinding::FaceSentimentAnalyzerBinding(
         ISkillDescriptor descriptor,
         ISkillExecutionDevice device,
@@ -18,6 +21,9 @@ namespace winrt::FaceSentimentAnalyzer::implementation
         m_winmlBinding = LearningModelBinding(session);
     }
 
+    //
+    // Returns whether or not a face is found given the bound outputs
+    //
     bool FaceSentimentAnalyzerBinding::IsFaceFound()
     {
         auto faceRect = m_bindingHelper.Lookup(SKILL_OUTPUTNAME_FACERECTANGLE).FeatureValue().as<SkillFeatureTensorFloatValue>().GetAsVectorView();
@@ -27,6 +33,9 @@ namespace winrt::FaceSentimentAnalyzer::implementation
             faceRect.GetAt(3) == 0.0f);
     }
 
+    //
+    // Return the sentiment with the highest score
+    //
     FaceSentimentAnalyzer::SentimentType FaceSentimentAnalyzerBinding::PredominantSentiment()
     {
         auto faceSentimentScores = m_bindingHelper.Lookup(SKILL_OUTPUTNAME_FACESENTIMENTSCORES).FeatureValue().as<SkillFeatureTensorFloatValue>().GetAsVectorView();
@@ -44,6 +53,9 @@ namespace winrt::FaceSentimentAnalyzer::implementation
         return predominantSentiment;
     }
 
+    //
+    // Return the face rectangle
+    //
     Windows::Foundation::Collections::IVectorView<float> FaceSentimentAnalyzerBinding::FaceRectangle()
     {
         return m_bindingHelper.Lookup(SKILL_OUTPUTNAME_FACERECTANGLE).FeatureValue().as<SkillFeatureTensorFloatValue>().GetAsVectorView();

@@ -38,7 +38,7 @@ namespace FaceSentimentAnalyzer
         private VisionSkillBindingHelper m_bindingHelper = null;
 
         /// <summary>
-        /// FaceSentimentAnalyzerBinding Constructor
+        /// FaceSentimentAnalyzerBinding constructor
         /// </summary>
         internal FaceSentimentAnalyzerBinding(
             ISkillDescriptor descriptor, 
@@ -46,12 +46,13 @@ namespace FaceSentimentAnalyzer
             LearningModelSession session)
         {
             m_bindingHelper = new VisionSkillBindingHelper(descriptor, device);
+
             // Create WinML binding
             m_winmlBinding = new LearningModelBinding(session);
         }
 
         /// <summary>
-        /// Set the input image to be processed by the skill
+        /// Sets the input image to be processed by the skill
         /// </summary>
         /// <param name="frame"></param>
         /// <returns></returns>
@@ -76,7 +77,7 @@ namespace FaceSentimentAnalyzer
         }
 
         /// <summary>
-        /// Return the sentiment with the highest score
+        /// Returns the sentiment with the highest score
         /// </summary>
         /// <returns></returns>
         public SentimentType PredominantSentiment
@@ -100,7 +101,7 @@ namespace FaceSentimentAnalyzer
         }
 
         /// <summary>
-        /// Return the face rectangle
+        /// Returns the face rectangle
         /// </summary>
         /// <returns></returns>
         public IReadOnlyList<float> FaceRectangle

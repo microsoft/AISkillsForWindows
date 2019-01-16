@@ -78,7 +78,7 @@ namespace FaceSentimentAnalyzer
         }
 
         /// <summary>
-        /// Retrieve a list of suppoorted ISkillExecutionDevice to run the skill logic on
+        /// Retrieves a list of supported ISkillExecutionDevice to run the skill logic on
         /// </summary>
         /// <returns></returns>
         public IAsyncOperation<IReadOnlyList<ISkillExecutionDevice>> GetSupportedExecutionDevicesAsync()
@@ -117,38 +117,38 @@ namespace FaceSentimentAnalyzer
         }
 
         /// <summary>
-        /// Return a description of the skill
+        /// Returns a description of the skill
         /// </summary>
         public string Description { get; private set; }
 
         /// <summary>
-        /// Return a unique skill identifier
+        /// Returns a unique skill identifier
         /// </summary>
         public Guid Id { get; }
 
         /// <summary>
-        /// Return a list of descriptors that correlate with each input SkillFeature
+        /// Returns a list of descriptors that correlate with each input SkillFeature
         /// </summary>
         public IReadOnlyList<ISkillFeatureDescriptor> InputFeatureDescriptors => m_inputSkillDesc;
 
         /// <summary>
-        /// Return a set of metadata that may control the skill execution differently than by feeding an input 
+        /// Returns a set of metadata that may control the skill execution differently than by feeding an input 
         /// i.e. internal state, sub-process execution frequency, etc.
         /// </summary>
         public IReadOnlyDictionary<string, string> Metadata => null;
 
         /// <summary>
-        /// Return the skill name
+        /// Returns the skill name
         /// </summary>
         public string Name { get; private set; }
 
         /// <summary>
-        /// Return a list of descriptors that correlate with each output SkillFeature
+        /// Returns a list of descriptors that correlate with each output SkillFeature
         /// </summary>
         public IReadOnlyList<ISkillFeatureDescriptor> OutputFeatureDescriptors => m_outputSkillDesc;
 
         /// <summary>
-        /// Return the Version information of the skill
+        /// Returns the Version information of the skill
         /// </summary>
         public SkillVersion Version { get; }
     }

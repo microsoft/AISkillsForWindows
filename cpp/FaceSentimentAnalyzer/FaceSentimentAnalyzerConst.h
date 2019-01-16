@@ -5,6 +5,9 @@
 #include "winrt/base.h"
 #include "winrt/Windows.Foundation.Collections.h"
 
+/// <summary>
+/// Set of contant values used throughout the skill
+/// </summary>
 namespace winrt::FaceSentimentAnalyzer::implementation
 {
     const winrt::hstring WINML_MODEL_FILENAME = L"emotion_ferplus.onnx";

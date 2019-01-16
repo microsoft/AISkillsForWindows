@@ -12,6 +12,9 @@ namespace winrt::FaceSentimentAnalyzer::implementation
     // {678BD455-4190-45D3-B5DA-41543283C092}
     const guid FaceSentimentAnalyzerId = guid(0x678bd455, 0x4190, 0x45d3, { 0xb5, 0xda, 0x41, 0x54, 0x32, 0x83, 0xc0, 0x92 });
 
+    //
+    // FaceSentimentAnalyzerDescriptor constructor
+    //
     FaceSentimentAnalyzerDescriptor::FaceSentimentAnalyzerDescriptor()
     {
         m_version = SkillVersion::Create(
@@ -58,6 +61,37 @@ namespace winrt::FaceSentimentAnalyzer::implementation
         );
     }
 
+    //
+    // Retrieves a list of supported ISkillExecutionDevice to run the skill logic on
+    //
+    Windows::Foundation::IAsyncOperation<Windows::Foundation::Collections::IVectorView<ISkillExecutionDevice>> FaceSentimentAnalyzerDescriptor::GetSupportedExecutionDevicesAsync()
+    {
+        m_devices = single_threaded_vector<ISkillExecutionDevice>();
+        m_devices.Append(SkillExecutionDeviceCPU::Create());
+        auto gpuDevices = SkillExecutionDeviceGPU::GetAvailableGpuExecutionDevices();
+        for (auto iter : gpuDevices)
+        {
+            // Expose only D3D12 devices since WinML supports only those
+            if (iter.as<SkillExecutionDeviceGPU>().MaxSupportedFeatureLevel() >= D3DFeatureLevelKind::D3D_FEATURE_LEVEL_12_0)
+            {
+                m_devices.Append(iter);
+            }
+        }
+        co_await resume_background();
+        return m_devices.GetView();
+    }
+
+    //
+    // Factory method for instantiating and initializing the skill
+    //
+    Windows::Foundation::IAsyncOperation<ISkill> FaceSentimentAnalyzerDescriptor::CreateSkillAsync(ISkillExecutionDevice const executionDevice)
+    {
+        co_await resume_background();
+        auto desc = this->operator winrt::Windows::Foundation::IInspectable().as<ISkillDescriptor>();
+        auto skill = FaceSentimentAnalyzerSkill::CreateAsync(desc, executionDevice).get();
+        return skill;
+    }
+
     winrt::guid FaceSentimentAnalyzerDescriptor::Id()
     {
         return FaceSentimentAnalyzerId;
@@ -88,33 +122,10 @@ namespace winrt::FaceSentimentAnalyzer::implementation
         return m_outputSkillDesc.GetView();
     }
 
-    Windows::Foundation::IAsyncOperation<Windows::Foundation::Collections::IVectorView<ISkillExecutionDevice>> FaceSentimentAnalyzerDescriptor::GetSupportedExecutionDevicesAsync()
-    {
-        m_devices = single_threaded_vector<ISkillExecutionDevice>();
-        m_devices.Append(SkillExecutionDeviceCPU::Create());
-        auto gpuDevices = SkillExecutionDeviceGPU::GetAvailableGpuExecutionDevices();
-        for (auto iter : gpuDevices)
-        {
-            // Expose only D3D12 devices since WinML supports only those
-            if (iter.as<SkillExecutionDeviceGPU>().MaxSupportedFeatureLevel() >= D3DFeatureLevelKind::D3D_FEATURE_LEVEL_12_0)
-            {
-                m_devices.Append(iter);
-            }
-        }
-        co_await resume_background();
-        return m_devices.GetView();
-    }
-
     Windows::Foundation::Collections::IMapView<hstring, hstring> FaceSentimentAnalyzerDescriptor::Metadata()
     {
         return single_threaded_map<hstring, hstring>().GetView();
     }
 
-    Windows::Foundation::IAsyncOperation<ISkill> FaceSentimentAnalyzerDescriptor::CreateSkillAsync(ISkillExecutionDevice const executionDevice)
-    {
-        co_await resume_background();
-        auto desc = this->operator winrt::Windows::Foundation::IInspectable().as<ISkillDescriptor>();
-        auto skill = FaceSentimentAnalyzerSkill::CreateAsync(desc, executionDevice).get();
-        return skill;
-    }
+    
 }

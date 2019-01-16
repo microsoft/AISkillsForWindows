@@ -15,7 +15,9 @@ using namespace winrt::Windows::Media;
 
 namespace winrt::FaceSentimentAnalyzer::implementation
 {
+    //
     // If possible, retrieve a WinML LearningModelDevice that corresponds to an ISkillExecutionDevice
+    //
     LearningModelDevice GetWinMLDevice(ISkillExecutionDevice executionDevice)
     {
         switch (executionDevice.ExecutionDeviceKind())
@@ -34,7 +36,9 @@ namespace winrt::FaceSentimentAnalyzer::implementation
         }
     }
 
+    //
     // Calculate SoftMax normalization over a set of data
+    //
     Windows::Foundation::Collections::IVector<float> SoftMax(Windows::Foundation::Collections::IVectorView<float> inputs)
     {
         Windows::Foundation::Collections::IVector<float> inputsExp = single_threaded_vector<float>();
@@ -53,6 +57,9 @@ namespace winrt::FaceSentimentAnalyzer::implementation
         return inputsExp;
     }
 
+    //
+    // Creates and initializes a FaceSentimentAnalyzerSkill instance
+    //
     Windows::Foundation::IAsyncOperation<winrt::FaceSentimentAnalyzer::FaceSentimentAnalyzerSkill> FaceSentimentAnalyzerSkill::CreateAsync(
         ISkillDescriptor description,
         ISkillExecutionDevice device)
@@ -72,6 +79,9 @@ namespace winrt::FaceSentimentAnalyzer::implementation
         return make< FaceSentimentAnalyzerSkill>(description, device, faceDetector, winmlSession);
     }
 
+    //
+    // Factory method for instantiating FaceSentimentAnalyzerBinding
+    //
     Windows::Foundation::IAsyncOperation<Microsoft::AI::Skills::SkillInterfacePreview::ISkillBinding> FaceSentimentAnalyzerSkill::CreateSkillBindingAsync()
     {
         co_await resume_background();
@@ -79,6 +89,13 @@ namespace winrt::FaceSentimentAnalyzer::implementation
         return binding;
     }
 
+    //
+    // Run the skill against a binding object, executing the skill logic on the associated input features and populating the output ones
+    // This skill proceeds in 2 steps: 
+    // 1) Run FaceDetector against the image and populate the face bound feature in the binding object
+    // 2) If a face was detected, proceeds with sentiment analysis of that portion fo the image using Windows ML then updating the score 
+    // of each possible sentiment returned as result
+    //
     Windows::Foundation::IAsyncAction FaceSentimentAnalyzerSkill::EvaluateAsync(Microsoft::AI::Skills::SkillInterfacePreview::ISkillBinding const binding)
     {
         auto bindingObj = binding.try_as<FaceSentimentAnalyzerBinding>();
