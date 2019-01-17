@@ -26,11 +26,15 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
     //
     bool FaceSentimentAnalyzerBinding::IsFaceFound()
     {
-        auto faceRect = m_bindingHelper.Lookup(SKILL_OUTPUTNAME_FACERECTANGLE).FeatureValue().as<SkillFeatureTensorFloatValue>().GetAsVectorView();
-        return !(faceRect.GetAt(0) == 0.0f &&
-            faceRect.GetAt(1) == 0.0f &&
-            faceRect.GetAt(2) == 0.0f &&
-            faceRect.GetAt(3) == 0.0f);
+        auto faceRect = m_bindingHelper.TryLookup(SKILL_OUTPUTNAME_FACERECTANGLE).FeatureValue().as<SkillFeatureTensorFloatValue>().GetAsVectorView();
+        if (faceRect != nullptr)
+        {
+            return !(faceRect.GetAt(0) == 0.0f &&
+                faceRect.GetAt(1) == 0.0f &&
+                faceRect.GetAt(2) == 0.0f &&
+                faceRect.GetAt(3) == 0.0f);
+        }
+        return false;
     }
 
     //
@@ -38,17 +42,19 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
     //
     FaceSentimentAnalyzer::SentimentType FaceSentimentAnalyzerBinding::PredominantSentiment()
     {
-        auto faceSentimentScores = m_bindingHelper.Lookup(SKILL_OUTPUTNAME_FACESENTIMENTSCORES).FeatureValue().as<SkillFeatureTensorFloatValue>().GetAsVectorView();
+        auto faceSentimentScores = m_bindingHelper.TryLookup(SKILL_OUTPUTNAME_FACESENTIMENTSCORES).FeatureValue().as<SkillFeatureTensorFloatValue>().GetAsVectorView();
         SentimentType predominantSentiment = SentimentType::neutral;
-        float maxScore = FLT_MIN;
-        for (uint32_t i = 0; i < faceSentimentScores.Size(); i++)
+        if (faceSentimentScores != nullptr)
         {
-            if (faceSentimentScores.GetAt(i) > maxScore)
+            float maxScore = FLT_MIN;
+            for (uint32_t i = 0; i < faceSentimentScores.Size(); i++)
             {
-                predominantSentiment = (SentimentType)i;
-                maxScore = faceSentimentScores.GetAt(i);
+                if (faceSentimentScores.GetAt(i) > maxScore)
+                {
+                    predominantSentiment = (SentimentType)i;
+                    maxScore = faceSentimentScores.GetAt(i);
+                }
             }
-
         }
         return predominantSentiment;
     }
@@ -58,6 +64,6 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
     //
     Windows::Foundation::Collections::IVectorView<float> FaceSentimentAnalyzerBinding::FaceRectangle()
     {
-        return m_bindingHelper.Lookup(SKILL_OUTPUTNAME_FACERECTANGLE).FeatureValue().as<SkillFeatureTensorFloatValue>().GetAsVectorView();
+        return m_bindingHelper.TryLookup(SKILL_OUTPUTNAME_FACERECTANGLE).FeatureValue().as<SkillFeatureTensorFloatValue>().GetAsVectorView();
     }
 }

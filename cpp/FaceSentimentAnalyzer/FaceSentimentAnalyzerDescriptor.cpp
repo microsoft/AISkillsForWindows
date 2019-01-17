@@ -24,11 +24,11 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
             L"Contoso Publishing" // Publisher name
         );
 
-        m_inputSkillDesc = single_threaded_vector<ISkillFeatureDescriptor>();
-        m_outputSkillDesc = single_threaded_vector<ISkillFeatureDescriptor>();
+        auto inputSkillDesc = single_threaded_vector<ISkillFeatureDescriptor>();
+        auto outputSkillDesc = single_threaded_vector<ISkillFeatureDescriptor>();
 
         // Describe input feature
-        m_inputSkillDesc.Append(
+        inputSkillDesc.Append(
             SkillFeatureImageDescriptor::Create(
                 SKILL_INPUTNAME_IMAGE,
                 L"the input image onto which the sentiment analysis runs",
@@ -41,7 +41,7 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
         );
 
         // Describe first output feature
-        m_outputSkillDesc.Append(
+        outputSkillDesc.Append(
             SkillFeatureTensorDescriptor::Create(
                 SKILL_OUTPUTNAME_FACERECTANGLE,
                 L"a face bounding box in relative coordinates (left, top, right, bottom)",
@@ -51,7 +51,7 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
         );
 
         // Describe second output feature
-        m_outputSkillDesc.Append(
+        outputSkillDesc.Append(
             SkillFeatureTensorDescriptor::Create(
                 SKILL_OUTPUTNAME_FACESENTIMENTSCORES,
                 L"the prediction score for each class",
@@ -59,6 +59,9 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
                 single_threaded_vector<int64_t>({ 1, 8 }).GetView(), // tensor shape
                 SkillElementKind::Float)
         );
+
+        m_inputSkillDesc = inputSkillDesc.GetView();
+        m_outputSkillDesc = outputSkillDesc.GetView();
     }
 
     //
@@ -114,12 +117,12 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
 
     Windows::Foundation::Collections::IVectorView<ISkillFeatureDescriptor> FaceSentimentAnalyzerDescriptor::InputFeatureDescriptors()
     {
-        return m_inputSkillDesc.GetView();
+        return m_inputSkillDesc;
     }
 
     Windows::Foundation::Collections::IVectorView<ISkillFeatureDescriptor> FaceSentimentAnalyzerDescriptor::OutputFeatureDescriptors()
     {
-        return m_outputSkillDesc.GetView();
+        return m_outputSkillDesc;
     }
 
     Windows::Foundation::Collections::IMapView<hstring, hstring> FaceSentimentAnalyzerDescriptor::Metadata()

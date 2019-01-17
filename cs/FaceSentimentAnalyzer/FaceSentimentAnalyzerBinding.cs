@@ -68,11 +68,19 @@ namespace Contoso.FaceSentimentAnalyzer
         {
             get
             {
-                var faceRect = (m_bindingHelper[FaceSentimentAnalyzerConst.SKILL_OUTPUTNAME_FACERECTANGLE].FeatureValue as SkillFeatureTensorFloatValue).GetAsVectorView();
-                return !(faceRect[0] == 0.0f &&
-                    faceRect[1] == 0.0f &&
-                    faceRect[2] == 0.0f &&
-                    faceRect[3] == 0.0f);
+                ISkillFeature feature = null;
+                if (m_bindingHelper.TryGetValue(FaceSentimentAnalyzerConst.SKILL_OUTPUTNAME_FACERECTANGLE, out feature))
+                {
+                    var faceRect = (feature.FeatureValue as SkillFeatureTensorFloatValue).GetAsVectorView();
+                    return !(faceRect[0] == 0.0f &&
+                        faceRect[1] == 0.0f &&
+                        faceRect[2] == 0.0f &&
+                        faceRect[3] == 0.0f);
+                }
+                else
+                {
+                    return false;
+                }
             }
         }
 
@@ -84,18 +92,23 @@ namespace Contoso.FaceSentimentAnalyzer
         {
             get
             {
-                var faceSentimentScores = (m_bindingHelper[FaceSentimentAnalyzerConst.SKILL_OUTPUTNAME_FACESENTIMENTSCORES].FeatureValue as SkillFeatureTensorFloatValue).GetAsVectorView();
                 SentimentType predominantSentiment = SentimentType.neutral;
-                float maxScore = float.MinValue;
-                for (int i = 0; i < faceSentimentScores.Count; i++)
+                ISkillFeature feature = null;
+                if (m_bindingHelper.TryGetValue(FaceSentimentAnalyzerConst.SKILL_OUTPUTNAME_FACESENTIMENTSCORES, out feature))
                 {
-                    if (faceSentimentScores[i] > maxScore)
-                    {
-                        predominantSentiment = (SentimentType)i;
-                        maxScore = faceSentimentScores[i];
-                    }
+                    var faceSentimentScores = (feature.FeatureValue as SkillFeatureTensorFloatValue).GetAsVectorView();
 
+                    float maxScore = float.MinValue;
+                    for (int i = 0; i < faceSentimentScores.Count; i++)
+                    {
+                        if (faceSentimentScores[i] > maxScore)
+                        {
+                            predominantSentiment = (SentimentType)i;
+                            maxScore = faceSentimentScores[i];
+                        }
+                    }
                 }
+                
                 return predominantSentiment;
             }
         }
@@ -108,7 +121,15 @@ namespace Contoso.FaceSentimentAnalyzer
         {
             get
             {
-                return (m_bindingHelper[FaceSentimentAnalyzerConst.SKILL_OUTPUTNAME_FACERECTANGLE].FeatureValue as SkillFeatureTensorFloatValue).GetAsVectorView();
+                ISkillFeature feature = null;
+                if (m_bindingHelper.TryGetValue(FaceSentimentAnalyzerConst.SKILL_OUTPUTNAME_FACERECTANGLE, out feature))
+                {
+                    return (feature.FeatureValue as SkillFeatureTensorFloatValue).GetAsVectorView();
+                }
+                else
+                {
+                    return null;
+                }
             }
         }
 

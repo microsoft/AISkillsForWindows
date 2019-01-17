@@ -46,6 +46,6 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
         Windows::AI::MachineLearning::LearningModelSession m_winmlSession = nullptr;
 
         Microsoft::AI::Skills::SkillInterfacePreview::ISkillDescriptor m_skillDescriptor;
-        Microsoft::AI::Skills::SkillInterfacePreview::ISkillExecutionDevice m_device;
+        const Microsoft::AI::Skills::SkillInterfacePreview::ISkillExecutionDevice m_device;
     };
 }

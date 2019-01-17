@@ -22,8 +22,8 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
 
     private:
         Microsoft::AI::Skills::SkillInterfacePreview::SkillVersion m_version = nullptr;
-        Windows::Foundation::Collections::IVector<Microsoft::AI::Skills::SkillInterfacePreview::ISkillFeatureDescriptor> m_inputSkillDesc;
-        Windows::Foundation::Collections::IVector<Microsoft::AI::Skills::SkillInterfacePreview::ISkillFeatureDescriptor> m_outputSkillDesc;
+        Windows::Foundation::Collections::IVectorView<Microsoft::AI::Skills::SkillInterfacePreview::ISkillFeatureDescriptor> m_inputSkillDesc;
+        Windows::Foundation::Collections::IVectorView<Microsoft::AI::Skills::SkillInterfacePreview::ISkillFeatureDescriptor> m_outputSkillDesc;
         Windows::Foundation::Collections::IVector<Microsoft::AI::Skills::SkillInterfacePreview::ISkillExecutionDevice> m_devices;
     };
 }

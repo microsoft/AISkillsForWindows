@@ -17,8 +17,8 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
-    <PackageCertificateKeyFile>FaceSentimentAnalysisTestApp_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>3F893C531987B4E65050438EB39890ED9769EE41</PackageCertificateThumbprint>
+    <PackageCertificateKeyFile>FaceSentimentAnalysisTestApp_cpp_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>EE1F0601A7C9F21CEB69C13CAFB69E99CC579A30</PackageCertificateThumbprint>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>
@@ -108,7 +108,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="FaceSentimentAnalysisTestApp_TemporaryKey.pfx" />
+    <None Include="FaceSentimentAnalysisTestApp_cpp_TemporaryKey.pfx" />
     <AppxManifest Include="Package2.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
@@ -140,9 +140,6 @@
   <ItemGroup>
     <PackageReference Include="Contoso.FaceSentimentAnalyzer_CPP">
       <Version>0.0.0.1</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.AI.Skills.SkillInterfacePreview">
-      <Version>0.5.2.4</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.3</Version>

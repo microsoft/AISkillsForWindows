@@ -192,7 +192,7 @@ namespace FaceSentimentAnalysisTestApp
                 {
                     m_faceSentimentRenderer.Update(binding.FaceRectangle, binding.PredominantSentiment);
                     m_faceSentimentRenderer.IsVisible = true;
-                    var scores = (binding["faceSentimentScores"].FeatureValue as SkillFeatureTensorFloatValue).GetAsVectorView();
+                    var scores = (binding["FaceSentimentScores"].FeatureValue as SkillFeatureTensorFloatValue).GetAsVectorView();
                     UISkillOutputDetails.Text = "";
                     for(int i = 0; i < (int)SentimentType.contempt; i++)
                     {
