@@ -13,7 +13,7 @@ using namespace winrt::Windows::AI::MachineLearning;
 using namespace winrt::Windows::Graphics::Imaging;
 using namespace winrt::Windows::Media;
 
-namespace winrt::FaceSentimentAnalyzer::implementation
+namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
 {
     //
     // If possible, retrieves a WinML LearningModelDevice that corresponds to an ISkillExecutionDevice
@@ -60,7 +60,7 @@ namespace winrt::FaceSentimentAnalyzer::implementation
     //
     // Creates and initializes a FaceSentimentAnalyzerSkill instance
     //
-    Windows::Foundation::IAsyncOperation<winrt::FaceSentimentAnalyzer::FaceSentimentAnalyzerSkill> FaceSentimentAnalyzerSkill::CreateAsync(
+    Windows::Foundation::IAsyncOperation<winrt::Contoso::FaceSentimentAnalyzer::FaceSentimentAnalyzerSkill> FaceSentimentAnalyzerSkill::CreateAsync(
         ISkillDescriptor description,
         ISkillExecutionDevice device)
     {
@@ -70,7 +70,7 @@ namespace winrt::FaceSentimentAnalyzer::implementation
         auto faceDetector = FaceDetector::CreateAsync().get();
 
         // Load WinML model
-        auto modelFile = Windows::Storage::StorageFile::GetFileFromApplicationUriAsync(Windows::Foundation::Uri(L"ms-appx:///FaceSentimentAnalyzer/" + WINML_MODEL_FILENAME)).get();
+        auto modelFile = Windows::Storage::StorageFile::GetFileFromApplicationUriAsync(Windows::Foundation::Uri(L"ms-appx:///Contoso.FaceSentimentAnalyzer/" + WINML_MODEL_FILENAME)).get();
         auto winmlModel = LearningModel::LoadFromFilePath(modelFile.Path());
 
         // Create WinML session

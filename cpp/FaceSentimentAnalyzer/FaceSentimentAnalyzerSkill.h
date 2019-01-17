@@ -4,11 +4,11 @@
 
 #include "FaceSentimentAnalyzerSkill.g.h"
 
-namespace winrt::FaceSentimentAnalyzer::implementation
+namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
 {
     struct FaceSentimentAnalyzerSkill : FaceSentimentAnalyzerSkillT<FaceSentimentAnalyzerSkill>
     {
-        static Windows::Foundation::IAsyncOperation<winrt::FaceSentimentAnalyzer::FaceSentimentAnalyzerSkill> CreateAsync(
+        static Windows::Foundation::IAsyncOperation<winrt::Contoso::FaceSentimentAnalyzer::FaceSentimentAnalyzerSkill> CreateAsync(
             Microsoft::AI::Skills::SkillInterfacePreview::ISkillDescriptor description,
             Microsoft::AI::Skills::SkillInterfacePreview::ISkillExecutionDevice device);
 

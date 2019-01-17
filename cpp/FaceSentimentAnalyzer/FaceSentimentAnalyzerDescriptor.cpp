@@ -7,7 +7,7 @@
 
 using namespace winrt::Microsoft::AI::Skills::SkillInterfacePreview;
 
-namespace winrt::FaceSentimentAnalyzer::implementation
+namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
 {
     // {678BD455-4190-45D3-B5DA-41543283C092}
     const guid FaceSentimentAnalyzerId = guid(0x678bd455, 0x4190, 0x45d3, { 0xb5, 0xda, 0x41, 0x54, 0x32, 0x83, 0xc0, 0x92 });

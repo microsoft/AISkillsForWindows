@@ -7,7 +7,7 @@
 using namespace winrt::Microsoft::AI::Skills::SkillInterfacePreview;
 using namespace winrt::Windows::AI::MachineLearning;
 
-namespace winrt::FaceSentimentAnalyzer::implementation
+namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
 {
     //
     // FaceSentimentAnalyzerBinding constructor

@@ -20,9 +20,9 @@
     <PackageCertificateKeyFile>FaceSentimentAnalysisTestApp_TemporaryKey.pfx</PackageCertificateKeyFile>
     <PackageCertificateThumbprint>3F893C531987B4E65050438EB39890ED9769EE41</PackageCertificateThumbprint>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
-    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>
-    <AppxBundlePlatforms>x64</AppxBundlePlatforms>
+    <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
     <AppInstallerUpdateFrequency>1</AppInstallerUpdateFrequency>
     <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
   </PropertyGroup>
@@ -108,10 +108,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <AppxManifest Include="Package.appxmanifest">
+    <None Include="FaceSentimentAnalysisTestApp_TemporaryKey.pfx" />
+    <AppxManifest Include="Package2.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="FaceSentimentAnalysisTestApp_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\LargeTile.scale-200.png" />
@@ -119,7 +119,9 @@
     <Content Include="Assets\Square44x44Logo.altform-unplated_targetsize-48.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-48.png" />
     <Content Include="Assets\StoreLogo.scale-200.png" />
-    <Content Include="Properties\Default.rd.xml" />
+    <Content Include="Properties\Default.rd.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Assets\SplashScreen.scale-200.png" />
     <Content Include="Assets\Square150x150Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.scale-200.png" />
@@ -136,8 +138,11 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="FaceSentimentAnalyzer_CPP">
+    <PackageReference Include="Contoso.FaceSentimentAnalyzer_CPP">
       <Version>0.0.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AI.Skills.SkillInterfacePreview">
+      <Version>0.5.2.4</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.3</Version>

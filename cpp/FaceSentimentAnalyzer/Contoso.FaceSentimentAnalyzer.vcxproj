@@ -5,8 +5,8 @@
     <CppWinRTEnabled>true</CppWinRTEnabled>
     <MinimalCoreWin>true</MinimalCoreWin>
     <ProjectGuid>{e0320926-075f-46fc-9cc0-865b635bb1a1}</ProjectGuid>
-    <ProjectName>FaceSentimentAnalyzer</ProjectName>
-    <RootNamespace>FaceSentimentAnalyzer</RootNamespace>
+    <ProjectName>Contoso.FaceSentimentAnalyzer</ProjectName>
+    <RootNamespace>Contoso.FaceSentimentAnalyzer</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>
@@ -152,7 +152,9 @@
       <DeploymentContent>true</DeploymentContent>
     </None>
     <None Include="FaceSentimentAnalyzer.def" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

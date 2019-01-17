@@ -4,7 +4,7 @@
 
 #include "FaceSentimentAnalyzerDescriptor.g.h"
 
-namespace winrt::FaceSentimentAnalyzer::implementation
+namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
 {
     struct FaceSentimentAnalyzerDescriptor : FaceSentimentAnalyzerDescriptorT<FaceSentimentAnalyzerDescriptor>
     {
@@ -28,7 +28,7 @@ namespace winrt::FaceSentimentAnalyzer::implementation
     };
 }
 
-namespace winrt::FaceSentimentAnalyzer::factory_implementation
+namespace winrt::Contoso::FaceSentimentAnalyzer::factory_implementation
 {
     struct FaceSentimentAnalyzerDescriptor : FaceSentimentAnalyzerDescriptorT<FaceSentimentAnalyzerDescriptor, implementation::FaceSentimentAnalyzerDescriptor>
     {

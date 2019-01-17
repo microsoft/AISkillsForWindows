@@ -9,7 +9,7 @@ using Microsoft.AI.Skills.SkillInterfacePreview;
 using Windows.Foundation;
 using Windows.Graphics.Imaging;
 
-namespace FaceSentimentAnalyzer
+namespace Contoso.FaceSentimentAnalyzer
 {
     /// <summary>
     /// FaceSentimentAnalyzerDescriptor class.

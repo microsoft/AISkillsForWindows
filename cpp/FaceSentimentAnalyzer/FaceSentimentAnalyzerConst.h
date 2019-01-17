@@ -8,7 +8,7 @@
 /// <summary>
 /// Set of contant values used throughout the skill
 /// </summary>
-namespace winrt::FaceSentimentAnalyzer::implementation
+namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
 {
     const winrt::hstring WINML_MODEL_FILENAME = L"emotion_ferplus.onnx";
     const hstring WINML_MODEL_INPUTNAME = L"Input3";

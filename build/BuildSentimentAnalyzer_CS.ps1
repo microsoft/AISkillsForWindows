@@ -8,8 +8,7 @@ Performs all steps necessary to build the C# SentimentAnalysis WinRTComponent.
 #>
 Param
 (
-    # Specific architecture to build or all of them (i.e. "All" or "x86" or "x64" or "ARM")
-    [string]$BuildArch = "All"
+  
 )
 
 function RunCommand($Command)
@@ -25,24 +24,12 @@ function RunCommand($Command)
 
 # Restore packages
 RunCommand "$PSScriptRoot\RestorePackages.ps1"
-RunCommand "$PSScriptRoot\RestorePackages.ps1 -PackagesConfigPath $PSScriptRoot\..\cs\FaceSentimentAnalysis_CS.sln"
+# RunCommand "$PSScriptRoot\RestorePackages.ps1 -PackagesConfigPath $PSScriptRoot\..\cs\FaceSentimentAnalysis_CS.sln"
 
 # Setup the build environement
 RunCommand "$PSScriptRoot\SetBuildEnv.ps1"
 
-$BuildCommandBase = @('msbuild', '--%', "$PSScriptRoot\..\cs\FaceSentimentAnalyzer\FaceSentimentAnalyzer.csproj")
+$BuildCommandBase = @('msbuild', '--%', "$PSScriptRoot\..\cs\FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer.csproj")
 
-if($BuildArch -like "All")
-{
-    $BuildArchs = @("x86", "x64", "ARM")
-}
-else
-{
-	$BuildArchs = @($BuildArch)
-}
-
-ForEach ($value in $BuildArchs) 
-{
-    $BuildCommand = $BuildCommandBase + "/m /p:Platform=$value /p:Configuration=Release"
-    RunCommand $BuildCommand
-}
+$BuildCommand = $BuildCommandBase + "/m /p:Platform=AnyCPU /p:Configuration=Release"
+RunCommand $BuildCommand

@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 
-namespace FaceSentimentAnalyzer
+namespace Contoso.FaceSentimentAnalyzer
 {
     /// <summary>
     /// Set of contant values used throughout the skill

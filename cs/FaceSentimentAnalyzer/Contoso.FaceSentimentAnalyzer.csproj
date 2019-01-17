@@ -7,8 +7,8 @@
     <ProjectGuid>{0AEDB7FA-181F-4672-8BC6-DEA05600D7E8}</ProjectGuid>
     <OutputType>winmdobj</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FaceSentimentAnalyzer</RootNamespace>
-    <AssemblyName>FaceSentimentAnalyzer</AssemblyName>
+    <RootNamespace>Contoso.FaceSentimentAnalyzer</RootNamespace>
+    <AssemblyName>Contoso.FaceSentimentAnalyzer</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.17763.0</TargetPlatformVersion>
@@ -27,7 +27,7 @@
     <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\common\FaceSentimentAnalyzer.XML</DocumentationFile>
+    <DocumentationFile>..\..\common\Contoso.FaceSentimentAnalyzer.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -37,7 +37,7 @@
     <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\common\FaceSentimentAnalyzer.XML</DocumentationFile>
+    <DocumentationFile>..\..\common\Contoso.FaceSentimentAnalyzer.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <PlatformTarget>x86</PlatformTarget>
@@ -49,7 +49,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
-    <DocumentationFile>..\..\common\FaceSentimentAnalyzer.XML</DocumentationFile>
+    <DocumentationFile>..\..\common\Contoso.FaceSentimentAnalyzer.XML</DocumentationFile>
     <GenerateLibraryLayout>false</GenerateLibraryLayout>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
@@ -62,7 +62,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
-    <DocumentationFile>..\..\common\FaceSentimentAnalyzer.XML</DocumentationFile>
+    <DocumentationFile>..\..\common\Contoso.FaceSentimentAnalyzer.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <PlatformTarget>ARM</PlatformTarget>
@@ -74,7 +74,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
-    <DocumentationFile>..\..\common\FaceSentimentAnalyzer.XML</DocumentationFile>
+    <DocumentationFile>..\..\common\Contoso.FaceSentimentAnalyzer.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
     <PlatformTarget>ARM</PlatformTarget>
@@ -86,7 +86,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
-    <DocumentationFile>..\..\common\FaceSentimentAnalyzer.XML</DocumentationFile>
+    <DocumentationFile>..\..\common\Contoso.FaceSentimentAnalyzer.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <PlatformTarget>x64</PlatformTarget>
@@ -99,7 +99,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <ProduceReferenceWinmd>false</ProduceReferenceWinmd>
-    <DocumentationFile>..\..\common\FaceSentimentAnalyzer.XML</DocumentationFile>
+    <DocumentationFile>..\..\common\Contoso.FaceSentimentAnalyzer.XML</DocumentationFile>
     <GenerateLibraryLayout>false</GenerateLibraryLayout>
     <LangVersion>default</LangVersion>
   </PropertyGroup>
@@ -110,10 +110,10 @@
     <Optimize>true</Optimize>
     <NoWarn>;2008</NoWarn>
     <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
-    <DocumentationFile>..\..\common\FaceSentimentAnalyzer.XML</DocumentationFile>
+    <DocumentationFile>..\..\common\Contoso.FaceSentimentAnalyzer.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>

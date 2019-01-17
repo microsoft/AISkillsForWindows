@@ -11,22 +11,22 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
-    <ClCompile Include="FaceSentimentAnalyzerBinding.cpp" />
-    <ClCompile Include="FaceSentimentAnalyzerDescriptor.cpp" />
-    <ClCompile Include="FaceSentimentAnalyzerSkill.cpp" />
+    <ClCompile Include="Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerBinding.cpp" />
+    <ClCompile Include="Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerDescriptor.cpp" />
+    <ClCompile Include="Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerSkill.cpp" />
     <ClCompile Include="pch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
-    <ClInclude Include="FaceSentimentAnalyzerBinding.h" />
-    <ClInclude Include="FaceSentimentAnalyzerDescriptor.h" />
-    <ClInclude Include="FaceSentimentAnalyzerSkill.h" />
-    <ClInclude Include="FaceSentimentAnalyzerConst.h" />
+    <ClInclude Include="Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerBinding.h" />
+    <ClInclude Include="Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerDescriptor.h" />
+    <ClInclude Include="Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerSkill.h" />
+    <ClInclude Include="Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerConst.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="FaceSentimentAnalyzer.def" />
     <None Include="packages.config" />
     <None Include="..\..\common\emotion_ferplus.onnx" />
+    <None Include="Contoso.FaceSentimentAnalyzer.def" />
   </ItemGroup>
   <ItemGroup>
     <Midl Include="FaceSentimentAnalyzerBinding.idl" />

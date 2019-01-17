@@ -136,7 +136,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="FaceSentimentAnalyzer_CS">
+    <PackageReference Include="Contoso.FaceSentimentAnalyzer_CS">
       <Version>0.0.0.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">

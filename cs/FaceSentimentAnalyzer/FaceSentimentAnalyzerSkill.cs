@@ -13,7 +13,7 @@ using Windows.Media;
 using Windows.Media.FaceAnalysis;
 using Windows.Storage;
 
-namespace FaceSentimentAnalyzer
+namespace Contoso.FaceSentimentAnalyzer
 {
     /// <summary>
     /// FaceSentimentAnalyzerSkill class.
@@ -48,7 +48,7 @@ namespace FaceSentimentAnalyzer
                 skillInstance.m_faceDetector = await FaceDetector.CreateAsync();
 
                 // Load WinML model
-                var modelFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///FaceSentimentAnalyzer/{FaceSentimentAnalyzerConst.WINML_MODEL_FILENAME}"));
+                var modelFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Contoso.FaceSentimentAnalyzer/{FaceSentimentAnalyzerConst.WINML_MODEL_FILENAME}"));
                 var winmlModel = LearningModel.LoadFromFilePath(modelFile.Path);
 
                 // Create WinML session

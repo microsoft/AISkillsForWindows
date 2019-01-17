@@ -30,7 +30,7 @@ RunCommand "$PSScriptRoot\RestorePackages.ps1 -PackagesConfigPath $PSScriptRoot\
 # Setup the build environement
 RunCommand "$PSScriptRoot\SetBuildEnv.ps1"
 
-$BuildCommandBase = @('msbuild', '--%', "$PSScriptRoot\..\cpp\FaceSentimentAnalyzer\FaceSentimentAnalyzer.vcxproj")
+$BuildCommandBase = @('msbuild', '--%', "$PSScriptRoot\..\cpp\FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer.vcxproj")
 
 if($BuildArch -like "All")
 {

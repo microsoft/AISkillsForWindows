@@ -10,7 +10,7 @@ using Windows.Media;
 
 #pragma warning disable CS1591 // Disable missing comment warning
 
-namespace FaceSentimentAnalyzer
+namespace Contoso.FaceSentimentAnalyzer
 {
     /// <summary>
     /// Defines the set of possible emotion label scored by this skill

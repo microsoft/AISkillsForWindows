@@ -5,7 +5,7 @@
 #include "FaceSentimentAnalyzerBinding.g.h"
 #include "FaceSentimentAnalyzerSkill.h"
 
-namespace winrt::FaceSentimentAnalyzer::implementation
+namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
 {
     struct FaceSentimentAnalyzerBinding : FaceSentimentAnalyzerBindingT<FaceSentimentAnalyzerBinding>
     {
@@ -20,7 +20,7 @@ namespace winrt::FaceSentimentAnalyzer::implementation
         }
 
         bool IsFaceFound();
-        FaceSentimentAnalyzer::SentimentType PredominantSentiment();
+        Contoso::FaceSentimentAnalyzer::SentimentType PredominantSentiment();
         Windows::Foundation::Collections::IVectorView<float> FaceRectangle();
 
         // interface implementation via the VisionSkillBindingHelper member instance
@@ -63,6 +63,6 @@ namespace winrt::FaceSentimentAnalyzer::implementation
         Windows::AI::MachineLearning::LearningModelBinding m_winmlBinding = nullptr;
         Microsoft::AI::Skills::SkillInterfacePreview::VisionSkillBindingHelper m_bindingHelper = nullptr;
 
-        friend struct winrt::FaceSentimentAnalyzer::implementation::FaceSentimentAnalyzerSkill;
+        friend struct winrt::Contoso::FaceSentimentAnalyzer::implementation::FaceSentimentAnalyzerSkill;
     };
 }
