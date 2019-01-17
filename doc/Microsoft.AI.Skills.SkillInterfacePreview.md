@@ -3,12 +3,12 @@
  ### Summary
 
 Implementing and integrating efficient AI and Computer Vision (CV) solutions is a hard task for developers. The industry is moving at a fast pace and the amount of custom-tailored 
-solutions are coming out and app developer simply cannot keep-up easily. This proposed framework is meant to standardize the way AI and CV is put to use within a WinRT application 
-running on the edge. It aims to abstract away the complexity of AI and CV techniques by simply defining the concept of Skills which are modular pieces of code that process input and 
+solutions coming out make it almost impossible for app developers to keep up easily. This proposed framework is meant to standardize the way AI and CV is put to use within a WinRT application 
+running on the edge. It aims to abstract away the complexity of AI and CV techniques by simply defining the concept of *skills* which are modular pieces of code that process input and 
 produce output. The implementation that contains the complex details is encapsulated by an extensible WinRT API that inherits the base class present in this namespace, which leverages 
 built-in Windows primitives which in-turn eases interop with built-in acceleration frameworks or external 3rd party ones.
 
- The *Microsoft.AI.Skills.SkillInterfacePreview* namespace provides a set of base interfaces to be extended by all skills as well as classes and helper methods for skill implementers 
+ The *Microsoft.AI.Skills.SkillInterfacePreview* namespace provides a set of base interfaces to be extended by all *skills* as well as classes and helper methods for skill implementers 
  on Windows.
 
  ### Important concepts
@@ -20,7 +20,7 @@ built-in Windows primitives which in-turn eases interop with built-in accelerati
  It handles pre and post processing of the input/output data and simplifies their access.
  3. **[ISkill](#ISkill)** derivative that exposes the core logic of processing its input and forming its output via an **[ISkillBinding](#ISkillBinding)**.
 
- Skills are meant to leverage optimally the hardware capabilities (*CPU*, *GPU*, etc.) on each system they run on. Therefore skills have 
+ *Skills* are meant to leverage optimally the hardware capabilities (*CPU*, *GPU*, etc.) on each system they run on. Therefore *skills* have 
  to expose the set of [**ISkillExecutionDevice**](#ISkillExecutionDevice)s currently available and filter them into a list of compatible ones with their skill logic 
  so that the developer consuming their skill can best chose how to tap into supported hardware resources at runtime on a user system. 
 
@@ -561,7 +561,7 @@ ISkillExecutionDevice Device{ get; }
 
 ### ISkill <a name="ISkill"></a>
 
-Base interface for skills to implement and extend.
+Base interface for *skills* to implement and extend.
 
 #### Properties
 -----
