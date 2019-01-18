@@ -1,0 +1,178 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Contoso.FaceSentimentAnalyzer</name>
+    </assembly>
+    <members>
+        <member name="T:Contoso.FaceSentimentAnalyzer.SentimentType">
+            <summary>
+            Defines the set of possible emotion label scored by this skill
+            </summary>
+        </member>
+        <member name="T:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerBinding">
+            <summary>
+            FaceSentimentAnalyzerBinding class.
+            It holds the input and output passed and retrieved from a FaceSentimentAnalyzerSkill instance.
+            </summary>
+        </member>
+        <member name="M:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerBinding.#ctor(Microsoft.AI.Skills.SkillInterfacePreview.ISkillDescriptor,Microsoft.AI.Skills.SkillInterfacePreview.ISkillExecutionDevice,Windows.AI.MachineLearning.LearningModelSession)">
+            <summary>
+            FaceSentimentAnalyzerBinding constructor
+            </summary>
+        </member>
+        <member name="M:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerBinding.SetInputImageAsync(Windows.Media.VideoFrame)">
+            <summary>
+            Sets the input image to be processed by the skill
+            </summary>
+            <param name="frame"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerBinding.IsFaceFound">
+            <summary>
+            Returns whether or not a face is found given the bound outputs
+            </summary>
+        </member>
+        <member name="P:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerBinding.PredominantSentiment">
+            <summary>
+            Returns the sentiment with the highest score
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerBinding.FaceRectangle">
+            <summary>
+            Returns the face rectangle
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerConst">
+            <summary>
+            Set of contant values used throughout the skill
+            </summary>
+        </member>
+        <member name="T:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerDescriptor">
+            <summary>
+            FaceSentimentAnalyzerDescriptor class.
+            Exposes information about the skill and its input/output variable requirements.
+            Also acts as a factory for FaceSentimentAnalyzerSkill
+            </summary>
+        </member>
+        <member name="M:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerDescriptor.#ctor">
+            <summary>
+            FaceSentimentAnalyzerDescriptor constructor
+            </summary>
+        </member>
+        <member name="M:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerDescriptor.GetSupportedExecutionDevicesAsync">
+            <summary>
+            Retrieves a list of supported ISkillExecutionDevice to run the skill logic on
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerDescriptor.CreateSkillAsync(Microsoft.AI.Skills.SkillInterfacePreview.ISkillExecutionDevice)">
+            <summary>
+            Factory method for instantiating and initializing the skill
+            </summary>
+            <param name="executionDevice"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerDescriptor.Description">
+            <summary>
+            Returns a description of the skill
+            </summary>
+        </member>
+        <member name="P:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerDescriptor.Id">
+            <summary>
+            Returns a unique skill identifier
+            </summary>
+        </member>
+        <member name="P:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerDescriptor.InputFeatureDescriptors">
+            <summary>
+            Returns a list of descriptors that correlate with each input SkillFeature
+            </summary>
+        </member>
+        <member name="P:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerDescriptor.Metadata">
+            <summary>
+            Returns a set of metadata that may control the skill execution differently than by feeding an input 
+            i.e. internal state, sub-process execution frequency, etc.
+            </summary>
+        </member>
+        <member name="P:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerDescriptor.Name">
+            <summary>
+            Returns the skill name
+            </summary>
+        </member>
+        <member name="P:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerDescriptor.OutputFeatureDescriptors">
+            <summary>
+            Returns a list of descriptors that correlate with each output SkillFeature
+            </summary>
+        </member>
+        <member name="P:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerDescriptor.Version">
+            <summary>
+            Returns the Version information of the skill
+            </summary>
+        </member>
+        <member name="T:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerSkill">
+            <summary>
+            FaceSentimentAnalyzerSkill class.
+            Contains the main execution logic of the skill, findind a face in an image then running an ML model to infer its sentiment
+            Also acts as a factory for FaceSentimentAnalyzerBinding
+            to obtain the ONNX model used in this skill, refer to https://github.com/onnx/models/tree/master/emotion_ferplus
+            </summary>
+        </member>
+        <member name="M:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerSkill.CreateAsync(Microsoft.AI.Skills.SkillInterfacePreview.ISkillDescriptor,Microsoft.AI.Skills.SkillInterfacePreview.ISkillExecutionDevice)">
+            <summary>
+            Creates and initializes a FaceSentimentAnalyzerSkill instance
+            </summary>
+            <param name="descriptor"></param>
+            <param name="device"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerSkill.#ctor(Microsoft.AI.Skills.SkillInterfacePreview.ISkillDescriptor,Microsoft.AI.Skills.SkillInterfacePreview.ISkillExecutionDevice)">
+            <summary>
+            FaceSentimentAnalyzerSkill constructor
+            </summary>
+            <param name="description"></param>
+            <param name="device"></param>
+        </member>
+        <member name="M:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerSkill.CreateSkillBindingAsync">
+            <summary>
+            Factory method for instantiating FaceSentimentAnalyzerBinding
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerSkill.EvaluateAsync(Microsoft.AI.Skills.SkillInterfacePreview.ISkillBinding)">
+            <summary>
+            Runs the skill against a binding object, executing the skill logic on the associated input features and populating the output ones
+            This skill proceeds in 2 steps: 
+            1) Run FaceDetector against the image and populate the face bound feature in the binding object
+            2) If a face was detected, proceeds with sentiment analysis of that portion fo the image using Windows ML then updating the score 
+            of each possible sentiment returned as result
+            </summary>
+            <param name="binding"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerSkill.SkillDescriptor">
+            <summary>
+            Returns the descriptor of this skill
+            </summary>
+        </member>
+        <member name="P:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerSkill.Device">
+            <summary>
+            Return the execution device with which this skill was initialized
+            </summary>
+        </member>
+        <member name="M:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerSkill.SoftMax(System.Collections.Generic.IReadOnlyList{System.Single})">
+            <summary>
+            Calculates SoftMax normalization over a set of data
+            </summary>
+            <param name="inputs"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerSkill.GetWinMLDevice(Microsoft.AI.Skills.SkillInterfacePreview.ISkillExecutionDevice)">
+            <summary>
+            If possible, retrieves a WinML LearningModelDevice that corresponds to an ISkillExecutionDevice
+            </summary>
+            <param name="executionDevice"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
