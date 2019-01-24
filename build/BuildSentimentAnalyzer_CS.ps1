@@ -22,6 +22,8 @@ function RunCommand($Command)
     }
 }
 
+Invoke-Expression "$PSScriptRoot\nuget.exe source Add -Name WindowsVisionSkillsLocalBuildFolder -Source $PSScriptRoot"
+
 # Restore packages
 RunCommand "$PSScriptRoot\RestorePackages.ps1"
 RunCommand "$PSScriptRoot\RestorePackages.ps1 -PackagesConfigPath $PSScriptRoot\..\cs\FaceSentimentAnalysis_CS.sln"
