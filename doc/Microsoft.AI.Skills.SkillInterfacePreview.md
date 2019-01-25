@@ -6,7 +6,9 @@ Implementing and integrating efficient AI and Computer Vision (CV) solutions is 
 solutions coming out make it almost impossible for app developers to keep up easily. This proposed framework is meant to standardize the way AI and CV is put to use within a WinRT application 
 running on the edge. It aims to abstract away the complexity of AI and CV techniques by simply defining the concept of *skills* which are modular pieces of code that process input and 
 produce output. The implementation that contains the complex details is encapsulated by an extensible WinRT API that inherits the base class present in this namespace, which leverages 
-built-in Windows primitives which in-turn eases interop with built-in acceleration frameworks or external 3rd party ones.
+built-in Windows primitives which in-turn eases interop with built-in acceleration frameworks or external 3rd party ones. 
+
+While this preview focuses on vision-oriented scenarios and primitives, this API is meant to accomodate any kind of input and output variable and a wide range of scenarios (Vision, Audio, Text, etc.).
 
  The *Microsoft.AI.Skills.SkillInterfacePreview* namespace provides a set of base interfaces to be extended by all *skills* as well as classes and helper methods for skill implementers 
  on Windows.
@@ -30,7 +32,7 @@ from which this interface also defines multiple common derivatives of (tensor, i
  conversion to the appropriate format occurs when attempting to set a value that does not match the predefined format (i.e. when binding an image
 in a different format than the one required).
 
-# Microsoft.AI.Skills.SkillInterfacePreview API doc
+# Microsoft.AI.Skills.SkillInterfacePreview API documentation
 
 *For code see: [Microsoft.AI.Skills.SkillInterface.idl](../common/VisionSkillBase/Microsoft.AI.Skills.SkillInterface.idl)*
 
@@ -71,7 +73,7 @@ in a different format than the one required).
 ### SkillFeatureKind <a name="SkillFeatureKind"></a>
 Type of an input/output feature to be bound for evaluation by the skill
 Each of these values map to a corresponding ISkillFeatureDescriptor derivative that describes the format of the value
-to be bound and processed by the skill.
+to be bound and processed by the skill. This API defines [ISkillFeatureValue](#ISkillFeatureValue) derivatives associated with *Tensor*, *Map* and *Image* (see [SkillFeatureTensorFloatValue](#SkillFeatureTensorFloatValue), [SkillFeatureTensorIntValue](#SkillFeatureTensorIntValue), [SkillFeatureTensorBooleanValue](#SkillFeatureTensorBooleanValue), [SkillFeatureTensorStringValue](#SkillFeatureTensorStringValue), [SkillFeatureImageValue](#SkillFeatureImageValue), [SkillFeatureMapValue](#SkillFeatureMapValue)). The *Undefined* value can be leveraged by skill developers to declare a custom kind of [ISkillFeatureValue](#ISkillFeatureValue) alongside a custom derivative of [ISkillFeatureDescriptor](#ISkillFeatureDescriptor) responsible for creating it.
 
 | Fields      | Values
 | ----------- |--------|
@@ -195,14 +197,12 @@ IAsyncAction SetFeatureValueAsync(object value);
 **`value`** : object
 
 The value to be set onto this feature. 
-Note that this has to be of one of the concrete value type used to instantiate a [ISkillFeatureValue](#ISkillFeatureValue) derivative.
-see factory method for:
-  + [SkillFeatureTensorFloatValue](#SkillFeatureTensorFloatValue)
-  + [SkillFeatureTensorIntValue](#SkillFeatureTensorIntValue)
-  + [SkillFeatureTensorBooleanValue](#SkillFeatureTensorBooleanValue)
-  + [SkillFeatureTensorStringValue](#SkillFeatureTensorStringValue)
-  + [SkillFeatureImageValue](#SkillFeatureImageValue)
-  + [SkillFeatureMapValue](#SkillFeatureMapValue)
+Note that this has to be of one of the concrete value type used to create a [ISkillFeatureValue](#ISkillFeatureValue) derivative from the [ISkillFeatureDescriptor](#ISkillFeatureDescriptor) associated with this instance.
+see methods for creating [ISkillFeatureValue](#ISkillFeatureValue):
+  + [ISkillFeatureDescriptor.CreateValueAsync()](#ISkillFeatureDescriptor.CreateValueAsync)
+  + [SkillFeatureTensorDescriptor.CreateValueAsync()](#SkillFeatureTensorDescriptor.CreateValueAsync)
+  + [SkillFeatureImageDescriptor.CreateValueAsync()](#SkillFeatureImageDescriptor.CreateValueAsync)
+  + [SkillFeatureMapDescriptor.CreateValueAsync()](#SkillFeatureMapDescriptor.CreateValueAsync)
 
 
 ###### Returns
@@ -224,13 +224,11 @@ IAsyncAction SetFeatureValueAsync(object value, ISkillFeatureDescriptor descript
 
 The value to be set onto this feature.
 Note that this has to be of one of the concrete value type used to instantiate a [ISkillFeatureValue](#ISkillFeatureValue) derivative.
-see factory method for:
-  + [SkillFeatureTensorFloatValue](#SkillFeatureTensorFloatValue)
-  + [SkillFeatureTensorIntValue](#SkillFeatureTensorIntValue)
-  + [SkillFeatureTensorBooleanValue](#SkillFeatureTensorBooleanValue)
-  + [SkillFeatureTensorStringValue](#SkillFeatureTensorStringValue)
-  + [SkillFeatureImageValue](#SkillFeatureImageValue)
-  + [SkillFeatureMapValue](#SkillFeatureMapValue)
+see methods for creating [ISkillFeatureValue](#ISkillFeatureValue):
+  + [ISkillFeatureDescriptor.CreateValueAsync()](#ISkillFeatureDescriptor.CreateValueAsync)
+  + [SkillFeatureTensorDescriptor.CreateValueAsync()](#SkillFeatureTensorDescriptor.CreateValueAsync)
+  + [SkillFeatureImageDescriptor.CreateValueAsync()](#SkillFeatureImageDescriptor.CreateValueAsync)
+  + [SkillFeatureMapDescriptor.CreateValueAsync()](#SkillFeatureMapDescriptor.CreateValueAsync)
 
 **`descriptor`** : [ISkillFeatureDescriptor](#ISkillFeatureDescriptor)
 
@@ -263,7 +261,7 @@ ISkillFeatureDescriptor Descriptor{ get; }
 
 ### ISkillFeatureDescriptor <a name="ISkillFeatureDescriptor"></a>
 
-Base interface for a feature descriptor that provides information about a skill variable.
+Provides requirements for a [ISkillFeatureValue](#ISkillFeatureValue) and a factory method for instantiating it.
 
 #### Properties
 -----
@@ -302,6 +300,32 @@ The [SkillFeatureKind](#SkillFeatureKind) of an [ISkillFeature](#ISkillFeature) 
 ```csharp
 SkillFeatureKind FeatureKind{ get; }
 ```
+-----
+
+#### Methods
+-----
+##### CreateValueAsync() <a name="ISkillFeatureDescriptor.CreateValueAsync"></a>
+
+Create a [ISkillFeatureValue](#ISkillFeatureValue) according to the format this instance describes in the memory space of the specified device.
+
+```csharp
+IAsyncOperation<ISkillFeatureValue> CreateValueAsync(Object value, ISkillExecutionDevice device);
+```
+
+###### Parameters
+**`value`** : object
+
+The value from which to create the [ISkillFeatureValue](#ISkillFeatureValue).
+
+**`device`** : [ISkillExecutionDevice](#ISkillExecutionDevice)
+
+The execution device to be used by the skill which dictates the memory space.
+
+###### Returns
+[IAsyncOperation][IAsyncOperation]<[ISkillFeatureValue](#ISkillFeatureValue)>
+
+The [ISkillFeatureValue](#ISkillFeatureValue) created from the value passed as argument.
+
 -----
 
 
@@ -372,6 +396,8 @@ IIterable<object> ValidKeys { get; }
 `requires` [ISkillFeatureDescriptor](#ISkillFeatureDescriptor)
 
 Provides information about a [ISkillFeatureValue](#ISkillFeatureValue) derivative of [SkillFeatureKind](#SkillFeatureKind) Image.
+
+> **Note**: Planar [BitmapPixelFormat values](https://docs.microsoft.com/en-us/uwp/api/windows.graphics.imaging.bitmappixelformat) such as (Nv12, Yuy2 and P010) and odd dimension values are incompatible and will throw an exception.
 
 #### Properties
 -----
@@ -793,10 +819,10 @@ the feature should be mapped to.
 ###### Returns
 [SkillFeature](#SkillFeature)
 
-
 The [SkillFeature](#SkillFeature) created.
 
 -----
+
 
 ### SkillFeatureTensorFloatValue <a name="SkillFeatureTensorFloatValue"></a>
 ``implements`` [ISkillFeatureValue](#ISkillFeatureValue), [IClosable][IClosable]
@@ -815,41 +841,20 @@ IReadOnlyList <long> Shape{ get; }
 ```
 -----
 
-##### GetAsVectorView
+#### Methods
+
+##### GetAsVectorView()
 
 Retrieve the readonly view of the tensor.
 
 ```csharp
 IReadOnlyList <float> GetAsVectorView();
 ```
------
-
-#### Methods
------
-##### CreateAsync(IReadOnlyList< float >, ISkillFeatureTensorDescriptor, ISkillExecutionDevice)
-
- Instantiates a SkillFeatureTensorFloatValue.
-
-```csharp
-static IAsyncOperation<SkillFeatureTensorFloatValue> CreateAsync(IReadOnlyList<float> value, ISkillFeatureTensorDescriptor descriptor, ISkillExecutionDevice device);
-```
-###### Parameters
-**`value`** : [IReadOnlyList][IReadOnlyList]< float >
-
-The float values to be set.
-
-**`descriptor`** : [ISkillFeatureTensorDescriptor](#ISkillFeatureTensorDescriptor)
-
-The feature descriptor.
-
-**`device`** : [ISkillExecutionDevice](#ISkillExecutionDevice)
-
-The execution device to be used by the skill which dictates the memory space.
 
 ###### Returns
-[IAsyncOperation][IAsyncOperation]<[SkillFeatureTensorFloatValue](#SkillFeatureTensorFloatValue)>
+[IReadOnlyList][IReadOnlyList]< float >
 
-The SkillFeatureTensorFloatValue instantiated.
+The value contained within this instance.
 
 -----
     
@@ -871,43 +876,20 @@ IReadOnlyList <long> Shape{ get; }
 ```
 -----
 
-##### GetAsVectorView
+#### Methods
+
+##### GetAsVectorView()
 
 Retrieve the readonly view of the tensor.
 
 ```csharp
 IReadOnlyList <int> GetAsVectorView();
 ```
------
-
-#### Methods
------
-##### CreateAsync(IReadOnlyList< int >, ISkillFeatureTensorDescriptor, ISkillExecutionDevice)
-
- Instantiates a SkillFeatureTensorIntValue.
-
-```csharp
-static IAsyncOperation<SkillFeatureTensorIntValue> CreateAsync(IReadOnlyList<int> value, ISkillFeatureTensorDescriptor descriptor, ISkillExecutionDevice device);
-```
-
-###### Parameters
-**`value`** : [IReadOnlyList][IReadOnlyList]< int >
-
-The int values to be set.
-
-**`descriptor`** : [ISkillFeatureTensorDescriptor](#ISkillFeatureTensorDescriptor)
-
-The feature descriptor.
-
-**`device`** : [ISkillExecutionDevice](#ISkillExecutionDevice)
-
-The execution device to be used by the skill which dictates the memory space.
 
 ###### Returns
-[IAsyncOperation][IAsyncOperation]<[SkillFeatureTensorIntValue](#SkillFeatureTensorIntValue)>
+[IReadOnlyList][IReadOnlyList]< int >
 
-The SkillFeatureTensorIntValue instantiated.
-
+The value contained within this instance.
 -----
 
 
@@ -928,42 +910,20 @@ IReadOnlyList <long> Shape{ get; }
 ```
 -----
 
-##### GetAsVectorView
+#### Methods
+
+##### GetAsVectorView()
 
 Retrieve the readonly view of the tensor.
 
 ```csharp
 IReadOnlyList <bool> GetAsVectorView();
 ```
------
-
-#### Methods
------
-##### CreateAsync(IReadOnlyList< bool >, ISkillFeatureTensorDescriptor, ISkillExecutionDevice)
-
- Instantiates a SkillFeatureTensorBooleanValue.
-
-```csharp
-static IAsyncOperation<SkillFeatureTensorBooleanValue> CreateAsync(IReadOnlyList<bool> value, ISkillFeatureTensorDescriptor descriptor, ISkillExecutionDevice device);
-```
-###### Parameters
-**`value`** : [IReadOnlyList][IReadOnlyList]< bool >
-
-The bool values to be set.
-
-**`descriptor`** : [ISkillFeatureTensorDescriptor](#ISkillFeatureTensorDescriptor)
-
-The feature descriptor.
-
-**`device`** : [ISkillExecutionDevice](#ISkillExecutionDevice)
-
-The execution device to be used by the skill which dictates the memory space.
 
 ###### Returns
-[IAsyncOperation][IAsyncOperation]<[SkillFeatureTensorBooleanValue](#SkillFeatureTensorBooleanValue)>
+[IReadOnlyList][IReadOnlyList]< bool >
 
-The SkillFeatureTensorBooleanValue instantiated.
-
+The value contained within this instance.
 -----
 
 
@@ -984,42 +944,20 @@ IReadOnlyList <long> Shape{ get; }
 ```
 -----
 
-##### GetAsVectorView
+#### Methods
+
+##### GetAsVectorView()
 
 Retrieve the readonly view of the tensor.
 
 ```csharp
 IReadOnlyList <string> GetAsVectorView();
 ```
------
-
-#### Methods
------
-##### CreateAsync(IReadOnlyList< string >, ISkillFeatureTensorDescriptor, ISkillExecutionDevice)
-
- Instantiates a SkillFeatureTensorStringValue.
-
-```csharp
-static IAsyncOperation<SkillFeatureTensorStringValue> CreateAsync(IReadOnlyList<string> value, ISkillFeatureTensorDescriptor descriptor, ISkillExecutionDevice device);
-```
-###### Parameters
-**`value`** : [IReadOnlyList][IReadOnlyList]< string >
-
-The bool values to be set.
-
-**`descriptor`** : [ISkillFeatureTensorDescriptor](#ISkillFeatureTensorDescriptor)
-
-The feature descriptor.
-
-**`device`** : [ISkillExecutionDevice](#ISkillExecutionDevice)
-
-The execution device to be used by the skill which dictates the memory space.
 
 ###### Returns
-[IAsyncOperation][IAsyncOperation]<[SkillFeatureTensorStringValue](#SkillFeatureTensorStringValue)>
+[IReadOnlyList][IReadOnlyList]< string >
 
-The SkillFeatureTensorStringValue instantiated.
-
+The value contained within this instance.
 -----
 
 
@@ -1039,36 +977,6 @@ VideoFrame VideoFrame{ get; }
 ```
 -----
 
-#### Methods
------
-##### CreateAsync(VideoFrame, ISkillFeatureDescriptor, ISkillExecutionDevice)
-
- Instantiates a SkillFeatureImageValue.
-
-```csharp
-static IAsyncOperation<SkillFeatureTensorStringValue> CreateAsync(VideoFrame value, ISkillFeatureDescriptor descriptor, ISkillExecutionDevice device);
-```
-
-###### Parameters
-**`value`** : [VideoFrame][VideoFrame]
-
-The bool values to be set.
-
-**`descriptor`** : [ISkillFeatureDescriptor](#ISkillFeatureDescriptor)
-
-The feature descriptor.
-
-**`device`** : [ISkillExecutionDevice](#ISkillExecutionDevice)
-
-The execution device to be used by the skill which dictates the memory space.
-
-###### Returns
-[IAsyncOperation][IAsyncOperation]<[SkillFeatureImageValue](#SkillFeatureImageValue)>
-
-The SkillFeatureImageValue instantiated.
-
------
-
 
 ### SkillFeatureMapValue <a name="SkillFeatureMapValue"></a>
 ``implements`` [ISkillFeatureValue](#ISkillFeatureValue), [IClosable][IClosable]
@@ -1084,36 +992,6 @@ Retrieve the [IReadOnlyDictionary][IReadOnlyDictionary]< K, V > used at creation
 ```csharp
 Object MapView{ get; }
 ```
------
-
-#### Methods
------
-##### CreateAsync(object, ISkillFeatureDescriptor, ISkillExecutionDevice)
-
-Instantiates a SkillFeatureMapValue.
-
-```csharp
-static IAsyncOperation<SkillFeatureMapValue> CreateAsync(object value, ISkillFeatureDescriptor descriptor, ISkillExecutionDevice device);
-```
-
-###### Parameters
-**`value`** : object
-
-The value parameter needs to be of type [IReadOnlyDictionary][IReadOnlyDictionary]< K, V > with supported K and V per the [SkillElementKind](#SkillElementKind) enum.
-
-**`descriptor`** : [ISkillFeatureDescriptor](#ISkillFeatureDescriptor)
-
-The feature descriptor.
-
-**`device`** : [ISkillExecutionDevice](#ISkillExecutionDevice)
-
-The execution device to be used by the skill which dictates the memory space.
-
-###### Returns
-[IAsyncOperation][IAsyncOperation]<[SkillFeatureMapValue](#SkillFeatureMapValue)>
-
-The SkillFeatureMapValue instantiated.
-
 -----
 
 
@@ -1235,7 +1113,6 @@ The execution device that dictates memory space location of bound values.
 
 -----
 
-
 ##### SetInputImage(VideoFrame)
 
 Calls the protected virtual method SetInputImageInternalAsync() which can be overridden
@@ -1280,16 +1157,16 @@ The asynchronous action for completing this operation
 ### SkillFeatureTensorDescriptor <a name="SkillFeatureTensorDescriptor"></a>
 ``implements`` [ISkillFeatureTensorDescriptor](#ISkillFeatureTensorDescriptor)
 
-Describes a [ISkillFeatureTensorValue](#ISkillFeatureTensorValue) and acts as a static factory for itself.
+Describes a [ISkillFeatureTensorValue](#ISkillFeatureTensorValue).
 
 #### Methods
 -----
-##### Create(string, string, bool, IReadOnlyList< long >, SkillElementKind)
+##### SkillFeatureTensorDescriptor(string, string, bool, IReadOnlyList< long >, SkillElementKind)
 
-Instantiates a SkillBinding.
+SkillFeatureTensorDescriptor constructor.
 
 ```csharp
-static SkillFeatureTensorDescriptor Create(
+SkillFeatureTensorDescriptor(
             string name,
             string description,
             bool isRequired,
@@ -1327,20 +1204,44 @@ The SkillFeatureTensorDescriptor instantiated.
 
 -----
 
+##### CreateValueAsync() <a name="SkillFeatureTensorDescriptor.CreateValueAsync"></a>
+
+Create a [ISkillFeatureValue](#ISkillFeatureValue) of [SkillFeatureKind](#SkillFeatureKind) *Tensor* according to the shape specified with the specified input value argument.
+
+```csharp
+IAsyncOperation<ISkillFeatureValue> CreateValueAsync(Object value, ISkillExecutionDevice device);
+```
+
+###### Parameters
+**`value`** : object
+
+The value from which to create the [ISkillFeatureValue](#ISkillFeatureValue). Note that it has to be a [IReadOnlyList][IReadOnlyList]<TYPE> where TYPE is the primitive that correlates to the [SkillElementKind](#SkillElementKind)> contained in the tensor.
+
+**`device`** : [ISkillExecutionDevice](#ISkillExecutionDevice)
+
+The execution device to be used by the skill which dictates the memory space.
+
+###### Returns
+[IAsyncOperation][IAsyncOperation]<[ISkillFeatureValue](#ISkillFeatureValue)>
+
+The [ISkillFeatureValue](#ISkillFeatureValue) created from the value passed as argument.
+
+-----
+
 
 ### SkillFeatureImageDescriptor <a name="SkillFeatureImageDescriptor"></a>
 ``implements`` [ISkillFeatureImageDescriptor](#ISkillFeatureImageDescriptor)
 
-Describes a [ISkillFeatureImageValue](#ISkillFeatureImageValue) and acts as a static factory for itself.
+Describes a [ISkillFeatureImageValue](#ISkillFeatureImageValue).
 
 #### Methods
 -----
-##### Create(string, string, bool, int, int, int, BitmapPixelFormat, BitmapAlphaMode)
+##### SkillFeatureImageDescriptor(string, string, bool, int, int, int, BitmapPixelFormat, BitmapAlphaMode)
 
-Instantiates a SkillBinding.
+SkillFeatureImageDescriptor constructor
 
 ```csharp
-static SkillFeatureImageDescriptor Create(
+SkillFeatureImageDescriptor(
             string name,
             string description,
             bool isRequired,
@@ -1393,20 +1294,42 @@ The SkillFeatureImageDescriptor instantiated.
 
 -----
 
+##### CreateValueAsync() <a name="SkillFeatureImageDescriptor.CreateValueAsync"></a>
+
+Create a [ISkillFeatureValue](#ISkillFeatureValue) of [SkillFeatureKind](#SkillFeatureKind) *Image* according to the format specified.
+
+```csharp
+IAsyncOperation<ISkillFeatureValue> CreateValueAsync(Object value, ISkillExecutionDevice device);
+```
+
+###### Parameters
+**`value`** : object
+
+The value from which to create the [ISkillFeatureValue](#ISkillFeatureValue). Note that it has to be a [VideoFrame][VideoFrame].
+
+**`device`** : [ISkillExecutionDevice](#ISkillExecutionDevice)
+
+The execution device to be used by the skill which dictates the memory space.
+
+###### Returns
+[IAsyncOperation][IAsyncOperation]<[ISkillFeatureValue](#ISkillFeatureValue)>
+
+The [ISkillFeatureValue](#ISkillFeatureValue) created from the value passed as argument.
+
 
 ### SkillFeatureMapDescriptor <a name="SkillFeatureMapDescriptor"></a>
 ``implements`` [ISkillFeatureMapDescriptor](#ISkillFeatureMapDescriptor)
 
-Describes a [SkillFeatureMapValue](#SkillFeatureMapValue) and acts as a static factory for itself.
+Describes a [SkillFeatureMapValue](#SkillFeatureMapValue).
 
 #### Methods
 -----
-##### Create(string, string, bool, SkillElementKind, SkillElementKind, IIterable< object >)
+##### SkillFeatureMapDescriptor(string, string, bool, SkillElementKind, SkillElementKind, IIterable< object >)
 
-Instantiates a SkillBinding.
+SkillFeatureMapDescriptor constructor.
 
 ```csharp
-static SkillFeatureMapDescriptor Create(
+SkillFeatureMapDescriptor(
             string name,
             string description,
             bool isRequired,
@@ -1449,7 +1372,29 @@ The SkillFeatureMapDescriptor instantiated.
 
 -----
 
+##### CreateValueAsync() <a name="SkillFeatureMapDescriptor.CreateValueAsync"></a>
 
+Create a [ISkillFeatureValue](#ISkillFeatureValue) of [SkillFeatureKind](#SkillFeatureKind) *Map* according to the key and value [SkillElementKind](#SkillElementKind)s specified.
+
+```csharp
+IAsyncOperation<ISkillFeatureValue> CreateValueAsync(Object value, ISkillExecutionDevice device);
+```
+
+###### Parameters
+**`value`** : object
+
+The value from which to create the [ISkillFeatureValue](#ISkillFeatureValue). Note that it has to be a [IReadOnlyDictionary][IReadOnlyDictionary]<TYPE1, TYPE2> where TYPE1 and TYPE2 are the primitives that correlate to the [SkillElementKind](#SkillElementKind)> contained in the map.
+
+**`device`** : [ISkillExecutionDevice](#ISkillExecutionDevice)
+
+The execution device to be used by the skill which dictates the memory space.
+
+###### Returns
+[IAsyncOperation][IAsyncOperation]<[ISkillFeatureValue](#ISkillFeatureValue)>
+
+The [ISkillFeatureValue](#ISkillFeatureValue) created from the value passed as argument.
+
+-----
 
 
 [IReadOnlyList]: https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.ireadonlylist-1?view=netcore-2.2

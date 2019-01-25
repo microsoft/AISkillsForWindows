@@ -29,7 +29,7 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
 
         // Describe input feature
         inputSkillDesc.Append(
-            SkillFeatureImageDescriptor::Create(
+            SkillFeatureImageDescriptor(
                 SKILL_INPUTNAME_IMAGE,
                 L"the input image onto which the sentiment analysis runs",
                 true, // isRequired (since this is an input, it is required to be bound before the evaluation occurs)
@@ -42,7 +42,7 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
 
         // Describe first output feature
         outputSkillDesc.Append(
-            SkillFeatureTensorDescriptor::Create(
+            SkillFeatureTensorDescriptor(
                 SKILL_OUTPUTNAME_FACERECTANGLE,
                 L"a face bounding box in relative coordinates (left, top, right, bottom)",
                 false, // isRequired (since this is an output, it automatically get populated after the evaluation occurs)
@@ -52,7 +52,7 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
 
         // Describe second output feature
         outputSkillDesc.Append(
-            SkillFeatureTensorDescriptor::Create(
+            SkillFeatureTensorDescriptor(
                 SKILL_OUTPUTNAME_FACESENTIMENTSCORES,
                 L"the prediction score for each class",
                 false, // isRequired (since this is an output, it automatically get populated after the evaluation occurs)

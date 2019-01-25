@@ -44,7 +44,7 @@ namespace Contoso.FaceSentimentAnalyzer
             // Describe input feature
             m_inputSkillDesc = new List<ISkillFeatureDescriptor>();
             m_inputSkillDesc.Add(
-                SkillFeatureImageDescriptor.Create(
+                new SkillFeatureImageDescriptor(
                     FaceSentimentAnalyzerConst.SKILL_INPUTNAME_IMAGE,
                     "the input image onto which the sentiment analysis runs",
                     true, // isRequired (since this is an input, it is required to be bound before the evaluation occurs)
@@ -58,7 +58,7 @@ namespace Contoso.FaceSentimentAnalyzer
             // Describe first output feature
             m_outputSkillDesc = new List<ISkillFeatureDescriptor>();
             m_outputSkillDesc.Add(
-                SkillFeatureTensorDescriptor.Create(
+                new SkillFeatureTensorDescriptor(
                     FaceSentimentAnalyzerConst.SKILL_OUTPUTNAME_FACERECTANGLE,
                     "a face bounding box in relative coordinates (left, top, right, bottom)",
                     false, // isRequired (since this is an output, it automatically get populated after the evaluation occurs)
@@ -68,7 +68,7 @@ namespace Contoso.FaceSentimentAnalyzer
 
             // Describe second output feature
             m_outputSkillDesc.Add(
-                SkillFeatureTensorDescriptor.Create(
+                new SkillFeatureTensorDescriptor(
                     FaceSentimentAnalyzerConst.SKILL_OUTPUTNAME_FACESENTIMENTSCORES,
                     "the prediction score for each class",
                     false, // isRequired (since this is an output, it automatically get populated after the evaluation occurs)
