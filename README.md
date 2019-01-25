@@ -43,13 +43,15 @@ However, some consumers may also want to tweak and optimize part of that pipelin
 
 1. If you download the samples ZIP, be sure to unzip the entire archive, not just the folder with the sample you want to build.
 
-2. To build and package the **C# version** of the skill:
-    1. Run the included powershell script under *build\BuildSentimentAnalyzer_CS.ps1*
-    2. Once the sample is built, to generate a NuGet package from it, you can run the included powershell script under *build\PackageSentimentAnalyzer_CS.ps1*. You should see a *FaceSentimentAnalyzer_CS\*.nupkg* file generated.
+2. Open a powershell command line and navigate to the *<root>/build/* folder.
 
-3. To build and package the **C++/WinRT version** of the skill:
-    1. Run the included powershell script under *build\BuildSentimentAnalyzer_CPP.ps1*
-    2. Once the sample is built, to generate a NuGet package from it, you can run the included powershell script under *build\PackageSentimentAnalyzer_CPP.ps1*. You should see a *FaceSentimentAnalyzer_CPP\*.nupkg* file generated.
+3. To build and package the **C# version** of the skill:
+    1. Run the included powershell script named *BuildSentimentAnalyzer_CS.ps1*
+    2. Once the sample is built, to generate a NuGet package from it, you can run the included powershell script named *PackageSentimentAnalyzer_CS.ps1*. You should see a *FaceSentimentAnalyzer_CS\*.nupkg* file generated.
+
+4. To build and package the **C++/WinRT version** of the skill:
+    1. Run the included powershell script named *BuildSentimentAnalyzer_CPP.ps1*
+    2. Once the sample is built, to generate a NuGet package from it, you can run the included powershell script named *PackageSentimentAnalyzer_CPP.ps1*. You should see a *FaceSentimentAnalyzer_CPP\*.nupkg* file generated.
 
 ## Run the sample
 
