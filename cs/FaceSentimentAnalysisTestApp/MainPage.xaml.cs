@@ -341,7 +341,7 @@ namespace FaceSentimentAnalysisTestApp
                     UISkillOutputDetails.Text = "";
                     for (int i = 0; i < (int)SentimentType.contempt; i++)
                     {
-                        UISkillOutputDetails.Text += $"{(SentimentType)i} : {scores[i]} \n";
+                        UISkillOutputDetails.Text += $"{(SentimentType)i} : {scores[i]} {(i == (int)m_binding.PredominantSentiment ? " <<------" : "")} \n";
                     }
                 }
             });
@@ -374,7 +374,7 @@ namespace FaceSentimentAnalysisTestApp
     internal class FaceSentimentRenderer
     {
         private Canvas m_canvas;
-        private TextBox m_sentimentControl;
+        private TextBlock m_sentimentControl;
         private Rectangle m_rectangle = new Rectangle();
         private Dictionary<SentimentType, string> m_emojis = new Dictionary<SentimentType, string>
         {
@@ -392,7 +392,7 @@ namespace FaceSentimentAnalysisTestApp
         /// FaceSentimentRenderer constructor
         /// </summary>
         /// <param name="canvas"></param>
-        public FaceSentimentRenderer(Canvas canvas, TextBox sentimentControl)
+        public FaceSentimentRenderer(Canvas canvas, TextBlock sentimentControl)
         {
             m_canvas = canvas;
             m_sentimentControl = sentimentControl;
@@ -436,7 +436,7 @@ namespace FaceSentimentAnalysisTestApp
             Canvas.SetLeft(m_rectangle, coordinates[0] * m_canvas.Width);
             Canvas.SetTop(m_rectangle, coordinates[1] * m_canvas.Height);
 
-            m_sentimentControl.Text = $"{sentiment} {m_emojis[sentiment]}";
+            m_sentimentControl.Text = $"{m_emojis[sentiment]}";
         }
     }
 }
