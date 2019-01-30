@@ -42,6 +42,8 @@ namespace FaceSentimentAnalysisTestApp
         private IReadOnlyList<ISkillExecutionDevice> m_availableExecutionDevices = null;
         private uint m_cameraFrameWidth, m_cameraFrameHeight;
         private bool m_isCameraFrameDimensionInitialized = false;
+        private enum FrameSourceToggledType { None, ImageFile, Camera};
+        private FrameSourceToggledType m_currentFrameSourceToggled = FrameSourceToggledType.None;
 
         // Synchronization
         private SemaphoreSlim m_lock = new SemaphoreSlim(1);
@@ -168,10 +170,13 @@ namespace FaceSentimentAnalysisTestApp
 
                 m_skill = null;
                 m_binding = null;
+
+                m_currentFrameSourceToggled = FrameSourceToggledType.ImageFile;
             }
             catch (Exception ex)
             {
                 await (new MessageDialog(ex.Message)).ShowAsync();
+                m_currentFrameSourceToggled = FrameSourceToggledType.None;
             }
 
             m_lock.Release();
@@ -252,10 +257,12 @@ namespace FaceSentimentAnalysisTestApp
                 await UICameraPreview.StartAsync();
 
                 UICameraPreview.CameraHelper.FrameArrived += CameraHelper_FrameArrived;
+                m_currentFrameSourceToggled = FrameSourceToggledType.Camera;
             }
             catch (Exception ex)
             {
                 await (new MessageDialog(ex.Message)).ShowAsync();
+                m_currentFrameSourceToggled = FrameSourceToggledType.None;
             }
             finally
             {
@@ -275,8 +282,11 @@ namespace FaceSentimentAnalysisTestApp
                 // Use a lock to process frames one at a time and bypass processing if busy
                 if (m_lock.Wait(0))
                 {
+                    uint cameraFrameWidth = UICameraPreview.CameraHelper.PreviewFrameSource.CurrentFormat.VideoFormat.Width;
+                    uint cameraFrameHeight = UICameraPreview.CameraHelper.PreviewFrameSource.CurrentFormat.VideoFormat.Height;
+
                     // Allign overlay canvas and camera preview so that face detection rectangle looks right
-                    if (!m_isCameraFrameDimensionInitialized)
+                    if (!m_isCameraFrameDimensionInitialized || cameraFrameWidth != m_cameraFrameWidth || cameraFrameHeight != m_cameraFrameHeight)
                     {
                         m_cameraFrameWidth = UICameraPreview.CameraHelper.PreviewFrameSource.CurrentFormat.VideoFormat.Width;
                         m_cameraFrameHeight = UICameraPreview.CameraHelper.PreviewFrameSource.CurrentFormat.VideoFormat.Height;
@@ -345,6 +355,26 @@ namespace FaceSentimentAnalysisTestApp
                     }
                 }
             });
+        }
+
+        /// <summary>
+        /// Triggered when the execution device selected changes. We simply retrigger the image source toggle to reinitialize the skill accordingly. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UISkillExecutionDevices_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            switch(m_currentFrameSourceToggled)
+            {
+                case FrameSourceToggledType.ImageFile:
+                    UIButtonFilePick_Click(null, null);
+                    break;
+                case FrameSourceToggledType.Camera:
+                    UICameraToggle_Click(null, null);
+                    break;
+                default:
+                    break;
+            }
         }
 
         /// <summary>
