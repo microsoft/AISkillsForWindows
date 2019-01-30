@@ -78,7 +78,7 @@ namespace Contoso.FaceSentimentAnalyzer
         }
 
         /// <summary>
-        /// Retrieves a list of supported ISkillExecutionDevice to run the skill logic on
+        /// Retrieves a list of supported ISkillExecutionDevice to run the skill logic on.
         /// </summary>
         /// <returns></returns>
         public IAsyncOperation<IReadOnlyList<ISkillExecutionDevice>> GetSupportedExecutionDevicesAsync()
@@ -101,7 +101,7 @@ namespace Contoso.FaceSentimentAnalyzer
         }
 
         /// <summary>
-        /// Factory method for instantiating and initializing the skill
+        /// Factory method for instantiating and initializing the skill.
         /// </summary>
         /// <param name="executionDevice"></param>
         /// <returns></returns>
@@ -117,17 +117,17 @@ namespace Contoso.FaceSentimentAnalyzer
         }
 
         /// <summary>
-        /// Returns a description of the skill
+        /// Returns a description of the skill.
         /// </summary>
         public string Description { get; private set; }
 
         /// <summary>
-        /// Returns a unique skill identifier
+        /// Returns a unique skill identifier.
         /// </summary>
         public Guid Id { get; }
 
         /// <summary>
-        /// Returns a list of descriptors that correlate with each input SkillFeature
+        /// Returns a list of descriptors that correlate with each input SkillFeature.
         /// </summary>
         public IReadOnlyList<ISkillFeatureDescriptor> InputFeatureDescriptors => m_inputSkillDesc;
 
@@ -138,17 +138,17 @@ namespace Contoso.FaceSentimentAnalyzer
         public IReadOnlyDictionary<string, string> Metadata => null;
 
         /// <summary>
-        /// Returns the skill name
+        /// Returns the skill name.
         /// </summary>
         public string Name { get; private set; }
 
         /// <summary>
-        /// Returns a list of descriptors that correlate with each output SkillFeature
+        /// Returns a list of descriptors that correlate with each output SkillFeature.
         /// </summary>
         public IReadOnlyList<ISkillFeatureDescriptor> OutputFeatureDescriptors => m_outputSkillDesc;
 
         /// <summary>
-        /// Returns the Version information of the skill
+        /// Returns the Version information of the skill.
         /// </summary>
         public SkillVersion Version { get; }
     }

@@ -20,6 +20,9 @@ using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI;
 using Windows.UI.Xaml.Shapes;
 using Microsoft.AI.Skills.SkillInterfacePreview;
+using Microsoft.Toolkit.Uwp.UI.Controls;
+using Microsoft.Toolkit.Uwp.Helpers;
+using System.Threading;
 
 namespace FaceSentimentAnalysisTestApp
 {
@@ -30,11 +33,18 @@ namespace FaceSentimentAnalysisTestApp
     {
         // Skill-related variables
         private FaceSentimentAnalyzerDescriptor m_skillDescriptor = null;
+        private FaceSentimentAnalyzerSkill m_skill = null;
+        private FaceSentimentAnalyzerBinding m_binding = null;
 
         // UI-related variables
-        private SoftwareBitmapSource m_bitmapSource = new SoftwareBitmapSource();
-        private FaceSentimentRenderer m_faceSentimentRenderer = null;
+        private SoftwareBitmapSource m_bitmapSource = new SoftwareBitmapSource(); // used to render an image from a file
+        private FaceSentimentRenderer m_faceSentimentRenderer = null; // used to render a face rectangle on top of an iamge
         private IReadOnlyList<ISkillExecutionDevice> m_availableExecutionDevices = null;
+        private uint m_cameraFrameWidth, m_cameraFrameHeight;
+        private bool m_isCameraFrameDimensionInitialized = false;
+
+        // Synchronization
+        private SemaphoreSlim m_lock = new SemaphoreSlim(1);
 
         /// <summary>
         /// MainPage constructor
@@ -81,12 +91,12 @@ namespace FaceSentimentAnalysisTestApp
                             $"\n\tDescription: {inputDesc.Description}" +
                             $"\n\tType: {inputDesc.FeatureKind}" +
                             $"\n\tWidth: {inputDesc.Width}" +
-                            $"\n\tHeight: {inputDesc.Height}" + 
-                            $"\n\tSupportedBitmapPixelFormat: {inputDesc.SupportedBitmapPixelFormat}" + 
+                            $"\n\tHeight: {inputDesc.Height}" +
+                            $"\n\tSupportedBitmapPixelFormat: {inputDesc.SupportedBitmapPixelFormat}" +
                             $"\n\tSupportedBitmapAlphaMode: {inputDesc.SupportedBitmapAlphaMode}";
 
                             var outputDesc1 = m_skillDescriptor.OutputFeatureDescriptors[0] as SkillFeatureTensorDescriptor;
-                            UISkillOutputDescription1.Text = $"\tName: {outputDesc1.Name}, Description: {outputDesc1.Description} \n\tType: {outputDesc1.FeatureKind} of {outputDesc1.ElementKind} with shape [{outputDesc1.Shape.Select( i => i.ToString()).Aggregate((a, b) => a + ", " + b)}]";
+                            UISkillOutputDescription1.Text = $"\tName: {outputDesc1.Name}, Description: {outputDesc1.Description} \n\tType: {outputDesc1.FeatureKind} of {outputDesc1.ElementKind} with shape [{outputDesc1.Shape.Select(i => i.ToString()).Aggregate((a, b) => a + ", " + b)}]";
 
                             var outputDesc2 = m_skillDescriptor.OutputFeatureDescriptors[1] as SkillFeatureTensorDescriptor;
                             UISkillOutputDescription2.Text = $"\tName: {outputDesc2.Name} \n\tDescription: {outputDesc2.Description} \n\tType: {outputDesc2.FeatureKind} of {outputDesc2.ElementKind} with shape [{outputDesc2.Shape.Select(i => i.ToString()).Aggregate((a, b) => a + ", " + b)}]";
@@ -98,24 +108,81 @@ namespace FaceSentimentAnalysisTestApp
                             else
                             {
                                 // Display available execution devices
-                                UISkillExecutionDevices.ItemsSource = m_availableExecutionDevices.Select((device)=>device.Name);
+                                UISkillExecutionDevices.ItemsSource = m_availableExecutionDevices.Select((device) => device.Name);
                                 UISkillExecutionDevices.SelectedIndex = 0;
 
                                 // Alow user to interact with the app
                                 UIButtonFilePick.IsEnabled = true;
+                                UICameraToggle.IsEnabled = true;
                                 UIButtonFilePick.Focus(FocusState.Keyboard);
                             }
                         });
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     await new MessageDialog(ex.Message).ShowAsync();
                 }
             });
+
+            // Register callback for if camera preview encoutners an issue
+            UICameraPreview.PreviewFailed += UICameraPreview_PreviewFailed;
         }
 
         /// <summary>
-        /// Launch file picker for user to select a picture file and return a VideoFrame
+        /// Triggered when UIButtonFilePick is clicked, grabs a frame from an image file.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void UIButtonFilePick_Click(object sender, RoutedEventArgs e)
+        {
+            // Stop Camera preview
+            UICameraPreview.Stop();
+            if (UICameraPreview.CameraHelper != null)
+            {
+                await UICameraPreview.CameraHelper.CleanUpAsync();
+            }
+            UICameraPreview.Visibility = Visibility.Collapsed;
+            UIImageViewer.Visibility = Visibility.Visible;
+
+            // Disable subsequent trigger of this event callback 
+            UICameraToggle.IsEnabled = false;
+            UIButtonFilePick.IsEnabled = false;
+
+            await m_lock.WaitAsync();
+
+            try
+            {
+                // Initialize skill with the selected supported device
+                m_skill = await m_skillDescriptor.CreateSkillAsync(m_availableExecutionDevices[UISkillExecutionDevices.SelectedIndex]) as FaceSentimentAnalyzerSkill;
+
+                // Instantiate a binding object that will hold the skill's input and output resource
+                m_binding = await m_skill.CreateSkillBindingAsync() as FaceSentimentAnalyzerBinding;
+
+                var frame = await LoadVideoFrameFromFilePickedAsync();
+                await m_bitmapSource.SetBitmapAsync(frame.SoftwareBitmap);
+                UIImageViewer.Source = m_bitmapSource;
+
+                UIImageViewer_SizeChanged(null, null);
+
+                await RunSkillAsync(frame);
+
+                m_skill = null;
+                m_binding = null;
+            }
+            catch (Exception ex)
+            {
+                await (new MessageDialog(ex.Message)).ShowAsync();
+            }
+
+            m_lock.Release();
+
+            // Enable subsequent trigger of this event callback
+            UIButtonFilePick.IsEnabled = true;
+            UICameraToggle.IsEnabled = true;
+        }
+
+        /// <summary>
+        /// Launch file picker for user to select a picture file and return a VideoFrame.
         /// </summary>
         /// <returns>VideoFrame instanciated from the selected image file</returns>
         public static IAsyncOperation<VideoFrame> LoadVideoFrameFromFilePickedAsync()
@@ -157,32 +224,110 @@ namespace FaceSentimentAnalysisTestApp
         }
 
         /// <summary>
-        /// Triggered when UIButtonFilePick is clicked
+        /// Triggered when UICameraToggle is clicked, initializes frame grabbing from the camera stream
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void UIButtonFilePick_Click(object sender, RoutedEventArgs e)
+        private async void UICameraToggle_Click(object sender, RoutedEventArgs e)
         {
-            // Disable subsequent trigger of this event callback 
-            UIButtonFilePick.IsEnabled = false;
+            await m_lock.WaitAsync();
             try
             {
+                UICameraPreview.Stop();
+                if (UICameraPreview.CameraHelper != null)
+                {
+                    await UICameraPreview.CameraHelper.CleanUpAsync();
+                }
+                m_isCameraFrameDimensionInitialized = false;
+
                 // Initialize skill with the selected supported device
-                FaceSentimentAnalyzerSkill skill = await m_skillDescriptor.CreateSkillAsync(m_availableExecutionDevices[UISkillExecutionDevices.SelectedIndex]) as FaceSentimentAnalyzerSkill;
+                m_skill = await m_skillDescriptor.CreateSkillAsync(m_availableExecutionDevices[UISkillExecutionDevices.SelectedIndex]) as FaceSentimentAnalyzerSkill;
 
                 // Instantiate a binding object that will hold the skill's input and output resource
-                FaceSentimentAnalyzerBinding binding = await skill.CreateSkillBindingAsync() as FaceSentimentAnalyzerBinding;
+                m_binding = await m_skill.CreateSkillBindingAsync() as FaceSentimentAnalyzerBinding;
 
-                var frame = await LoadVideoFrameFromFilePickedAsync();
-                await m_bitmapSource.SetBitmapAsync(frame.SoftwareBitmap);
-                UIImageViewer.Source = m_bitmapSource;
+                // Initialize the CameraPreview control, register frame arrived event callback
+                UIImageViewer.Visibility = Visibility.Collapsed;
+                UICameraPreview.Visibility = Visibility.Visible;
+                await UICameraPreview.StartAsync();
 
-                // Update input image and run the skill against it
-                await binding.SetInputImageAsync(frame);
-                await skill.EvaluateAsync(binding);
+                UICameraPreview.CameraHelper.FrameArrived += CameraHelper_FrameArrived;
+            }
+            catch (Exception ex)
+            {
+                await (new MessageDialog(ex.Message)).ShowAsync();
+            }
+            finally
+            {
+                m_lock.Release();
+            }
+        }
 
+        /// <summary>
+        /// Triggered when a new frame is available from the camera stream.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void CameraHelper_FrameArrived(object sender, FrameEventArgs e)
+        {
+            try
+            {
+                // Use a lock to process frames one at a time and bypass processing if busy
+                if (m_lock.Wait(0))
+                {
+                    // Allign overlay canvas and camera preview so that face detection rectangle looks right
+                    if (!m_isCameraFrameDimensionInitialized)
+                    {
+                        m_cameraFrameWidth = UICameraPreview.CameraHelper.PreviewFrameSource.CurrentFormat.VideoFormat.Width;
+                        m_cameraFrameHeight = UICameraPreview.CameraHelper.PreviewFrameSource.CurrentFormat.VideoFormat.Height;
+
+                        await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                        {
+                            UIImageViewer_SizeChanged(null, null);
+                        });
+
+                        m_isCameraFrameDimensionInitialized = true;
+                    }
+
+                    // Run the skill against the frame
+                    await RunSkillAsync(e.VideoFrame);
+                    m_lock.Release();
+                }
+                e.VideoFrame.Dispose();
+            }
+            catch (Exception ex)
+            {
+                // Show the error
+                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => UISkillOutputDetails.Text = ex.Message);
+                m_lock.Release();
+            }
+        }
+
+        /// <summary>
+        /// Triggered when something wrong happens with the camera preview control.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void UICameraPreview_PreviewFailed(object sender, PreviewFailedEventArgs e)
+        {
+            await new MessageDialog(e.Error).ShowAsync();
+        }
+
+        /// <summary>
+        /// Run the skill against the frame passed as parameter
+        /// </summary>
+        /// <param name="frame"></param>
+        /// <returns></returns>
+        private async Task RunSkillAsync(VideoFrame frame)
+        {
+            // Update input image and run the skill against it
+            await m_binding.SetInputImageAsync(frame);
+            await m_skill.EvaluateAsync(m_binding);
+
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
                 // Retrieve result
-                if (!binding.IsFaceFound)
+                if (!m_binding.IsFaceFound)
                 {
                     // if no face found, hide the rectangle in the UI
                     m_faceSentimentRenderer.IsVisible = false;
@@ -190,34 +335,36 @@ namespace FaceSentimentAnalysisTestApp
                 }
                 else // Display the face rectangle abd sebtiment in the UI
                 {
-                    m_faceSentimentRenderer.Update(binding.FaceRectangle, binding.PredominantSentiment);
+                    m_faceSentimentRenderer.Update(m_binding.FaceRectangle, m_binding.PredominantSentiment);
                     m_faceSentimentRenderer.IsVisible = true;
-                    var scores = (binding["FaceSentimentScores"].FeatureValue as SkillFeatureTensorFloatValue).GetAsVectorView();
+                    var scores = (m_binding["FaceSentimentScores"].FeatureValue as SkillFeatureTensorFloatValue).GetAsVectorView();
                     UISkillOutputDetails.Text = "";
-                    for(int i = 0; i < (int)SentimentType.contempt; i++)
+                    for (int i = 0; i < (int)SentimentType.contempt; i++)
                     {
                         UISkillOutputDetails.Text += $"{(SentimentType)i} : {scores[i]} \n";
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                await (new MessageDialog(ex.Message)).ShowAsync();
-            }
-
-            // Enable subsequent trigger of this event callback
-            UIButtonFilePick.IsEnabled = true;
+            });
         }
 
         /// <summary>
-        /// Triggers when the iamge control is resized, makes sure the canvas size stays in sync
+        /// Triggers when the image control is resized, makes sure the canvas size stays in sync with the frame display control.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void UIImageViewer_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            UICanvasOverlay.Width = UIImageViewer.ActualWidth;
-            UICanvasOverlay.Height = UIImageViewer.ActualHeight;
+            if (UIImageViewer.Visibility == Visibility.Visible) // we are using an image file that we stretch, match UI control dimension
+            {
+                UICanvasOverlay.Width = UIImageViewer.ActualWidth;
+                UICanvasOverlay.Height = UIImageViewer.ActualHeight;
+            }
+            else // we are using a camera preview, make sure the aspect ratio is honored when rendering the face rectangle
+            {
+                float aspectRatio = (float)m_cameraFrameWidth / m_cameraFrameHeight;
+                UICanvasOverlay.Width = aspectRatio >= 1.0f ? UICameraPreview.ActualWidth : UICameraPreview.ActualWidth * aspectRatio;
+                UICanvasOverlay.Height = aspectRatio >= 1.0f ? UICameraPreview.ActualHeight / aspectRatio : UICameraPreview.ActualHeight;
+            }
         }
     }
 

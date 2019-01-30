@@ -31,7 +31,7 @@ namespace Contoso.FaceSentimentAnalyzer
     /// FaceSentimentAnalyzerBinding class.
     /// It holds the input and output passed and retrieved from a FaceSentimentAnalyzerSkill instance.
     /// </summary>
-    public sealed  class FaceSentimentAnalyzerBinding : IReadOnlyDictionary<string, ISkillFeature>, ISkillBinding
+    public sealed class FaceSentimentAnalyzerBinding : IReadOnlyDictionary<string, ISkillFeature>, ISkillBinding
     {
         // WinML related
         internal LearningModelBinding m_winmlBinding = null;
