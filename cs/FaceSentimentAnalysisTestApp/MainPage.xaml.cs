@@ -126,7 +126,7 @@ namespace FaceSentimentAnalysisTestApp
                 }
             });
 
-            // Register callback for if camera preview encoutners an issue
+            // Register callback for if camera preview encounters an issue
             UICameraPreview.PreviewFailed += UICameraPreview_PreviewFailed;
         }
 
@@ -161,12 +161,15 @@ namespace FaceSentimentAnalysisTestApp
                 m_binding = await m_skill.CreateSkillBindingAsync() as FaceSentimentAnalyzerBinding;
 
                 var frame = await LoadVideoFrameFromFilePickedAsync();
-                await m_bitmapSource.SetBitmapAsync(frame.SoftwareBitmap);
-                UIImageViewer.Source = m_bitmapSource;
+                if (frame != null)
+                {
+                    await m_bitmapSource.SetBitmapAsync(frame.SoftwareBitmap);
+                    UIImageViewer.Source = m_bitmapSource;
 
-                UIImageViewer_SizeChanged(null, null);
+                    UIImageViewer_SizeChanged(null, null);
 
-                await RunSkillAsync(frame);
+                    await RunSkillAsync(frame);
+                }
 
                 m_skill = null;
                 m_binding = null;
@@ -189,7 +192,7 @@ namespace FaceSentimentAnalysisTestApp
         /// <summary>
         /// Launch file picker for user to select a picture file and return a VideoFrame.
         /// </summary>
-        /// <returns>VideoFrame instanciated from the selected image file</returns>
+        /// <returns>VideoFrame instantiated from the selected image file</returns>
         public static IAsyncOperation<VideoFrame> LoadVideoFrameFromFilePickedAsync()
         {
             return AsyncInfo.Run(async (token) =>
@@ -343,7 +346,7 @@ namespace FaceSentimentAnalysisTestApp
                     m_faceSentimentRenderer.IsVisible = false;
                     UISkillOutputDetails.Text = "No face found";
                 }
-                else // Display the face rectangle abd sebtiment in the UI
+                else // Display the face rectangle and sentiment in the UI
                 {
                     m_faceSentimentRenderer.Update(m_binding.FaceRectangle, m_binding.PredominantSentiment);
                     m_faceSentimentRenderer.IsVisible = true;
