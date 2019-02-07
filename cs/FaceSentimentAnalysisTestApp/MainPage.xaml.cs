@@ -395,8 +395,8 @@ namespace FaceSentimentAnalysisTestApp
             else // we are using a camera preview, make sure the aspect ratio is honored when rendering the face rectangle
             {
                 float aspectRatio = (float)m_cameraFrameWidth / m_cameraFrameHeight;
-                UICanvasOverlay.Width = aspectRatio >= 1.0f ? UICameraPreview.ActualWidth : UICameraPreview.ActualWidth * aspectRatio;
-                UICanvasOverlay.Height = aspectRatio >= 1.0f ? UICameraPreview.ActualHeight / aspectRatio : UICameraPreview.ActualHeight;
+                UICanvasOverlay.Width = aspectRatio >= 1.0f ? UICameraPreview.ActualWidth : UICameraPreview.ActualHeight * aspectRatio;
+                UICanvasOverlay.Height = aspectRatio >= 1.0f ? UICameraPreview.ActualWidth / aspectRatio : UICameraPreview.ActualHeight;
             }
         }
     }
