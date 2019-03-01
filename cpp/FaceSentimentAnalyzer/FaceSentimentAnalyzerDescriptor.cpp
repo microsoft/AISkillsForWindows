@@ -71,8 +71,8 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
     {
         m_devices = single_threaded_vector<ISkillExecutionDevice>();
         m_devices.Append(SkillExecutionDeviceCPU::Create());
-        auto gpuDevices = SkillExecutionDeviceDirectX::GetAvailableDirectXExecutionDevices();
-        for (auto iter : gpuDevices)
+        auto devices = SkillExecutionDeviceDirectX::GetAvailableDirectXExecutionDevices();
+        for (auto iter : devices)
         {
             // Expose only D3D12 devices since WinML supports only those
             if (iter.as<SkillExecutionDeviceDirectX>().MaxSupportedFeatureLevel() >= D3DFeatureLevelKind::D3D_FEATURE_LEVEL_12_0)

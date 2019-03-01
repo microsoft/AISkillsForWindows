@@ -30,7 +30,7 @@ namespace Contoso.FaceSentimentAnalyzer
             Name = "FaceSentimentAnalyzer";
 
             Description = "Finds a face in the image and infers its predominant sentiment from a set of 8 possible labels";
-           
+
             // {F8D275CE-C244-4E71-8A39-57335D291388}
             Id = new Guid(0xf8d275ce, 0xc244, 0x4e71, 0x8a, 0x39, 0x57, 0x33, 0x5d, 0x29, 0x13, 0x88);
 
@@ -39,7 +39,7 @@ namespace Contoso.FaceSentimentAnalyzer
                 1,  // minor version
                 "Contoso Developer", // Author name 
                 "Contoso Publishing" // Publisher name
-                ); 
+                );
 
             // Describe input feature
             m_inputSkillDesc = new List<ISkillFeatureDescriptor>();
@@ -85,18 +85,20 @@ namespace Contoso.FaceSentimentAnalyzer
         {
             return AsyncInfo.Run(async (token) =>
             {
-                var result = new List<ISkillExecutionDevice>();
-                await Task.Run(() =>
+                return await Task.Run(() =>
                 {
+                    var result = new List<ISkillExecutionDevice>();
+
                     // Add CPU as supported device
                     result.Add(SkillExecutionDeviceCPU.Create());
 
-                    // Retrieve a list of GPUs available on the system and filter them by keeping only GPUs that support DX12+ feature level
-                    var gpuDevices = SkillExecutionDeviceDirectX.GetAvailableDirectXExecutionDevices();
-                    var compatibleGpuDevices = gpuDevices.Where((device) => (device as SkillExecutionDeviceDirectX).MaxSupportedFeatureLevel >= D3DFeatureLevelKind.D3D_FEATURE_LEVEL_12_0);
-                    result.AddRange(compatibleGpuDevices);
+                    // Retrieve a list of DirectX devices available on the system and filter them by keeping only the ones that support DX12+ feature level
+                    var devices = SkillExecutionDeviceDirectX.GetAvailableDirectXExecutionDevices();
+                    var compatibleDevices = devices.Where((device) => (device as SkillExecutionDeviceDirectX).MaxSupportedFeatureLevel >= D3DFeatureLevelKind.D3D_FEATURE_LEVEL_12_0);
+                    result.AddRange(compatibleDevices);
+
+                    return result as IReadOnlyList<ISkillExecutionDevice>;
                 });
-                return result as IReadOnlyList<ISkillExecutionDevice>;
             });
         }
 
@@ -140,7 +142,7 @@ namespace Contoso.FaceSentimentAnalyzer
             return AsyncInfo.Run(async (token) =>
             {
                 // Create a skill instance with the executionDevice supplied
-                var skillInstance = await FaceSentimentAnalyzerSkill.CreateAsync(this, executionDevice);          
+                var skillInstance = await FaceSentimentAnalyzerSkill.CreateAsync(this, executionDevice);
 
                 return skillInstance as ISkill;
             });
