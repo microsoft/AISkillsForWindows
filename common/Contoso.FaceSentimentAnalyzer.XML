@@ -63,30 +63,37 @@
         </member>
         <member name="M:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerDescriptor.GetSupportedExecutionDevicesAsync">
             <summary>
-            Retrieves a list of supported ISkillExecutionDevice to run the skill logic on
+            Retrieves a list of supported ISkillExecutionDevice to run the skill logic on.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerDescriptor.CreateSkillAsync">
+            <summary>
+            Factory method for instantiating and initializing the skill.
+            Let the skill decide of the optimal or default ISkillExecutionDevice available to use.
             </summary>
             <returns></returns>
         </member>
         <member name="M:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerDescriptor.CreateSkillAsync(Microsoft.AI.Skills.SkillInterfacePreview.ISkillExecutionDevice)">
             <summary>
-            Factory method for instantiating and initializing the skill
+            Factory method for instantiating and initializing the skill.
             </summary>
             <param name="executionDevice"></param>
             <returns></returns>
         </member>
         <member name="P:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerDescriptor.Description">
             <summary>
-            Returns a description of the skill
+            Returns a description of the skill.
             </summary>
         </member>
         <member name="P:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerDescriptor.Id">
             <summary>
-            Returns a unique skill identifier
+            Returns a unique skill identifier.
             </summary>
         </member>
         <member name="P:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerDescriptor.InputFeatureDescriptors">
             <summary>
-            Returns a list of descriptors that correlate with each input SkillFeature
+            Returns a list of descriptors that correlate with each input SkillFeature.
             </summary>
         </member>
         <member name="P:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerDescriptor.Metadata">
@@ -97,17 +104,17 @@
         </member>
         <member name="P:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerDescriptor.Name">
             <summary>
-            Returns the skill name
+            Returns the skill name.
             </summary>
         </member>
         <member name="P:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerDescriptor.OutputFeatureDescriptors">
             <summary>
-            Returns a list of descriptors that correlate with each output SkillFeature
+            Returns a list of descriptors that correlate with each output SkillFeature.
             </summary>
         </member>
         <member name="P:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerDescriptor.Version">
             <summary>
-            Returns the Version information of the skill
+            Returns the Version information of the skill.
             </summary>
         </member>
         <member name="T:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerSkill">

@@ -224,7 +224,7 @@ namespace Contoso.FaceSentimentAnalyzer
 
                 case SkillExecutionDeviceKind.Gpu:
                     {
-                        var gpuDevice = executionDevice as SkillExecutionDeviceGPU;
+                        var gpuDevice = executionDevice as SkillExecutionDeviceDirectX;
                         return LearningModelDevice.CreateFromDirect3D11Device(gpuDevice.Direct3D11Device);
                     }
 

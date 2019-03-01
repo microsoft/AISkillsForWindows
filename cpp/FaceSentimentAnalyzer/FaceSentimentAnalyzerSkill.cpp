@@ -27,7 +27,7 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
 
         case SkillExecutionDeviceKind::Gpu:
         {
-            auto gpuDevice = executionDevice.as<SkillExecutionDeviceGPU>();
+            auto gpuDevice = executionDevice.as<SkillExecutionDeviceDirectX>();
             return LearningModelDevice::CreateFromDirect3D11Device(gpuDevice.Direct3D11Device());
         }
 

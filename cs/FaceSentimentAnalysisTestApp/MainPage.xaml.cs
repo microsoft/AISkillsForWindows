@@ -66,65 +66,56 @@ namespace FaceSentimentAnalysisTestApp
             // Initialize helper class used to render the skill results on screen
             m_faceSentimentRenderer = new FaceSentimentRenderer(UICanvasOverlay, UISentiment);
 
-            await Task.Run(async () =>
+            try
             {
-                try
+                // Instatiate skill descriptor to display details about the skill and populate UI
+                m_skillDescriptor = new FaceSentimentAnalyzerDescriptor();
+                m_availableExecutionDevices = await m_skillDescriptor.GetSupportedExecutionDevicesAsync();
+
+                // Show skill description members in UI
+                UISkillName.Text = m_skillDescriptor.Name;
+
+                UISkillDescription.Text = $"{m_skillDescriptor.Description}" +
+                $"\n\tauthored by: {m_skillDescriptor.Version.Author}" +
+                $"\n\tpublished by: {m_skillDescriptor.Version.Author}" +
+                $"\n\tversion: {m_skillDescriptor.Version.Major}.{m_skillDescriptor.Version.Minor}" +
+                $"\n\tunique ID: {m_skillDescriptor.Id}";
+
+                var inputDesc = m_skillDescriptor.InputFeatureDescriptors[0] as SkillFeatureImageDescriptor;
+                UISkillInputDescription.Text = $"\tName: {inputDesc.Name}" +
+                $"\n\tDescription: {inputDesc.Description}" +
+                $"\n\tType: {inputDesc.FeatureKind}" +
+                $"\n\tWidth: {inputDesc.Width}" +
+                $"\n\tHeight: {inputDesc.Height}" +
+                $"\n\tSupportedBitmapPixelFormat: {inputDesc.SupportedBitmapPixelFormat}" +
+                $"\n\tSupportedBitmapAlphaMode: {inputDesc.SupportedBitmapAlphaMode}";
+
+                var outputDesc1 = m_skillDescriptor.OutputFeatureDescriptors[0] as SkillFeatureTensorDescriptor;
+                UISkillOutputDescription1.Text = $"\tName: {outputDesc1.Name}, Description: {outputDesc1.Description} \n\tType: {outputDesc1.FeatureKind} of {outputDesc1.ElementKind} with shape [{outputDesc1.Shape.Select(i => i.ToString()).Aggregate((a, b) => a + ", " + b)}]";
+
+                var outputDesc2 = m_skillDescriptor.OutputFeatureDescriptors[1] as SkillFeatureTensorDescriptor;
+                UISkillOutputDescription2.Text = $"\tName: {outputDesc2.Name} \n\tDescription: {outputDesc2.Description} \n\tType: {outputDesc2.FeatureKind} of {outputDesc2.ElementKind} with shape [{outputDesc2.Shape.Select(i => i.ToString()).Aggregate((a, b) => a + ", " + b)}]";
+
+                if (m_availableExecutionDevices.Count == 0)
                 {
-                    // Instatiate skill descriptor to display details about the skill and populate UI
-                    m_skillDescriptor = new FaceSentimentAnalyzerDescriptor();
-                    m_availableExecutionDevices = await m_skillDescriptor.GetSupportedExecutionDevicesAsync();
-
-                    // Refresh UI
-                    await Dispatcher.RunAsync(
-                        Windows.UI.Core.CoreDispatcherPriority.Normal,
-                        () =>
-                        {
-                            // Show skill description members in UI
-                            UISkillName.Text = m_skillDescriptor.Name;
-
-                            UISkillDescription.Text = $"{m_skillDescriptor.Description}" +
-                            $"\n\tauthored by: {m_skillDescriptor.Version.Author}" +
-                            $"\n\tpublished by: {m_skillDescriptor.Version.Author}" +
-                            $"\n\tversion: {m_skillDescriptor.Version.Major}.{m_skillDescriptor.Version.Minor}" +
-                            $"\n\tunique ID: {m_skillDescriptor.Id}";
-
-                            var inputDesc = m_skillDescriptor.InputFeatureDescriptors[0] as SkillFeatureImageDescriptor;
-                            UISkillInputDescription.Text = $"\tName: {inputDesc.Name}" +
-                            $"\n\tDescription: {inputDesc.Description}" +
-                            $"\n\tType: {inputDesc.FeatureKind}" +
-                            $"\n\tWidth: {inputDesc.Width}" +
-                            $"\n\tHeight: {inputDesc.Height}" +
-                            $"\n\tSupportedBitmapPixelFormat: {inputDesc.SupportedBitmapPixelFormat}" +
-                            $"\n\tSupportedBitmapAlphaMode: {inputDesc.SupportedBitmapAlphaMode}";
-
-                            var outputDesc1 = m_skillDescriptor.OutputFeatureDescriptors[0] as SkillFeatureTensorDescriptor;
-                            UISkillOutputDescription1.Text = $"\tName: {outputDesc1.Name}, Description: {outputDesc1.Description} \n\tType: {outputDesc1.FeatureKind} of {outputDesc1.ElementKind} with shape [{outputDesc1.Shape.Select(i => i.ToString()).Aggregate((a, b) => a + ", " + b)}]";
-
-                            var outputDesc2 = m_skillDescriptor.OutputFeatureDescriptors[1] as SkillFeatureTensorDescriptor;
-                            UISkillOutputDescription2.Text = $"\tName: {outputDesc2.Name} \n\tDescription: {outputDesc2.Description} \n\tType: {outputDesc2.FeatureKind} of {outputDesc2.ElementKind} with shape [{outputDesc2.Shape.Select(i => i.ToString()).Aggregate((a, b) => a + ", " + b)}]";
-
-                            if (m_availableExecutionDevices.Count == 0)
-                            {
-                                UISkillOutputDetails.Text = "No execution devices available, this skill cannot run on this device";
-                            }
-                            else
-                            {
-                                // Display available execution devices
-                                UISkillExecutionDevices.ItemsSource = m_availableExecutionDevices.Select((device) => device.Name);
-                                UISkillExecutionDevices.SelectedIndex = 0;
-
-                                // Alow user to interact with the app
-                                UIButtonFilePick.IsEnabled = true;
-                                UICameraToggle.IsEnabled = true;
-                                UIButtonFilePick.Focus(FocusState.Keyboard);
-                            }
-                        });
+                    UISkillOutputDetails.Text = "No execution devices available, this skill cannot run on this device";
                 }
-                catch (Exception ex)
+                else
                 {
-                    await new MessageDialog(ex.Message).ShowAsync();
+                    // Display available execution devices
+                    UISkillExecutionDevices.ItemsSource = m_availableExecutionDevices.Select((device) => device.Name);
+                    UISkillExecutionDevices.SelectedIndex = 0;
+
+                    // Alow user to interact with the app
+                    UIButtonFilePick.IsEnabled = true;
+                    UICameraToggle.IsEnabled = true;
+                    UIButtonFilePick.Focus(FocusState.Keyboard);
                 }
-            });
+            }
+            catch (Exception ex)
+            {
+                await new MessageDialog(ex.Message).ShowAsync();
+            }
 
             // Register callback for if camera preview encounters an issue
             UICameraPreview.PreviewFailed += UICameraPreview_PreviewFailed;

@@ -30,7 +30,7 @@ namespace Contoso.FaceSentimentAnalyzer
             Name = "FaceSentimentAnalyzer";
 
             Description = "Finds a face in the image and infers its predominant sentiment from a set of 8 possible labels";
-           
+
             // {F8D275CE-C244-4E71-8A39-57335D291388}
             Id = new Guid(0xf8d275ce, 0xc244, 0x4e71, 0x8a, 0x39, 0x57, 0x33, 0x5d, 0x29, 0x13, 0x88);
 
@@ -39,7 +39,7 @@ namespace Contoso.FaceSentimentAnalyzer
                 1,  // minor version
                 "Contoso Developer", // Author name 
                 "Contoso Publishing" // Publisher name
-                ); 
+                );
 
             // Describe input feature
             m_inputSkillDesc = new List<ISkillFeatureDescriptor>();
@@ -85,18 +85,50 @@ namespace Contoso.FaceSentimentAnalyzer
         {
             return AsyncInfo.Run(async (token) =>
             {
-                var result = new List<ISkillExecutionDevice>();
-                await Task.Run(() =>
+                return await Task.Run(() =>
                 {
+                    var result = new List<ISkillExecutionDevice>();
+
                     // Add CPU as supported device
                     result.Add(SkillExecutionDeviceCPU.Create());
 
-                    // Retrieve a list of GPUs available on the system and filter them bv keeping only GPUs that support DX11+ feature level
-                    var gpuDevices = SkillExecutionDeviceGPU.GetAvailableGpuExecutionDevices();
-                    var compatibleGpuDevices = gpuDevices.Where((device) => (device as SkillExecutionDeviceGPU).MaxSupportedFeatureLevel >= D3DFeatureLevelKind.D3D_FEATURE_LEVEL_11_0);
-                    result.AddRange(compatibleGpuDevices);
+                    // Retrieve a list of DirectX devices available on the system and filter them by keeping only the ones that support DX12+ feature level
+                    var devices = SkillExecutionDeviceDirectX.GetAvailableDirectXExecutionDevices();
+                    var compatibleDevices = devices.Where((device) => (device as SkillExecutionDeviceDirectX).MaxSupportedFeatureLevel >= D3DFeatureLevelKind.D3D_FEATURE_LEVEL_12_0);
+                    result.AddRange(compatibleDevices);
+
+                    return result as IReadOnlyList<ISkillExecutionDevice>;
                 });
-                return result as IReadOnlyList<ISkillExecutionDevice>;
+            });
+        }
+
+        /// <summary>
+        /// Factory method for instantiating and initializing the skill.
+        /// Let the skill decide of the optimal or default ISkillExecutionDevice available to use.
+        /// </summary>
+        /// <returns></returns>
+        public IAsyncOperation<ISkill> CreateSkillAsync()
+        {
+            return AsyncInfo.Run(async (token) =>
+            {
+                var supportedDevices = await GetSupportedExecutionDevicesAsync();
+                ISkillExecutionDevice deviceToUse = supportedDevices.First();
+
+                // Either use the first device returned (CPU) or the highest performing GPU
+                int powerIndex = int.MaxValue;
+                foreach (var device in supportedDevices)
+                {
+                    if (device.ExecutionDeviceKind == SkillExecutionDeviceKind.Gpu)
+                    {
+                        var directXDevice = device as SkillExecutionDeviceDirectX;
+                        if (directXDevice.HighPerformanceIndex < powerIndex)
+                        {
+                            deviceToUse = device;
+                            powerIndex = directXDevice.HighPerformanceIndex;
+                        }
+                    }
+                }
+                return await CreateSkillAsync(deviceToUse);
             });
         }
 
@@ -110,7 +142,7 @@ namespace Contoso.FaceSentimentAnalyzer
             return AsyncInfo.Run(async (token) =>
             {
                 // Create a skill instance with the executionDevice supplied
-                var skillInstance = await FaceSentimentAnalyzerSkill.CreateAsync(this, executionDevice);          
+                var skillInstance = await FaceSentimentAnalyzerSkill.CreateAsync(this, executionDevice);
 
                 return skillInstance as ISkill;
             });
