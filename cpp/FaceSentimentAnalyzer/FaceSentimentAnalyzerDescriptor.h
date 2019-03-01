@@ -18,6 +18,7 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
         Windows::Foundation::Collections::IVectorView<Microsoft::AI::Skills::SkillInterfacePreview::ISkillFeatureDescriptor> OutputFeatureDescriptors();
         Windows::Foundation::IAsyncOperation<Windows::Foundation::Collections::IVectorView<Microsoft::AI::Skills::SkillInterfacePreview::ISkillExecutionDevice>> GetSupportedExecutionDevicesAsync();
         Windows::Foundation::Collections::IMapView<hstring, hstring> Metadata();
+        Windows::Foundation::IAsyncOperation<Microsoft::AI::Skills::SkillInterfacePreview::ISkill> CreateSkillAsync();
         Windows::Foundation::IAsyncOperation<Microsoft::AI::Skills::SkillInterfacePreview::ISkill> CreateSkillAsync(Microsoft::AI::Skills::SkillInterfacePreview::ISkillExecutionDevice const executionDevice);
 
     private:

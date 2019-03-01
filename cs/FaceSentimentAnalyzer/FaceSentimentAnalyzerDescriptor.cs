@@ -91,12 +91,42 @@ namespace Contoso.FaceSentimentAnalyzer
                     // Add CPU as supported device
                     result.Add(SkillExecutionDeviceCPU.Create());
 
-                    // Retrieve a list of GPUs available on the system and filter them bv keeping only GPUs that support DX11+ feature level
-                    var gpuDevices = SkillExecutionDeviceGPU.GetAvailableGpuExecutionDevices();
-                    var compatibleGpuDevices = gpuDevices.Where((device) => (device as SkillExecutionDeviceGPU).MaxSupportedFeatureLevel >= D3DFeatureLevelKind.D3D_FEATURE_LEVEL_11_0);
+                    // Retrieve a list of GPUs available on the system and filter them by keeping only GPUs that support DX12+ feature level
+                    var gpuDevices = SkillExecutionDeviceDirectX.GetAvailableDirectXExecutionDevices();
+                    var compatibleGpuDevices = gpuDevices.Where((device) => (device as SkillExecutionDeviceDirectX).MaxSupportedFeatureLevel >= D3DFeatureLevelKind.D3D_FEATURE_LEVEL_12_0);
                     result.AddRange(compatibleGpuDevices);
                 });
                 return result as IReadOnlyList<ISkillExecutionDevice>;
+            });
+        }
+
+        /// <summary>
+        /// Factory method for instantiating and initializing the skill.
+        /// Let the skill decide of the optimal or default ISkillExecutionDevice available to use.
+        /// </summary>
+        /// <returns></returns>
+        public IAsyncOperation<ISkill> CreateSkillAsync()
+        {
+            return AsyncInfo.Run(async (token) =>
+            {
+                var supportedDevices = await GetSupportedExecutionDevicesAsync();
+                ISkillExecutionDevice deviceToUse = supportedDevices.First();
+
+                // Either use the first device returned (CPU) or the highest performing GPU
+                int powerIndex = int.MaxValue;
+                foreach (var device in supportedDevices)
+                {
+                    if (device.ExecutionDeviceKind == SkillExecutionDeviceKind.Gpu)
+                    {
+                        var directXDevice = device as SkillExecutionDeviceDirectX;
+                        if (directXDevice.HighPerformanceIndex < powerIndex)
+                        {
+                            deviceToUse = device;
+                            powerIndex = directXDevice.HighPerformanceIndex;
+                        }
+                    }
+                }
+                return await CreateSkillAsync(deviceToUse);
             });
         }
 

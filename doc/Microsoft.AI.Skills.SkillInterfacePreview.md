@@ -45,6 +45,7 @@ in a different format than the one required).
   + [ISkillExecutionDevice](#ISkillExecutionDevice)
   + [ISkillFeature](#ISkillFeature)
   + [ISkillFeatureValue](#ISkillFeatureValue)
+  + [ISkillFeatureTensorValue](#ISkillFeatureTensorValue)
   + [ISkillFeatureDescriptor](#ISkillFeatureDescriptor)
   + [ISkillFeatureTensorDescriptor](#ISkillFeatureTensorDescriptor)
   + [ISkillFeatureMapDescriptor](#ISkillFeatureMapDescriptor)
@@ -54,12 +55,21 @@ in a different format than the one required).
   + [ISkill](#ISkill)
 + [Classes](#Classes)
   + [SkillExecutionDeviceCPU](#SkillExecutionDeviceCPU)
-  + [SkillExecutionDeviceGPU](#SkillExecutionDeviceGPU)
+  + [SkillExecutionDeviceDirectX](#SkillExecutionDeviceDirectX)
   + [SkillFeature](#SkillFeature)
   + [SkillFeatureTensorFloatValue](#SkillFeatureTensorFloatValue)
   + [SkillFeatureTensorIntValue](#SkillFeatureTensorIntValue)
+  + [SkillFeatureTensorStringValue](#SkillFeatureTensorStringValue)  
   + [SkillFeatureTensorBooleanValue](#SkillFeatureTensorBooleanValue)
-  + [SkillFeatureTensorStringValue](#SkillFeatureTensorStringValue)
+  + [SkillFeatureTensorInt8Value](#SkillFeatureTensorInt8Value)
+  + [SkillFeatureTensorInt16Value](#SkillFeatureTensorInt16Value)
+  + [SkillFeatureTensorInt64Value](#SkillFeatureTensorInt64Value)
+  + [SkillFeatureTensorUInt8Value](#SkillFeatureTensorUInt8Value)
+  + [SkillFeatureTensorUInt16Value](#SkillFeatureTensorUInt16Value)
+  + [SkillFeatureTensorUInt32Value](#SkillFeatureTensorUInt32Value)
+  + [SkillFeatureTensorUInt64Value](#SkillFeatureTensorUInt64Value)
+  + [SkillFeatureTensorFloat16Value](#SkillFeatureTensorFloat16Value)
+  + [SkillFeatureTensorDoubleValue](#SkillFeatureTensorDoubleValue)
   + [SkillFeatureImageValue](#SkillFeatureImageValue)
   + [SkillFeatureMapValue](#SkillFeatureMapValue)
   + [SkillVersion](#SkillVersion)
@@ -73,7 +83,25 @@ in a different format than the one required).
 ### SkillFeatureKind <a name="SkillFeatureKind"></a>
 Type of an input/output feature to be bound for evaluation by the skill
 Each of these values map to a corresponding ISkillFeatureDescriptor derivative that describes the format of the value
-to be bound and processed by the skill. This API defines [ISkillFeatureValue](#ISkillFeatureValue) derivatives associated with *Tensor*, *Map* and *Image* (see [SkillFeatureTensorFloatValue](#SkillFeatureTensorFloatValue), [SkillFeatureTensorIntValue](#SkillFeatureTensorIntValue), [SkillFeatureTensorBooleanValue](#SkillFeatureTensorBooleanValue), [SkillFeatureTensorStringValue](#SkillFeatureTensorStringValue), [SkillFeatureImageValue](#SkillFeatureImageValue), [SkillFeatureMapValue](#SkillFeatureMapValue)). The *Undefined* value can be leveraged by skill developers to declare a custom kind of [ISkillFeatureValue](#ISkillFeatureValue) alongside a custom derivative of [ISkillFeatureDescriptor](#ISkillFeatureDescriptor) responsible for creating it.
+to be bound and processed by the skill. This API defines [ISkillFeatureValue](#ISkillFeatureValue) derivatives associated with *Tensor*, *Map* and *Image* 
+(see 
++ [SkillFeatureTensorFloatValue](#SkillFeatureTensorFloatValue)
++ [SkillFeatureTensorIntValue](#SkillFeatureTensorIntValue) 
++ [SkillFeatureTensorStringValue](#SkillFeatureTensorStringValue)
++ [SkillFeatureTensorBooleanValue](#SkillFeatureTensorBooleanValue)
++ [SkillFeatureTensorInt8Value](#SkillFeatureTensorInt8Value)
++ [SkillFeatureTensorInt16Value](#SkillFeatureTensorInt16Value)
++ [SkillFeatureTensorInt64Value](#SkillFeatureTensorInt64Value)
++ [SkillFeatureTensorUInt8Value](#SkillFeatureTensorUInt8Value)
++ [SkillFeatureTensorUInt16Value](#SkillFeatureTensorUInt16Value)
++ [SkillFeatureTensorUInt32Value](#SkillFeatureTensorUInt32Value)
++ [SkillFeatureTensorUInt64Value](#SkillFeatureTensorUInt64Value)
++ [SkillFeatureTensorFloat16Value](#SkillFeatureTensorFloat16Value)
++ [SkillFeatureTensorDoubleValue](#SkillFeatureTensorDoubleValue)
++ [SkillFeatureImageValue](#SkillFeatureImageValue)
++ [SkillFeatureMapValue](#SkillFeatureMapValue))
+ 
+The *Undefined* value can be leveraged by skill developers to declare a custom kind of [ISkillFeatureValue](#ISkillFeatureValue) alongside a custom derivative of [ISkillFeatureDescriptor](#ISkillFeatureDescriptor) responsible for creating it.
 
 | Fields      | Values
 | ----------- |--------|
@@ -104,6 +132,15 @@ Type of element found in composite [ISkillFeatureValue](#ISkillFeatureValue)s li
 | Int32       |2|
 | String      |3|
 | Boolean     |4|
+| Int8        |5|
+| Int16       |6|
+| Int64       |7|
+| UInt8       |8|
+| UInt16      |9|
+| UInt32      |10|
+| UInt64      |11|
+| Float16     |12|
+| Double      |13|
 
 
 ### D3DFeatureLevelKind <a name="D3DFeatureLevelKind"></a>
@@ -257,6 +294,23 @@ The feature descriptor associated with this feature value.
 ISkillFeatureDescriptor Descriptor{ get; }
 ```
 ----- 
+
+
+### ISkillFeatureTensorValue <a name="ISkillFeatureTensorValue"></a>
+``requires`` [ISkillFeatureValue](#ISkillFeatureValue)
+
+Defines a SkillFeatureValue of [SkillFeatureKind](#SkillFeatureKind) Tensor.
+
+#### Properties
+-----
+##### Shape
+
+Retrieve the shape of the tensor.
+
+```csharp
+IReadOnlyList <long> Shape{ get; }
+```
+-----
 
 
 ### ISkillFeatureDescriptor <a name="ISkillFeatureDescriptor"></a>
@@ -542,6 +596,23 @@ Note that each skill defines its own logic to test each available device against
 
 -----
 
+##### CreateSkillAsync()
+
+Creates a skill for which it holds the description and requirements. 
+Let the skill decide of the optimal or default ISkillExecutionDevice available to use.
+
+```csharp
+IAsyncOperation <ISkill> CreateSkillAsync();
+```
+
+###### Returns
+[IAsyncOperation][IAsyncOperation]
+<[ISkill](#ISkill)>
+
+The [ISkill](#ISkill) created.
+
+-----
+
 ##### CreateSkillAsync(ISkillExecutionDevice)
 
 Creates a skill for which it holds the descriptor.
@@ -679,17 +750,17 @@ The SkillExecutionDeviceCPU instantiated.
 -----
 
 
-### SkillExecutionDeviceGPU <a name="SkillExecutionDeviceGPU"></a>
+### SkillExecutionDeviceDirectX <a name="SkillExecutionDeviceDirectX"></a>
 ``implements`` [ISkillExecutionDevice](#ISkillExecutionDevice)
 
-Provides a GPU execution device and its information useful to infer if a skill could be run with it appropriately in the consumer's context. 
+Provides a DirectX execution device and its information useful to infer if a skill could be run with it appropriately in the consumer's context. 
 Also acts as a static factory for itself.
 
 #### Properties
 -----
 ##### AdapterId
 
-The adapter ID of this GPU device.
+The adapter ID of this DirectX device.
 
 ```csharp
 long AdapterId { get; }
@@ -698,7 +769,7 @@ long AdapterId { get; }
 
 ##### DedicatedVideoMemory
 
-The amount of dedicated video memory of this GPU device (bytes).
+The amount of dedicated video memory of this DirectX device (bytes).
 
 ```csharp
 long DedicatedVideoMemory { get; }
@@ -707,7 +778,7 @@ long DedicatedVideoMemory { get; }
 
 ##### IsDefault
 
-Tells if this GPU device is considered the default one.
+Tells if this DirectX device is considered the default one.
 
 ```csharp
 bool IsDefault { get; }
@@ -716,7 +787,7 @@ bool IsDefault { get; }
 
 ##### HighPerformanceIndex
 
-The ranking in terms of performance of this GPU device relative to others.
+The ranking in terms of performance of this DirectX device relative to others.
 
 ```csharp
 ushort HighPerformanceIndex { get; }
@@ -725,7 +796,7 @@ ushort HighPerformanceIndex { get; }
 
 ##### PowerSavingIndex
 
-The ranking in terms of power saving of this GPU device relative to others.
+The ranking in terms of power saving of this DirectX device relative to others.
 
 ```csharp
 ushort PowerSavingIndex { get; }
@@ -734,7 +805,7 @@ ushort PowerSavingIndex { get; }
 
 ##### MaxSupportedFeatureLevel
 
-The maximum supported [D3DFeatureLevelKind](#D3DFeatureLevelKind) by this GPU device.
+The maximum supported [D3DFeatureLevelKind](#D3DFeatureLevelKind) by this DirectX device.
 
 ```csharp
 D3DFeatureLevelKind MaxSupportedFeatureLevel { get; }
@@ -743,7 +814,7 @@ D3DFeatureLevelKind MaxSupportedFeatureLevel { get; }
 
 ##### Direct3D11Device
 
-The [IDirect3DDevice][IDirect3DDevice] associated with this GPU.
+The [IDirect3DDevice][IDirect3DDevice] associated with this DirectX.
 
 ```csharp
 Windows.Graphics.DirectX.Direct3D11.IDirect3DDevice Direct3D11Device { get; };
@@ -754,37 +825,37 @@ Windows.Graphics.DirectX.Direct3D11.IDirect3DDevice Direct3D11Device { get; };
 -----
 ##### Create(IDirect3DDevice)
 
- Instantiates a SkillExecutionDeviceGPU.
+ Instantiates a SkillExecutionDeviceDirectX.
 
 ```csharp
-static SkillExecutionDeviceGPU Create(IDirect3DDevice direct3D11Device);
+static SkillExecutionDeviceDirectX Create(IDirect3DDevice direct3D11Device);
 ```
 ###### Parameters
 **`direct3D11Device`** : [IDirect3DDevice][IDirect3DDevice]
 
-The [IDirect3DDevice][IDirect3DDevice] corresponding to this GPU device.
+The [IDirect3DDevice][IDirect3DDevice] corresponding to this DirectX device.
 
 ###### Returns
-[SkillExecutionDeviceGPU](#SkillExecutionDeviceGPU)
+[SkillExecutionDeviceDirectX](#SkillExecutionDeviceDirectX)
 
-The SkillExecutionDeviceGPU instantiated.
+The SkillExecutionDeviceDirectX instantiated.
 
 -----
 
-##### GetAvailableGpuExecutionDevices()
+##### GetAvailableDirectXExecutionDevices()
 
-Obtain all SkillExecutionDeviceGPU available on the system so that they can be filtered out appropriately given the 
+Obtain all SkillExecutionDeviceDirectX available on the system so that they can be filtered out appropriately given the 
 skill requirements by the skill developer and exposed accordingly when calling 
 [ISkillDescriptor.GetSupportedExecutionDevicesAsync()](#ISkillDescriptor.GetSupportedExecutionDevicesAsync).
 
 ```csharp
-static IReadOnlyList<SkillExecutionDeviceGPU> GetAvailableGpuExecutionDevices();
+static IReadOnlyList<SkillExecutionDeviceDirectX> GetAvailableDirectXExecutionDevices();
 ```
 
 ###### Returns
-[IReadOnlyList][IReadOnlyList]<[SkillExecutionDeviceGPU](#SkillExecutionDeviceGPU)>
+[IReadOnlyList][IReadOnlyList]<[SkillExecutionDeviceDirectX](#SkillExecutionDeviceDirectX)>
 
-All SkillExecutionDeviceGPU available on the system.
+All SkillExecutionDeviceDirectX available on the system.
 
 *``Note : This includes only hardware devices and excludes WARP``*
 
@@ -825,10 +896,9 @@ The [SkillFeature](#SkillFeature) created.
 
 
 ### SkillFeatureTensorFloatValue <a name="SkillFeatureTensorFloatValue"></a>
-``implements`` [ISkillFeatureValue](#ISkillFeatureValue), [IClosable][IClosable]
+``implements`` [ISkillFeatureTensorValue](#ISkillFeatureTensorValue), [IClosable][IClosable]
 
 Defines a SkillFeatureValue of [SkillFeatureKind](#SkillFeatureKind) Tensor of [SkillElementKind](#SkillElementKind) Float.
-Also acts as a static factory for itself.
 
 #### Properties
 -----
@@ -860,10 +930,9 @@ The value contained within this instance.
     
 
 ### SkillFeatureTensorIntValue <a name="SkillFeatureTensorIntValue"></a>
-``implements`` [ISkillFeatureValue](#ISkillFeatureValue), [IClosable][IClosable]
+``implements`` [ISkillFeatureTensorValue](#ISkillFeatureTensorValue), [IClosable][IClosable]
 
 Defines a SkillFeatureValue of [SkillFeatureKind](#SkillFeatureKind) Tensor of [SkillElementKind](#SkillElementKind) Int32.
-Also acts as a static factory for itself.
 
 #### Properties
 -----
@@ -890,48 +959,14 @@ IReadOnlyList <int> GetAsVectorView();
 [IReadOnlyList][IReadOnlyList]< int >
 
 The value contained within this instance.
------
 
-
-### SkillFeatureTensorBooleanValue <a name="SkillFeatureTensorBooleanValue"></a>
-``implements`` [ISkillFeatureValue](#ISkillFeatureValue), [IClosable][IClosable]
-
-Defines a SkillFeatureValue of [SkillFeatureKind](#SkillFeatureKind) Tensor of [SkillElementKind](#SkillElementKind) Boolean.
-Also acts as a static factory for itself.
-
-#### Properties
------
-##### Shape
-
-Retrieve the shape of the tensor.
-
-```csharp
-IReadOnlyList <long> Shape{ get; }
-```
------
-
-#### Methods
-
-##### GetAsVectorView()
-
-Retrieve the readonly view of the tensor.
-
-```csharp
-IReadOnlyList <bool> GetAsVectorView();
-```
-
-###### Returns
-[IReadOnlyList][IReadOnlyList]< bool >
-
-The value contained within this instance.
 -----
 
 
 ### SkillFeatureTensorStringValue <a name="SkillFeatureTensorStringValue"></a>
-``implements`` [ISkillFeatureValue](#ISkillFeatureValue), [IClosable][IClosable]
+``implements`` [ISkillFeatureTensorValue](#ISkillFeatureTensorValue), [IClosable][IClosable]
 
 Defines a SkillFeatureValue of [SkillFeatureKind](#SkillFeatureKind) Tensor of [SkillElementKind](#SkillElementKind) String.
-Also acts as a static factory for itself.
 
 #### Properties
 -----
@@ -958,6 +993,347 @@ IReadOnlyList <string> GetAsVectorView();
 [IReadOnlyList][IReadOnlyList]< string >
 
 The value contained within this instance.
+
+-----
+
+
+### SkillFeatureTensorBooleanValue <a name="SkillFeatureTensorBooleanValue"></a>
+``implements`` [ISkillFeatureTensorValue](#ISkillFeatureTensorValue), [IClosable][IClosable]
+
+Defines a SkillFeatureValue of [SkillFeatureKind](#SkillFeatureKind) Tensor of [SkillElementKind](#SkillElementKind) Boolean.
+
+#### Properties
+-----
+##### Shape
+
+Retrieve the shape of the tensor.
+
+```csharp
+IReadOnlyList <long> Shape{ get; }
+```
+-----
+
+#### Methods
+
+##### GetAsVectorView()
+
+Retrieve the readonly view of the tensor.
+
+```csharp
+IReadOnlyList <bool> GetAsVectorView();
+```
+
+###### Returns
+[IReadOnlyList][IReadOnlyList]< bool >
+
+The value contained within this instance.
+
+-----
+
+
+### SkillFeatureTensorInt8Value <a name="SkillFeatureTensorInt8Value"></a>
+``implements`` [ISkillFeatureTensorValue](#ISkillFeatureTensorValue), [IClosable][IClosable]
+
+Defines a SkillFeatureValue of [SkillFeatureKind](#SkillFeatureKind) Tensor of [SkillElementKind](#SkillElementKind) Int8.
+
+#### Properties
+-----
+##### Shape
+
+Retrieve the shape of the tensor.
+
+```csharp
+IReadOnlyList <long> Shape{ get; }
+```
+-----
+
+#### Methods
+
+##### GetAsVectorView()
+
+Retrieve the readonly view of the tensor.
+
+```csharp
+IReadOnlyList <Byte> GetAsVectorView();
+```
+
+###### Returns
+[IReadOnlyList][IReadOnlyList]< Byte >
+
+The value contained within this instance.
+
+-----
+
+
+### SkillFeatureTensorInt16Value <a name="SkillFeatureTensorInt16Value"></a>
+``implements`` [ISkillFeatureTensorValue](#ISkillFeatureTensorValue), [IClosable][IClosable]
+
+Defines a SkillFeatureValue of [SkillFeatureKind](#SkillFeatureKind) Tensor of [SkillElementKind](#SkillElementKind) Int16.
+
+#### Properties
+-----
+##### Shape
+
+Retrieve the shape of the tensor.
+
+```csharp
+IReadOnlyList <long> Shape{ get; }
+```
+-----
+
+#### Methods
+
+##### GetAsVectorView()
+
+Retrieve the readonly view of the tensor.
+
+```csharp
+IReadOnlyList <Int16> GetAsVectorView();
+```
+
+###### Returns
+[IReadOnlyList][IReadOnlyList]< Int16 >
+
+The value contained within this instance.
+
+-----
+
+
+### SkillFeatureTensorInt64Value <a name="SkillFeatureTensorInt64Value"></a>
+``implements`` [ISkillFeatureTensorValue](#ISkillFeatureTensorValue), [IClosable][IClosable]
+
+Defines a SkillFeatureValue of [SkillFeatureKind](#SkillFeatureKind) Tensor of [SkillElementKind](#SkillElementKind) Int64.
+
+#### Properties
+-----
+##### Shape
+
+Retrieve the shape of the tensor.
+
+```csharp
+IReadOnlyList <long> Shape{ get; }
+```
+-----
+
+#### Methods
+
+##### GetAsVectorView()
+
+Retrieve the readonly view of the tensor.
+
+```csharp
+IReadOnlyList <Int64> GetAsVectorView();
+```
+
+###### Returns
+[IReadOnlyList][IReadOnlyList]< Int64 >
+
+The value contained within this instance.
+
+-----
+
+
+### SkillFeatureTensorUInt8Value <a name="SkillFeatureTensorUInt8Value"></a>
+``implements`` [ISkillFeatureTensorValue](#ISkillFeatureTensorValue), [IClosable][IClosable]
+
+Defines a SkillFeatureValue of [SkillFeatureKind](#SkillFeatureKind) Tensor of [SkillElementKind](#SkillElementKind) UInt8.
+
+#### Properties
+-----
+##### Shape
+
+Retrieve the shape of the tensor.
+
+```csharp
+IReadOnlyList <long> Shape{ get; }
+```
+-----
+
+#### Methods
+
+##### GetAsVectorView()
+
+Retrieve the readonly view of the tensor.
+
+```csharp
+IReadOnlyList <Byte> GetAsVectorView();
+```
+
+###### Returns
+[IReadOnlyList][IReadOnlyList]< Byte >
+
+The value contained within this instance.
+
+-----
+
+
+### SkillFeatureTensorUInt16Value <a name="SkillFeatureTensorUInt16Value"></a>
+``implements`` [ISkillFeatureTensorValue](#ISkillFeatureTensorValue), [IClosable][IClosable]
+
+Defines a SkillFeatureValue of [SkillFeatureKind](#SkillFeatureKind) Tensor of [SkillElementKind](#SkillElementKind) UInt16.
+
+#### Properties
+-----
+##### Shape
+
+Retrieve the shape of the tensor.
+
+```csharp
+IReadOnlyList <long> Shape{ get; }
+```
+-----
+
+#### Methods
+
+##### GetAsVectorView()
+
+Retrieve the readonly view of the tensor.
+
+```csharp
+IReadOnlyList <UInt16> GetAsVectorView();
+```
+
+###### Returns
+[IReadOnlyList][IReadOnlyList]< UInt16 >
+
+The value contained within this instance.
+
+-----
+
+
+### SkillFeatureTensorUInt32Value <a name="SkillFeatureTensorUInt32Value"></a>
+``implements`` [ISkillFeatureTensorValue](#ISkillFeatureTensorValue), [IClosable][IClosable]
+
+Defines a SkillFeatureValue of [SkillFeatureKind](#SkillFeatureKind) Tensor of [SkillElementKind](#SkillElementKind) UInt32.
+
+#### Properties
+-----
+##### Shape
+
+Retrieve the shape of the tensor.
+
+```csharp
+IReadOnlyList <long> Shape{ get; }
+```
+-----
+
+#### Methods
+
+##### GetAsVectorView()
+
+Retrieve the readonly view of the tensor.
+
+```csharp
+IReadOnlyList <UInt32> GetAsVectorView();
+```
+
+###### Returns
+[IReadOnlyList][IReadOnlyList]< UInt32 >
+
+The value contained within this instance.
+
+-----
+
+
+### SkillFeatureTensorUInt64Value <a name="SkillFeatureTensorUInt64Value"></a>
+``implements`` [ISkillFeatureTensorValue](#ISkillFeatureTensorValue), [IClosable][IClosable]
+
+Defines a SkillFeatureValue of [SkillFeatureKind](#SkillFeatureKind) Tensor of [SkillElementKind](#SkillElementKind) UInt64.
+
+#### Properties
+-----
+##### Shape
+
+Retrieve the shape of the tensor.
+
+```csharp
+IReadOnlyList <long> Shape{ get; }
+```
+-----
+
+#### Methods
+
+##### GetAsVectorView()
+
+Retrieve the readonly view of the tensor.
+
+```csharp
+IReadOnlyList <UInt64> GetAsVectorView();
+```
+
+###### Returns
+[IReadOnlyList][IReadOnlyList]< UInt64 >
+
+The value contained within this instance.
+
+-----
+
+
+### SkillFeatureTensorFloat16Value <a name="SkillFeatureTensorFloat16Value"></a>
+``implements`` [ISkillFeatureTensorValue](#ISkillFeatureTensorValue), [IClosable][IClosable]
+
+Defines a SkillFeatureValue of [SkillFeatureKind](#SkillFeatureKind) Tensor of [SkillElementKind](#SkillElementKind) Float16.
+
+#### Properties
+-----
+##### Shape
+
+Retrieve the shape of the tensor.
+
+```csharp
+IReadOnlyList <long> Shape{ get; }
+```
+-----
+
+#### Methods
+
+##### GetAsVectorView()
+
+Retrieve the readonly view of the tensor.
+
+```csharp
+IReadOnlyList <Single> GetAsVectorView();
+```
+
+###### Returns
+[IReadOnlyList][IReadOnlyList]< Single >
+
+The value contained within this instance.
+
+-----
+
+
+### SkillFeatureTensorDoubleValue <a name="SkillFeatureTensorFloat16Value"></a>
+``implements`` [ISkillFeatureTensorValue](#ISkillFeatureTensorValue), [IClosable][IClosable]
+
+Defines a SkillFeatureValue of [SkillFeatureKind](#SkillFeatureKind) Tensor of [SkillElementKind](#SkillElementKind) Double.
+
+#### Properties
+-----
+##### Shape
+
+Retrieve the shape of the tensor.
+
+```csharp
+IReadOnlyList <long> Shape{ get; }
+```
+-----
+
+#### Methods
+
+##### GetAsVectorView()
+
+Retrieve the readonly view of the tensor.
+
+```csharp
+IReadOnlyList <Double> GetAsVectorView();
+```
+
+###### Returns
+[IReadOnlyList][IReadOnlyList]< Double >
+
+The value contained within this instance.
+
 -----
 
 
