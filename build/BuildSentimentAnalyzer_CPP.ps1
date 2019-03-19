@@ -27,12 +27,12 @@ Invoke-Expression "$PSScriptRoot\nuget.exe source Add -Name WindowsVisionSkillsL
 
 # Restore packages
 RunCommand "$PSScriptRoot\RestorePackages.ps1"
+RunCommand "$PSScriptRoot\RestorePackages.ps1 -PackagesConfigPath $PSScriptRoot\..\cpp\Obfuscator\packages.config -PackagesDirectory $PSScriptRoot\..\cpp\packages"
+RunCommand "$PSScriptRoot\RestorePackages.ps1 -PackagesConfigPath $PSScriptRoot\..\cpp\Deobfuscator\packages.config -PackagesDirectory $PSScriptRoot\..\cpp\packages"
 RunCommand "$PSScriptRoot\RestorePackages.ps1 -PackagesConfigPath $PSScriptRoot\..\cpp\FaceSentimentAnalyzer\packages.config -PackagesDirectory $PSScriptRoot\..\cpp\packages"
 
 # Setup the build environement
 RunCommand "$PSScriptRoot\SetBuildEnv.ps1"
-
-$BuildCommandBase = @('msbuild', '--%', "$PSScriptRoot\..\cpp\FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer.vcxproj")
 
 if($BuildArch -like "All")
 {
@@ -43,6 +43,20 @@ else
 	$BuildArchs = @($BuildArch)
 }
 
+ # Build Obfucation .exe
+$BuildCommandBase = @('msbuild', '--%', "$PSScriptRoot\..\cpp\Obfuscator\Obfuscator.vcxproj /m /p:Platform=Win32 /p:Configuration=Debug")
+RunCommand $BuildCommandBase
+
+# Build DeobfuscationHelper
+$BuildCommandBase = @('msbuild', '--%', "$PSScriptRoot\..\cpp\Deobfuscator\DeobfuscationHelper.vcxproj")
+ForEach ($value in $BuildArchs) 
+{
+    $BuildCommand = $BuildCommandBase + "/m /p:Platform=$value /p:Configuration=Release"
+    RunCommand $BuildCommand
+}
+
+# Build skill
+$BuildCommandBase = @('msbuild', '--%', "$PSScriptRoot\..\cpp\FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer.vcxproj")
 ForEach ($value in $BuildArchs) 
 {
     $BuildCommand = $BuildCommandBase + "/m /p:Platform=$value /p:Configuration=Release"

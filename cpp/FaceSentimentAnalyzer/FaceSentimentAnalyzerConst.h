@@ -10,7 +10,7 @@
 /// </summary>
 namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
 {
-    const winrt::hstring WINML_MODEL_FILENAME = L"emotion_ferplus.onnx";
+    const winrt::hstring WINML_MODEL_FILENAME = L"emotion_ferplus.crypt";
     const hstring WINML_MODEL_INPUTNAME = L"Input3";
     const hstring WINML_MODEL_OUTPUTNAME = L"Plus692_Output_0";
     const hstring SKILL_INPUTNAME_IMAGE = L"InputImage";

@@ -10,28 +10,21 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="FaceSentimentAnalyzerDescriptor.cpp" />
-    <ClCompile Include="FaceSentimentAnalyzerSkill.cpp" />
-    <ClCompile Include="FaceSentimentAnalyzerBinding.cpp" />
+    <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
+    <ClCompile Include="Deobfuscator.cpp" />
+    <ClCompile Include="..\Obfuscator\ObfuscationHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
-    <ClInclude Include="FaceSentimentAnalyzerConst.h" />
-    <ClInclude Include="FaceSentimentAnalyzerDescriptor.h" />
-    <ClInclude Include="FaceSentimentAnalyzerSkill.h" />
-    <ClInclude Include="FaceSentimentAnalyzerBinding.h" />
+    <ClInclude Include="Deobfuscator.h" />
+    <ClInclude Include="..\Obfuscator\ObfuscationHelper.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="FaceSentimentAnalyzer.def" />
-    <None Include="emotion_ferplus.crypt" />
+    <None Include="DeobfuscationHelper.def" />
   </ItemGroup>
   <ItemGroup>
-    <Midl Include="FaceSentimentAnalyzerBinding.idl" />
-    <Midl Include="FaceSentimentAnalyzerDescriptor.idl" />
-    <Midl Include="FaceSentimentAnalyzerSkill.idl" />
-    <Midl Include="Common.idl" />
+    <Midl Include="Deobfuscator.idl" />
   </ItemGroup>
 </Project>

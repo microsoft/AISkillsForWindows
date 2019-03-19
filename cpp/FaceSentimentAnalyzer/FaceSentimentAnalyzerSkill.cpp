@@ -4,6 +4,7 @@
 #include "FaceSentimentAnalyzerSkill.h"
 #include "FaceSentimentAnalyzerBinding.h"
 #include "FaceSentimentAnalyzerConst.h"
+#include "winrt/DeobfuscationHelper.h"
 #include <ppltasks.h>
 #include <math.h>
 
@@ -61,7 +62,7 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
     // Creates and initializes a FaceSentimentAnalyzerSkill instance
     //
     Windows::Foundation::IAsyncOperation<winrt::Contoso::FaceSentimentAnalyzer::FaceSentimentAnalyzerSkill> FaceSentimentAnalyzerSkill::CreateAsync(
-        ISkillDescriptor description,
+        ISkillDescriptor descriptor,
         ISkillExecutionDevice device)
     {
         co_await resume_background();
@@ -71,12 +72,14 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
 
         // Load WinML model
         auto modelFile = Windows::Storage::StorageFile::GetFileFromApplicationUriAsync(Windows::Foundation::Uri(L"ms-appx:///Contoso.FaceSentimentAnalyzer/" + WINML_MODEL_FILENAME)).get();
-        auto winmlModel = LearningModel::LoadFromFilePath(modelFile.Path());
+        
+        // Deobfuscate model file and retrieve LearningModel instance
+        LearningModel learningModel = winrt::DeobfuscationHelper::Deobfuscator::DeobfuscateModelAsync(modelFile, descriptor.Id()).get();
 
         // Create WinML session
-        auto winmlSession = LearningModelSession(winmlModel, GetWinMLDevice(device));
+        auto winmlSession = LearningModelSession(learningModel, GetWinMLDevice(device));
 
-        return make< FaceSentimentAnalyzerSkill>(description, device, faceDetector, winmlSession);
+        return make< FaceSentimentAnalyzerSkill>(descriptor, device, faceDetector, winmlSession);
     }
 
     //
