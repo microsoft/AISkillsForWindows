@@ -9,7 +9,8 @@ Specifically, this sample shows how to:
 1. **Create and implement a skill descriptor class** inherited from ISkillDescriptor that provide information on the skill, provides a list of supported execution devices (CPU, GPU) and acts as a factory object for the skill.
 2. **Create and implement a skill class** inherited from ISkill that executes the skill logic and produces output given a set of input, and acts as a factory object for the skill binding.
 3. **Create and implement a skill binding class** inherited from ISkillBinding that contains input and output variables as well as expose adapter to ease usage by developers.
-4. **Create a NuGet package** that is dependent on the Microsoft.AI.Skills.SkillInterfacePreview NuGet package that ecapsulates a Windows Runtime Component along its assets so that an app can ingest it.
+4. **Obfuscate files as pre-build step and deobfuscate files at runtime** to deter your skill consumers from tempering or accessing your resource files. Note that this part is shown only in the C++/Winrt version of the skill to keep the C# version simpler. Obfuscation is handled as a pre-build step using a dedicated compiled tool (Obfuscator.exe) and deobfuscation is exposed via a simple helper Windows Runtime Component ingested by the skill (DeobfuscationHelper).
+4. **Create a NuGet package** that is dependent on the Microsoft.AI.Skills.SkillInterfacePreview NuGet package that ecapsulates a Windows Runtime Component along its assets so that an app can ingest it. This NuGet package also links to a license and triggers a request for its approval before ingestion.
 5. **Ingest a custom Windows Vision Skill** from a NuGet package inside a C# UWP app to execute sentiment analysis againt images by binding VideoFrame instances and displaying binding outputs via adapter properties.
 
 ## Scenario
@@ -31,6 +32,7 @@ However, some consumers may also want to tweak and optimize part of that pipelin
 **Reference**
 - [Using the Face Detection effect](https://docs.microsoft.com/en-us/uwp/api/Windows.Media.FaceAnalysis.FaceDetector)
 - [Using Windows ML](https://docs.microsoft.com/en-us/windows/ai/)
+- [Using CryptographicEngine to obfuscate and deobfuscate files at runtime](https://docs.microsoft.com/en-us/uwp/api/windows.security.cryptography.core.symmetrickeyalgorithmprovider)
 - [Acquiring the sentiment analysis ONNX model](https://github.com/onnx/models/tree/master/emotion_ferplus)
 - [C++/Winrt reference documentation](https://docs.microsoft.com/en-us/windows/uwp/cpp-and-winrt-apis/)
 - [MIDL 3.0 syntax reference guide for authoring .idl files](https://docs.microsoft.com/en-us/uwp/midl-3/intro)
