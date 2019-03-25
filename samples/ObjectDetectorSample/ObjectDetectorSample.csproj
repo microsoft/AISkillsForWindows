@@ -154,10 +154,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AI.Skills.SkillInterfacePreview">
-      <Version>0.5.2.11</Version>
+      <Version>0.5.2.12</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AI.Skills.Vision.ObjectDetectorPreview">
-      <Version>0.0.0.2</Version>
+      <Version>0.0.0.4</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.8</Version>
