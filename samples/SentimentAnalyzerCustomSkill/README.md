@@ -1,7 +1,7 @@
 ﻿# Sentiment Analyzer Windows Vision Skill sample
 
-Provides an end-to-end sample to show how to write a Windows Vision Skill by extending the [Microsoft.AI.Skills.SkillInterfacePreview](./doc/Microsoft.AI.Skills.SkillInterfacePreview.md) base API.
-This skill's implementation leverages the Windows built-in FaceDetector and Windows.AI APIs along a Machine Learning model in ONNX format to identify a face in an image and infer its sentiment.
+Provides an end-to-end sample to show how to write a Windows Vision Skill by extending the [Microsoft.AI.Skills.SkillInterfacePreview](../../doc/Microsoft.AI.Skills.SkillInterfacePreview.md) base API.
+This skill's implementation leverages the Windows built-in `FaceDetector` and `Windows.AI` APIs along a Machine Learning model in ONNX format to identify a face in an image and infer its sentiment.
 This sample also contains scripts to package the skill's Windows Runtime Component and its assets to a NuGet package (.nupkg) and a UWP application that ingests this NuGet package and exercises the skill against images.
 
 Specifically, this sample shows how to:
