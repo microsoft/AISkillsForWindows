@@ -1,0 +1,8 @@
+namespace DXCoreHelper
+{
+    static runtimeclass LearningModelDeviceHelper
+    {
+        static IVectorView<Windows.AI.MachineLearning.LearningModelDevice> EnumerateLearningModelDevices();
+        static Windows.AI.MachineLearning.LearningModelDevice GetVpu();
+    }
+}
