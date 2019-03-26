@@ -7,6 +7,8 @@ This sample will show how to use the Object Detector Vision Skill NuGet package 
 - [Microsoft.AI.Skills.SkillInterfacePreview API document](../../doc/Microsoft.AI.Skills.SkillInterfacePreview.md)
 - [Microsoft.AI.Skills.Vision.ObjectDetectorPreview API document](../../doc/Microsoft.AI.Skills.Vision.ObjectDetectorPreview.md)
 - [Creating a custom Windows Vision Skill](../SentimentAnalyzerCustomSkill)
+- [UWP Community Toolkit](https://docs.microsoft.com/en-us/windows/communitytoolkit/)
+  - [Expander control (used in sample app)](https://docs.microsoft.com/en-us/windows/communitytoolkit/controls/expander)
 
 ## System requirements
 
