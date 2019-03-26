@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FaceSentimentAnalysisTestApp_cpp", "..\cs\FaceSentimentAnalysisTestApp\FaceSentimentAnalysisTestApp_cpp.csproj", "{C573E45A-CA10-4A97-9AAA-99A301383A68}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Contoso.FaceSentimentAnalyzer", "FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer.vcxproj", "{E0320926-075F-46FC-9CC0-865B635BB1A1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{38FA18AA-D23B-4B38-AB5E-ED7891A6588B} = {38FA18AA-D23B-4B38-AB5E-ED7891A6588B}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Obfuscator", "Obfuscator\Obfuscator.vcxproj", "{38FA18AA-D23B-4B38-AB5E-ED7891A6588B}"
 EndProject

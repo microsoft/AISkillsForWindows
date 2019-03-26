@@ -12,8 +12,8 @@
     <AppContainerApplication>true</AppContainerApplication>
     <ApplicationType>Windows Store</ApplicationType>
     <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
-    <WindowsTargetPlatformVersion Condition=" '$(WindowsTargetPlatformVersion)' == '' ">10.0.17763.0</WindowsTargetPlatformVersion>
-    <WindowsTargetPlatformMinVersion>10.0.17763.0</WindowsTargetPlatformMinVersion>
+    <WindowsTargetPlatformVersion Condition=" '$(WindowsTargetPlatformVersion)' == '' ">10.0.18342.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>10.0.18342.0</WindowsTargetPlatformMinVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <ItemGroup Label="ProjectConfigurations">
@@ -174,7 +174,7 @@
   <ItemGroup>
     <None Include="emotion_ferplus.crypt">
       <DeploymentContent>true</DeploymentContent>
-	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="FaceSentimentAnalyzer.def" />
     <None Include="packages.config">
@@ -184,6 +184,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Deobfuscator\DeobfuscationHelper.vcxproj">
       <Project>{8d4b9659-6ab7-4eb0-919a-517fad43dfe2}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\DXCore_WinRTComponent\DXCore_WinRTComponent.vcxproj">
+      <Project>{b3944f41-21ac-4d49-81a9-cb3f9b46f810}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

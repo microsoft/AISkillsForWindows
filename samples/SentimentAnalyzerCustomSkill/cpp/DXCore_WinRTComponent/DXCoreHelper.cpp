@@ -95,6 +95,35 @@ namespace winrt::DXCore_WinRTComponent::implementation
 		return device;
 	}
 
+	winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::AI::MachineLearning::LearningModelDevice> DXCoreHelper::GetAvailableDevices()
+	{
+		com_ptr<IDXCoreAdapterList> spAdapterList;
+		const GUID dxGUIDs[] = { DXCORE_ADAPTER_ATTRIBUTE_D3D12_CORE_COMPUTE };
+
+		check_hresult(_factory->GetAdapterList(dxGUIDs, ARRAYSIZE(dxGUIDs), spAdapterList.put()));
+
+		auto devices = single_threaded_vector<winrt::Windows::AI::MachineLearning::LearningModelDevice>();
+		for (UINT i = 0; i < spAdapterList->GetAdapterCount(); i++)
+		{
+			com_ptr<IDXCoreAdapter> spAdapter;
+			check_hresult(spAdapterList->GetItem(i, spAdapter.put()));
+
+			bool isHardware = false;
+
+			check_hresult(spAdapter->QueryProperty(DXCoreProperty::IsHardware,
+				sizeof(isHardware),
+				&isHardware));
+
+			if (isHardware)
+			{
+				LearningModelDevice device = GetLearningModelDeviceFromAdapter(spAdapter.get());
+				devices.Append(device);
+			}
+		}
+
+		return devices.GetView();
+	}
+
 	LearningModelDevice DXCoreHelper::GetLearningModelDeviceFromAdapter(IDXCoreAdapter* adapter)
 	{
 		D3D_FEATURE_LEVEL d3dFeatureLevel = D3D_FEATURE_LEVEL_1_0_CORE;

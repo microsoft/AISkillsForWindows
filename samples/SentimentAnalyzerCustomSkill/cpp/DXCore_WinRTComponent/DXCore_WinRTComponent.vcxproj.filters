@@ -23,9 +23,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="readme.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <Midl Include="DxcoreHelper.idl" />
   </ItemGroup>
 </Project>

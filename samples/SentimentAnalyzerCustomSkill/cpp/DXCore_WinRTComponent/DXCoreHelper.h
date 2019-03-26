@@ -10,6 +10,7 @@ namespace winrt::DXCore_WinRTComponent::implementation
 
 		winrt::Windows::AI::MachineLearning::LearningModelDevice GetVpuDeviceFromDXCore();
 		winrt::Windows::AI::MachineLearning::LearningModelDevice GetHardwareDeviceFromDXCore();
+		winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::AI::MachineLearning::LearningModelDevice> GetAvailableDevices();
 
 	private:
 		winrt::Windows::AI::MachineLearning::LearningModelDevice GetLearningModelDeviceFromAdapter(IDXCoreAdapter* adapter);
