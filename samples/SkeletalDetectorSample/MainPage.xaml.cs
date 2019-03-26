@@ -289,18 +289,16 @@ namespace SkeletalDetectorSample
                 // Use a lock to process frames one at a time and bypass processing if busy
                 if (m_lock.Wait(0))
                 {
-                    // Instantiate a binding object that will hold the skill's input and output resource
-                    // If camera was changed, incoming frame might be of a different size. 
-                    // Can't bind frames of different sizes to same binding. 
-                    // As a workaround, recreate the binding for each eval.
-                    m_skeletalDetectorBinding = await m_skeletalDetectorSkill.CreateSkillBindingAsync() as SkeletalDetectorBinding;
-
                     uint cameraFrameWidth = UICameraPreview.CameraHelper.PreviewFrameSource.CurrentFormat.VideoFormat.Width;
                     uint cameraFrameHeight = UICameraPreview.CameraHelper.PreviewFrameSource.CurrentFormat.VideoFormat.Height;
 
                     // Allign overlay canvas and camera preview so that face detection rectangle looks right
                     if (!m_isCameraFrameDimensionInitialized || cameraFrameWidth != m_cameraFrameWidth || cameraFrameHeight != m_cameraFrameHeight)
                     {
+                        // Can't bind frames of different sizes to same binding.
+                        // As a workaround, recreate the binding for each eval if framesize changed.
+                        m_skeletalDetectorBinding = await m_skeletalDetectorSkill.CreateSkillBindingAsync() as SkeletalDetectorBinding;
+
                         m_cameraFrameWidth = UICameraPreview.CameraHelper.PreviewFrameSource.CurrentFormat.VideoFormat.Width;
                         m_cameraFrameHeight = UICameraPreview.CameraHelper.PreviewFrameSource.CurrentFormat.VideoFormat.Height;
 
