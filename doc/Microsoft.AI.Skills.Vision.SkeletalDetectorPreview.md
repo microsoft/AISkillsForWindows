@@ -1,4 +1,4 @@
-# Microsoft.AI.Skills.Vision.ObjectDetectorPreview API documentation
+# Microsoft.AI.Skills.Vision.SkeletalDetectorPreview API documentation
 
 + [Enums](#Enums)
   + [JointLabel](#JointLabel)
