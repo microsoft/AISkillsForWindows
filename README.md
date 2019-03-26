@@ -1,6 +1,6 @@
- # WindowsVisionSkillsPreview
+# WindowsVisionSkillsPreview
 
- ## Summary
+## Summary
 
 Implementing and integrating efficient AI and Computer Vision (CV) solutions is a hard task for developers. The industry is moving at a fast pace and the amount of custom-tailored 
 solutions coming out make it almost impossible for app developers to keep up easily. This proposed framework is meant to standardize the way AI and CV is put to use within a WinRT application 
@@ -12,9 +12,12 @@ While this preview focuses on vision-oriented scenarios and primitives, this API
 
 ## How To Use
 
-1. For how to use the framework to author a Skill to be consumed, and creating an app to consume the skill, see the [SentimentAnalzerCustomSkill](samples/SentimentAnalyzerCustomSkill) Sample. 
+For how to use the framework to author a Skill to be consumed, and creating an app to consume the skill, see the [SentimentAnalzerCustomSkill](samples/SentimentAnalyzerCustomSkill) Sample. 
 
-2. For how to extend the VisionSkill API to create custom outputs, see either the [ObjectDetector](samples/ObjectDetectorSample) or [SkeletalDetector](samples/SkeletalDetectorSample) sample.
+## Other Samples
+
+- [ObjectDetector](samples/ObjectDetectorSample): detecting and classifying objects
+- [SkeletalDetector](samples/SkeletalDetectorSample): estimating poses of people in images
 
 -----
 
