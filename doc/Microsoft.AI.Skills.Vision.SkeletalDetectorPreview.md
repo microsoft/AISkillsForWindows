@@ -60,11 +60,19 @@ Microsoft.AI.Skills.Vision.SkeletalDetectorPreview.JointLabel Label
 
 Normalized image coordinate between 0 and 1 in the horizontal direction.
 
+```csharp
+double X
+```
+
 -----
 
 ##### Y
 
-Normalized iamge coordinate between 0 and 1 in the vertical direction.
+Normalized image coordinate between 0 and 1 in the vertical direction.
+
+```csharp
+double Y
+```
 
 -----
 
@@ -78,11 +86,19 @@ Normalized iamge coordinate between 0 and 1 in the vertical direction.
 
 The first of a pair of joints making up the limb.
 
+```csharp
+Microsoft.AI.Skills.Vision.SkeletalDetector.Joint joint1
+```
+
 -----
 
 ##### Joint2
 
 The second of a pair of joints making up the limb.
+
+```csharp
+Microsoft.AI.Skills.Vision.SkeletalDetector.Joint joint2
+```
 
 -----
 
@@ -133,11 +149,25 @@ Constructor for SkeletalDetectorResultListDescriptor.
 SkeletalDetectorResultListDescriptor(string name, string description, bool isRequired);
 ```
 
+###### Parameters
+
+**`name`** : string
+
+The name for a SkeletalDetector result list.
+
+**`description`** : string
+
+The description for a SkeletalDetector result list
+
+**`isRequired`** : bool
+
+Whether this particular feature is required or not. 
+
 -----
 
 ### SkeletalDetectorResultListValue
 
-``implements`` [ISkillFeatureValue](./Microsoft.AI.Skills.SkillInterfacePreview.md#ISkillFeatureValue), IClosable
+``implements`` [ISkillFeatureValue](./Microsoft.AI.Skills.SkillInterfacePreview.md#ISkillFeatureValue), [IClosable](https://docs.microsoft.com/en-us/uwp/api/windows.foundation.iclosable)
 
 -----
 
@@ -155,7 +185,7 @@ IReadOnlyList<SkeletalDetectorResult> GetAsVectorView();
 
 ###### Returns
 
-IReadOnlyList<[SkeletalDetectorResult](#SkeletalDetectorResult)>
+[IReadOnlyList](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.ireadonlylist-1?view=netcore-2.2)<[SkeletalDetectorResult](#SkeletalDetectorResult)>
 
 A list of detected bodies from the input.
 
@@ -174,18 +204,18 @@ A list of detected bodies from the input.
 ##### SetInputImageAsync
 
 ```csharp
-Windows::Foundation::IAsyncAction SetInputImageAsync(VideoFrame videoFrame)
+Windows.Foundation.IAsyncAction SetInputImageAsync(VideoFrame videoFrame)
 ```
 
 ###### Parameters
 
-**`videoFrame`** : [VideoFrame][VideoFrame]
+**`videoFrame`** : [VideoFrame](https://docs.microsoft.com/en-us/uwp/api/Windows.Media.VideoFrame)
 
 The input image value.
 
 ###### Returns
 
-[IAsyncAction][IAsyncAction]
+[IAsyncAction](https://docs.microsoft.com/en-us/uwp/api/windows.foundation.iasyncaction)
 
 The asynchronous action for completing this operation
 
@@ -240,7 +270,5 @@ SkeletalDetectorDescriptor()
 [IClosable](https://docs.microsoft.com/en-us/uwp/api/windows.foundation.iclosable)
 
 [VideoFrame](https://docs.microsoft.com/en-us/uwp/api/Windows.Media.VideoFrame)
-
-[Rect](https://docs.microsoft.com/en-us/uwp/api/Windows.Foundation.Rect)
 
 ###### Copyright (c) Microsoft Corporation. All rights reserved.

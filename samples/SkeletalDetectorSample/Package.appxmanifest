@@ -4,7 +4,7 @@
   <mp:PhoneIdentity PhoneProductId="927243f2-d3a8-491e-ab46-1ee557e0fd41" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>SkeletalDetectorSample</DisplayName>
-    <PublisherDisplayName>pyeh</PublisherDisplayName>
+    <PublisherDisplayName>Microsoft</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Dependencies>
@@ -23,7 +23,6 @@
     </Application>
   </Applications>
   <Capabilities>
-    <Capability Name="internetClient" />
     <uap:Capability Name="picturesLibrary" />
     <DeviceCapability Name="webcam" />
   </Capabilities>

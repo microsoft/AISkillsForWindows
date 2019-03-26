@@ -7,33 +7,22 @@ using Microsoft.Toolkit.Uwp.UI.Controls;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.Devices.Enumeration;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Graphics.Imaging;
 using Windows.Media;
-using Windows.Media.Capture;
-using Windows.Media.Capture.Frames;
-using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Core;
 using Windows.UI.Popups;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Shapes;
 
 namespace SkeletalDetectorSample
@@ -134,7 +123,6 @@ namespace SkeletalDetectorSample
                         });
                 }
                 catch (Exception ex)
-
                 {
                     await new MessageDialog(ex.Message).ShowAsync();
                 }
@@ -224,7 +212,7 @@ namespace SkeletalDetectorSample
                     return null;
                 }
 
-
+                // Decoding image file content into a SoftwareBitmap, and wrap into VideoFrame
                 VideoFrame resultFrame = null;
                 SoftwareBitmap softwareBitmap = null;
                 using (IRandomAccessStream stream = await selectedStorageFile.OpenAsync(FileAccessMode.Read))
