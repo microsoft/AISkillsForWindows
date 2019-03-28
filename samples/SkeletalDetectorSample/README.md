@@ -7,6 +7,7 @@ This sample will show how to use the Skeletal Detector Skill NuGet package to cr
 - [Microsoft.AI.Skills.SkillInterfacePreview API document](../../doc/Microsoft.AI.Skills.SkillInterfacePreview.md)
 - [Microsoft.AI.Skills.Vision.SkeletalDetectorPreview API document](../../doc/Microsoft.AI.Skills.Vision.SkeletalDetectorPreview.md)
 - [Creating a custom Windows Vision Skill](../SentimentAnalyzerCustomSkill)
+- [Windows Community Toolkit](https://docs.microsoft.com/en-us/windows/communitytoolkit/)
 
 ## System requirements
 
