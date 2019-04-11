@@ -4,6 +4,7 @@
 #include "FaceSentimentAnalyzerConst.h"
 #include "FaceSentimentAnalyzerDescriptor.h"
 #include "FaceSentimentAnalyzerSkill.h"
+#include "winrt/DXCore_WinRTComponent.h"
 
 using namespace winrt::Microsoft::AI::Skills::SkillInterfacePreview;
 
@@ -71,15 +72,14 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
     {
         m_devices = single_threaded_vector<ISkillExecutionDevice>();
         m_devices.Append(SkillExecutionDeviceCPU::Create());
-        auto devices = SkillExecutionDeviceDirectX::GetAvailableDirectXExecutionDevices();
-        for (auto iter : devices)
-        {
-            // Expose only D3D12 devices since WinML supports only those
-            if (iter.as<SkillExecutionDeviceDirectX>().MaxSupportedFeatureLevel() >= D3DFeatureLevelKind::D3D_FEATURE_LEVEL_12_0)
-            {
-                m_devices.Append(iter);
-            }
-        }
+        
+		// Enumerate hardware devices
+		DXCore_WinRTComponent::DXCoreHelper dxCoreHelper;
+		auto winmlDevices = dxCoreHelper.GetAvailableDevices();
+		for (auto&& winmlDevice : winmlDevices)
+		{
+			m_devices.Append(SkillExecutionDeviceDirectX::Create(winmlDevice.Direct3D11Device()));
+		}
         co_await resume_background();
         return m_devices.GetView();
     }
