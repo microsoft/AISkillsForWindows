@@ -6,16 +6,17 @@ namespace winrt::DXCore_WinRTComponent::implementation
 {
     struct DXCoreHelper : DXCoreHelperT<DXCoreHelper>
     {
-		DXCoreHelper();
+        DXCoreHelper();
 
-		winrt::Windows::AI::MachineLearning::LearningModelDevice GetVpuDeviceFromDXCore();
-		winrt::Windows::AI::MachineLearning::LearningModelDevice GetHardwareDeviceFromDXCore();
-		winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::AI::MachineLearning::LearningModelDevice> GetAvailableDevices();
+        winrt::Windows::AI::MachineLearning::LearningModelDevice GetDeviceFromVpuAdapter();
+        winrt::Windows::AI::MachineLearning::LearningModelDevice GetDeviceFromComputeOnlyAdapter();
+        winrt::Windows::AI::MachineLearning::LearningModelDevice GetDeviceFromGraphicsAdapter();
+        winrt::Windows::Foundation::Collections::IVectorView<winrt::Windows::AI::MachineLearning::LearningModelDevice> GetAvailableDevices();
 
-	private:
-		winrt::Windows::AI::MachineLearning::LearningModelDevice GetLearningModelDeviceFromAdapter(IDXCoreAdapter* adapter);
+    private:
+        winrt::Windows::AI::MachineLearning::LearningModelDevice GetLearningModelDeviceFromAdapter(IDXCoreAdapter* adapter);
 
-		winrt::com_ptr<IDXCoreAdapterFactory> _factory;
+        winrt::com_ptr<IDXCoreAdapterFactory> _factory;
     };
 }
 

@@ -3,9 +3,10 @@ namespace DXCore_WinRTComponent
     [default_interface]
     runtimeclass DXCoreHelper
     {
-		DXCoreHelper();
-		Windows.AI.MachineLearning.LearningModelDevice GetVpuDeviceFromDXCore();
-		Windows.AI.MachineLearning.LearningModelDevice GetHardwareDeviceFromDXCore();
-		IVectorView<Windows.AI.MachineLearning.LearningModelDevice> GetAvailableDevices();
+        DXCoreHelper();
+        Windows.AI.MachineLearning.LearningModelDevice GetDeviceFromVpuAdapter();
+        Windows.AI.MachineLearning.LearningModelDevice GetDeviceFromComputeOnlyAdapter();
+        Windows.AI.MachineLearning.LearningModelDevice GetDeviceFromGraphicsAdapter();
+        IVectorView<Windows.AI.MachineLearning.LearningModelDevice> GetAvailableDevices();
     }
 }

@@ -12,11 +12,9 @@
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
-    <ClCompile Include="DXCoreHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
-    <ClInclude Include="DXCoreHelper.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DXCore_WinRTComponent.def" />
