@@ -119,6 +119,9 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">copy $(ProjectDir)..\..\Common\emotion_ferplus.onnx $(ProjectDir) &amp;&amp; ^$(ProjectDir)..\Obfuscator\Win32\Debug\Obfuscator.exe $(ProjectDir)emotion_ferplus.onnx $(ProjectDir) emotion_ferplus.crypt 678BD455-4190-45D3-B5DA-41543283C092 &amp;&amp; ^del $(ProjectDir)emotion_ferplus.onnx</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">copying model file locally, running obfuscation, deleting local copy of model file</Message>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>$(ProjectDir)PostBuildHeaderGen.cmd "$(TargetDir)" "$(WindowsSDK_UnionMetadataPath)" </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
     <ClCompile>
@@ -136,6 +139,9 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">copy $(ProjectDir)..\..\Common\emotion_ferplus.onnx $(ProjectDir) &amp;&amp; ^$(ProjectDir)..\Obfuscator\Win32\Debug\Obfuscator.exe $(ProjectDir)emotion_ferplus.onnx $(ProjectDir) emotion_ferplus.crypt 678BD455-4190-45D3-B5DA-41543283C092 &amp;&amp; ^del $(ProjectDir)emotion_ferplus.onnx</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">copying model file locally, running obfuscation, deleting local copy of model file</Message>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>$(ProjectDir)PostBuildHeaderGen.cmd "$(TargetDir)" "$(WindowsSDK_UnionMetadataPath)" </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="FaceSentimentAnalyzerConst.h" />
@@ -174,7 +180,7 @@
   <ItemGroup>
     <None Include="emotion_ferplus.crypt">
       <DeploymentContent>true</DeploymentContent>
-	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="FaceSentimentAnalyzer.def" />
     <None Include="packages.config">
@@ -188,15 +194,15 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.10\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets" Condition="Exists('..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.10\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets')" />
     <Import Project="..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.targets" Condition="Exists('..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.targets')" />
+    <Import Project="..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.12\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets" Condition="Exists('..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.12\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.10\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.10\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets'))" />
     <Error Condition="!Exists('..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.12\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.12\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets'))" />
   </Target>
 </Project>
