@@ -9,7 +9,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Contoso.FaceSentimentAnalyz
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Obfuscator", "Obfuscator\Obfuscator.vcxproj", "{38FA18AA-D23B-4B38-AB5E-ED7891A6588B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Deobfuscator", "Deobfuscator\DeobfuscationHelper.vcxproj", "{8D4B9659-6AB7-4EB0-919A-517FAD43DFE2}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeobfuscationHelper", "Deobfuscator\DeobfuscationHelper.vcxproj", "{8D4B9659-6AB7-4EB0-919A-517FAD43DFE2}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FaceSentimentAnalysisConsole_cpp", "FaceSentimentAnalysisConsole_cpp\FaceSentimentAnalysisConsole_cpp.vcxproj", "{7EC87A87-91F9-4C2C-9DEA-8FE75F76F17C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,6 +75,16 @@ Global
 		{8D4B9659-6AB7-4EB0-919A-517FAD43DFE2}.Release|x64.Build.0 = Release|x64
 		{8D4B9659-6AB7-4EB0-919A-517FAD43DFE2}.Release|x86.ActiveCfg = Release|Win32
 		{8D4B9659-6AB7-4EB0-919A-517FAD43DFE2}.Release|x86.Build.0 = Release|Win32
+		{7EC87A87-91F9-4C2C-9DEA-8FE75F76F17C}.Debug|ARM.ActiveCfg = Debug|Win32
+		{7EC87A87-91F9-4C2C-9DEA-8FE75F76F17C}.Debug|x64.ActiveCfg = Debug|x64
+		{7EC87A87-91F9-4C2C-9DEA-8FE75F76F17C}.Debug|x64.Build.0 = Debug|x64
+		{7EC87A87-91F9-4C2C-9DEA-8FE75F76F17C}.Debug|x86.ActiveCfg = Debug|Win32
+		{7EC87A87-91F9-4C2C-9DEA-8FE75F76F17C}.Debug|x86.Build.0 = Debug|Win32
+		{7EC87A87-91F9-4C2C-9DEA-8FE75F76F17C}.Release|ARM.ActiveCfg = Release|Win32
+		{7EC87A87-91F9-4C2C-9DEA-8FE75F76F17C}.Release|x64.ActiveCfg = Release|x64
+		{7EC87A87-91F9-4C2C-9DEA-8FE75F76F17C}.Release|x64.Build.0 = Release|x64
+		{7EC87A87-91F9-4C2C-9DEA-8FE75F76F17C}.Release|x86.ActiveCfg = Release|Win32
+		{7EC87A87-91F9-4C2C-9DEA-8FE75F76F17C}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
