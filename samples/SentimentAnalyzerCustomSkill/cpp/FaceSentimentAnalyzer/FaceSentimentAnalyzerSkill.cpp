@@ -58,6 +58,27 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
         return inputsExp;
     }
 
+    // helper function to determine if the skill is being called from a UWP app container or not.
+    bool IsUWPContainer()
+    {
+        HANDLE hProcessToken = INVALID_HANDLE_VALUE;
+        HANDLE hProcess;
+
+        hProcess = GetCurrentProcess();
+        if (!OpenProcessToken(hProcess, TOKEN_QUERY, &hProcessToken))
+        {
+            throw winrt::hresult(HRESULT_FROM_WIN32(GetLastError()));
+        }
+        BOOL bIsAppContainer = false;
+        DWORD dwLength;
+        if (!GetTokenInformation(hProcessToken, TokenIsAppContainer, &bIsAppContainer, sizeof(bIsAppContainer), &dwLength))
+        {
+            // if we were denied token information we are definitely not in an app container.
+            bIsAppContainer = false;
+        }
+
+        return bIsAppContainer;
+    }
     //
     // Creates and initializes a FaceSentimentAnalyzerSkill instance
     //
@@ -71,8 +92,20 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
         auto faceDetector = FaceDetector::CreateAsync().get();
 
         // Load WinML model
-        auto modelFile = Windows::Storage::StorageFile::GetFileFromApplicationUriAsync(Windows::Foundation::Uri(L"ms-appx:///Contoso.FaceSentimentAnalyzer/" + WINML_MODEL_FILENAME)).get();
         
+        winrt::Windows::Storage::StorageFile modelFile = nullptr;
+        if (IsUWPContainer())
+        {
+            auto modelFile = Windows::Storage::StorageFile::GetFileFromApplicationUriAsync(Windows::Foundation::Uri(L"ms-appx:///Contoso.FaceSentimentAnalyzer/" + WINML_MODEL_FILENAME)).get();
+        }
+        else
+        {
+            WCHAR DllPath[MAX_PATH] = { 0 };
+            GetModuleFileName(NULL, DllPath, _countof(DllPath));
+            auto file = Windows::Storage::StorageFile::GetFileFromPathAsync(DllPath).get();
+            auto folder = file.GetParentAsync().get();
+            modelFile = folder.GetFileAsync(WINML_MODEL_FILENAME).get();
+        }
         // Deobfuscate model file and retrieve LearningModel instance
         LearningModel learningModel = winrt::DeobfuscationHelper::Deobfuscator::DeobfuscateModelAsync(modelFile, descriptor.Id()).get();
 
