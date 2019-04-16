@@ -1,5 +1,5 @@
-// FaceSentimentAnalysis_cpp.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
+// Copyright (c) Microsoft Corporation. All rights reserved.
+
 #include "App.h"
 
 HRESULT App::FrameArrivedHandler(IMediaFrameReader* pFrameReader, IMediaFrameArrivedEventArgs*)
