@@ -96,7 +96,7 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
         winrt::Windows::Storage::StorageFile modelFile = nullptr;
         if (IsUWPContainer())
         {
-            auto modelFile = Windows::Storage::StorageFile::GetFileFromApplicationUriAsync(Windows::Foundation::Uri(L"ms-appx:///Contoso.FaceSentimentAnalyzer/" + WINML_MODEL_FILENAME)).get();
+            modelFile = Windows::Storage::StorageFile::GetFileFromApplicationUriAsync(Windows::Foundation::Uri(L"ms-appx:///Contoso.FaceSentimentAnalyzer/" + WINML_MODEL_FILENAME)).get();
         }
         else
         {
