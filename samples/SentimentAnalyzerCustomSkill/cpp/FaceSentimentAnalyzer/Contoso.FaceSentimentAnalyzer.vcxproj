@@ -120,7 +120,9 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">copying model file locally, running obfuscation, deleting local copy of model file</Message>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>$(ProjectDir)PostBuildHeaderGen.cmd "$(TargetDir)" "$(WindowsSDK_UnionMetadataPath)" </Command>
+      <Command>$(ProjectDir)PostBuildHeaderGen.cmd "$(TargetDir)" "$(WindowsSDK_UnionMetadataPath)" 
+cppwinrt -in Microsoft.AI.Skills.SkillInterfacePreview.winmd -ref $(TargetDir) -ref $(WindowsSDK_UnionMetadataPath) -out $(TargetDir)
+cppwinrt -in Contoso.FaceSentimentAnalyzer.winmd -ref $(TargetDir) -ref $(WindowsSDK_UnionMetadataPath) -out $(TargetDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
@@ -140,7 +142,9 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">copying model file locally, running obfuscation, deleting local copy of model file</Message>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>$(ProjectDir)PostBuildHeaderGen.cmd "$(TargetDir)" "$(WindowsSDK_UnionMetadataPath)" </Command>
+      <Command>$(ProjectDir)PostBuildHeaderGen.cmd "$(TargetDir)" "$(WindowsSDK_UnionMetadataPath)" 
+cppwinrt -in Microsoft.AI.Skills.SkillInterfacePreview.winmd -ref $(TargetDir) -ref $(WindowsSDK_UnionMetadataPath) -out $(TargetDir)
+cppwinrt -in Contoso.FaceSentimentAnalyzer.winmd -ref $(TargetDir) -ref $(WindowsSDK_UnionMetadataPath) -out $(TargetDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
