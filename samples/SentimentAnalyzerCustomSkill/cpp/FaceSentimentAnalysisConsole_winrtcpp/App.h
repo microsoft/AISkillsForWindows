@@ -29,8 +29,8 @@ class App
     FaceSentimentAnalyzerSkill m_Skill;
     MediaFrameReader m_frameReader;
     winrt::slim_mutex m_lock;
-    void initMediaCapture();
-    void deInitMediaCapture();
+    void InitCameraAndFrameSource();
+    void DeInitCameraAndFrameSource();
     winrt::Windows::Foundation::IAsyncAction FrameArrivedHandler(MediaFrameReader pFrameReader, MediaFrameArrivedEventArgs);
 
 public:
