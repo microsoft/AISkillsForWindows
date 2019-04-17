@@ -14,7 +14,7 @@ This sample will show how to use the Object Detector Vision Skill NuGet package 
 
 **Client**: Windows 10 64-bit build 17763 or greater
 > **IMPORTANT NOTE**  
-> Due to the size of the model used for object detection and memory limitations in 32-bit architectures, the ObjectDetector skill is NOT supported in 32-bit (e.g. x86 and ARM32). As such, this sample will only build in x64 and ARM64 configurations.
+> Due to the size of the model used for object detection and memory limitations in 32-bit architectures, the ObjectDetector skill is NOT supported in 32-bit (e.g. x86 and ARM32). As such, this sample will only build in x64 configuration.
 
 ## Build the sample
 
