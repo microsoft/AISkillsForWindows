@@ -17,6 +17,9 @@ namespace ObjectDetectorSkill_SampleApp
     {
         private Canvas m_canvas;
 
+        // Cache the original Rects we get for resizing purposes
+        private List<Windows.Foundation.Rect> m_rawRects = new List<Windows.Foundation.Rect>();
+
         // Pre-populate rectangles/textblocks to avoid clearing and re-creating on each frame
         private Rectangle[] m_rectangles;
         private TextBlock[] m_textBlocks;
@@ -71,6 +74,9 @@ namespace ObjectDetectorSkill_SampleApp
             // Render detections up to MAX_BOXES
             for (i = 0; i < detections.Count && i < m_rectangles.Length; i++)
             {
+                // Cache rect
+                m_rawRects.Add(detections[i].Rect);
+
                 // Render bounding box
                 m_rectangles[i].Width = detections[i].Rect.Width * m_canvas.ActualWidth;
                 m_rectangles[i].Height = detections[i].Rect.Height * m_canvas.ActualHeight;
@@ -110,14 +116,14 @@ namespace ObjectDetectorSkill_SampleApp
             for (int i = 0; i < m_rectangles.Length && m_rectangles[i].Visibility == Visibility.Visible; i++)
             {
                 // Update bounding box
-                m_rectangles[i].Width *= args.NewSize.Width / args.PreviousSize.Width;
-                m_rectangles[i].Height *= args.NewSize.Height / args.PreviousSize.Height;
-                Canvas.SetLeft(m_rectangles[i], Canvas.GetLeft(m_rectangles[i]) * args.NewSize.Width / args.PreviousSize.Width);
-                Canvas.SetTop(m_rectangles[i], Canvas.GetTop(m_rectangles[i]) * args.NewSize.Height / args.PreviousSize.Height);
+                m_rectangles[i].Width = m_rawRects[i].Width * m_canvas.Width;
+                m_rectangles[i].Height = m_rawRects[i].Height * m_canvas.Height;
+                Canvas.SetLeft(m_rectangles[i], m_rawRects[i].X * m_canvas.Width);
+                Canvas.SetTop(m_rectangles[i], m_rawRects[i].Y * m_canvas.Height);
 
                 // Update text label
-                Canvas.SetLeft(m_textBlocks[i], Canvas.GetLeft(m_textBlocks[i]) * args.NewSize.Width / args.PreviousSize.Width);
-                Canvas.SetTop(m_textBlocks[i], Canvas.GetTop(m_textBlocks[i]) * args.NewSize.Height / args.PreviousSize.Height);
+                Canvas.SetLeft(m_textBlocks[i], m_rawRects[i].X * m_canvas.Width);
+                Canvas.SetTop(m_textBlocks[i], m_rawRects[i].Y * m_canvas.Height + m_rectangles[i].Height);
             }
         }
     }
