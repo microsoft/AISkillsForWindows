@@ -74,7 +74,8 @@ void App::InitCameraAndFrameSource()
     } while (fsIter.MoveNext());
     if (!fsIter.HasCurrent())
     {
-        throw new winrt::hresult_out_of_bounds();
+        std::cout << "No valid video frame sources were found with source type color.";
+        throw new winrt::hresult(MF_E_INVALIDMEDIATYPE);
     }
 
     // Create FrameReader with the FrameSource that we selected in the loop above.

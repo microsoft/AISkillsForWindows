@@ -4,6 +4,7 @@
 #include <string>
 #include <Windows.Foundation.h>
 #include <windows.foundation.collections.h>
+#include <Mferror.h>
 #include <wrl/implements.h>
 #include <wrl/wrappers/corewrappers.h>
 #include <wrl/client.h>

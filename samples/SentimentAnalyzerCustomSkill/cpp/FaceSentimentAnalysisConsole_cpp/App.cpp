@@ -120,11 +120,11 @@ HRESULT App::InitCameraAndFrameSource()
         std::cout << "FrameSourceType:" << streamType << std::endl;
         while (((streamType != MediaStreamType::MediaStreamType_VideoPreview) && (streamType != MediaStreamType::MediaStreamType_VideoRecord)) || (sourceKind != MediaFrameSourceKind::MediaFrameSourceKind_Color))
         {
-            boolean bHasCurrent1;
-            CHECKHR_GOTO(spIterator->MoveNext(&bHasCurrent1), cleanup);
-            if (!bHasCurrent1)
+            CHECKHR_GOTO(spIterator->MoveNext(&bHasCurrent), cleanup);
+            if (!bHasCurrent)
             {
-                continue;
+                std::cout << "No valid video frame sources were found with source type color.";
+                CHECKHR_GOTO(MF_E_INVALIDMEDIATYPE, cleanup);
             }
             CHECKHR_GOTO(spIterator->get_Current(spKeyValue.ReleaseAndGetAddressOf()), cleanup);
             CHECKHR_GOTO(spKeyValue->get_Value(spFrameSource.ReleaseAndGetAddressOf()), cleanup);
