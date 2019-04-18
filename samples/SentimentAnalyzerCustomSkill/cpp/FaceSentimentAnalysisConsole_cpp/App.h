@@ -4,8 +4,8 @@
 #include <string>
 #include <Windows.Foundation.h>
 #include <windows.foundation.collections.h>
-#include <wrl\implements.h>
-#include <wrl\wrappers\corewrappers.h>
+#include <wrl/implements.h>
+#include <wrl/wrappers/corewrappers.h>
 #include <wrl/client.h>
 #include <wrl/event.h>
 #include <windows.system.threading.h>
@@ -13,6 +13,7 @@
 #include <windows.media.capture.h>
 #include <windows.media.capture.frames.h>
 #include "Contoso.FaceSentimentAnalyzer.h"
+
 using namespace ABI::Windows::Foundation;
 using namespace ABI::Windows::Foundation::Collections;
 using namespace Microsoft::WRL;
