@@ -13,7 +13,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Obfuscator", "Obfuscator\Ob
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeobfuscationHelper", "Deobfuscator\DeobfuscationHelper.vcxproj", "{8D4B9659-6AB7-4EB0-919A-517FAD43DFE2}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DXCore_WinRTComponent", "DXCore_WinRTComponent\DXCore_WinRTComponent.vcxproj", "{B3944F41-21AC-4D49-81A9-CB3F9B46F810}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Contoso.CustomSkillExecutionDevice", "CustomSkillExecutionDevice\CustomSkillExecutionDevice.vcxproj", "{982C3B18-573A-4D33-BB66-D7E2FA3768FB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

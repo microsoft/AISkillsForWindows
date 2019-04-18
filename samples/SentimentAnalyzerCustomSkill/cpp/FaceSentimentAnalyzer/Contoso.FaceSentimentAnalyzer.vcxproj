@@ -183,23 +183,21 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CustomSkillExecutionDevice\CustomSkillExecutionDevice.vcxproj">
+      <Project>{982c3b18-573a-4d33-bb66-d7e2fa3768fb}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Deobfuscator\DeobfuscationHelper.vcxproj">
       <Project>{8d4b9659-6ab7-4eb0-919a-517fad43dfe2}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\DXCore_WinRTComponent\DXCore_WinRTComponent.vcxproj">
-      <Project>{b3944f41-21ac-4d49-81a9-cb3f9b46f810}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.12\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets" Condition="Exists('..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.12\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets')" />
     <Import Project="..\packages\Microsoft.Windows.CppWinRT.1.0.190205.2\build\native\Microsoft.Windows.CppWinRT.targets" Condition="Exists('..\packages\Microsoft.Windows.CppWinRT.1.0.190205.2\build\native\Microsoft.Windows.CppWinRT.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.12\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.12\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets'))" />
     <Error Condition="!Exists('..\packages\Microsoft.Windows.CppWinRT.1.0.190205.2\build\native\Microsoft.Windows.CppWinRT.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Windows.CppWinRT.1.0.190205.2\build\native\Microsoft.Windows.CppWinRT.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.Windows.CppWinRT.1.0.190205.2\build\native\Microsoft.Windows.CppWinRT.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Windows.CppWinRT.1.0.190205.2\build\native\Microsoft.Windows.CppWinRT.targets'))" />
   </Target>

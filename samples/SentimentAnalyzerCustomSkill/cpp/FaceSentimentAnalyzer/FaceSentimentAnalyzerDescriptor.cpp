@@ -4,9 +4,10 @@
 #include "FaceSentimentAnalyzerConst.h"
 #include "FaceSentimentAnalyzerDescriptor.h"
 #include "FaceSentimentAnalyzerSkill.h"
-#include "winrt/DXCore_WinRTComponent.h"
+#include "winrt/Contoso.CustomSkillExecutionDevice.h"
 
 using namespace winrt::Microsoft::AI::Skills::SkillInterfacePreview;
+using namespace winrt::Contoso::CustomSkillExecutionDevice;
 
 namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
 {
@@ -72,14 +73,11 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
     {
         m_devices = single_threaded_vector<ISkillExecutionDevice>();
         m_devices.Append(SkillExecutionDeviceCPU::Create());
-        
-		// Enumerate hardware devices
-		DXCore_WinRTComponent::DXCoreHelper dxCoreHelper;
-		auto winmlDevices = dxCoreHelper.GetAvailableDevices();
-		for (auto&& winmlDevice : winmlDevices)
-		{
-			m_devices.Append(SkillExecutionDeviceDirectX::Create(winmlDevice.Direct3D11Device()));
-		}
+        auto devices = SkillExecutionDeviceDXCore::GetAvailableHardwareExecutionDevices();
+        for (auto iter : devices)
+        {
+            m_devices.Append(iter);
+        }
         co_await resume_background();
         return m_devices.GetView();
     }
@@ -92,18 +90,14 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
         auto supportedDevices = GetSupportedExecutionDevicesAsync().get();
         ISkillExecutionDevice deviceToUse = supportedDevices.First().Current();
 
-        // Either use the first device returned (CPU) or the highest performing GPU
-        int powerIndex = INT32_MAX;
+        // Use the first GPU or VPU device if available, otherwise default to CPU
         for (auto device : supportedDevices)
         {
-            if (device.ExecutionDeviceKind() == SkillExecutionDeviceKind::Gpu)
+            if (device.ExecutionDeviceKind() == SkillExecutionDeviceKind::Gpu
+                || device.ExecutionDeviceKind() == SkillExecutionDeviceKind::Vpu)
             {
-                auto directXDevice = device.as<SkillExecutionDeviceDirectX>();
-                if (directXDevice.HighPerformanceIndex() < powerIndex)
-                {
-                    deviceToUse = device;
-                    powerIndex = directXDevice.HighPerformanceIndex();
-                }
+                deviceToUse = device;
+                break;
             }
         }
         return CreateSkillAsync(deviceToUse);

@@ -29,7 +29,7 @@ Invoke-Expression "$PSScriptRoot\nuget.exe source Add -Name WindowsVisionSkillsL
 RunCommand "$PSScriptRoot\RestorePackages.ps1"
 RunCommand "$PSScriptRoot\RestorePackages.ps1 -PackagesConfigPath $PSScriptRoot\..\cpp\Obfuscator\packages.config -PackagesDirectory $PSScriptRoot\..\cpp\packages"
 RunCommand "$PSScriptRoot\RestorePackages.ps1 -PackagesConfigPath $PSScriptRoot\..\cpp\Deobfuscator\packages.config -PackagesDirectory $PSScriptRoot\..\cpp\packages"
-RunCommand "$PSScriptRoot\RestorePackages.ps1 -PackagesConfigPath $PSScriptRoot\..\cpp\DXCore_WinRTComponent\packages.config -PackagesDirectory $PSScriptRoot\..\cpp\packages"
+RunCommand "$PSScriptRoot\RestorePackages.ps1 -PackagesConfigPath $PSScriptRoot\..\cpp\CustomSkillExecutionDevice\packages.config -PackagesDirectory $PSScriptRoot\..\cpp\packages"
 RunCommand "$PSScriptRoot\RestorePackages.ps1 -PackagesConfigPath $PSScriptRoot\..\cpp\FaceSentimentAnalyzer\packages.config -PackagesDirectory $PSScriptRoot\..\cpp\packages"
 
 # Setup the build environement
