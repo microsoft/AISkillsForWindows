@@ -19,6 +19,11 @@ namespace ObjectDetectorSkill_SampleApp.FrameSource
         public event EventHandler<VideoFrame> FrameArrived;
         VideoFrame m_videoFrame;
 
+        /// <summary>
+        /// Static factory
+        /// </summary>
+        /// <param name="storageFile"></param>
+        /// <returns></returns>
         public static async Task<ImageFileFrameSource> CreateFromStorageFileAsyncTask(StorageFile storageFile)
         {
             var result = new ImageFileFrameSource();
