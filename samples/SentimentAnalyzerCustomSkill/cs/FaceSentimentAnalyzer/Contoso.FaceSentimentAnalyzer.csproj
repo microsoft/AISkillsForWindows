@@ -127,10 +127,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AI.Skills.SkillInterfacePreview">
-      <Version>0.5.2.12</Version>
+      <Version>0.5.2.13</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.2.3</Version>
+      <Version>6.2.8</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

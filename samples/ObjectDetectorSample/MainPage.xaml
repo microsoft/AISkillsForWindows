@@ -21,7 +21,7 @@
                     <SolidColorBrush Color="Gainsboro" Opacity="0.5" />
                 </StackPanel.Background>
                 <AppBarButton x:Name="UICameraButton" Icon="AttachCamera" Label="Attach Camera" Click="CameraButton_Click" />
-                <AppBarButton x:Name="UIVideoFilePickerButton" Icon="BrowsePhotos" Label="Open Video File" ToolTipService.ToolTip="Load a video file from disk" Click="VideoFilePickerButton_Click"/>
+                <AppBarButton x:Name="UIFilePickerButton" Icon="BrowsePhotos" Label="Open File" ToolTipService.ToolTip="Load an image or video file from disk" Click="FilePickerButton_Click"/>
             </StackPanel>
             <!-- Video display -->
             <Image x:Name="ProcessedPreview" Canvas.ZIndex="-1"  VerticalAlignment="Center" Stretch="Uniform" SizeChanged="ProcessedPreview_SizeChanged" />

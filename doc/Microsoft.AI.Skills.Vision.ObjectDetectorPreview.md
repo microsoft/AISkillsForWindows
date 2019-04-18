@@ -1,5 +1,8 @@
 # Microsoft.AI.Skills.Vision.ObjectDetectorPreview API documentation
 
+> **IMPORTANT NOTE**  
+> Due to the size of the model used for object detection and memory limitations in 32-bit architectures, the ObjectDetector skill is NOT supported in 32-bit (e.g. x86 and ARM32)
+
 + [Enums](#Enums)
   + [ObjectKind](#ObjectKind)
 + [Classes](#Classes)
