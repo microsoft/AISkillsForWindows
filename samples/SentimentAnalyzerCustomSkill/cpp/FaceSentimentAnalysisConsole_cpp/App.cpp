@@ -33,7 +33,7 @@ HRESULT App::FrameArrivedHandler(IMediaFrameReader* pFrameReader, IMediaFrameArr
     CHECKHR_GOTO(m_spFaceSentimentSkillBinding->SetInputImageAsync(spVideoFrame.Get(), &spOp), cleanup);
     CHECKHR_GOTO(AwaitAction(spOp), cleanup);
 
-    // QI the binding to geneneric base interface as we are using the base interface for the skill to evaluate
+    // QI the binding to generic base interface as we are using the base interface for the skill to evaluate
     CHECKHR_GOTO(m_spFaceSentimentSkillBinding.As(&spSkillBinding), cleanup);
 
     // Evaluate sentiments in video frame using the skill
