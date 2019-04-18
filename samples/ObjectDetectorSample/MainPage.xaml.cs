@@ -263,6 +263,9 @@ namespace ObjectDetectorSkill_SampleApp
                 m_frameSource.FrameArrived += frameSource_FrameAvailable;
             }
             m_skillLock.Release();
+
+            // Start frame source outside of lock so that skill can run
+            await m_frameSource.StartAsync();
         }
 
         /// <summary>
@@ -307,7 +310,7 @@ namespace ObjectDetectorSkill_SampleApp
             if (Dispatcher.HasThreadAccess)
             {
                 UICameraButton.IsEnabled = enableButtons;
-                UIVideoFilePickerButton.IsEnabled = enableButtons;
+                UIFilePickerButton.IsEnabled = enableButtons;
             }
             else
             {
@@ -358,21 +361,27 @@ namespace ObjectDetectorSkill_SampleApp
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void VideoFilePickerButton_Click(object sender, RoutedEventArgs e)
+        private async void FilePickerButton_Click(object sender, RoutedEventArgs e)
         {
             // Disable the top menu while handling the click
             await UpdateMediaSourceButtonsAsync(false);
 
             var picker = new Windows.Storage.Pickers.FileOpenPicker();
             picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
-            picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.VideosLibrary;
+            picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.PicturesLibrary;
+            // Add common video file extensions
             picker.FileTypeFilter.Add(".mp4");
+            picker.FileTypeFilter.Add(".avi");
+            // Add common image file extensions
+            picker.FileTypeFilter.Add(".jpg");
+            picker.FileTypeFilter.Add(".png");
+            picker.FileTypeFilter.Add(".bmp");
 
             Windows.Storage.StorageFile file = await picker.PickSingleFileAsync();
             if (file != null)
             {
                 await ConfigureFrameSourceAsync(file);
-                NotifyUser("Loading video file: " + file.Path);
+                NotifyUser("Loading file: " + file.Path);
             }
 
             // Re-enable the top menu once done handling the click

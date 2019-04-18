@@ -55,6 +55,17 @@ namespace ObjectDetectorSkill_SampleApp.FrameSource
         {
         }
 
+        /// <summary>
+        /// Start frame playback
+        /// </summary>
+        public Task StartAsync()
+        {
+            m_mediaPlayer.Play();
+
+            // Async not needed, return success
+            return Task.FromResult(true);
+        }
+
         public event EventHandler<VideoFrame> FrameArrived;
         public event EventHandler StreamEnded;
 
@@ -77,7 +88,6 @@ namespace ObjectDetectorSkill_SampleApp.FrameSource
                             (int)FrameHeight);
 
             m_mediaPlayer.VideoFrameAvailable += mediaPlayer_VideoFrameAvailable;
-            m_mediaPlayer.Play();
 
             m_frameSourceReadyEvent.Set();
         }

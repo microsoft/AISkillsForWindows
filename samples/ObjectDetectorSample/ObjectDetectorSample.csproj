@@ -121,6 +121,7 @@
     <Compile Include="BoundingBoxRenderer.cs" />
     <Compile Include="FrameSource\IFrameSource.cs" />
     <Compile Include="FrameSource\FrameReaderFrameSource.cs" />
+    <Compile Include="FrameSource\ImageFileFrameSource.cs" />
     <Compile Include="FrameSource\MediaPlayerFrameSource.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
