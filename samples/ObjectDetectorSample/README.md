@@ -2,6 +2,8 @@
 
 This sample will show how to use the Object Detector Vision Skill NuGet package to create an app that can detect and classify objects in a video feed
 
+![Screenshot of object detector skill in action](./doc/sample_app.jpg)
+
 ## Related topics
 
 - [Microsoft.AI.Skills.SkillInterfacePreview API document](../../doc/Microsoft.AI.Skills.SkillInterfacePreview.md)
@@ -10,7 +12,9 @@ This sample will show how to use the Object Detector Vision Skill NuGet package 
 
 ## System requirements
 
-**Client**: Windows 10 build 17763 or greater
+**Client**: Windows 10 64-bit build 17763 or greater
+> **IMPORTANT NOTE**  
+> Due to the size of the model used for object detection and memory limitations in 32-bit architectures, the ObjectDetector skill is NOT supported in 32-bit (e.g. x86 and ARM32). As such, this sample will only build in x64 configuration.
 
 ## Build the sample
 
