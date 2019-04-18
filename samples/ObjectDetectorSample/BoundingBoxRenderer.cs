@@ -2,6 +2,7 @@
 
 using Microsoft.AI.Skills.Vision.ObjectDetectorPreview;
 using System.Collections.Generic;
+using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -18,7 +19,7 @@ namespace ObjectDetectorSkill_SampleApp
         private Canvas m_canvas;
 
         // Cache the original Rects we get for resizing purposes
-        private List<Windows.Foundation.Rect> m_rawRects = new List<Windows.Foundation.Rect>();
+        private List<Rect> m_rawRects;
 
         // Pre-populate rectangles/textblocks to avoid clearing and re-creating on each frame
         private Rectangle[] m_rectangles;
@@ -32,6 +33,7 @@ namespace ObjectDetectorSkill_SampleApp
         /// <param name="colorBrush">Default Colors.SpringGreen color brush if not specified</param>
         public BoundingBoxRenderer(Canvas canvas, int maxBoxes = 50, int lineThickness = 2, SolidColorBrush colorBrush = null)
         {
+            m_rawRects = new List<Rect>();
             m_rectangles = new Rectangle[maxBoxes];
             m_textBlocks = new TextBlock[maxBoxes];
             if (colorBrush == null)
@@ -71,6 +73,7 @@ namespace ObjectDetectorSkill_SampleApp
         public void Render(IReadOnlyList<ObjectDetectorResult> detections)
         {
             int i = 0;
+            m_rawRects.Clear();
             // Render detections up to MAX_BOXES
             for (i = 0; i < detections.Count && i < m_rectangles.Length; i++)
             {
