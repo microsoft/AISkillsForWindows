@@ -25,7 +25,7 @@ winrt::Windows::Foundation::IAsyncAction App::FrameArrivedHandler(MediaFrameRead
             if (m_FaceSentimentSkillBinding.IsFaceFound())
             {
                 auto sentiment = m_FaceSentimentSkillBinding.PredominantSentiment();
-                std::string sentiments[] = {
+                static const std::string sentiments[] = {
                     "neutral ",
                     "happiness ",
                     "surprise ",

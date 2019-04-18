@@ -46,7 +46,7 @@ HRESULT App::FrameArrivedHandler(IMediaFrameReader* pFrameReader, IMediaFrameArr
     if (bIsFaceFound)
     {
         SentimentType sentiment;
-        std::string sentiments[] = {
+        static const std::string sentiments[] = {
             "neutral ",
             "happiness ",
             "surprise ",
