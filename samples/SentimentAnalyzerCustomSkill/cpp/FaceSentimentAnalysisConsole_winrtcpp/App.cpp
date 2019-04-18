@@ -77,19 +77,19 @@ void App::InitCameraAndFrameSource()
         throw new winrt::hresult_out_of_bounds();
     }
 
-    // Create frame reader with the FrameSource that we selected in the loop above.
+    // Create FrameReader with the FrameSource that we selected in the loop above.
     m_frameReader = m_mediaCapture.CreateFrameReaderAsync(fsIter.Current().Value()).get();
 
     // Set up a delegate to handle the frames when they are ready
     m_frameReader.FrameArrived({ this, &App::FrameArrivedHandler });
 
-    // Finally start the frame reader
+    // Finally start the FrameReader
     m_frameReader.StartAsync().get();
 }
 
 void App::DeInitCameraAndFrameSource()
 {
-    //Stop Frame reader and close
+    //Stop FrameReader and close
     m_frameReader.StopAsync().get();
     m_frameReader.Close();
     m_frameReader = nullptr;
@@ -110,7 +110,7 @@ int App::AppMain()
     // Create instance of the skill binding
     m_FaceSentimentSkillBinding = m_Skill.CreateSkillBindingAsync().get().as<FaceSentimentAnalyzerBinding>();
 
-    // Initialize media capture and frame reader
+    // Initialize MediaCapture and FrameReader
     InitCameraAndFrameSource();
     std::cout << "\t\t\t\t\t\t\t\t...press enter to Stop" << std::endl;
 
@@ -119,7 +119,7 @@ int App::AppMain()
 
     std::cout << std::endl << "Key pressed.. exiting";
 
-    // De-initialize the media capture and frame reader
+    // De-initialize the MediaCapture and FrameReader
     DeInitCameraAndFrameSource();
 }
 

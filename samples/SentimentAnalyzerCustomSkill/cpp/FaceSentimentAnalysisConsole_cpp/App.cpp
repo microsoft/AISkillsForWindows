@@ -86,14 +86,14 @@ HRESULT App::InitCameraAndFrameSource()
     ComPtr<IIterator<IKeyValuePair<HSTRING, MediaFrameSource*>*>> spIterator;
     ComPtr<IKeyValuePair<HSTRING, MediaFrameSource*>>             spKeyValue;
 
-    // Get an instance of the Windows Media Capture runtime class
+    // Get an instance of the Windows MediaCapture runtime class
     CHECKHR_GOTO(ActivateInstance(HStringReference(RuntimeClass_Windows_Media_Capture_MediaCapture).Get(), &m_spMediaCapture), cleanup);
 
-    // Initialize Media capture with default settings
+    // Initialize MediaCapture with default settings
     CHECKHR_GOTO(m_spMediaCapture->InitializeAsync(&op), cleanup);
     CHECKHR_GOTO(AwaitAction(op), cleanup);
 
-    // QueryInterface to the IMediaCapture5 interface which gives us the ability to create a media frame reader 
+    // QueryInterface to the IMediaCapture5 interface which gives us the ability to create a MediaFrameReader 
     CHECKHR_GOTO(m_spMediaCapture.As(&spMediaCaptureFS), cleanup);
 
     // Get a list of available Frame source and iterate through them to find a Video preview/record source with Color images ( and not IR/depth etc)
@@ -134,7 +134,7 @@ HRESULT App::InitCameraAndFrameSource()
             std::cout << "FrameSourceType:" << streamType << std::endl;
         }
 
-        // Create frame reader with the FrameSource that we selected in the loop above.
+        // Create FrameReader with the FrameSource that we selected in the loop above.
         CHECKHR_GOTO(spMediaCaptureFS->CreateFrameReaderAsync(spFrameSource.Get(), &spOp), cleanup);
         CHECKHR_GOTO(AwaitTypedResult(spOp, MediaFrameReader*, m_spFrameReader), cleanup);
 
@@ -149,7 +149,7 @@ HRESULT App::InitCameraAndFrameSource()
 
         CHECKHR_GOTO(m_spFrameReader->add_FrameArrived(m_spFrameArrivedHandlerDelegate.Get(), &m_token), cleanup);
 
-        // Finally start the frame reader
+        // Finally start the FrameReader
         CHECKHR_GOTO(m_spFrameReader->StartAsync(&spOp1), cleanup);
         CHECKHR_GOTO(AwaitTypedResult(spOp1, MediaFrameReaderStartStatus, Stat), cleanup);
     }
@@ -163,7 +163,7 @@ HRESULT App::DeInitCameraAndFrameSource()
     HRESULT hr = S_OK;
     ComPtr<IAsyncAction> spOp;
 
-    // Remove the frame handler and stop frame reader
+    // Remove the frame handler and stop FrameReader
     CHECKHR_GOTO(m_spFrameReader->remove_FrameArrived(m_token), cleanup);
     CHECKHR_GOTO(m_spFrameReader->StopAsync(&spOp), cleanup);
     CHECKHR_GOTO(AwaitAction(spOp), cleanup);
@@ -202,7 +202,7 @@ int App::AppMain()
     // Query the face sentiment analyzer specialized interface from the base interface
     CHECKHR_GOTO(spSkillBinding.As(&m_spFaceSentimentSkillBinding), cleanup);
 
-    // Initialize media capture and frame reader
+    // Initialize MediaCapture and FrameReader
     CHECKHR_GOTO(InitCameraAndFrameSource(), cleanup);
     std::cout << "\t\t\t\t\t\t\t\t...press enter to Stop" << std::endl;
 
@@ -211,7 +211,7 @@ int App::AppMain()
 
     std::cout << std::endl << "Key pressed.. exiting";
 
-    // De-initialize the media capture and frame reader
+    // De-initialize the MediaCapture and FrameReader
     CHECKHR_GOTO(DeInitCameraAndFrameSource(), cleanup);
 
 cleanup:
