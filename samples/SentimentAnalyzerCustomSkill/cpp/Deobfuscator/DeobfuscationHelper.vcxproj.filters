@@ -21,8 +21,8 @@
     <ClInclude Include="..\Obfuscator\ObfuscationHelper.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="DeobfuscationHelper.def" />
     <None Include="packages.config" />
+    <None Include="DeobfuscationHelper.def" />
   </ItemGroup>
   <ItemGroup>
     <Midl Include="Deobfuscator.idl" />
