@@ -4,7 +4,7 @@
         <!-- Required elements-->
         <id>Contoso.FaceSentimentAnalyzer_CS</id>
 		<title>Contoso.FaceSentimentAnalyzer_CS</title>
-        <version>0.0.0.5</version>
+        <version>0.0.0.6</version>
         <description>Face Sentiment Analyzer skill sample that extends the Microsoft.AI.Skills.SkillInterfacePreview APIs</description>
         <authors>Contoso</authors>
 		<owners>Contoso</owners>
@@ -13,19 +13,26 @@
 		<licenseUrl>https://github.com/Microsoft/WindowsVisionSkillsPreview/blob/master/license/doc/LICENSE_package.md</licenseUrl>
 		<projectUrl>https://github.com/Microsoft/WindowsVisionSkillsPreview</projectUrl>
 		<iconUrl>https://github.com/Microsoft/WindowsVisionSkillsPreview/blob/master/doc/Logo.png?raw=true</iconUrl>
-		<releaseNotes>v0.0.0.5 release https://github.com/Microsoft/WindowsVisionSkillsPreview/releases</releaseNotes>
+		<releaseNotes>v0.0.0.6 release https://github.com/Microsoft/WindowsVisionSkillsPreview/releases</releaseNotes>
 		<dependencies>
             <dependency id="Microsoft.AI.Skills.SkillInterfacePreview" version="0.5.2.13" />
         </dependencies>
         <tags>ComputerVision AI VisionSkill</tags>
+		<contentFiles>
+		  <!-- PackageReference metadata pointing to content files, e.g.  resource, ONNX model -->
+          <files include="any/uap10.0.17763/Contoso.FaceSentimentAnalyzer/emotion_ferplus.onnx" buildAction="None" copyToOutput="true" flatten="false" />
+        </contentFiles>
     </metadata>
   <files>
 
 	<!-- WinMD, Intellisense and resource files-->
-    <file src="..\common\emotion_ferplus.onnx" target="lib\uap10.0.17763\Contoso.FaceSentimentAnalyzer" />
-    <file src="..\cs\FaceSentimentAnalyzer\bin\Release\Contoso.FaceSentimentAnalyzer.winmd" target="lib\uap10.0.17763" />
-	<file src="..\cs\FaceSentimentAnalyzer\bin\Release\Contoso.FaceSentimentAnalyzer.pri" target="lib\uap10.0.17763" />
+    <file src="..\common\emotion_ferplus.onnx" target="contentFiles\any\uap10.0.17763\Contoso.FaceSentimentAnalyzer" />
+	
+	<file src="..\cs\FaceSentimentAnalyzer\bin\Release\Contoso.FaceSentimentAnalyzer.winmd" target="lib\uap10.0.17763" />
 	<file src="..\common\Contoso.FaceSentimentAnalyzer.xml" target="lib\uap10.0.17763" />
 
+	<!-- .targets -->
+    <file src="Contoso.FaceSentimentAnalyzer_CS.targets" target="build\native"/>
+	
   </files>
 </package>
