@@ -15,6 +15,7 @@ namespace ObjectDetectorSkill_SampleApp.FrameSource
         uint FrameWidth { get; }
 
         event EventHandler<VideoFrame> FrameArrived;
+        Task StartAsync();
     }
 
     /// <summary>
@@ -32,7 +33,19 @@ namespace ObjectDetectorSkill_SampleApp.FrameSource
         {
             if (source is Windows.Storage.StorageFile)
             {
-                return await MediaPlayerFrameSource.CreateFromStorageFileAsyncTask(source as Windows.Storage.StorageFile);
+                var sourceFile = source as Windows.Storage.StorageFile;
+                if (sourceFile.ContentType.StartsWith("image"))
+                {
+                    return await ImageFileFrameSource.CreateFromStorageFileAsyncTask(sourceFile);
+                }
+                else if (sourceFile.ContentType.StartsWith("video"))
+                {
+                    return await MediaPlayerFrameSource.CreateFromStorageFileAsyncTask(sourceFile);
+                }
+                else
+                {
+                    throw new ArgumentException("Invalid file type received: " + sourceFile.ContentType);
+                }
             }
             else if (source is Windows.Media.Capture.MediaCapture)
             {

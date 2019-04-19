@@ -27,14 +27,23 @@ namespace ObjectDetectorSkill_SampleApp.FrameSource
         public event EventHandler<VideoFrame> FrameArrived;
 
         /// <summary>
+        /// Start frame playback
+        /// </summary>
+        public async Task StartAsync()
+        {
+            await m_frameReader.StartAsync();
+        }
+
+        /// <summary>
         /// Dispose method implementation
         /// </summary>
         public void Dispose()
         {
             lock (m_lock)
             {
-                m_mediaCapture.Dispose();
+                m_frameReader.FrameArrived -= FrameReader_FrameArrived;
                 m_frameReader.Dispose();
+                m_mediaCapture.Dispose();
             }
         }
 
@@ -117,8 +126,6 @@ namespace ObjectDetectorSkill_SampleApp.FrameSource
             m_frameReader = await m_mediaCapture.CreateFrameReaderAsync(m_frameSource, MediaEncodingSubtypes.Bgra8);
             m_frameReader.AcquisitionMode = MediaFrameReaderAcquisitionMode.Realtime;
             m_frameReader.FrameArrived += FrameReader_FrameArrived;
-
-            await m_frameReader.StartAsync();
         }
 
         /// <summary>
