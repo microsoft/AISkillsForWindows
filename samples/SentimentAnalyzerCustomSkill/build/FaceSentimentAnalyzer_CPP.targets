@@ -9,6 +9,6 @@
             <Implementation>Contoso.FaceSentimentAnalyzer.dll</Implementation>
         </Reference>
         <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\runtimes\win10-$(FaceSentimentAnalyzer-Platform)\native\Contoso.FaceSentimentAnalyzer.dll" />
-		<ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\contentFiles\any\Contoso.FaceSentimentAnalyzer.dll.pri" />
+        <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\contentFiles\any\uap10.0.17763\Contoso.FaceSentimentAnalyzer.pri" />
     </ItemGroup>
 </Project>
