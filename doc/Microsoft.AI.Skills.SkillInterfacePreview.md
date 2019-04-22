@@ -107,9 +107,12 @@ This device factors into the instatiation of the skill and the memory placement 
 
 | Fields      | Values
 | ----------- |--------|
-| Cpu         |0|
-| Gpu         |1|
-| Cloud       |2|
+| Undefined   |0|
+| Cpu         |1|
+| Gpu         |2|
+| Vpu         |3|
+| Fpga        |4|
+| Cloud       |5|
 
 
 ### SkillElementKind <a name="SkillElementKind"></a>

@@ -10,7 +10,7 @@
         <owners>Contoso</owners>
         <copyright>Copyright (c) Microsoft Corporation.  All rights reserved.</copyright>
         <requireLicenseAcceptance>true</requireLicenseAcceptance>
-        <licenseUrl>https://github.com/Microsoft/WindowsVisionSkillsPreview/blob/user/lobourre/license/doc/LICENSE_package.md</licenseUrl>
+        <licenseUrl>https://github.com/Microsoft/WindowsVisionSkillsPreview/blob/master/license/doc/LICENSE_package.md</licenseUrl>
         <projectUrl>https://github.com/Microsoft/WindowsVisionSkillsPreview</projectUrl>
         <iconUrl>https://github.com/Microsoft/WindowsVisionSkillsPreview/blob/master/doc/Logo.png?raw=true</iconUrl>
         <releaseNotes>v0.0.0.6 experimental release with VPU support https://github.com/Microsoft/WindowsVisionSkillsPreview/releases</releaseNotes>

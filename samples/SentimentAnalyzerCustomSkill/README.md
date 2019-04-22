@@ -55,7 +55,7 @@ However, some consumers may also want to tweak and optimize part of that pipelin
     1. Run the included powershell script named *BuildSentimentAnalyzer_CPP.ps1*
     2. Once the sample is built, to generate a NuGet package from it, you can run the included powershell script named *PackageSentimentAnalyzer_CPP.ps1*. You should see a *FaceSentimentAnalyzer_CPP\*.nupkg* file generated.
 
-## Run the sample
+## Run the sample <a name="PrivateNuGetFeed"></a>
 
 To run the test app and visualize the sample code for the skill:
 - **For the C# sample**, open the solution file located at *cs\FaceSentimentAnalysis_CS.sln*
