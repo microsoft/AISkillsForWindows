@@ -78,11 +78,6 @@ namespace winrt::Contoso::CustomSkillExecutionDevice::implementation
         return results.GetView();
     }
 
-    Windows::Graphics::DirectX::Direct3D11::IDirect3DDevice SkillExecutionDeviceDXCore::Direct3D11Device() const
-    {
-        return m_device.Direct3D11Device();
-    }
-
     Windows::AI::MachineLearning::LearningModelDevice SkillExecutionDeviceDXCore::WinMLDevice() const
     {
         return m_device;

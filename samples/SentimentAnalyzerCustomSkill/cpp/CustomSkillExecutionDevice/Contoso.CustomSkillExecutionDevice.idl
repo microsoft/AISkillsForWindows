@@ -8,8 +8,8 @@ namespace Contoso.CustomSkillExecutionDevice
         //! Retrieve all available hardware (DirectX) devices on the system.
         static Windows.Foundation.Collections.IVectorView<SkillExecutionDeviceDXCore> GetAvailableHardwareExecutionDevices();
 
-        //! The IDirect3DDevice interface corresponding to this DirectX device.
-        Windows.Graphics.DirectX.Direct3D11.IDirect3DDevice Direct3D11Device { get; };
+        //! The LearningModelDevice corresponding to this SkillExecutionDevice
+        Windows.AI.MachineLearning.LearningModelDevice WinMLDevice{ get; };
 
         //! The adapter ID of this DirectX device.
         UInt64 AdapterId { get; };

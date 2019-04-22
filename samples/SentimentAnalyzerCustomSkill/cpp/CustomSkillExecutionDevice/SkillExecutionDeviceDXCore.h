@@ -15,7 +15,6 @@ namespace winrt::Contoso::CustomSkillExecutionDevice::implementation
         // i.e. these methods may be called by a consuming UWP app or another Runtime Component
         static Windows::Foundation::Collections::IVectorView<Contoso::CustomSkillExecutionDevice::SkillExecutionDeviceDXCore> GetAvailableHardwareExecutionDevices();
 
-        Windows::Graphics::DirectX::Direct3D11::IDirect3DDevice Direct3D11Device() const;
         Windows::AI::MachineLearning::LearningModelDevice WinMLDevice() const;
         Microsoft::AI::Skills::SkillInterfacePreview::SkillExecutionDeviceKind ExecutionDeviceKind() const;
         hstring Name() const;
