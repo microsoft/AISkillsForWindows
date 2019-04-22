@@ -18,18 +18,14 @@
             <dependency id="Microsoft.AI.Skills.SkillInterfacePreview" version="0.5.2.13" />
         </dependencies>
         <tags>ComputerVision AI VisionSkill</tags>
-		<contentFiles>
-		  <!-- PackageReference metadata pointing to content files, e.g.  resource, ONNX model -->
-          <files include="any/uap10.0.17763/Contoso.FaceSentimentAnalyzer/emotion_ferplus.onnx" buildAction="None" copyToOutput="true" flatten="false" />
-        </contentFiles>
     </metadata>
     <files>
 
 	  <!-- WinMD, Intellisense and resource files-->
-	  <file src="..\common\emotion_ferplus.onnx" target="contentFiles\any\uap10.0.17763\Contoso.FaceSentimentAnalyzer" />
-	
       <file src="..\cs\FaceSentimentAnalyzer\bin\Release\Contoso.FaceSentimentAnalyzer.winmd" target="lib\uap10.0.17763" />
+	  <file src="..\cs\FaceSentimentAnalyzer\bin\Release\Contoso.FaceSentimentAnalyzer.pri" target="lib\uap10.0.17763" />
       <file src="..\common\Contoso.FaceSentimentAnalyzer.xml" target="lib\uap10.0.17763" />
+	  <file src="..\common\emotion_ferplus.onnx" target="lib\uap10.0.17763\Contoso.FaceSentimentAnalyzer" />
 
       <!-- .targets -->
       <file src="Contoso.FaceSentimentAnalyzer_CS.targets" target="build\native"/>

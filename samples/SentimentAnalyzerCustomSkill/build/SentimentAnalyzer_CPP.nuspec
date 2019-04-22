@@ -19,7 +19,9 @@
         <tags>ComputerVision AI VisionSkill</tags>
 		<contentFiles>
           <!-- PackageReference metadata pointing to content files, e.g.  resource, ONNX model -->
-          <files include="any/uap10.0.17763/Contoso.FaceSentimentAnalyzer/emotion_ferplus.crypt" buildAction="None" copyToOutput="true" flatten="false" />
+          <files include="any/uap10.0.17763/DeobfuscationHelper.pri" buildAction="None" />
+          <files include="any/uap10.0.17763/Contoso.FaceSentimentAnalyzer.pri" buildAction="None" />
+		  <files include="any/uap10.0.17763/Contoso.FaceSentimentAnalyzer/emotion_ferplus.crypt" buildAction="None" copyToOutput="true" flatten="false" />
         </contentFiles>
     </metadata>
     <files>
@@ -28,7 +30,11 @@
 		
 		<!-- WinMD and Intellisense files-->
 		<file src="..\cpp\Deobfuscator\x64\Release\DeobfuscationHelper\DeobfuscationHelper.winmd" target="lib\uap10.0.17763" />
+		<file src="..\cpp\Deobfuscator\x64\Release\DeobfuscationHelper\DeobfuscationHelper.pri" target="contentFiles\any\uap10.0.17763" />
+		
 		<file src="..\cpp\FaceSentimentAnalyzer\x64\Release\Contoso.FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer.winmd" target="lib\uap10.0.17763" />
+		<file src="..\cpp\FaceSentimentAnalyzer\x64\Release\Contoso.FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer.pri" target="contentFiles\any\uap10.0.17763" />
+		
 		<file src="..\common\Contoso.FaceSentimentAnalyzer.xml" target="lib\uap10.0.17763" />
 		
 		<!-- Skill DLLs -->
