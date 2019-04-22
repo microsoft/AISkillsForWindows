@@ -68,9 +68,10 @@ In order for local NuGet packages to be available to your app project, you need 
 2. Click on the *+* sign to add a new NuGet source and make sure the value of the source is the path to the folder where the *.nupkg* files are (i.e. in *./build/*)
 ![LocalNugetHowTo2](./doc/localNugetHowTo2.jpg)
 
-3. From your test app project, make sure you install the skill NuGet package by right-clicking on your project \> *Manage NuGet Packages*, then make sure the *Package Source* points to your custom NuGet source, then click *Install*
+3. From your test app project, make sure you install the skill NuGet package by right-clicking on your project \> *Manage NuGet Packages*, then make sure the *Package Source* points to your custom NuGet source, then click *Install*. If you are targeting the experimental VPU support, be sure to check the "Include prerelease" to show the experimental packages which the samples use.
 ![LocalNugetHowTo3](./doc/localNugetHowTo3.jpg)
 
+> NOTE: This version of the sample includes experimental VPU support which utilizes the prerelease [SkillExecutionDeviceDXCore](./doc/Microsoft.AI.Skills.DXCoreExecutionDevice.md) package. See the [documentation](./doc/Microsoft.AI.Skills.DXCoreExecutionDevice.md) for more information on the package.
 
 # Contributing
 

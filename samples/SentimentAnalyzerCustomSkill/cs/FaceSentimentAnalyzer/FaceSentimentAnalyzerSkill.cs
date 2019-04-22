@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Contoso.CustomSkillExecutionDevice;
+using Microsoft.AI.Skills.DXCoreExecutionDevice;
 using Microsoft.AI.Skills.SkillInterfacePreview;
 using Windows.AI.MachineLearning;
 using Windows.Foundation;

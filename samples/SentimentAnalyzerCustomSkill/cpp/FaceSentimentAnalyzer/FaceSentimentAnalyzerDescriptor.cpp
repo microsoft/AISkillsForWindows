@@ -4,10 +4,10 @@
 #include "FaceSentimentAnalyzerConst.h"
 #include "FaceSentimentAnalyzerDescriptor.h"
 #include "FaceSentimentAnalyzerSkill.h"
-#include "winrt/Contoso.CustomSkillExecutionDevice.h"
+#include "winrt/Microsoft.AI.Skills.DXCoreExecutionDevice.h"
 
 using namespace winrt::Microsoft::AI::Skills::SkillInterfacePreview;
-using namespace winrt::Contoso::CustomSkillExecutionDevice;
+using namespace winrt::Microsoft::AI::Skills::DXCoreExecutionDevice;
 
 namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
 {

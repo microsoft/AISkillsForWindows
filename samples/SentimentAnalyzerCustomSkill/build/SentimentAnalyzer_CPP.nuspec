@@ -15,7 +15,7 @@
         <releaseNotes>v0.0.0.6 experimental release with VPU support https://github.com/Microsoft/WindowsVisionSkillsPreview/releases</releaseNotes>
         <dependencies>
             <dependency id="Microsoft.AI.Skills.SkillInterfacePreview" version="0.5.2.14" />
-            <dependency id="Contoso.CustomSkillExecutionDevice" version="0.0.0.1" />
+            <dependency id="Microsoft.AI.Skills.DXCoreExecutionDevice" version="0.0.0.1-experimental" />
         </dependencies>
         <tags>ComputerVision AI VisionSkill</tags>
         <contentFiles>

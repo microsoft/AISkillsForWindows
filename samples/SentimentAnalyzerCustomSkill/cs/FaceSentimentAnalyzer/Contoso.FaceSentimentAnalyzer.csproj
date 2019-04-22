@@ -126,8 +126,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Contoso.CustomSkillExecutionDevice">
-      <Version>0.0.0.1</Version>
+    <PackageReference Include="Microsoft.AI.Skills.DXCoreExecutionDevice">
+      <Version>0.0.0.1-experimental</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AI.Skills.SkillInterfacePreview">
       <Version>0.5.2.14</Version>

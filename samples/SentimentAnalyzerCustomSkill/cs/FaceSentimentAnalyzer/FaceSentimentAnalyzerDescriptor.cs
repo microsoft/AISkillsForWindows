@@ -5,11 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Microsoft.AI.Skills.DXCoreExecutionDevice;
 using Microsoft.AI.Skills.SkillInterfacePreview;
 using Windows.Foundation;
 using Windows.Graphics.Imaging;
 
-using Contoso.CustomSkillExecutionDevice;
 
 namespace Contoso.FaceSentimentAnalyzer
 {
