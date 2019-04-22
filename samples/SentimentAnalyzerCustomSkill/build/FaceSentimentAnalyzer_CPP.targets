@@ -5,7 +5,7 @@
         <FaceSentimentAnalyzer-Platform Condition="'$(Platform)' != 'Win32'">$(Platform)</FaceSentimentAnalyzer-Platform>
     </PropertyGroup>
     <ItemGroup>
-        <Reference Include="$(MSBuildThisFileDirectory)..\..\lib\uap10.0.17763\Contoso.FaceSentimentAnalyzer.winmd">
+        <Reference Include="$(MSBuildThisFileDirectory)..\..\lib\uap10.0.18870\Contoso.FaceSentimentAnalyzer.winmd">
             <Implementation>Contoso.FaceSentimentAnalyzer.dll</Implementation>
         </Reference>
         <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\runtimes\win10-$(FaceSentimentAnalyzer-Platform)\native\Contoso.FaceSentimentAnalyzer.dll" />

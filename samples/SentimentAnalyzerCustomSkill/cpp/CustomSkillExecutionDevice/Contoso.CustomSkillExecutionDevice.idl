@@ -1,0 +1,20 @@
+// Copyright (C) Microsoft Corporation. All rights reserved.
+
+namespace Contoso.CustomSkillExecutionDevice
+{
+    [default_interface]
+    runtimeclass SkillExecutionDeviceDXCore : Microsoft.AI.Skills.SkillInterfacePreview.ISkillExecutionDevice
+    {
+        //! Retrieve all available hardware (DirectX) devices on the system.
+        static Windows.Foundation.Collections.IVectorView<SkillExecutionDeviceDXCore> GetAvailableHardwareExecutionDevices();
+
+        //! The LearningModelDevice corresponding to this SkillExecutionDevice
+        Windows.AI.MachineLearning.LearningModelDevice WinMLDevice{ get; };
+
+        //! The adapter ID of this DirectX device.
+        UInt64 AdapterId { get; };
+
+        //! The amount of dedicated video memory of this DirectX device (bytes).
+        UInt64 DedicatedVideoMemory { get; };
+    }
+}

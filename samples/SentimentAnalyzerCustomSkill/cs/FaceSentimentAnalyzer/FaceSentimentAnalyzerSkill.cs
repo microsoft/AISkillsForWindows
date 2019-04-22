@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Contoso.CustomSkillExecutionDevice;
 using Microsoft.AI.Skills.SkillInterfacePreview;
 using Windows.AI.MachineLearning;
 using Windows.Foundation;
@@ -223,9 +224,10 @@ namespace Contoso.FaceSentimentAnalyzer
                     return new LearningModelDevice(LearningModelDeviceKind.Cpu);
 
                 case SkillExecutionDeviceKind.Gpu:
+                case SkillExecutionDeviceKind.Vpu:
                     {
-                        var gpuDevice = executionDevice as SkillExecutionDeviceDirectX;
-                        return LearningModelDevice.CreateFromDirect3D11Device(gpuDevice.Direct3D11Device);
+                        var dxDevice = executionDevice as SkillExecutionDeviceDXCore;
+                        return dxDevice.WinMLDevice;
                     }
 
                 default:

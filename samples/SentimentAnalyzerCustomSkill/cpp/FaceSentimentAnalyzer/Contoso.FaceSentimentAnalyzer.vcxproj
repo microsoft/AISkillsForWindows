@@ -12,8 +12,8 @@
     <AppContainerApplication>true</AppContainerApplication>
     <ApplicationType>Windows Store</ApplicationType>
     <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
-    <WindowsTargetPlatformVersion Condition=" '$(WindowsTargetPlatformVersion)' == '' ">10.0.17763.0</WindowsTargetPlatformVersion>
-    <WindowsTargetPlatformMinVersion>10.0.17763.0</WindowsTargetPlatformMinVersion>
+    <WindowsTargetPlatformVersion Condition=" '$(WindowsTargetPlatformVersion)' == '' ">10.0.18870.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>10.0.18870.0</WindowsTargetPlatformMinVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <ItemGroup Label="ProjectConfigurations">
@@ -44,7 +44,7 @@
   </ItemGroup>
   <PropertyGroup Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
@@ -188,14 +188,16 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.13\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets" Condition="Exists('..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.13\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets')" />
+    <Import Project="..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.14\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets" Condition="Exists('..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.14\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets')" />
+    <Import Project="..\packages\Contoso.CustomSkillExecutionDevice.0.0.0.1\build\native\Contoso.CustomSkillExecutionDevice.targets" Condition="Exists('..\packages\Contoso.CustomSkillExecutionDevice.0.0.0.1\build\native\Contoso.CustomSkillExecutionDevice.targets')" />
     <Import Project="..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.targets" Condition="Exists('..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.13\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.13\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.14\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.14\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets'))" />
+    <Error Condition="!Exists('..\packages\Contoso.CustomSkillExecutionDevice.0.0.0.1\build\native\Contoso.CustomSkillExecutionDevice.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Contoso.CustomSkillExecutionDevice.0.0.0.1\build\native\Contoso.CustomSkillExecutionDevice.targets'))" />
     <Error Condition="!Exists('..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.targets'))" />
   </Target>

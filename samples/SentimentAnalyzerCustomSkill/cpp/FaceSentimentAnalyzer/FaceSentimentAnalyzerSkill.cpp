@@ -17,27 +17,6 @@ using namespace winrt::Windows::Media;
 namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
 {
     //
-    // If possible, retrieves a WinML LearningModelDevice that corresponds to an ISkillExecutionDevice
-    //
-    LearningModelDevice GetWinMLDevice(ISkillExecutionDevice executionDevice)
-    {
-        switch (executionDevice.ExecutionDeviceKind())
-        {
-        case SkillExecutionDeviceKind::Cpu:
-            return LearningModelDevice(LearningModelDeviceKind::Cpu);
-
-        case SkillExecutionDeviceKind::Gpu:
-        {
-            auto gpuDevice = executionDevice.as<SkillExecutionDeviceDirectX>();
-            return LearningModelDevice::CreateFromDirect3D11Device(gpuDevice.Direct3D11Device());
-        }
-
-        default:
-            throw new hresult_invalid_argument(L"Passing unsupported SkillExecutionDeviceKind");
-        }
-    }
-
-    //
     // Calculates SoftMax normalization over a set of data
     //
     Windows::Foundation::Collections::IVector<float> SoftMax(Windows::Foundation::Collections::IVectorView<float> inputs)
@@ -77,9 +56,9 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
         LearningModel learningModel = winrt::DeobfuscationHelper::Deobfuscator::DeobfuscateModelAsync(modelFile, descriptor.Id()).get();
 
         // Create WinML session
-        auto winmlSession = LearningModelSession(learningModel, GetWinMLDevice(device));
+        auto winmlSession = LearningModelSession(learningModel, device.WinMLDevice());
 
-        return make< FaceSentimentAnalyzerSkill>(descriptor, device, faceDetector, winmlSession);
+        return make<FaceSentimentAnalyzerSkill>(descriptor, device, faceDetector, winmlSession);
     }
 
     //
@@ -166,6 +145,7 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
 
             // Run WinML evaluation
             auto winMLEvaluationResult = m_winmlSession.EvaluateAsync(bindingObj->m_winmlBinding, L"").get();
+            WINRT_ASSERT(winMLEvaluationResult.Succeeded());
             auto winMLModelResult = winMLEvaluationResult.Outputs().Lookup(WINML_MODEL_OUTPUTNAME).as<TensorFloat>().GetAsVectorView();
             auto predictionScores = SoftMax(winMLModelResult);
 
