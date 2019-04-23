@@ -5,6 +5,7 @@
 #include "FaceSentimentAnalyzerBinding.h"
 #include "FaceSentimentAnalyzerConst.h"
 #include "winrt/DeobfuscationHelper.h"
+#include "winrt/Microsoft.AI.Skills.DXCoreExecutionDevice.h"
 #include <ppltasks.h>
 #include <math.h>
 
@@ -16,6 +17,26 @@ using namespace winrt::Windows::Media;
 
 namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
 {
+    //
+    // If possible, retrieves a WinML LearningModelDevice that corresponds to an ISkillExecutionDevice
+    //
+    LearningModelDevice GetWinMLDevice(ISkillExecutionDevice executionDevice)
+    {
+        switch (executionDevice.ExecutionDeviceKind())
+        {
+        case SkillExecutionDeviceKind::Cpu:
+            return LearningModelDevice(LearningModelDeviceKind::Cpu);
+        case SkillExecutionDeviceKind::Gpu:
+        case SkillExecutionDeviceKind::Vpu:
+        {
+            auto dxDevice = executionDevice.as<winrt::Microsoft::AI::Skills::DXCoreExecutionDevice::SkillExecutionDeviceDXCore>();
+            return dxDevice.WinMLDevice();
+        }
+        default:
+            throw new hresult_invalid_argument(L"Passing unsupported SkillExecutionDeviceKind");
+        }
+    }
+
     //
     // Calculates SoftMax normalization over a set of data
     //
@@ -56,7 +77,7 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
         LearningModel learningModel = winrt::DeobfuscationHelper::Deobfuscator::DeobfuscateModelAsync(modelFile, descriptor.Id()).get();
 
         // Create WinML session
-        auto winmlSession = LearningModelSession(learningModel, device.WinMLDevice());
+        auto winmlSession = LearningModelSession(learningModel, GetWinMLDevice(device));
 
         return make<FaceSentimentAnalyzerSkill>(descriptor, device, faceDetector, winmlSession);
     }
