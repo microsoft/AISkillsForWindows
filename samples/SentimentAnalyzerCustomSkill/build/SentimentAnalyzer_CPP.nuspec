@@ -3,7 +3,7 @@
     <metadata>
         <!-- Required elements-->
         <id>Contoso.FaceSentimentAnalyzer_CPP</id>
-        <version>0.0.0.4</version>
+        <version>0.0.0.5</version>
         <description>Face Sentiment Analyzer skill sample that extends the Microsoft.AI.Skills.SkillInterfacePreview APIs</description>
         <authors>Contoso</authors>
 		<owners>Contoso</owners>
@@ -14,7 +14,7 @@
 		<iconUrl>https://github.com/Microsoft/WindowsVisionSkillsPreview/blob/master/doc/Logo.png?raw=true</iconUrl>
 		<releaseNotes>v0.0.0.4 release https://github.com/Microsoft/WindowsVisionSkillsPreview/releases</releaseNotes>
 		<dependencies>
-            <dependency id="Microsoft.AI.Skills.SkillInterfacePreview" version="0.5.2.11" />
+            <dependency id="Microsoft.AI.Skills.SkillInterfacePreview" version="0.5.2.12" />
         </dependencies>
         <tags>ComputerVision AI VisionSkill</tags>
 		<contentFiles>
@@ -34,7 +34,10 @@
     <!-- WinMD and Intellisense files-->
 	<file src="..\cpp\Deobfuscator\x64\Release\DeobfuscationHelper\DeobfuscationHelper.winmd" target="lib\uap10.0.17763" />
     <file src="..\cpp\FaceSentimentAnalyzer\x64\Release\Contoso.FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer.winmd" target="lib\uap10.0.17763" />
+    <file src="..\cpp\Deobfuscator\x64\Release\DeobfuscationHelper\DeobfuscationHelper.winmd" target="lib\netcoreapp3.0" />
+    <file src="..\cpp\FaceSentimentAnalyzer\x64\Release\Contoso.FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer.winmd" target="lib\netcoreapp3.0" />
 	<file src="..\common\Contoso.FaceSentimentAnalyzer.xml" target="lib\uap10.0.17763" />
+        <file src="..\common\Contoso.FaceSentimentAnalyzer.xml" target="lib\netcoreapp3.0" />
 	
 	<!-- Skill DLLs -->
     <file src="..\cpp\FaceSentimentAnalyzer\x64\Release\Contoso.FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer.dll" target="runtimes\win10-x64\native" />
