@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FaceSentimentAnalysisTestApp", "FaceSentimentAnalysisTestApp\FaceSentimentAnalysisTestApp.csproj", "{C573E45A-CA10-4A97-9AAA-99A301383A68}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contoso.FaceSentimentAnalyzer", "FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer.csproj", "{0AEDB7FA-181F-4672-8BC6-DEA05600D7E8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contoso.FaceSentimentAnalyzer_CS", "FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer_CS.csproj", "{0AEDB7FA-181F-4672-8BC6-DEA05600D7E8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
