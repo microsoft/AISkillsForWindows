@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Contoso.FaceSentimentAnalyzer_CPP" Version="0.0.0.5" />
-    <PackageReference Include="Microsoft.AI.Skills.SkillInterfacePreview" Version="0.5.2.12" />
+    <PackageReference Include="Contoso.FaceSentimentAnalyzer_CPP" Version="0.0.0.6" />
+    <PackageReference Include="Microsoft.AI.Skills.SkillInterfacePreview" Version="0.5.2.13" />
   </ItemGroup>
 
   <ItemGroup>
