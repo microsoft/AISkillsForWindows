@@ -121,8 +121,9 @@
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>$(ProjectDir)PostBuildHeaderGen.cmd "$(TargetDir)" "$(WindowsSDK_UnionMetadataPath)" 
-cppwinrt -in Microsoft.AI.Skills.SkillInterfacePreview.winmd -ref $(TargetDir) -ref $(WindowsSDK_UnionMetadataPath) -out $(TargetDir)
-cppwinrt -in Contoso.FaceSentimentAnalyzer.winmd -ref $(TargetDir) -ref $(WindowsSDK_UnionMetadataPath) -out $(TargetDir)</Command>
+cppwinrt -in "$(TargetDir)Microsoft.AI.Skills.SkillInterfacePreview.winmd" -ref "$(TargetDir)." -ref "$(WindowsSDK_UnionMetadataPath)" -out "$(TargetDir)."
+cppwinrt -in "$(TargetDir)Contoso.FaceSentimentAnalyzer.winmd" -ref "$(TargetDir)." -ref "$(WindowsSDK_UnionMetadataPath)" -out "$(TargetDir)."
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
@@ -143,8 +144,9 @@ cppwinrt -in Contoso.FaceSentimentAnalyzer.winmd -ref $(TargetDir) -ref $(Window
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>$(ProjectDir)PostBuildHeaderGen.cmd "$(TargetDir)" "$(WindowsSDK_UnionMetadataPath)" 
-cppwinrt -in Microsoft.AI.Skills.SkillInterfacePreview.winmd -ref $(TargetDir) -ref $(WindowsSDK_UnionMetadataPath) -out $(TargetDir)
-cppwinrt -in Contoso.FaceSentimentAnalyzer.winmd -ref $(TargetDir) -ref $(WindowsSDK_UnionMetadataPath) -out $(TargetDir)</Command>
+cppwinrt -in "$(TargetDir)Microsoft.AI.Skills.SkillInterfacePreview.winmd" -ref "$(TargetDir)." -ref "$(WindowsSDK_UnionMetadataPath)" -out "$(TargetDir)."
+cppwinrt -in "$(TargetDir)Contoso.FaceSentimentAnalyzer.winmd" -ref "$(TargetDir)." -ref "$(WindowsSDK_UnionMetadataPath)" -out "$(TargetDir)."
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
