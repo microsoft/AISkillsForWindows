@@ -5,7 +5,6 @@
 #include "FaceSentimentAnalyzerBinding.h"
 #include "FaceSentimentAnalyzerConst.h"
 #include "winrt/DeobfuscationHelper.h"
-#include "winrt/Microsoft.AI.Skills.DXCoreExecutionDevice.h"
 #include <ppltasks.h>
 #include <math.h>
 
@@ -29,7 +28,7 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
         case SkillExecutionDeviceKind::Gpu:
         case SkillExecutionDeviceKind::Vpu:
         {
-            auto dxDevice = executionDevice.as<winrt::Microsoft::AI::Skills::DXCoreExecutionDevice::SkillExecutionDeviceDXCore>();
+            auto dxDevice = executionDevice.as<DXCoreExtension::SkillExecutionDeviceDXCore>();
             return dxDevice.WinMLDevice();
         }
         default:

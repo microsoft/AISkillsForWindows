@@ -4,10 +4,8 @@
 #include "FaceSentimentAnalyzerConst.h"
 #include "FaceSentimentAnalyzerDescriptor.h"
 #include "FaceSentimentAnalyzerSkill.h"
-#include "winrt/Microsoft.AI.Skills.DXCoreExecutionDevice.h"
 
 using namespace winrt::Microsoft::AI::Skills::SkillInterfacePreview;
-using namespace winrt::Microsoft::AI::Skills::DXCoreExecutionDevice;
 
 namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
 {
@@ -73,7 +71,7 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
     {
         m_devices = single_threaded_vector<ISkillExecutionDevice>();
         m_devices.Append(SkillExecutionDeviceCPU::Create());
-        auto devices = SkillExecutionDeviceDXCore::GetAvailableHardwareExecutionDevices();
+        auto devices = DXCoreExtension::SkillExecutionDeviceDXCore::GetAvailableHardwareExecutionDevices();
         for (auto iter : devices)
         {
             m_devices.Append(iter);

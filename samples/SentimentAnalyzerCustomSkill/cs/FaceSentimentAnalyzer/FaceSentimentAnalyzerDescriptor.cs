@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Microsoft.AI.Skills.DXCoreExecutionDevice;
 using Microsoft.AI.Skills.SkillInterfacePreview;
+using Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension;
 using Windows.Foundation;
 using Windows.Graphics.Imaging;
 

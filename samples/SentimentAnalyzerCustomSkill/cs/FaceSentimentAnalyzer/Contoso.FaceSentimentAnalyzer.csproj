@@ -126,11 +126,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AI.Skills.DXCoreExecutionDevice">
-      <Version>0.0.0.1-experimental</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.AI.Skills.SkillInterfacePreview">
       <Version>0.5.2.14</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension">
+      <Version>0.0.0.1-experimental</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.8</Version>

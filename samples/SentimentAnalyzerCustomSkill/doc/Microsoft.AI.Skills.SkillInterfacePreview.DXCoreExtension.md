@@ -1,8 +1,8 @@
-# Windows DXCore SkillExecutionDevice Documentation
+# Windows Vision Skills DXCoreExtension Documentation
 
- The experimental *Microsoft.AI.Skills.DXCoreExecutionDevice* package enables limited VPU support using the prerelease *DXCore* API.
+ The experimental *Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension* package enables limited VPU support using the prerelease *DXCore* API.
 
-# Microsoft.AI.Skills.DXCoreExecutionDevice API documentation
+# Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension API documentation
 + [Classes](#Classes)
   + [SkillExecutionDeviceDXCore](#SkillExecutionDeviceDXCore)
 

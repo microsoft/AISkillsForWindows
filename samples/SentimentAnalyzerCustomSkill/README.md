@@ -39,7 +39,7 @@ However, some consumers may also want to tweak and optimize part of that pipelin
 
 ## System requirements
 
-**Client:** Windows 10 build 17763 or greater
+**Client:** Windows 10 build **18870** or greater
 
 ## Build the sample
 
@@ -54,6 +54,8 @@ However, some consumers may also want to tweak and optimize part of that pipelin
 4. To build and package the **C++/WinRT version** of the skill:
     1. Run the included powershell script named *BuildSentimentAnalyzer_CPP.ps1*
     2. Once the sample is built, to generate a NuGet package from it, you can run the included powershell script named *PackageSentimentAnalyzer_CPP.ps1*. You should see a *FaceSentimentAnalyzer_CPP\*.nupkg* file generated.
+
+> NOTE: The experimental package provided for VPU access *Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension* has a very long name which may interfere with MSBuild. If your builds are failing with `warning MSB3106`, try moving the sample folder to a shorter path, e.g. C:/. Note that you will need to move the **entire** sample folder, including the *common/* and *build/* directories!
 
 ## Run the sample <a name="PrivateNuGetFeed"></a>
 
@@ -71,7 +73,7 @@ In order for local NuGet packages to be available to your app project, you need 
 3. From your test app project, make sure you install the skill NuGet package by right-clicking on your project \> *Manage NuGet Packages*, then make sure the *Package Source* points to your custom NuGet source, then click *Install*. If you are targeting the experimental VPU support, be sure to check the "Include prerelease" to show the experimental packages which the samples use.
 ![LocalNugetHowTo3](./doc/localNugetHowTo3.jpg)
 
-> NOTE: This version of the sample includes experimental VPU support which utilizes the prerelease [SkillExecutionDeviceDXCore](./doc/Microsoft.AI.Skills.DXCoreExecutionDevice.md) package. See the [documentation](./doc/Microsoft.AI.Skills.DXCoreExecutionDevice.md) for more information on the package.
+> NOTE: This version of the sample includes experimental VPU support which utilizes the prerelease [SkillExecutionDeviceDXCore](./doc/Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension.md) package. See the [documentation](./doc/Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension.md) for more information on the package.
 
 # Contributing
 
