@@ -9,12 +9,12 @@
             <Implementation>Contoso.FaceSentimentAnalyzer.dll</Implementation>
         </Reference>
         <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\runtimes\win10-$(FaceSentimentAnalyzer-Platform)\native\Contoso.FaceSentimentAnalyzer.dll" />
-		<ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\contentFiles\any\uap10.0.17763\Contoso.FaceSentimentAnalyzer.pri" />
-		
-		<Reference Include="$(MSBuildThisFileDirectory)..\..\lib\uap10.0.17763\DeobfuscationHelper.winmd">
+        <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\contentFiles\any\uap10.0.17763\Contoso.FaceSentimentAnalyzer.pri" />
+        
+        <Reference Include="$(MSBuildThisFileDirectory)..\..\lib\uap10.0.17763\DeobfuscationHelper.winmd">
             <Implementation>DeobfuscationHelper.dll</Implementation>
         </Reference>
-		<ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\runtimes\win10-$(FaceSentimentAnalyzer-Platform)\native\DeobfuscationHelper.dll" />
-		<ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\contentFiles\any\uap10.0.17763\DeobfuscationHelper.pri" />
+        <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\runtimes\win10-$(FaceSentimentAnalyzer-Platform)\native\DeobfuscationHelper.dll" />
+        <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\contentFiles\any\uap10.0.17763\DeobfuscationHelper.pri" />
     </ItemGroup>
 </Project>

@@ -6,6 +6,6 @@
     </PropertyGroup>
     <ItemGroup>
         <Reference Include="$(MSBuildThisFileDirectory)..\..\lib\uap10.0.17763\Contoso.FaceSentimentAnalyzer.winmd" />
-		<ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\lib\uap10.0.17763\Contoso.FaceSentimentAnalyzer.pri" />		
+        <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\lib\uap10.0.17763\Contoso.FaceSentimentAnalyzer.pri" />
     </ItemGroup>
 </Project>
