@@ -80,7 +80,7 @@ using namespace ABI::Windows::Media::Capture::Frames;
     return hr;                                                                                                                  \
 } ();
 
-// Macro for conveniance of error checking and bail-out
+// Macro for convenience of error checking and bail-out
 #define CHECKHR_GOTO( _hr, _lbl ) { hr = _hr; if( FAILED( hr ) ){ std::cout << std::endl << "Error at:" <<__FILE__ <<":" << __LINE__ << " hr: " << std::hex << hr; goto _lbl; } }
 
 class App
