@@ -23,6 +23,7 @@ using Microsoft.AI.Skills.SkillInterfacePreview;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System.Threading;
+using System.Diagnostics;
 
 namespace FaceSentimentAnalysisTestApp
 {
@@ -35,6 +36,7 @@ namespace FaceSentimentAnalysisTestApp
         private FaceSentimentAnalyzerDescriptor m_skillDescriptor = null;
         private FaceSentimentAnalyzerSkill m_skill = null;
         private FaceSentimentAnalyzerBinding m_binding = null;
+        private Stopwatch m_evalStopwatch = new Stopwatch();
 
         // UI-related variables
         private SoftwareBitmapSource m_bitmapSource = new SoftwareBitmapSource(); // used to render an image from a file
@@ -326,7 +328,9 @@ namespace FaceSentimentAnalysisTestApp
         {
             // Update input image and run the skill against it
             await m_binding.SetInputImageAsync(frame);
+            m_evalStopwatch.Restart();
             await m_skill.EvaluateAsync(m_binding);
+            m_evalStopwatch.Stop();
 
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
@@ -347,6 +351,9 @@ namespace FaceSentimentAnalysisTestApp
                     {
                         UISkillOutputDetails.Text += $"{(SentimentType)i} : {scores[i]} {(i == (int)m_binding.PredominantSentiment ? " <<------" : "")} \n";
                     }
+
+                    // Append eval time to output
+                    UISkillOutputDetails.Text += $"\nEvaluation time: {m_evalStopwatch.ElapsedMilliseconds}ms\n";
                 }
             });
         }
