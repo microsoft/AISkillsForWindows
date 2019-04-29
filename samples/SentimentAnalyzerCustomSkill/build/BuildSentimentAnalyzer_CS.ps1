@@ -2,10 +2,6 @@
 .SYNOPSIS
 Performs all steps necessary to build the C# SentimentAnalysis WinRTComponent.
 #>
-<#
-.DESCRIPTION
--BuildArch: You can build for a specific architecture (i.e. "All" or "x86" or "x64" or "ARM", "All" is default)
-#>
 Param
 (
   
@@ -26,12 +22,12 @@ Invoke-Expression "$PSScriptRoot\nuget.exe source Add -Name WindowsVisionSkillsL
 
 # Restore packages
 RunCommand "$PSScriptRoot\RestorePackages.ps1"
-RunCommand "$PSScriptRoot\RestorePackages.ps1 -PackagesConfigPath $PSScriptRoot\..\cs\FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer.csproj"
+RunCommand "$PSScriptRoot\RestorePackages.ps1 -PackagesConfigPath $PSScriptRoot\..\cs\FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer_CS.csproj"
 
 # Setup the build environement
 RunCommand "$PSScriptRoot\SetBuildEnv.ps1"
 
-$BuildCommandBase = @('msbuild', '--%', "$PSScriptRoot\..\cs\FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer.csproj")
+$BuildCommandBase = @('msbuild', '--%', "$PSScriptRoot\..\cs\FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer_CS.csproj")
 
 $BuildCommand = $BuildCommandBase + "/m /p:Platform=AnyCPU /p:Configuration=Release"
 RunCommand $BuildCommand
