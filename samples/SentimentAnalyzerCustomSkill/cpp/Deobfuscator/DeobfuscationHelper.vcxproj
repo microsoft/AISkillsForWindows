@@ -117,7 +117,7 @@
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <PostBuildEvent>
-      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\Skills_PostBuild.ps1' -TargetName:'$(TargetFileName)' -TargetDir:'$(TargetDir)' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\Skills_PostBuild.ps1' -TargetName:'$(TargetFileName)' -TargetDir:'$(TargetDir)' -ProjectDir:'$(ProjectDir)'</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
@@ -125,7 +125,7 @@
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <PostBuildEvent>
-      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\Skills_PostBuild.ps1' -TargetName:'$(TargetFileName)' -TargetDir:'$(TargetDir)' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\Skills_PostBuild.ps1' -TargetName:'$(TargetFileName)' -TargetDir:'$(TargetDir)' -ProjectDir:'$(ProjectDir)'</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

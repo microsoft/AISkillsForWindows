@@ -120,7 +120,7 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">copying model file locally, running obfuscation, deleting local copy of model file</Message>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\Skills_PostBuild.ps1' -TargetName:'$(TargetFileName)' -TargetDir:'$(TargetDir)' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\Skills_PostBuild.ps1' -TargetName:'$(TargetFileName)' -TargetDir:'$(TargetDir)' -ProjectDir:'$(ProjectDir)'</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
@@ -140,7 +140,7 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">copying model file locally, running obfuscation, deleting local copy of model file</Message>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\Skills_PostBuild.ps1' -TargetName:'$(TargetFileName)' -TargetDir:'$(TargetDir)' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\Skills_PostBuild.ps1' -TargetName:'$(TargetFileName)' -TargetDir:'$(TargetDir)' -ProjectDir:'$(ProjectDir)'</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -195,7 +195,7 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.targets" Condition="Exists('..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.targets')" />
-    <Import Project="..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.13\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets" Condition="Exists('..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.13\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets')" />
+    <Import Project="..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.15\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets" Condition="Exists('..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.15\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -203,6 +203,6 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.targets'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.13\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.13\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.15\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.15\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets'))" />
   </Target>
 </Project>

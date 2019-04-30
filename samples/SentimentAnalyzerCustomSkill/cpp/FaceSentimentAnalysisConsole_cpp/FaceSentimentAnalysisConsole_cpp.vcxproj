@@ -127,7 +127,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\FaceSentimentAnalyzer\$(Platform)\$(Configuration)\Contoso.FaceSentimentAnalyzer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAsWinRT>false</CompileAsWinRT>
       <AdditionalOptions>/Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -141,6 +141,12 @@
     <Manifest>
       <AdditionalManifestFiles>app.manifest</AdditionalManifestFiles>
     </Manifest>
+    <PostBuildEvent>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform)</Command>
+    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWRLCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -151,7 +157,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\FaceSentimentAnalyzer\$(Platform)\$(Configuration)\Contoso.FaceSentimentAnalyzer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAsWinRT>false</CompileAsWinRT>
       <AdditionalOptions>/Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -162,6 +168,12 @@
     <Manifest>
       <AdditionalManifestFiles>app.manifest</AdditionalManifestFiles>
     </Manifest>
+    <PostBuildEvent>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform)</Command>
+    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWRLCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <ClCompile>
@@ -172,7 +184,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\FaceSentimentAnalyzer\$(Platform)\$(Configuration)\Contoso.FaceSentimentAnalyzer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAsWinRT>false</CompileAsWinRT>
       <AdditionalOptions>/Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -183,6 +195,12 @@
     <Manifest>
       <AdditionalManifestFiles>app.manifest</AdditionalManifestFiles>
     </Manifest>
+    <PostBuildEvent>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform)</Command>
+    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWRLCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -193,7 +211,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\FaceSentimentAnalyzer\$(Platform)\$(Configuration)\Contoso.FaceSentimentAnalyzer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAsWinRT>false</CompileAsWinRT>
       <AdditionalOptions>/Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -206,10 +224,10 @@
       <AdditionalManifestFiles>app.manifest</AdditionalManifestFiles>
     </Manifest>
     <PostBuildEvent>
-      <Command>powershell -NoLogo -NonInteractive -Command .'$(SolutionDir)scripts\AppWRLCPP_PreBuild.ps1' -TargetName:'$(TargetFileName)' -TargetDir:'$(TargetDir)' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform)</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>powershell -NoLogo -NonInteractive -Command .'$(SolutionDir)scripts\AppWRLCPP_PreBuild.ps1' -TargetName:'$(TargetFileName)' -TargetDir:'$(TargetDir)' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWRLCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -223,7 +241,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\FaceSentimentAnalyzer\$(Platform)\$(Configuration)\Contoso.FaceSentimentAnalyzer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAsWinRT>false</CompileAsWinRT>
       <AdditionalOptions>/Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -237,6 +255,12 @@
     <Manifest>
       <AdditionalManifestFiles>app.manifest</AdditionalManifestFiles>
     </Manifest>
+    <PostBuildEvent>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform)</Command>
+    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWRLCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <ClCompile>
@@ -249,7 +273,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\FaceSentimentAnalyzer\$(Platform)\$(Configuration)\Contoso.FaceSentimentAnalyzer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAsWinRT>false</CompileAsWinRT>
       <AdditionalOptions>/Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -263,6 +287,12 @@
     <Manifest>
       <AdditionalManifestFiles>app.manifest</AdditionalManifestFiles>
     </Manifest>
+    <PostBuildEvent>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform)</Command>
+    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWRLCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
@@ -272,7 +302,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Manifest Include="app.manifest" />
+    <Manifest Include="app.manifest">
+      <SubType>Designer</SubType>
+    </Manifest>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
