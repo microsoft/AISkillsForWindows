@@ -1,7 +1,7 @@
 param($TargetName,$TargetDir,$ProjectDir)
 
 $filelist = Get-ChildItem -Path $ProjectDir -Filter *.idl -File | %{$_.FullName}
-$fileArg = "" #$filelist -join ' '
+$fileArg = ""
 foreach($file in $filelist)
 {
     $fileArg += "'$file'" + " " 
