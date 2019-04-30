@@ -205,6 +205,12 @@
     <Manifest>
       <AdditionalManifestFiles>app.manifest</AdditionalManifestFiles>
     </Manifest>
+    <PostBuildEvent>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(SolutionDir)scripts\AppWRLCPP_PreBuild.ps1' -TargetName:'$(TargetFileName)' -TargetDir:'$(TargetDir)' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
+    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(SolutionDir)scripts\AppWRLCPP_PreBuild.ps1' -TargetName:'$(TargetFileName)' -TargetDir:'$(TargetDir)' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>

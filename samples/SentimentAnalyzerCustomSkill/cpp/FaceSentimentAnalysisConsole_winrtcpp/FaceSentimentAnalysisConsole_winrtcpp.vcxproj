@@ -127,7 +127,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\FaceSentimentAnalyzer\$(Platform)\$(Configuration)\Contoso.FaceSentimentAnalyzer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAsWinRT>false</CompileAsWinRT>
       <AdditionalOptions>/Zc:twoPhase- /await %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -142,6 +142,12 @@
     <Manifest>
       <AdditionalManifestFiles>app.manifest</AdditionalManifestFiles>
     </Manifest>
+    <PreBuildEvent>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -152,7 +158,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\FaceSentimentAnalyzer\$(Platform)\$(Configuration)\Contoso.FaceSentimentAnalyzer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAsWinRT>false</CompileAsWinRT>
       <AdditionalOptions>/Zc:twoPhase- /await %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -162,6 +168,12 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>runtimeobject.lib;kernel32.lib;user32.lib;ole32.lib;oleaut32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <ClCompile>
@@ -172,7 +184,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\FaceSentimentAnalyzer\$(Platform)\$(Configuration)\Contoso.FaceSentimentAnalyzer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAsWinRT>false</CompileAsWinRT>
       <AdditionalOptions>/Zc:twoPhase- /await %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -182,6 +194,12 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>runtimeobject.lib;kernel32.lib;user32.lib;ole32.lib;oleaut32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -192,7 +210,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\FaceSentimentAnalyzer\$(Platform)\$(Configuration)\Contoso.FaceSentimentAnalyzer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAsWinRT>false</CompileAsWinRT>
       <AdditionalOptions>/Zc:twoPhase- /await %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -202,6 +220,12 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>runtimeobject.lib;kernel32.lib;user32.lib;ole32.lib;oleaut32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -214,7 +238,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\FaceSentimentAnalyzer\$(Platform)\$(Configuration)\Contoso.FaceSentimentAnalyzer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAsWinRT>false</CompileAsWinRT>
       <AdditionalOptions>/Zc:twoPhase- /await %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -229,6 +253,12 @@
     <Manifest>
       <AdditionalManifestFiles>app.manifest</AdditionalManifestFiles>
     </Manifest>
+    <PreBuildEvent>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <ClCompile>
@@ -241,7 +271,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\FaceSentimentAnalyzer\$(Platform)\$(Configuration)\Contoso.FaceSentimentAnalyzer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAsWinRT>false</CompileAsWinRT>
       <AdditionalOptions>/Zc:twoPhase- /await %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -256,13 +286,21 @@
     <Manifest>
       <AdditionalManifestFiles>app.manifest</AdditionalManifestFiles>
     </Manifest>
+    <PreBuildEvent>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="app.manifest" />
@@ -273,11 +311,13 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.13\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets" Condition="Exists('..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.13\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets')" />
+    <Import Project="..\packages\Contoso.FaceSentimentAnalyzer_CPP.0.0.0.6\build\native\Contoso.FaceSentimentAnalyzer_CPP.targets" Condition="Exists('..\packages\Contoso.FaceSentimentAnalyzer_CPP.0.0.0.6\build\native\Contoso.FaceSentimentAnalyzer_CPP.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.13\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.13\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets'))" />
+    <Error Condition="!Exists('..\packages\Contoso.FaceSentimentAnalyzer_CPP.0.0.0.6\build\native\Contoso.FaceSentimentAnalyzer_CPP.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Contoso.FaceSentimentAnalyzer_CPP.0.0.0.6\build\native\Contoso.FaceSentimentAnalyzer_CPP.targets'))" />
   </Target>
 </Project>

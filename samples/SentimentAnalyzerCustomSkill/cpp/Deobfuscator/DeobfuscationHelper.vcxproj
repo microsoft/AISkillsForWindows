@@ -116,11 +116,17 @@
     <ClCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <PostBuildEvent>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\Skills_PostBuild.ps1' -TargetName:'$(TargetFileName)' -TargetDir:'$(TargetDir)' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
     <ClCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <PostBuildEvent>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\Skills_PostBuild.ps1' -TargetName:'$(TargetFileName)' -TargetDir:'$(TargetDir)' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Obfuscator\ObfuscationHelper.h" />

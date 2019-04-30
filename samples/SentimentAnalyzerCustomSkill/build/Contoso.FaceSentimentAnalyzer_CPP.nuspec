@@ -30,9 +30,11 @@
 		
 		<!-- WinMD and Intellisense files-->
 		<file src="..\cpp\Deobfuscator\x64\Release\DeobfuscationHelper\DeobfuscationHelper.winmd" target="lib\uap10.0.17763" />
+		<file src="..\cpp\Deobfuscator\x64\Release\DeobfuscationHelper\DeobfuscationHelper.manifest" target="lib\uap10.0.17763" />
 		<file src="..\cpp\Deobfuscator\x64\Release\DeobfuscationHelper\DeobfuscationHelper.pri" target="contentFiles\any\uap10.0.17763" />
 		
 		<file src="..\cpp\FaceSentimentAnalyzer\x64\Release\Contoso.FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer.winmd" target="lib\uap10.0.17763" />
+		<file src="..\cpp\FaceSentimentAnalyzer\x64\Release\Contoso.FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer.manifest" target="lib\uap10.0.17763" />
 		<file src="..\cpp\FaceSentimentAnalyzer\x64\Release\Contoso.FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer.pri" target="contentFiles\any\uap10.0.17763" />
 		
 		<file src="..\common\Contoso.FaceSentimentAnalyzer.xml" target="lib\uap10.0.17763" />
