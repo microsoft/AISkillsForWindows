@@ -12,7 +12,7 @@ foreach ($package in $packages.packages.package)
 $OutDir = "$ProjectDir" + "inc"
 if(!(Test-Path "$OutDir"))
 {
-    mkdir - $OutDir 
+    mkdir $OutDir 
 }
 foreach($file in $winmdFiles)
 {
