@@ -6,13 +6,23 @@ foreach ($package in $packages.packages.package)
 {
     $packageroot = "$ProjectDir" + "..\packages\" + $package.id + "." + $package.version
     $dllPath = $packageroot + "\runtimes\win10-" + $Arch
+    $dllFiles = Get-ChildItem -Path "$dllPath" -Recurse -Filter *.dll -File | %{$_.FullName}
+    foreach($file in $dllFiles) 
+    {
+        copy $file $TargetDir
+    }
+
     $manifestPath = $packageroot +"\lib\uap10.0.17763\"
     if(!(Test-Path $manifestPath))
     {
         $manifestPath = $packageroot +"\lib\uap10.0\"
     }
-    copy $dllPath\*.dll $TargetDir
-    copy $manifestPath\*.manifest $TargetDir
+    
+    $manifestFiles = Get-ChildItem -Path "$manifestPath" -Recurse -Filter *.manifest -File | %{$_.FullName}
+    foreach($file in $dllFiles) 
+    {
+        copy $file $TargetDir
+    }
 
     if(Test-Path "$packageroot\contentFiles")
     {
@@ -25,3 +35,5 @@ foreach ($package in $packages.packages.package)
     }
 
 }
+cmd /c mklink $TargetDir\vcruntime140_app.dll c:\windows\system32\vcruntime140.dll
+cmd /c mklink $TargetDir\msvcp140_app.dll c:\windows\system32\msvcp140.dll
