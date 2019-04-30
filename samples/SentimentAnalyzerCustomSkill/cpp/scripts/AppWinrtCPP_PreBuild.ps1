@@ -29,11 +29,3 @@ foreach($file in $winmdFiles)
 {
     rm $file
 }
-#$winmdnameBase = $TargetDir+ "Microsoft.AI.Skills.SkillInterfacePreview.winmd"
-#$winmdnameSkill = $TargetDir+ "Contoso.FaceSentimentAnalyzer.winmd"
-#$outdir = $TargetDir +"."
-#
-#$winrtHeaderScriptBase =  "cppwinrt -in " + "'$winmdnameBase'" + " -ref " + "'$outdir'" +  " -ref " + "'$WindowsSDK_UnionMetadataPath'" + " -out "+ "'$outdir'" 
-#$winrtHeaderScriptSkill = "cppwinrt -in " + "'$winmdnameSkill'" +" -ref " + "'$outdir'" + " -ref " + "'$WindowsSDK_UnionMetadataPath'" + " -out " + "'$outdir'"
-#Invoke-Expression "$winrtHeaderScriptBase"
-#Invoke-Expression "$winrtHeaderScriptSkill"

@@ -19,8 +19,9 @@ foreach ($package in $packages.packages.package)
     }
     
     $manifestFiles = Get-ChildItem -Path "$manifestPath" -Recurse -Filter *.manifest -File | %{$_.FullName}
-    foreach($file in $dllFiles) 
+    foreach($file in $manifestFiles) 
     {
+    
         copy $file $TargetDir
     }
 
