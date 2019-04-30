@@ -13,10 +13,12 @@ foreach ($package in $packages.packages.package)
     }
     copy $dllPath\*.dll $TargetDir
     copy $manifestPath\*.manifest $TargetDir
-    if(Test-Path $packageroot+"\contentFiles")
+
+    if(Test-Path "$packageroot\contentFiles")
     {
-        $contentFiles = Get-ChildItem -Path $packageroot+"\contentFiles\" -Recurse -Filter *.* | %{$_.FullName}
-        foreach($file in $contentFiles )
+    
+        $contentFiles = Get-ChildItem -Path "$packageroot\contentFiles\" -Recurse -Filter *.* -File | %{$_.FullName}
+        foreach($file in $contentFiles)
         {
             copy $file $TargetDir
         }
