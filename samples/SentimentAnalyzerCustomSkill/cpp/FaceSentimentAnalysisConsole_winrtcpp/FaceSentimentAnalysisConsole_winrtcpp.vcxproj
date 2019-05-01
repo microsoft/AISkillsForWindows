@@ -146,7 +146,7 @@
       <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform)</Command>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform)  -VCInstallDir:'$(VCInstallDir)'</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -172,7 +172,7 @@
       <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform)</Command>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform)  -VCInstallDir:'$(VCInstallDir)' -Debug</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
@@ -198,7 +198,7 @@
       <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform)</Command>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform)  -VCInstallDir:'$(VCInstallDir)' -Debug</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -224,7 +224,7 @@
       <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform)</Command>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform)  -VCInstallDir:'$(VCInstallDir)' -Debug</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -257,7 +257,7 @@
       <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform)</Command>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform)  -VCInstallDir:'$(VCInstallDir)'</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
@@ -290,7 +290,7 @@
       <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform)</Command>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform)  -VCInstallDir:'$(VCInstallDir)'</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

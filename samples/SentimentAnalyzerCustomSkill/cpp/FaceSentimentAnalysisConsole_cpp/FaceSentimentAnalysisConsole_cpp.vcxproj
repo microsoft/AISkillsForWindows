@@ -142,7 +142,7 @@
       <AdditionalManifestFiles>app.manifest</AdditionalManifestFiles>
     </Manifest>
     <PostBuildEvent>
-      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform)</Command>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform) -VCInstallDir:'$(VCInstallDir)'</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWRLCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
@@ -170,7 +170,7 @@
       <AdditionalManifestFiles>app.manifest</AdditionalManifestFiles>
     </Manifest>
     <PostBuildEvent>
-      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform)</Command>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform) -VCInstallDir:'$(VCInstallDir)'  -Debug</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWRLCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
@@ -198,7 +198,7 @@
       <AdditionalManifestFiles>app.manifest</AdditionalManifestFiles>
     </Manifest>
     <PostBuildEvent>
-      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform)</Command>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform) -VCInstallDir:'$(VCInstallDir)' -Debug</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWRLCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
@@ -226,7 +226,7 @@
       <AdditionalManifestFiles>app.manifest</AdditionalManifestFiles>
     </Manifest>
     <PostBuildEvent>
-      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform)</Command>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform) -VCInstallDir:'$(VCInstallDir)' -Debug</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWRLCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
@@ -258,7 +258,7 @@
       <AdditionalManifestFiles>app.manifest</AdditionalManifestFiles>
     </Manifest>
     <PostBuildEvent>
-      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform)</Command>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform) -VCInstallDir:'$(VCInstallDir)'</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWRLCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
@@ -290,7 +290,7 @@
       <AdditionalManifestFiles>app.manifest</AdditionalManifestFiles>
     </Manifest>
     <PostBuildEvent>
-      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform)</Command>
+      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWinrtCPP_PostBuild.ps1' -ProjectDir:'$(ProjectDir)' -TargetDir:'$(TargetDir)' -Arch:$(Platform) -VCInstallDir:'$(VCInstallDir)'</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\scripts\AppWRLCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>

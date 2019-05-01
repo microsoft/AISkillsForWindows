@@ -1,4 +1,4 @@
-param($TargetDir,$Arch,$ProjectDir)
+param($TargetDir,$Arch,$ProjectDir,$VCInstallDir,[switch] $Debug)
 [xml]$packages = Get-Content "$ProjectDir\packages.config"
 echo "Gathering known dependencies..."
 
@@ -9,7 +9,7 @@ foreach ($package in $packages.packages.package)
     $dllFiles = Get-ChildItem -Path "$dllPath" -Recurse -Filter *.dll -File | %{$_.FullName}
     foreach($file in $dllFiles) 
     {
-        copy $file $TargetDir
+        copy -Force $file $TargetDir
     }
 
     $manifestPath = $packageroot +"\lib\uap10.0.17763\"
@@ -22,7 +22,7 @@ foreach ($package in $packages.packages.package)
     foreach($file in $manifestFiles) 
     {
     
-        copy $file $TargetDir
+        copy -Force $file $TargetDir
     }
 
     if(Test-Path "$packageroot\contentFiles")
@@ -31,10 +31,26 @@ foreach ($package in $packages.packages.package)
         $contentFiles = Get-ChildItem -Path "$packageroot\contentFiles\" -Recurse -Filter *.* -File | %{$_.FullName}
         foreach($file in $contentFiles)
         {
-            copy $file $TargetDir
+            copy -Force $file $TargetDir
         }
     }
 
 }
-cmd /c mklink $TargetDir\vcruntime140_app.dll c:\windows\system32\vcruntime140.dll
-cmd /c mklink $TargetDir\msvcp140_app.dll c:\windows\system32\msvcp140.dll
+if($Debug)
+{
+    $redistPath = $VCInstallDir + "Redist\MSVC\14.16.27012\onecore\debug_nonredist\$Arch\Microsoft.VC141.DebugCRT\"
+    $redistfiles =@("vcruntime140d.dll" , "msvcp140d.dll")
+}
+else
+{
+    $redistPath = $VCInstallDir + "Redist\MSVC\14.16.27012\onecore\$Arch\Microsoft.VC141.CRT\"
+    $redistfiles =@("vcruntime140.dll" , "msvcp140.dll")
+}
+foreach($file in $redistfiles)
+{
+    $fullpath = $redistPath + $file
+    copy -Force $fullpath $TargetDir    
+}
+
+cmd /c mklink /h $TargetDir\vcruntime140_app.dll $TargetDir\vcruntime140.dll
+cmd /c mklink /h $TargetDir\msvcp140_app.dll $TargetDir\msvcp140.dll
