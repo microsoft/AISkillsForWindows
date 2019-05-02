@@ -36,21 +36,25 @@ foreach ($package in $packages.packages.package)
     }
 
 }
+$redistfiles =@("vcruntime140" , "msvcp140")
+$redistPath = $VCInstallDir + "Redist\MSVC\14.16.27012\onecore\$Arch\Microsoft.VC141.CRT\"
 if($Debug)
 {
-    $redistPath = $VCInstallDir + "Redist\MSVC\14.16.27012\onecore\debug_nonredist\$Arch\Microsoft.VC141.DebugCRT\"
-    $redistfiles =@("vcruntime140d.dll" , "msvcp140d.dll")
-}
-else
-{
-    $redistPath = $VCInstallDir + "Redist\MSVC\14.16.27012\onecore\$Arch\Microsoft.VC141.CRT\"
-    $redistfiles =@("vcruntime140.dll" , "msvcp140.dll")
-}
-foreach($file in $redistfiles)
-{
-    $fullpath = $redistPath + $file
-    copy -Force $fullpath $TargetDir    
+    $redistPathDebug = $VCInstallDir + "Redist\MSVC\14.16.27012\onecore\debug_nonredist\$Arch\Microsoft.VC141.DebugCRT\"
+    foreach($file in $redistfiles)
+    {
+        $fullpath = $redistPathDebug + $file +"d.dll"
+        copy -Force $fullpath $TargetDir
+    }
 }
 
-cmd /c mklink /h $TargetDir\vcruntime140_app.dll $TargetDir\vcruntime140.dll
-cmd /c mklink /h $TargetDir\msvcp140_app.dll $TargetDir\msvcp140.dll
+#*_app.dll symlinks for the skills which are built with the APPCONTAINER flag, assuming skills are all in Release mode only
+foreach($file in $redistfiles)
+{
+    $fullname = $file + ".dll"
+    $linkFile = $file + "_app.dll"
+    $fullpath = $redistPath+$fullname
+    copy -Force $fullpath $TargetDir
+
+    cmd /c mklink /h $TargetDir$linkFile $TargetDir$fullname
+}
