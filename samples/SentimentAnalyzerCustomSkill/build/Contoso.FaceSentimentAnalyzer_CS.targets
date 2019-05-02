@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <FaceSentimentAnalyzer-Platform Condition="'$(Platform)' == 'Win32'">x86</FaceSentimentAnalyzer-Platform>
+        <FaceSentimentAnalyzer-Platform Condition="'$(Platform)' != 'Win32'">$(Platform)</FaceSentimentAnalyzer-Platform>
+    </PropertyGroup>
+    <ItemGroup>
+        <Reference Include="$(MSBuildThisFileDirectory)..\..\lib\uap10.0.17763\Contoso.FaceSentimentAnalyzer.winmd" />
+        <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\lib\uap10.0.17763\Contoso.FaceSentimentAnalyzer.pri" />
+    </ItemGroup>
+</Project>

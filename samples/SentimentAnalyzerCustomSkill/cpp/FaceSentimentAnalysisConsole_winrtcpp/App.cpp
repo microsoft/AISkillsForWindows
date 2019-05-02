@@ -102,25 +102,34 @@ int App::AppMain()
 {
     std::cout << "WinrtCPP Non-packaged(win32) console APP: Face it!!" << std::endl;
 
-    // Create the FaceSentimentAnalyzer skill descriptor
-    auto skillDesc = FaceSentimentAnalyzerDescriptor().as<ISkillDescriptor>();
+    try 
+    {
+        // Create the FaceSentimentAnalyzer skill descriptor
+        auto skillDesc = FaceSentimentAnalyzerDescriptor().as<ISkillDescriptor>();
 
-    // Create instance of the skill
-    m_Skill = skillDesc.CreateSkillAsync().get().as<FaceSentimentAnalyzerSkill>();
+        // Create instance of the skill
+        m_Skill = skillDesc.CreateSkillAsync().get().as<FaceSentimentAnalyzerSkill>();
 
-    // Create instance of the skill binding
-    m_FaceSentimentSkillBinding = m_Skill.CreateSkillBindingAsync().get().as<FaceSentimentAnalyzerBinding>();
+        // Create instance of the skill binding
+        m_FaceSentimentSkillBinding = m_Skill.CreateSkillBindingAsync().get().as<FaceSentimentAnalyzerBinding>();
 
-    // Initialize MediaCapture and FrameReader
-    InitCameraAndFrameSource();
-    std::cout << "\t\t\t\t\t\t\t\t...press enter to Stop" << std::endl;
+        // Initialize MediaCapture and FrameReader
+        InitCameraAndFrameSource();
+        std::cout << "\t\t\t\t\t\t\t\t...press enter to Stop" << std::endl;
 
-    // Wait for enter keypress
-    while (std::cin.get() != '\n');
+        // Wait for enter keypress
+        while (std::cin.get() != '\n');
 
-    std::cout << std::endl << "Key pressed.. exiting";
+        std::cout << std::endl << "Key pressed.. exiting";
 
-    // De-initialize the MediaCapture and FrameReader
-    DeInitCameraAndFrameSource();
+        // De-initialize the MediaCapture and FrameReader
+        DeInitCameraAndFrameSource();
+    }
+    catch (hresult_error const &ex)
+    {
+        std::wcout << "Error:" << ex.message().c_str() << ":" << std::hex << ex.code().value << std::endl;
+        return ex.code().value;
+    }
+    return 0;
 }
 
