@@ -12,7 +12,7 @@ Specifically, this sample shows how to:
 4. **Obfuscate files as pre-build step and deobfuscate files at runtime** to deter your skill consumers from tempering or accessing your resource files. Note that this part is shown only in the C++/Winrt version of the skill to keep the C# version simpler. Obfuscation is handled as a pre-build step using a dedicated compiled tool (Obfuscator.exe) and deobfuscation is exposed via a simple helper Windows Runtime Component ingested by the skill (DeobfuscationHelper).
 4. **Create a NuGet package** that is dependent on the Microsoft.AI.Skills.SkillInterfacePreview NuGet package that ecapsulates a Windows Runtime Component along its assets so that an app can ingest it. This NuGet package also links to a license and triggers a request for its approval before ingestion.
 5. **Ingest a custom Windows Vision Skill** from a NuGet package inside a C# UWP app to execute sentiment analysis againt images by binding VideoFrame instances and displaying binding outputs via adapter properties.
-6. **Ingest a custom Windows Vision Skill** from a NuGet package inside a C++ Win32 app to execute sentiment analysis againt images by binding VideoFrame instances and displaying binding outputs via adapter properties.
+6. **Ingest a custom Windows Vision Skill** from a NuGet package inside a **C++ Win32** app to execute sentiment analysis againt images by binding VideoFrame instances and displaying binding outputs via adapter properties.
 
 ## Scenario
 A developer wants to expose a functionality to his/her users that infers the sentiment of a person from an image.
@@ -37,7 +37,7 @@ However, some consumers may also want to tweak and optimize part of that pipelin
 - [Acquiring the sentiment analysis ONNX model](https://github.com/onnx/models/tree/master/emotion_ferplus)
 - [C++/Winrt reference documentation](https://docs.microsoft.com/en-us/windows/uwp/cpp-and-winrt-apis/)
 - [MIDL 3.0 syntax reference guide for authoring .idl files](https://docs.microsoft.com/en-us/uwp/midl-3/intro)
-- [Reg-Free WinRT component activation for Win32 apps and linking dependencies ]https://blogs.windows.com/buildingapps/2019/04/30/enhancing-non-packaged-desktop-apps-using-windows-runtime-components/
+- [Reg-Free WinRT component activation for Win32 apps and linking dependencies](https://blogs.windows.com/buildingapps/2019/04/30/enhancing-non-packaged-desktop-apps-using-windows-runtime-components)
 
 ## System requirements
 
