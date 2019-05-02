@@ -17,12 +17,13 @@ foreach ($package in $packages.packages.package)
     {
         $manifestPath = $packageroot +"\lib\uap10.0\"
     }
-    
-    $manifestFiles = Get-ChildItem -Path "$manifestPath" -Recurse -Filter *.manifest -File | %{$_.FullName}
-    foreach($file in $manifestFiles) 
+    if((Test-Path $manifestPath))
     {
-    
-        copy -Force $file $TargetDir
+        $manifestFiles = Get-ChildItem -Path "$manifestPath" -Recurse -Filter *.manifest -File | %{$_.FullName}
+        foreach($file in $manifestFiles) 
+        {
+            copy -Force $file $TargetDir
+        }
     }
 
     if(Test-Path "$packageroot\contentFiles")
@@ -56,5 +57,10 @@ foreach($file in $redistfiles)
     $fullpath = $redistPath+$fullname
     copy -Force $fullpath $TargetDir
 
-    cmd /c mklink /h $TargetDir$linkFile $TargetDir$fullname
+    # the vc runtime forwarders may not exist for all architectures, we create the links for the ones that we require
+    if(!(Test-Path "$TargetDir$linkFile"))
+    {
+        cmd /c mklink /h $TargetDir$linkFile $TargetDir$fullname
+    }
+
 }
