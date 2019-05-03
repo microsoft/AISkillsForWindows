@@ -5,30 +5,8 @@ echo "Gathering known dependencies..."
 foreach ($package in $packages.packages.package)
 {
     $packageroot = "$ProjectDir" + "..\packages\" + $package.id + "." + $package.version
-    $dllPath = $packageroot + "\runtimes\win10-" + $Arch
-    $dllFiles = Get-ChildItem -Path "$dllPath" -Recurse -Filter *.dll -File | %{$_.FullName}
-    foreach($file in $dllFiles) 
-    {
-        copy -Force $file $TargetDir
-    }
-
-    $manifestPath = $packageroot +"\lib\uap10.0.17763\"
-    if(!(Test-Path $manifestPath))
-    {
-        $manifestPath = $packageroot +"\lib\uap10.0\"
-    }
-    if((Test-Path $manifestPath))
-    {
-        $manifestFiles = Get-ChildItem -Path "$manifestPath" -Recurse -Filter *.manifest -File | %{$_.FullName}
-        foreach($file in $manifestFiles) 
-        {
-            copy -Force $file $TargetDir
-        }
-    }
-
     if(Test-Path "$packageroot\contentFiles")
-    {
-    
+    { 
         $contentFiles = Get-ChildItem -Path "$packageroot\contentFiles\" -Recurse -Filter *.* -File | %{$_.FullName}
         foreach($file in $contentFiles)
         {
@@ -56,11 +34,11 @@ foreach($file in $redistfiles)
     $linkFile = $file + "_app.dll"
     $fullpath = $redistPath+$fullname
     copy -Force $fullpath $TargetDir
-
+    
     # the vc runtime forwarders may not exist for all architectures, we create the links for the ones that we require
     if(!(Test-Path "$TargetDir$linkFile"))
     {
         cmd /c mklink /h $TargetDir$linkFile $TargetDir$fullname
     }
-
+    
 }
