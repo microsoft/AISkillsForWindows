@@ -90,4 +90,12 @@
     </dependentAssembly>
   </dependency>
   
+  <dependency>
+    <dependentAssembly>
+      <assemblyIdentity
+          type="win32"
+          name="DeobfuscationHelper"
+          version="1.0.0.0"/>
+    </dependentAssembly>
+  </dependency>
 </assembly>

@@ -1,20 +1,7 @@
 param($TargetDir,$Arch,$ProjectDir,$VCInstallDir,[switch] $Debug)
-[xml]$packages = Get-Content "$ProjectDir\packages.config"
+
 echo "Gathering known dependencies..."
 
-foreach ($package in $packages.packages.package)
-{
-    $packageroot = "$ProjectDir" + "..\packages\" + $package.id + "." + $package.version
-    if(Test-Path "$packageroot\contentFiles")
-    { 
-        $contentFiles = Get-ChildItem -Path "$packageroot\contentFiles\" -Recurse -Filter *.* -File | %{$_.FullName}
-        foreach($file in $contentFiles)
-        {
-            copy -Force $file $TargetDir
-        }
-    }
-
-}
 $redistfiles =@("vcruntime140" , "msvcp140")
 $redistPath = $VCInstallDir + "Redist\MSVC\14.16.27012\onecore\$Arch\Microsoft.VC141.CRT\"
 if($Debug)

@@ -51,6 +51,7 @@
 
         <!-- .targets -->
         <file src="Contoso.FaceSentimentAnalyzer_CPP.targets" target="build\native"/>
+        <file src="Contoso.FaceSentimentAnalyzer_CPP.targets" target="build\netcoreapp3.0"/>
     
     </files>
 </package>

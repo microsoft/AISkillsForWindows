@@ -18,5 +18,6 @@
         <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\runtimes\win10-$(FaceSentimentAnalyzer-Platform)\native\DeobfuscationHelper.dll" />
         <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\contentFiles\any\uap10.0.17763\DeobfuscationHelper.pri" />
         <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\lib\win32\DeobfuscationHelper.manifest" />
+        <ReferenceCopyLocalPaths  Condition="'$(TargetPlatformIdentifier)' != 'UAP'" Include="$(MSBuildThisFileDirectory)..\..\contentFiles\any\uap10.0.17763\Contoso.FaceSentimentAnalyzer\emotion_ferplus.crypt" />
     </ItemGroup>
 </Project>
