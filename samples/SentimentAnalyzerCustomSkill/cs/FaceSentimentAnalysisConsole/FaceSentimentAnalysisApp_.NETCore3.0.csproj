@@ -4,8 +4,13 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Platforms>AnyCPU;x64</Platforms>
+    <Platforms>AnyCPU;x64;x86</Platforms>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Contoso.FaceSentimentAnalyzer_CPP" Version="0.0.0.6" />
+    <PackageReference Include="Microsoft.VCRTForwarders.140" Version="1.0.0-rc" />
+  </ItemGroup>
 
   <ItemGroup>
     <Reference Include="System.Runtime.WindowsRuntime">
