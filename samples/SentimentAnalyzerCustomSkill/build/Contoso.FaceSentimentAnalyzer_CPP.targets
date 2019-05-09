@@ -4,19 +4,44 @@
         <FaceSentimentAnalyzer-Platform Condition="'$(Platform)' == 'Win32'">x86</FaceSentimentAnalyzer-Platform>
         <FaceSentimentAnalyzer-Platform Condition="'$(Platform)' != 'Win32'">$(Platform)</FaceSentimentAnalyzer-Platform>
     </PropertyGroup>
-    <ItemGroup>
-        <Reference Include="$(MSBuildThisFileDirectory)..\..\lib\uap10.0.17763\Contoso.FaceSentimentAnalyzer.winmd">
-            <Implementation>Contoso.FaceSentimentAnalyzer.dll</Implementation>
-        </Reference>
-        <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\runtimes\win10-$(FaceSentimentAnalyzer-Platform)\native\Contoso.FaceSentimentAnalyzer.dll" />
-        <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\contentFiles\any\uap10.0.17763\Contoso.FaceSentimentAnalyzer.pri" />
-        <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\lib\win32\Contoso.FaceSentimentAnalyzer.manifest" />
-
-        <Reference Include="$(MSBuildThisFileDirectory)..\..\lib\uap10.0.17763\DeobfuscationHelper.winmd">
-            <Implementation>DeobfuscationHelper.dll</Implementation>
-        </Reference>
-        <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\runtimes\win10-$(FaceSentimentAnalyzer-Platform)\native\DeobfuscationHelper.dll" />
-        <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\contentFiles\any\uap10.0.17763\DeobfuscationHelper.pri" />
-        <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\lib\win32\DeobfuscationHelper.manifest" />
-    </ItemGroup>
+	
+	<!--UWP-->
+  <ItemGroup Condition="'$(ApplicationType)' == 'Windows Store' Or '$(TargetPlatformIdentifier)' == 'UAP'">
+    <Reference Include="$(MSBuildThisFileDirectory)..\..\lib\uap10.0.17763\Contoso.FaceSentimentAnalyzer.winmd">
+      <Implementation>Contoso.FaceSentimentAnalyzer.dll</Implementation>
+    </Reference>
+	
+	<Reference Include="$(MSBuildThisFileDirectory)..\..\lib\uap10.0.17763\DeobfuscationHelper.winmd">
+      <Implementation>DeobfuscationHelper.dll</Implementation>
+    </Reference>
+  </ItemGroup>
+  
+  <!--ARM and ARM64 Not Supported yet for .NetCore3.0 and Win32-->
+  <Target Name="BeforeBuild" Condition="('$(Keyword)' == 'Win32Proj' Or '$(TargetFramework)' == 'netcoreapp3.0') And ('$(Platform)' == 'ARM' Or '$(Platform)' == 'ARM64')" >
+    <Warning Text=" Because your project is being built as ARM or ARM64 no Microsoft.VCRTForwarders.140 DLLs were copied to your ouput folder. Microsoft.VCRTForwarders.140 only supports x86 or x64 applications due to a C++ Runtime dependency. Please change your app project architecture to x86 or x64 in the Configuration Manager."/>
+  </Target>
+  
+  <!--Win32-->
+  <ItemGroup Condition="'$(Keyword)' == 'Win32Proj'">
+    <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\lib\win32\Contoso.FaceSentimentAnalyzer.manifest" />
+	<ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\lib\win32\DeobfuscationHelper.manifest" />
+	
+  </ItemGroup>
+  
+  <!--NetCore3.0-->
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
+    <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\lib\netcoreapp3.0\Contoso.FaceSentimentAnalyzer.manifest" />
+	<ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\lib\netcoreapp3.0\DeobfuscationHelper.manifest" />
+  </ItemGroup>
+  
+  <!--All project types-->
+  <ItemGroup>
+    <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\runtimes\win10-$(FaceSentimentAnalyzer-Platform)\native\Contoso.FaceSentimentAnalyzer.dll" />
+    <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\contentFiles\any\uap10.0.17763\Contoso.FaceSentimentAnalyzer.pri" />
+	  
+	<ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\runtimes\win10-$(FaceSentimentAnalyzer-Platform)\native\DeobfuscationHelper.dll" />
+    <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\contentFiles\any\uap10.0.17763\DeobfuscationHelper.pri" />
+  </ItemGroup>
+	
+	
 </Project>
