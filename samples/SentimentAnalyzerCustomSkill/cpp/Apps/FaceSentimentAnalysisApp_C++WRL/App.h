@@ -1,10 +1,12 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
 #pragma once
 #include <iostream>
 #include <string>
 #include <Windows.Foundation.h>
 #include <windows.foundation.collections.h>
-#include <wrl\implements.h>
-#include <wrl\wrappers\corewrappers.h>
+#include <Mferror.h>
+#include <wrl/implements.h>
+#include <wrl/wrappers/corewrappers.h>
 #include <wrl/client.h>
 #include <wrl/event.h>
 #include <windows.system.threading.h>
@@ -12,6 +14,7 @@
 #include <windows.media.capture.h>
 #include <windows.media.capture.frames.h>
 #include "Contoso.FaceSentimentAnalyzer.h"
+
 using namespace ABI::Windows::Foundation;
 using namespace ABI::Windows::Foundation::Collections;
 using namespace Microsoft::WRL;
@@ -23,6 +26,7 @@ using namespace ABI::Windows::Media;
 using namespace ABI::Windows::Media::Capture;
 using namespace ABI::Windows::Media::Capture::Frames;
 
+// Macro to await for Async Operations and get results where the type in AsyncOperation template instance and the type of result have slight differences
 #define AwaitTypedResult(op,type,result) [&]() -> HRESULT                              \
 {                                                                                                                               \
     HRESULT hr;                                                                                                                 \
@@ -40,6 +44,7 @@ using namespace ABI::Windows::Media::Capture::Frames;
     return hr;                                                                                                                  \
 } ();
 
+// Macro to await for Async Operation
 #define Await(op,result) [&]() -> HRESULT                              \
 {                                                                                                                               \
     HRESULT hr;                                                                                                                 \
@@ -57,7 +62,7 @@ using namespace ABI::Windows::Media::Capture::Frames;
     return hr;                                                                                                                  \
 } ();
 
-
+// Macro to await for Async Action
 #define AwaitAction(op) [&]() -> HRESULT                              \
 {                                                                                                                               \
     HRESULT hr;                                                                                                                 \
@@ -75,6 +80,7 @@ using namespace ABI::Windows::Media::Capture::Frames;
     return hr;                                                                                                                  \
 } ();
 
+// Macro for convenience of error checking and bail-out
 #define CHECKHR_GOTO( _hr, _lbl ) { hr = _hr; if( FAILED( hr ) ){ std::cout << std::endl << "Error at:" <<__FILE__ <<":" << __LINE__ << " hr: " << std::hex << hr; goto _lbl; } }
 
 class App
@@ -87,8 +93,8 @@ class App
     ComPtr<IMediaFrameReader> m_spFrameReader;
     SRWLOCK m_lock;
 
-    HRESULT initMediaCapture();
-    HRESULT deInitMediaCapture();
+    HRESULT InitCameraAndFrameSource();
+    HRESULT DeInitCameraAndFrameSource();
     HRESULT FrameArrivedHandler(IMediaFrameReader* pFrameReader, IMediaFrameArrivedEventArgs*);
 public:
     int AppMain();
