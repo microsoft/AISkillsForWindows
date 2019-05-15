@@ -22,12 +22,12 @@ Invoke-Expression "$PSScriptRoot\nuget.exe source Add -Name WindowsVisionSkillsL
 
 # Restore packages
 RunCommand "$PSScriptRoot\RestorePackages.ps1"
-RunCommand "$PSScriptRoot\RestorePackages.ps1 -PackagesConfigPath $PSScriptRoot\..\cs\FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer_CS.csproj"
+RunCommand "$PSScriptRoot\RestorePackages.ps1 -PackagesConfigPath $PSScriptRoot\..\cs\Skill\FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer_CS.csproj"
 
 # Setup the build environement
 RunCommand "$PSScriptRoot\SetBuildEnv.ps1"
 
-$BuildCommandBase = @('msbuild', '--%', "$PSScriptRoot\..\cs\FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer_CS.csproj")
+$BuildCommandBase = @('msbuild', '--%', "$PSScriptRoot\..\cs\Skill\FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer_CS.csproj")
 
 $BuildCommand = $BuildCommandBase + "/m /p:Platform=AnyCPU /p:Configuration=Release"
 RunCommand $BuildCommand

@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>{C573E45A-CA10-4A97-9AAA-99A301383A68}</ProjectGuid>
+    <ProjectGuid>{82D3FCC8-FE7E-42DE-9602-277D6D616850}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FaceSentimentAnalysisTestApp</RootNamespace>
