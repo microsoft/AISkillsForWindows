@@ -34,15 +34,15 @@ Specifically, this sample shows how to:
 
 ## System requirements
 
-**Client for building C++ and C# skills, C# UWP app ingestion:**
+**Client for building C++ and C# skills, C# UWP app:**
 - Visual Studio 2017 or later
 - Windows 10 build 17763 and related SDK
 
-**Client for C++ Win32 Destop app and C# .NetCore 3.0 app ingestion:** 
+**Client for C++ Win32 Destop app:** 
 - Visual Studio 2017 or later
 - Windows 10 build 18362 with related SDK
 
-**Client for C# .NetCore 3.0 app ingestion:** 
+**Client for C# .NetCore 3.0 app:** 
 - Visual Studio 2019 or later with .NetCore preview enabled (*Tools* → *Options* → *Project and Solutions* → *.NET Core* and then check *Use previews of the .NET Core SDK*)
 - Windows 10 build 18362 with related SDK
 - [.NetCore 3.0 preview](https://dotnet.microsoft.com/download/dotnet-core/3.0) installed and enabled(follow instructions)
