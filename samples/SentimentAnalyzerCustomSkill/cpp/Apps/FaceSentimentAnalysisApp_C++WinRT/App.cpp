@@ -53,9 +53,12 @@ winrt::Windows::Foundation::IAsyncAction App::FrameArrivedHandler(MediaFrameRead
 
 void App::InitCameraAndFrameSource()
 {
-    // Initialize media capture with default settings
+    // Initialize media capture with default settings in video-only streaming mode and in shared mode so that multiple instances can access the camera concurrently
     m_mediaCapture = winrt::Windows::Media::Capture::MediaCapture();
-    m_mediaCapture.InitializeAsync().get();
+	auto mediaCaptureInitializationSettings = winrt::Windows::Media::Capture::MediaCaptureInitializationSettings();
+	mediaCaptureInitializationSettings.SharingMode(winrt::Windows::Media::Capture::MediaCaptureSharingMode::SharedReadOnly);
+	mediaCaptureInitializationSettings.StreamingCaptureMode(winrt::Windows::Media::Capture::StreamingCaptureMode::Video);
+    m_mediaCapture.InitializeAsync(mediaCaptureInitializationSettings).get();
 
     // Get a list of available Frame source and iterate through them to find a Video preview/record source with Color images ( and not IR/depth etc)
     auto fsIter = m_mediaCapture.FrameSources().First();
@@ -63,7 +66,9 @@ void App::InitCameraAndFrameSource()
     {
         auto mediaStreamType = fsIter.Current().Value().Info().MediaStreamType();
         auto sourceKind = fsIter.Current().Value().Info().SourceKind();
-        std::cout << "MediaStreamType:" << (int)mediaStreamType << " MediaFrameSourceKind:" << (int)sourceKind << std::endl;
+		auto cameraName = fsIter.Current().Value().Info().DeviceInformation().Name().c_str();
+		
+        std::cout << to_string(cameraName) << " | MediaStreamType:" << (int)mediaStreamType << " MediaFrameSourceKind:" << (int)sourceKind << std::endl;
         if (
             ((mediaStreamType == MediaStreamType::VideoPreview)
                 || (mediaStreamType == MediaStreamType::VideoRecord))
@@ -100,7 +105,7 @@ void App::DeInitCameraAndFrameSource()
 
 int App::AppMain()
 {
-    std::cout << "WinrtCPP Non-packaged(win32) console APP: Face it!!" << std::endl;
+    std::cout << "C++/WinRT Non-packaged(win32) console APP: Please face your camera" << std::endl;
 
     try 
     {

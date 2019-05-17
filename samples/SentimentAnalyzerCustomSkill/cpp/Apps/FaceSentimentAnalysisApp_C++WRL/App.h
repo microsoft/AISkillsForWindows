@@ -10,6 +10,7 @@
 #include <wrl/client.h>
 #include <wrl/event.h>
 #include <windows.system.threading.h>
+#include <windows.devices.enumeration.h>
 #include <windows.media.h>
 #include <windows.media.capture.h>
 #include <windows.media.capture.frames.h>
@@ -22,6 +23,7 @@ using namespace Microsoft::WRL::Wrappers;
 using namespace ABI::Contoso::FaceSentimentAnalyzer;
 using namespace ABI::Microsoft::AI::Skills::SkillInterfacePreview;
 using namespace ABI::Windows::System::Threading;
+using namespace ABI::Windows::Devices::Enumeration;
 using namespace ABI::Windows::Media;
 using namespace ABI::Windows::Media::Capture;
 using namespace ABI::Windows::Media::Capture::Frames;

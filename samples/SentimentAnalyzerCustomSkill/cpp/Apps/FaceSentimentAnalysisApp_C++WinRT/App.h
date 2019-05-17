@@ -4,6 +4,7 @@
 #include <string>
 #include <winerror.h>
 #include <Mferror.h>
+#include <winrt/Windows.Devices.Enumeration.h>
 #include <winrt/Windows.Foundation.h>
 #include <winrt/windows.foundation.collections.h>
 #include <winrt/windows.system.threading.h>

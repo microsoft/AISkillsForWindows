@@ -1,6 +1,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 
 #include "App.h"
+#include <locale>
+#include <codecvt>
 
 // Function to handle the frame when it arrives from FrameReader
 HRESULT App::FrameArrivedHandler(IMediaFrameReader* pFrameReader, IMediaFrameArrivedEventArgs*)
@@ -85,12 +87,18 @@ HRESULT App::InitCameraAndFrameSource()
     ComPtr<IIterable<IKeyValuePair<HSTRING, MediaFrameSource*>*>> spIterable;
     ComPtr<IIterator<IKeyValuePair<HSTRING, MediaFrameSource*>*>> spIterator;
     ComPtr<IKeyValuePair<HSTRING, MediaFrameSource*>>             spKeyValue;
+	ComPtr<IMediaCaptureInitializationSettings> spMediaCaptureInitializationSettings;
+	ComPtr<IMediaCaptureInitializationSettings5> spMediaCaptureInitializationSettings5;
 
     // Get an instance of the Windows MediaCapture runtime class
     CHECKHR_GOTO(ActivateInstance(HStringReference(RuntimeClass_Windows_Media_Capture_MediaCapture).Get(), &m_spMediaCapture), cleanup);
 
-    // Initialize MediaCapture with default settings
-    CHECKHR_GOTO(m_spMediaCapture->InitializeAsync(&op), cleanup);
+	// Initialize media capture with default settings in video-only streaming mode and in shared mode so that multiple instances can access the camera concurrently
+	CHECKHR_GOTO(ActivateInstance(HStringReference(RuntimeClass_Windows_Media_Capture_MediaCaptureInitializationSettings).Get(), &spMediaCaptureInitializationSettings5), cleanup);
+	CHECKHR_GOTO(spMediaCaptureInitializationSettings5->put_SharingMode(ABI::Windows::Media::Capture::MediaCaptureSharingMode::MediaCaptureSharingMode_SharedReadOnly), cleanup);
+	CHECKHR_GOTO(spMediaCaptureInitializationSettings5.As(&spMediaCaptureInitializationSettings), cleanup);
+	CHECKHR_GOTO(spMediaCaptureInitializationSettings->put_StreamingCaptureMode(ABI::Windows::Media::Capture::StreamingCaptureMode::StreamingCaptureMode_Video), cleanup);
+	CHECKHR_GOTO(m_spMediaCapture->InitializeWithSettingsAsync(spMediaCaptureInitializationSettings.Get(), &op), cleanup);
     CHECKHR_GOTO(AwaitAction(op), cleanup);
 
     // QueryInterface to the IMediaCapture5 interface which gives us the ability to create a MediaFrameReader 
@@ -112,15 +120,15 @@ HRESULT App::InitCameraAndFrameSource()
         CHECKHR_GOTO(spIterator->get_Current(&spKeyValue), cleanup);
         CHECKHR_GOTO(spKeyValue->get_Value(&spFrameSource), cleanup);
         ComPtr<IMediaFrameSourceInfo> spInfo;
+		ComPtr<IDeviceInformation> spDeviceInformation;
+		HSTRING deviceName;
+		HString deviceName2;
         spFrameSource->get_Info(&spInfo);
         MediaStreamType streamType;
-        MediaFrameSourceKind sourceKind;
-        spInfo->get_MediaStreamType(&streamType);
-        spInfo->get_SourceKind(&sourceKind);
-        std::cout << "FrameSourceType:" << streamType << std::endl;
-        while (((streamType != MediaStreamType::MediaStreamType_VideoPreview) && (streamType != MediaStreamType::MediaStreamType_VideoRecord)) || (sourceKind != MediaFrameSourceKind::MediaFrameSourceKind_Color))
-        {
-            CHECKHR_GOTO(spIterator->MoveNext(&bHasCurrent), cleanup);
+        MediaFrameSourceKind sourceKind;	
+
+		do
+		{
             if (!bHasCurrent)
             {
                 std::cout << "No valid video frame sources were found with source type color.";
@@ -128,11 +136,18 @@ HRESULT App::InitCameraAndFrameSource()
             }
             CHECKHR_GOTO(spIterator->get_Current(spKeyValue.ReleaseAndGetAddressOf()), cleanup);
             CHECKHR_GOTO(spKeyValue->get_Value(spFrameSource.ReleaseAndGetAddressOf()), cleanup);
-            spFrameSource->get_Info(spInfo.ReleaseAndGetAddressOf());
-            spInfo->get_MediaStreamType(&streamType);
-            spInfo->get_SourceKind(&sourceKind);
-            std::cout << "FrameSourceType:" << streamType << std::endl;
-        }
+            CHECKHR_GOTO(spFrameSource->get_Info(spInfo.ReleaseAndGetAddressOf()), cleanup);
+			CHECKHR_GOTO(spInfo->get_MediaStreamType(&streamType), cleanup);
+			CHECKHR_GOTO(spInfo->get_SourceKind(&sourceKind), cleanup);
+			CHECKHR_GOTO(spInfo->get_DeviceInformation(&spDeviceInformation), cleanup);
+			CHECKHR_GOTO(spDeviceInformation->get_Name(&deviceName), cleanup);
+			CHECKHR_GOTO(deviceName2.Set(deviceName), cleanup);
+
+			std::cout << std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t>().to_bytes(deviceName2.GetRawBuffer(nullptr)) << " | FrameSourceType:" << streamType << std::endl;
+
+			CHECKHR_GOTO(spIterator->MoveNext(&bHasCurrent), cleanup);
+
+		} while (((streamType != MediaStreamType::MediaStreamType_VideoPreview) && (streamType != MediaStreamType::MediaStreamType_VideoRecord)) || (sourceKind != MediaFrameSourceKind::MediaFrameSourceKind_Color));
 
         // Create FrameReader with the FrameSource that we selected in the loop above.
         CHECKHR_GOTO(spMediaCaptureFS->CreateFrameReaderAsync(spFrameSource.Get(), &spOp), cleanup);
@@ -183,7 +198,7 @@ int App::AppMain()
     ComPtr<ISkillBinding> spSkillBinding;
     ComPtr<IActivationFactory> spFactory;
     ComPtr<IAsyncOperation<ISkillBinding*>> spOp1;
-    std::cout << "Face it!\n";
+	std::cout << "C++ WRL Non-packaged(win32) console APP: Please face your camera" << std::endl;
 
     // Initialize Runtime enviroment
     RoInitializeWrapper initialize(RO_INIT_MULTITHREADED);

@@ -30,7 +30,7 @@ namespace FaceSentimentAnalysisConsole
         /// <returns></returns>
         static void Main(string[] args)
         {
-            Console.WriteLine("Face Sentiment Analyzer Console App!");
+            Console.WriteLine("Face Sentiment Analyzer .NetCore 3.0 Console App: Please face your camera");
 
             Task.Run(async () =>
             {
@@ -52,7 +52,6 @@ namespace FaceSentimentAnalysisConsole
             }).Wait();
 
             Console.WriteLine("\nPress Any key to stop\n");
-            //System.Diagnostics.Process.Start(System.AppContext.BaseDirectory + "runpage.cmd");
 
             var key = Console.ReadKey();
 
@@ -118,9 +117,15 @@ namespace FaceSentimentAnalysisConsole
         /// <returns></returns>
         private static async Task StartMediaCaptureAsync()
         {
+            // Initialize media capture with default settings in video-only streaming mode and in shared mode so that multiple instances can access the camera concurrently
             m_mediaCapture = new MediaCapture();
+            var mediaCaptureInistializationSettings = new MediaCaptureInitializationSettings()
+            {
+                StreamingCaptureMode = StreamingCaptureMode.Video,
+                SharingMode = MediaCaptureSharingMode.SharedReadOnly
+            };
 
-            await m_mediaCapture.InitializeAsync();
+            await m_mediaCapture.InitializeAsync(mediaCaptureInistializationSettings);
 
             var selectedFrameSource = m_mediaCapture.FrameSources.FirstOrDefault(source => source.Value.Info.MediaStreamType == MediaStreamType.VideoPreview
                                                                                         && source.Value.Info.SourceKind == MediaFrameSourceKind.Color).Value;
@@ -129,6 +134,12 @@ namespace FaceSentimentAnalysisConsole
                 selectedFrameSource = m_mediaCapture.FrameSources.FirstOrDefault(source => source.Value.Info.MediaStreamType == MediaStreamType.VideoRecord
                                                                                            && source.Value.Info.SourceKind == MediaFrameSourceKind.Color).Value;
             }
+            if(selectedFrameSource == null)
+            {
+                throw(new Exception("No valid video frame sources were found with source type color."));
+            }
+
+            Console.WriteLine($"{selectedFrameSource.Info.DeviceInformation?.Name} | MediaStreamType: {selectedFrameSource.Info.MediaStreamType} MediaFrameSourceKind: {selectedFrameSource.Info.SourceKind}");
 
             m_frameReader = await m_mediaCapture.CreateFrameReaderAsync(selectedFrameSource);
             m_frameReader.FrameArrived += FrameArrivedHandler;
