@@ -18,6 +18,7 @@ using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using Windows.Devices.Enumeration;
 using Windows.Media.Capture;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 
 namespace ObjectDetectorSkill_SampleApp
 {
@@ -468,6 +469,24 @@ namespace ObjectDetectorSkill_SampleApp
         private void ProcessedPreview_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             m_bboxRenderer.Resize(e);
+        }
+
+        /// <summary>
+        /// Triggered when the expander is expanded and collapsed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Expander_Expanded(object sender, EventArgs e)
+        {
+            var expander = (sender as Expander);
+            if(expander.IsExpanded)
+            {
+                UIVideoFeed.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                UIVideoFeed.Visibility = Visibility.Visible;
+            }
         }
     }
 }

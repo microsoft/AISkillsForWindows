@@ -11,24 +11,10 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="7*" />
-            <RowDefinition Height="3*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="10*" />
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
-            <!-- Video source controls -->
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
-                <StackPanel.Background>
-                    <SolidColorBrush Color="Gainsboro" Opacity="0.5" />
-                </StackPanel.Background>
-                <AppBarButton x:Name="UICameraButton" Icon="AttachCamera" Label="Attach Camera" Click="CameraButton_Click" />
-                <AppBarButton x:Name="UIFilePickerButton" Icon="BrowsePhotos" Label="Open File" ToolTipService.ToolTip="Load an image or video file from disk" Click="FilePickerButton_Click"/>
-            </StackPanel>
-            <!-- Video display -->
-            <Image x:Name="ProcessedPreview" Canvas.ZIndex="-1"  VerticalAlignment="Center" Stretch="Uniform" SizeChanged="ProcessedPreview_SizeChanged" />
-            <Canvas Name="OverlayCanvas" Canvas.ZIndex="0" HorizontalAlignment="Center" VerticalAlignment="Center" />
-        </Grid>
-
-        <ScrollViewer Grid.Row="1">
+        <ScrollViewer Grid.Row="0" Grid.RowSpan="2">
             <StackPanel>
                 <controls:Expander VerticalAlignment="Top"
                                Header="Details and options.."
@@ -37,7 +23,9 @@
                                Background="#FF7F7F7F"
                                BorderBrush="Black"
                                IsExpanded="False"
-                               ExpandDirection="Down">
+                               ExpandDirection="Down"
+                               Expanded="Expander_Expanded"
+                               Collapsed="Expander_Expanded">
                     <StackPanel>
                         <TextBlock Name="UISkillName" Text="Skill name" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold"/>
                         <TextBlock Text="Skill Description:" FontWeight="Bold"/>
@@ -55,7 +43,23 @@
                 <!-- Metrics display area -->
                 <TextBlock Name="UIPerfTextBlock" HorizontalAlignment="Center" />
                 <TextBlock Name="UIMessageTextBlock" HorizontalAlignment="Center" />
+                
             </StackPanel>
         </ScrollViewer>
+
+        <Grid Grid.Row="1" Name="UIVideoFeed">
+            <!-- Video source controls -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
+                <StackPanel.Background>
+                    <SolidColorBrush Color="Gainsboro" Opacity="0.5" />
+                </StackPanel.Background>
+                <AppBarButton x:Name="UICameraButton" Icon="AttachCamera" Label="Attach Camera" Click="CameraButton_Click" />
+                <AppBarButton x:Name="UIFilePickerButton" Icon="BrowsePhotos" Label="Open File" ToolTipService.ToolTip="Load an image or video file from disk" Click="FilePickerButton_Click"/>
+            </StackPanel>
+            
+            <!-- Video display -->
+            <Image x:Name="ProcessedPreview" Canvas.ZIndex="-1"  VerticalAlignment="Center" Stretch="Uniform" SizeChanged="ProcessedPreview_SizeChanged" />
+            <Canvas Name="OverlayCanvas" Canvas.ZIndex="0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </Grid>
     </Grid>
 </Page>

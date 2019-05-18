@@ -58,7 +58,7 @@ namespace ObjectDetectorSkill_SampleApp
                 m_textBlocks[i] = new TextBlock();
                 // Default configuration
                 m_textBlocks[i].Foreground = colorBrush;
-                m_textBlocks[i].FontSize = 10;
+                m_textBlocks[i].FontSize = 18;
                 // Hide
                 m_textBlocks[i].Visibility = Visibility.Collapsed;
                 // Add to canvas
@@ -89,8 +89,8 @@ namespace ObjectDetectorSkill_SampleApp
 
                 // Render text label
                 m_textBlocks[i].Text = detections[i].Kind.ToString();
-                Canvas.SetLeft(m_textBlocks[i], detections[i].Rect.X * m_canvas.ActualWidth);
-                Canvas.SetTop(m_textBlocks[i], detections[i].Rect.Y * m_canvas.ActualHeight + m_rectangles[i].Height);
+                Canvas.SetLeft(m_textBlocks[i], detections[i].Rect.X * m_canvas.ActualWidth + 2);
+                Canvas.SetTop(m_textBlocks[i], detections[i].Rect.Y * m_canvas.ActualHeight + 2);
                 m_textBlocks[i].Visibility = Visibility.Visible;
             }
             // Hide all remaining boxes
