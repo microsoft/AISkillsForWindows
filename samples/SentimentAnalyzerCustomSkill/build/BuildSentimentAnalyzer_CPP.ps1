@@ -27,9 +27,9 @@ Invoke-Expression "$PSScriptRoot\nuget.exe source Add -Name WindowsVisionSkillsL
 
 # Restore packages
 RunCommand "$PSScriptRoot\RestorePackages.ps1"
-RunCommand "$PSScriptRoot\RestorePackages.ps1 -PackagesConfigPath $PSScriptRoot\..\cpp\Obfuscator\packages.config -PackagesDirectory $PSScriptRoot\..\cpp\packages"
-RunCommand "$PSScriptRoot\RestorePackages.ps1 -PackagesConfigPath $PSScriptRoot\..\cpp\Deobfuscator\packages.config -PackagesDirectory $PSScriptRoot\..\cpp\packages"
-RunCommand "$PSScriptRoot\RestorePackages.ps1 -PackagesConfigPath $PSScriptRoot\..\cpp\FaceSentimentAnalyzer\packages.config -PackagesDirectory $PSScriptRoot\..\cpp\packages"
+RunCommand "$PSScriptRoot\RestorePackages.ps1 -PackagesConfigPath $PSScriptRoot\..\cpp\Skill\Obfuscator\packages.config -PackagesDirectory $PSScriptRoot\..\cpp\packages"
+RunCommand "$PSScriptRoot\RestorePackages.ps1 -PackagesConfigPath $PSScriptRoot\..\cpp\Skill\Deobfuscator\packages.config -PackagesDirectory $PSScriptRoot\..\cpp\packages"
+RunCommand "$PSScriptRoot\RestorePackages.ps1 -PackagesConfigPath $PSScriptRoot\..\cpp\Skill\FaceSentimentAnalyzer\packages.config -PackagesDirectory $PSScriptRoot\..\cpp\packages"
 
 # Setup the build environement
 RunCommand "$PSScriptRoot\SetBuildEnv.ps1"
@@ -44,11 +44,11 @@ else
 }
 
  # Build Obfucation .exe
-$BuildCommandBase = @('msbuild', '--%', "$PSScriptRoot\..\cpp\Obfuscator\Obfuscator.vcxproj /m /p:Platform=Win32 /p:Configuration=Debug")
+$BuildCommandBase = @('msbuild', '--%', "$PSScriptRoot\..\cpp\Skill\Obfuscator\Obfuscator.vcxproj /m /p:Platform=Win32 /p:Configuration=Debug")
 RunCommand $BuildCommandBase
 
 # Build DeobfuscationHelper
-$BuildCommandBase = @('msbuild', '--%', "$PSScriptRoot\..\cpp\Deobfuscator\DeobfuscationHelper.vcxproj")
+$BuildCommandBase = @('msbuild', '--%', "$PSScriptRoot\..\cpp\Skill\Deobfuscator\DeobfuscationHelper.vcxproj")
 ForEach ($value in $BuildArchs) 
 {
     $BuildCommand = $BuildCommandBase + "/m /p:Platform=$value /p:Configuration=Release"
@@ -56,7 +56,7 @@ ForEach ($value in $BuildArchs)
 }
 
 # Build skill
-$BuildCommandBase = @('msbuild', '--%', "$PSScriptRoot\..\cpp\FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer.vcxproj")
+$BuildCommandBase = @('msbuild', '--%', "$PSScriptRoot\..\cpp\Skill\FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer.vcxproj")
 ForEach ($value in $BuildArchs) 
 {
     $BuildCommand = $BuildCommandBase + "/m /p:Platform=$value /p:Configuration=Release"

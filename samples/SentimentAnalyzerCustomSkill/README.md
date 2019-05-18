@@ -2,17 +2,7 @@
 
 Provides an end-to-end sample to show how to write a Windows Vision Skill by extending the [Microsoft.AI.Skills.SkillInterfacePreview](../../doc/Microsoft.AI.Skills.SkillInterfacePreview.md) base API.
 This skill's implementation leverages the Windows built-in `FaceDetector` and `Windows.AI` APIs along a Machine Learning model in ONNX format to identify a face in an image and infer its sentiment.
-This sample also contains scripts to package the skill's Windows Runtime Component and its assets to a NuGet package (.nupkg) along with UWP and Win32 applications that ingests this NuGet package and exercises the skill against images.
-
-Specifically, this sample shows how to:
-
-1. **Create and implement a skill descriptor class** inherited from ISkillDescriptor that provide information on the skill, provides a list of supported execution devices (CPU, GPU) and acts as a factory object for the skill.
-2. **Create and implement a skill class** inherited from ISkill that executes the skill logic and produces output given a set of input, and acts as a factory object for the skill binding.
-3. **Create and implement a skill binding class** inherited from ISkillBinding that contains input and output variables as well as expose adapter to ease usage by developers.
-4. **Obfuscate files as pre-build step and deobfuscate files at runtime** to deter your skill consumers from tempering or accessing your resource files. Note that this part is shown only in the C++/Winrt version of the skill to keep the C# version simpler. Obfuscation is handled as a pre-build step using a dedicated compiled tool (Obfuscator.exe) and deobfuscation is exposed via a simple helper Windows Runtime Component ingested by the skill (DeobfuscationHelper).
-4. **Create a NuGet package** that is dependent on the Microsoft.AI.Skills.SkillInterfacePreview NuGet package that ecapsulates a Windows Runtime Component along its assets so that an app can ingest it. This NuGet package also links to a license and triggers a request for its approval before ingestion.
-5. **Ingest a custom Windows Vision Skill** from a NuGet package inside a C# UWP app to execute sentiment analysis againt images by binding VideoFrame instances and displaying binding outputs via adapter properties.
-6. **Ingest a custom Windows Vision Skill** from a NuGet package inside a **C++ Win32** app to execute sentiment analysis againt images by binding VideoFrame instances and displaying binding outputs via adapter properties.
+This sample also contains scripts to package the skill's Windows Runtime Component and its assets to a NuGet package (.nupkg). It also provides sample applications written in C++ and C# targetting UWP, Win32 Desktop and .NetCore 3.0 Desktop that ingest this NuGet package and exercise the skill against images.
 
 ## Scenario
 A developer wants to expose a functionality to his/her users that infers the sentiment of a person from an image.
@@ -29,22 +19,36 @@ The initialization of this pipeline is not pictured here but each step needs its
 
 However, some consumers may also want to tweak and optimize part of that pipeline to avoid for example an image conversion step by feeding the correct image format in the first place or ensure execution of this functionality is less power hungry by selecting a specific execution device to run on. The skill interface API allows a developer to expose these parameters but still encapsulate complexity of a solution. 
 
-## Related topics
-**Reference**
-- [Using the Face Detection effect](https://docs.microsoft.com/en-us/uwp/api/Windows.Media.FaceAnalysis.FaceDetector)
-- [Using Windows ML](https://docs.microsoft.com/en-us/windows/ai/)
-- [Using CryptographicEngine to obfuscate and deobfuscate files at runtime](https://docs.microsoft.com/en-us/uwp/api/windows.security.cryptography.core.symmetrickeyalgorithmprovider)
-- [Acquiring the sentiment analysis ONNX model](https://github.com/onnx/models/tree/master/emotion_ferplus)
-- [C++/Winrt reference documentation](https://docs.microsoft.com/en-us/windows/uwp/cpp-and-winrt-apis/)
-- [MIDL 3.0 syntax reference guide for authoring .idl files](https://docs.microsoft.com/en-us/uwp/midl-3/intro)
-- [Reg-Free WinRT component activation for Win32 apps and linking dependencies](https://blogs.windows.com/buildingapps/2019/04/30/enhancing-non-packaged-desktop-apps-using-windows-runtime-components)
+Specifically, this sample shows how to:
+
+1. **Create and implement a skill descriptor class** inherited from ISkillDescriptor that provide information on the skill, provides a list of supported execution devices (CPU, GPU) and acts as a factory object for the skill.
+2. **Create and implement a skill class** inherited from ISkill that executes the skill logic and produces output given a set of input, and acts as a factory object for the skill binding.
+3. **Create and implement a skill binding class** inherited from ISkillBinding that contains input and output variables as well as expose adapter to ease usage by developers.
+4. **Obfuscate files as pre-build step and deobfuscate files at runtime** to deter your skill consumers from tempering or accessing your resource files. Note that this part is shown only in this C++/WinRT version of the skill to keep the other C# version simpler. Obfuscation is handled as a pre-build step using a dedicated compiled tool (Obfuscator.exe) and deobfuscation is exposed via a simple helper Windows Runtime Component ingested by the skill (DeobfuscationHelper).
+5. **Create a NuGet package** that is dependent on the Microsoft.AI.Skills.SkillInterfacePreview NuGet package that ecapsulates a Windows Runtime Component along its assets so that an app can ingest it. This NuGet package also links to a license and triggers a request for its approval before ingestion.
+6. **Create a set of apps that ingest a custom Windows Vision Skill** to execute sentiment analysis againt images from a camera by binding VideoFrame instances and displaying results by retrieving them from the binding.
+    1. **C# UWP** app with a UI
+    2. **C++/WinRT** Desktop console app
+    3. **C++ WRL** Desktop console app
+    4. **.NetCore 3.0 C#** Desktop console app
 
 ## System requirements
 
-**Client:** Windows 10 build 17763 or greater for UWP
-**Client:** Windows 10 build 18267 or greater for Win32
+**Client for building C++ and C# skills, C# UWP app:**
+- Visual Studio 2017 or later
+- Windows 10 build 17763 and related SDK
 
-## Build the sample
+**Client for C++ Win32 Destop app:** 
+- Visual Studio 2017 or later
+- Windows 10 build 18362 with related SDK
+
+**Client for C# .NetCore 3.0 app:** 
+- Visual Studio 2019 or later with .NetCore preview enabled (*Tools* → *Options* → *Project and Solutions* → *.NET Core* and then check *Use previews of the .NET Core SDK*)
+- Windows 10 build 18362 with related SDK
+- [.NetCore 3.0 preview](https://dotnet.microsoft.com/download/dotnet-core/3.0) installed and enabled(follow instructions)
+
+## Build the samples
+### 1. Build skills
 
 1. If you download the samples ZIP, be sure to unzip the entire archive, not just the folder with the sample you want to build.
 
@@ -55,14 +59,20 @@ However, some consumers may also want to tweak and optimize part of that pipelin
     2. Once the sample is built, to generate a NuGet package from it, you can run the included powershell script named *PackageSentimentAnalyzer_CS.ps1*. You should see a *FaceSentimentAnalyzer_CS\*.nupkg* file generated.
 
 4. To build and package the **C++/WinRT version** of the skill:
-    1. Run the included powershell script named *BuildSentimentAnalyzer_CPP.ps1*
+    1. Run the included powershell script named *BuildSentimentAnalyzer_CPP.ps1* <a name="ManifestGeneration"></a>
+        - This version of the skill will run a script as a post-build step that generates a [manifest file](https://docs.microsoft.com/en-us/windows/desktop/sbscs/manifests) (.manifest). This enables a mechanism that provides interoperability with **Win32** and **.NetCore 3.0** apps by activating COM components exposed in our skill Windows Runtime Component we just built.
     2. Once the sample is built, to generate a NuGet package from it, you can run the included powershell script named *PackageSentimentAnalyzer_CPP.ps1*. You should see a *FaceSentimentAnalyzer_CPP\*.nupkg* file generated.
 
-## Run the sample <a name="PrivateNuGetFeed"></a>
+### 2. Build and run the sample apps
 
 To run the test app and visualize the sample code for the skill:
-- **For the C# sample**, open the solution file located at *cs\FaceSentimentAnalysis_CS.sln*
+- **For the C# sample** that contains a C# UWP app, open the solution file located at *cs\FaceSentimentAnalysis_CS.sln*
 - **For the C++/WinRT sample**, open the solution file located at *cpp\FaceSentimentAnalysis_Cpp.sln*
+    >**Important to note:** the C++/WinRT and C++ WRL console applications, there are pre-build and post-build steps that leverage a set of powershell scripts included in *<root>/cpp/Scripts*. These scripts can be reused in your projects when you write this kind of application that leverages Windows Vision Skills.
+         - The pre-build script generate header files from the skill's Windows Runtime Component metadata included in the NuGet package (.winmd).
+         - The post-build script copies dependency binaries to the application's executable location.
+
+    >**Important to note:** the file named *app.manifest* included in these two application projects must reference the dependent assemblies present in the NuGet packages ingested. This leverages the work done in the [previous step 4.1 in the previous section](#ManifestGeneration) when building your skill.
 
 In order for local NuGet packages to be available to your app project, you need to add a local NuGet repository pointing to where you built the skill NuGet package and where the base API package resides (i.e. in *./build/*). Follow the below steps to achieve this:
 1. In Visual Studio, go to *Tools* \> *NuGet Package Manager* \> *Package Manager Settings*
@@ -74,6 +84,15 @@ In order for local NuGet packages to be available to your app project, you need 
 3. From your test app project, make sure you install the skill NuGet package by right-clicking on your project \> *Manage NuGet Packages*, then make sure the *Package Source* points to your custom NuGet source, then click *Install*
 ![LocalNugetHowTo3](./doc/localNugetHowTo3.jpg)
 
+## Related topics
+**Reference**
+- [Using the Face Detection effect](https://docs.microsoft.com/en-us/uwp/api/Windows.Media.FaceAnalysis.FaceDetector)
+- [Using Windows ML](https://docs.microsoft.com/en-us/windows/ai/)
+- [Using CryptographicEngine to obfuscate and deobfuscate files at runtime](https://docs.microsoft.com/en-us/uwp/api/windows.security.cryptography.core.symmetrickeyalgorithmprovider)
+- [Acquiring the sentiment analysis ONNX model](https://github.com/onnx/models/tree/master/emotion_ferplus)
+- [C++/Winrt reference documentation](https://docs.microsoft.com/en-us/windows/uwp/cpp-and-winrt-apis/)
+- [MIDL 3.0 syntax reference guide for authoring .idl files](https://docs.microsoft.com/en-us/uwp/midl-3/intro)
+- [Reg-Free WinRT component activation for Win32 apps and linking dependencies](https://blogs.windows.com/buildingapps/2019/04/30/enhancing-non-packaged-desktop-apps-using-windows-runtime-components)
 
 # Contributing
 

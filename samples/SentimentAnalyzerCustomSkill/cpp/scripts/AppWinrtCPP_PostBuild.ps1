@@ -1,12 +1,23 @@
-param($TargetDir,$Arch,$ProjectDir,$VCInstallDir,[switch] $Debug)
+<#
+.SYNOPSIS
+Copies all required binaries to the specified target directory
+#>
+<#
+.DESCRIPTION
+-TargetDir: target directory where the app executable is placed
+-VCRedistPath: directory containing VC redistributable for the processor architecture specified (i.e.: C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.20.27508\redist\x86)
+-Debug: optional, if using debug .dll
+#>
+
+param($TargetDir,$VCRedistPath,[switch] $Debug)
 
 echo "Gathering known dependencies..."
 
 $redistfiles =@("vcruntime140" , "msvcp140")
-$redistPath = $VCInstallDir + "Redist\MSVC\14.16.27012\onecore\$Arch\Microsoft.VC141.CRT\"
+$redistPath = $VCRedistPath + "\Microsoft.VC141.CRT\"
 if($Debug)
 {
-    $redistPathDebug = $VCInstallDir + "Redist\MSVC\14.16.27012\onecore\debug_nonredist\$Arch\Microsoft.VC141.DebugCRT\"
+    $redistPathDebug = $VCRedistPath + "\Microsoft.VC141.DebugCRT\"
     foreach($file in $redistfiles)
     {
         $fullpath = $redistPathDebug + $file +"d.dll"
@@ -22,7 +33,7 @@ foreach($file in $redistfiles)
     $fullpath = $redistPath+$fullname
     copy -Force $fullpath $TargetDir
     
-    # the vc runtime forwarders may not exist for all architectures, we create the links for the ones that we require
+    # the vc runtime forwarders may not exist for all architectures (i.e. ARM and ARM64), we create the links for the ones that we require
     if(!(Test-Path "$TargetDir$linkFile"))
     {
         cmd /c mklink /h $TargetDir$linkFile $TargetDir$fullname

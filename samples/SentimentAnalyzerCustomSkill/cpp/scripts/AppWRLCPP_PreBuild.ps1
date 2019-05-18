@@ -1,4 +1,15 @@
-param($ProjectDir,$WindowsSDK_UnionMetadataPath)
+<#
+.SYNOPSIS
+Generates temporary .idl files from .winmd referenced via NuGet, then generates headers (.h) files from the previously generated .idl files.
+#>
+<#
+.DESCRIPTION
+-ProjectDir: path to the folder of the app project that contains package.config detailing dependencies
+-PackageDir: path to the folder containing the dependency packages pulled from NuGet
+-WindowsSDK_UnionMetadataPath: folder path of the SDK union metadata that contains Windows.winmd (i.e.: C:\Program Files (x86)\Windows Kits\10\UnionMetadata\10.0.18362.0)
+#>
+
+param($ProjectDir,$PackageDir,$WindowsSDK_UnionMetadataPath)
 
 [xml]$packages = Get-Content "$ProjectDir\packages.config"
 #echo $packages.packages
@@ -6,7 +17,7 @@ $winmdFiles = @()
 
 foreach ($package in $packages.packages.package)
 {
-    $searchpath = "$ProjectDir" + "..\packages\" + $package.id + "." + $package.version
+    $searchpath = $PackageDir + "\packages\" + $package.id + "." + $package.version
     $winmdFiles += Get-ChildItem -Path "$searchpath" -Recurse -Filter *.winmd | %{$_.FullName}
 }
 $OutDir = "$ProjectDir" + "inc"

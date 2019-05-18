@@ -1,11 +1,19 @@
-#not for public use. This is a temporary tool written by Sudhanshu to genenrate manifest for Vision SKills. Not guaranteed to work with all idl files.
+<#
+.SYNOPSIS
+Generate SxS manifest for a specific .dll using a set of .idl files in a specified project directory.
+#>
+<#
+.DESCRIPTION
+arg[0]: name of the target .dll to generate a manifest file for
+arg[1]: folder path of where to output the manifest file
+arg[2+]: valid .idl file to process
+#>
 
 if($args.Count -lt 3)
 {
-    Write-Output "usage: scriptname.ps1 <dllnameWithoutPath.dll> <pathtoOutputManifest> <inputIDLfileWithPath1.idl> <optionalinputIDLfileWithPath2.idl> ....."
+    Write-Output "usage: genSxSManifest.ps1 <dllnameWithoutPath.dll> <pathToOutputManifest> <inputIDLFileWithPath1.idl> <optionalInputIDLFileWithPath2.idl> ....."
     return;
 }
-
 
 $dllFileName = $args[0]
 $identity = [io.path]::GetFileNameWithoutExtension($dllFileName);
