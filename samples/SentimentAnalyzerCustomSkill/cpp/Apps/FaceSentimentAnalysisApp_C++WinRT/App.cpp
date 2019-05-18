@@ -55,9 +55,9 @@ void App::InitCameraAndFrameSource()
 {
     // Initialize media capture with default settings in video-only streaming mode and in shared mode so that multiple instances can access the camera concurrently
     m_mediaCapture = winrt::Windows::Media::Capture::MediaCapture();
-	auto mediaCaptureInitializationSettings = winrt::Windows::Media::Capture::MediaCaptureInitializationSettings();
-	mediaCaptureInitializationSettings.SharingMode(winrt::Windows::Media::Capture::MediaCaptureSharingMode::SharedReadOnly);
-	mediaCaptureInitializationSettings.StreamingCaptureMode(winrt::Windows::Media::Capture::StreamingCaptureMode::Video);
+    auto mediaCaptureInitializationSettings = winrt::Windows::Media::Capture::MediaCaptureInitializationSettings();
+    mediaCaptureInitializationSettings.SharingMode(winrt::Windows::Media::Capture::MediaCaptureSharingMode::SharedReadOnly);
+    mediaCaptureInitializationSettings.StreamingCaptureMode(winrt::Windows::Media::Capture::StreamingCaptureMode::Video);
     m_mediaCapture.InitializeAsync(mediaCaptureInitializationSettings).get();
 
     // Get a list of available Frame source and iterate through them to find a Video preview/record source with Color images ( and not IR/depth etc)
@@ -66,8 +66,8 @@ void App::InitCameraAndFrameSource()
     {
         auto mediaStreamType = fsIter.Current().Value().Info().MediaStreamType();
         auto sourceKind = fsIter.Current().Value().Info().SourceKind();
-		auto cameraName = fsIter.Current().Value().Info().DeviceInformation().Name().c_str();
-		
+        auto cameraName = fsIter.Current().Value().Info().DeviceInformation().Name().c_str();
+
         std::cout << to_string(cameraName) << " | MediaStreamType:" << (int)mediaStreamType << " MediaFrameSourceKind:" << (int)sourceKind << std::endl;
         if (
             ((mediaStreamType == MediaStreamType::VideoPreview)
