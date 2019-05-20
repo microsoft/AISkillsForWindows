@@ -27,14 +27,14 @@ HRESULT CheckVersion()
     else
     {
         if ((HIWORD(pVer->dwProductVersionMS) < 10)
-            || (HIWORD(pVer->dwProductVersionLS) < 18267)
+            || (HIWORD(pVer->dwProductVersionLS) < 18362)
             )
         {
             std::cout << "Current windows version is:";
             std::cout << HIWORD(pVer->dwProductVersionMS) << '.'
                 << LOWORD(pVer->dwProductVersionMS) << '.'
                 << HIWORD(pVer->dwProductVersionLS) << std::endl;
-            std::cout << "This application will work only on windows verison 10.0.18267 or newer." << std::endl;
+            std::cout << "This application will work only on windows verison 10.0.18362 or newer." << std::endl;
             hr = E_ABORT;
         }
     }

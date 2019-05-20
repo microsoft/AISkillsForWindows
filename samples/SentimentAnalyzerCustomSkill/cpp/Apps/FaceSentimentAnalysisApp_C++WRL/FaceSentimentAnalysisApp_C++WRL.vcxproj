@@ -23,7 +23,7 @@
     <ProjectGuid>{7EC87A87-91F9-4C2C-9DEA-8FE75F76F17C}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>FaceSentimentAnalysiscpp</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
     <ProjectName>FaceSentimentAnalysisApp_C++WRL</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

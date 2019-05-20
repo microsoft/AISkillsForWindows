@@ -33,16 +33,16 @@ using namespace ABI::Windows::Media::Capture::Frames;
 {                                                                                                                               \
     HRESULT hr;                                                                                                                 \
     Event threadCompleted(CreateEventEx(nullptr, nullptr, CREATE_EVENT_MANUAL_RESET, WRITE_OWNER | EVENT_ALL_ACCESS));          \
-    ComPtr<IAsyncOperationCompletedHandler<type>> cb                                                       \
-    = Callback<Implements<RuntimeClassFlags<ClassicCom>, IAsyncOperationCompletedHandler<type>, FtmBase>>( \
-        [&threadCompleted](IAsyncOperation<type>* asyncOperation, AsyncStatus status)->HRESULT                                   \
+    ComPtr<IAsyncOperationCompletedHandler<type>> cb                                                                            \
+    = Callback<Implements<RuntimeClassFlags<ClassicCom>, IAsyncOperationCompletedHandler<type>, FtmBase>>(                      \
+        [&threadCompleted](IAsyncOperation<type>* asyncOperation, AsyncStatus status)->HRESULT                                  \
     {                                                                                                                           \
     SetEvent(threadCompleted.Get());                                                                                            \
     return S_OK;                                                                                                                \
     });                                                                                                                         \
-    op->put_Completed(cb.Get());                                                                                             \
+        op->put_Completed(cb.Get());                                                                                            \
     WaitForSingleObject(threadCompleted.Get(), INFINITE);                                                                       \
-    hr = op->GetResults(&result);                                                                                         \
+    hr = op->GetResults(&result);                                                                                               \
     return hr;                                                                                                                  \
 } ();
 
@@ -51,16 +51,16 @@ using namespace ABI::Windows::Media::Capture::Frames;
 {                                                                                                                               \
     HRESULT hr;                                                                                                                 \
     Event threadCompleted(CreateEventEx(nullptr, nullptr, CREATE_EVENT_MANUAL_RESET, WRITE_OWNER | EVENT_ALL_ACCESS));          \
-    ComPtr<IAsyncOperationCompletedHandler<decltype(result.Get())>> cb                                                       \
-    = Callback<Implements<RuntimeClassFlags<ClassicCom>, IAsyncOperationCompletedHandler<decltype(result.Get())>, FtmBase>>( \
-        [&threadCompleted](IAsyncOperation<decltype(result.Get())>* asyncOperation, AsyncStatus status)->HRESULT                                   \
+    ComPtr<IAsyncOperationCompletedHandler<decltype(result.Get())>> cb                                                          \
+    = Callback<Implements<RuntimeClassFlags<ClassicCom>, IAsyncOperationCompletedHandler<decltype(result.Get())>, FtmBase>>(    \
+        [&threadCompleted](IAsyncOperation<decltype(result.Get())>* asyncOperation, AsyncStatus status)->HRESULT                \
     {                                                                                                                           \
-        SetEvent(threadCompleted.Get());                                                                                            \
-        return S_OK;                                                                                                                \
+        SetEvent(threadCompleted.Get());                                                                                        \
+        return S_OK;                                                                                                            \
     });                                                                                                                         \
-    op->put_Completed(cb.Get());                                                                                             \
+    op->put_Completed(cb.Get());                                                                                                \
     WaitForSingleObject(threadCompleted.Get(), INFINITE);                                                                       \
-    hr = op->GetResults(&result);                                                                                         \
+    hr = op->GetResults(&result);                                                                                               \
     return hr;                                                                                                                  \
 } ();
 
@@ -69,16 +69,16 @@ using namespace ABI::Windows::Media::Capture::Frames;
 {                                                                                                                               \
     HRESULT hr;                                                                                                                 \
     Event threadCompleted(CreateEventEx(nullptr, nullptr, CREATE_EVENT_MANUAL_RESET, WRITE_OWNER | EVENT_ALL_ACCESS));          \
-    ComPtr<IAsyncActionCompletedHandler> cb                                                       \
-    = Callback<Implements<RuntimeClassFlags<ClassicCom>, IAsyncActionCompletedHandler, FtmBase>>( \
-        [&threadCompleted](decltype(op.Get()) asyncAction, AsyncStatus status)->HRESULT                                   \
+    ComPtr<IAsyncActionCompletedHandler> cb                                                                                     \
+    = Callback<Implements<RuntimeClassFlags<ClassicCom>, IAsyncActionCompletedHandler, FtmBase>>(                               \
+        [&threadCompleted](decltype(op.Get()) asyncAction, AsyncStatus status)->HRESULT                                         \
     {                                                                                                                           \
-        SetEvent(threadCompleted.Get());                                                                                            \
-        return S_OK;                                                                                                                \
+        SetEvent(threadCompleted.Get());                                                                                        \
+        return S_OK;                                                                                                            \
     });                                                                                                                         \
-    op->put_Completed(cb.Get());                                                                                             \
+    op->put_Completed(cb.Get());                                                                                                \
     WaitForSingleObject(threadCompleted.Get(), INFINITE);                                                                       \
-    hr = op->GetResults();                                                                                         \
+    hr = op->GetResults();                                                                                                      \
     return hr;                                                                                                                  \
 } ();
 
