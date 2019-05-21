@@ -24,9 +24,9 @@
     <ClInclude Include="FaceSentimentAnalyzerBinding.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
     <None Include="FaceSentimentAnalyzer.def" />
     <None Include="emotion_ferplus.crypt" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Midl Include="FaceSentimentAnalyzerBinding.idl" />

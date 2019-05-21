@@ -18,7 +18,7 @@
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
     <PackageCertificateKeyFile>FaceSentimentAnalysisTestApp_cpp_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>EE1F0601A7C9F21CEB69C13CAFB69E99CC579A30</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>203593A71904EF2ACFA6CD373AAFAF2A40048249</PackageCertificateThumbprint>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>
