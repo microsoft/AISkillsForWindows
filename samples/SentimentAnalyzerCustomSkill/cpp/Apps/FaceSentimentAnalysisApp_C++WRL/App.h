@@ -29,7 +29,7 @@ using namespace ABI::Windows::Media::Capture;
 using namespace ABI::Windows::Media::Capture::Frames;
 
 // Macro to await for Async Operations and get results where the type in AsyncOperation template instance and the type of result have slight differences
-#define AwaitTypedResult(op,type,result) [&]() -> HRESULT                              \
+#define AwaitTypedResult(op,type,result) [&]() -> HRESULT                                                                       \
 {                                                                                                                               \
     HRESULT hr;                                                                                                                 \
     Event threadCompleted(CreateEventEx(nullptr, nullptr, CREATE_EVENT_MANUAL_RESET, WRITE_OWNER | EVENT_ALL_ACCESS));          \
