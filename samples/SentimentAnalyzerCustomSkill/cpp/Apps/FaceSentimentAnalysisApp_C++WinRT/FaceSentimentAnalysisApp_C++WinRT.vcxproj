@@ -100,29 +100,29 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)</OutDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)</OutDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)</OutDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)</OutDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)</OutDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)</OutDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -155,7 +155,7 @@
       <Message>Generates headers (.h) files from a set of referenced .winmd files.</Message>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)Redist\MSVC\$(VCToolsRedistVersion)\$(PlatformTarget)'</Command>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget)</Command>
       <Message>Copies all required binaries to the specified target directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -179,11 +179,11 @@
       <AdditionalDependencies>Mincore.lib;runtimeobject.lib;kernel32.lib;user32.lib;ole32.lib;oleaut32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\scripts\AppWinrtCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\scripts\AppWinrtCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -PackageDir:'$(ProjectDir)..\..' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
       <Message>Generates headers (.h) files from a set of referenced .winmd files.</Message>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)Redist\MSVC\$(VCToolsRedistVersion)\$(PlatformTarget)' -Debug</Command>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget) -Debug</Command>
       <Message>Copies all required binaries to the specified target directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -207,11 +207,11 @@
       <AdditionalDependencies>Mincore.lib;runtimeobject.lib;kernel32.lib;user32.lib;ole32.lib;oleaut32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\scripts\AppWinrtCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\scripts\AppWinrtCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -PackageDir:'$(ProjectDir)..\..' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
       <Message>Generates headers (.h) files from a set of referenced .winmd files.</Message>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)Redist\MSVC\$(VCToolsRedistVersion)\$(PlatformTarget)' -Debug</Command>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget) -Debug</Command>
       <Message>Copies all required binaries to the specified target directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -235,11 +235,11 @@
       <AdditionalDependencies>Mincore.lib;runtimeobject.lib;kernel32.lib;user32.lib;ole32.lib;oleaut32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\scripts\AppWinrtCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\scripts\AppWinrtCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -PackageDir:'$(ProjectDir)..\..' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
       <Message>Generates headers (.h) files from a set of referenced .winmd files.</Message>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)Redist\MSVC\$(VCToolsRedistVersion)\$(PlatformTarget)' -Debug</Command>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget) -Debug</Command>
       <Message>Copies all required binaries to the specified target directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -274,7 +274,7 @@
       <Message>Generates headers (.h) files from a set of referenced .winmd files.</Message>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)Redist\MSVC\$(VCToolsRedistVersion)\$(PlatformTarget)'</Command>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget)</Command>
       <Message>Copies all required binaries to the specified target directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -309,7 +309,7 @@
       <Message>Generates headers (.h) files from a set of referenced .winmd files.</Message>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)Redist\MSVC\$(VCToolsRedistVersion)\$(PlatformTarget)'</Command>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget)</Command>
       <Message>Copies all required binaries to the specified target directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>

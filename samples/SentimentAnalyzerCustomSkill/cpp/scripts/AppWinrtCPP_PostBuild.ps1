@@ -9,15 +9,15 @@ Copies all required binaries to the specified target directory
 -Debug: optional, if using debug .dll
 #>
 
-param($TargetDir,$VCRedistPath,[switch] $Debug)
+param($TargetDir,$VCRedistPath,$VCToolsRedistVersion,$PlatformTarget,[switch] $Debug)
 
 echo "Gathering known dependencies..."
 
 $redistfiles =@("vcruntime140" , "msvcp140")
-$redistPath = $VCRedistPath + "\Microsoft.VC141.CRT\"
+$redistPath = $VCRedistPath + "Redist\MSVC\" + $VCToolsRedistVersion + "\" + $PlatformTarget + "\Microsoft.VC141.CRT\"
 if($Debug)
 {
-    $redistPathDebug = $VCRedistPath + "\Microsoft.VC141.DebugCRT\"
+    $redistPathDebug = $VCRedistPath + "Redist\MSVC\" + $VCToolsRedistVersion + "\debug_nonredist\" + $PlatformTarget + "\Microsoft.VC141.DebugCRT\"
     foreach($file in $redistfiles)
     {
         $fullpath = $redistPathDebug + $file +"d.dll"
