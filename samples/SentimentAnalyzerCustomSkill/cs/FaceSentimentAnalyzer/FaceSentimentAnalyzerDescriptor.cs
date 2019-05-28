@@ -6,8 +6,10 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Microsoft.AI.Skills.SkillInterfacePreview;
+using Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension;
 using Windows.Foundation;
 using Windows.Graphics.Imaging;
+
 
 namespace Contoso.FaceSentimentAnalyzer
 {
@@ -92,10 +94,14 @@ namespace Contoso.FaceSentimentAnalyzer
                     // Add CPU as supported device
                     result.Add(SkillExecutionDeviceCPU.Create());
 
-                    // Retrieve a list of DirectX devices available on the system and filter them by keeping only the ones that support DX12+ feature level
-                    var devices = SkillExecutionDeviceDirectX.GetAvailableDirectXExecutionDevices();
-                    var compatibleDevices = devices.Where((device) => (device as SkillExecutionDeviceDirectX).MaxSupportedFeatureLevel >= D3DFeatureLevelKind.D3D_FEATURE_LEVEL_12_0);
-                    result.AddRange(compatibleDevices);
+                    // Retrieve a list of DirectX devices available on the system
+                    // Note: Using AddRange (i.e. result.AddRange(devices)) marshals the devices
+                    // incorrectly, resulting in memory corruption
+                    var devices = SkillExecutionDeviceDXCore.GetAvailableHardwareExecutionDevices();
+                    foreach (var device in devices)
+                    {
+                        result.Add(device);
+                    }
 
                     return result as IReadOnlyList<ISkillExecutionDevice>;
                 });
@@ -114,18 +120,13 @@ namespace Contoso.FaceSentimentAnalyzer
                 var supportedDevices = await GetSupportedExecutionDevicesAsync();
                 ISkillExecutionDevice deviceToUse = supportedDevices.First();
 
-                // Either use the first device returned (CPU) or the highest performing GPU
-                int powerIndex = int.MaxValue;
+                // Either use the first device returned (CPU) or the first available hardware device
                 foreach (var device in supportedDevices)
                 {
-                    if (device.ExecutionDeviceKind == SkillExecutionDeviceKind.Gpu)
+                    if (device is SkillExecutionDeviceDXCore)
                     {
-                        var directXDevice = device as SkillExecutionDeviceDirectX;
-                        if (directXDevice.HighPerformanceIndex < powerIndex)
-                        {
-                            deviceToUse = device;
-                            powerIndex = directXDevice.HighPerformanceIndex;
-                        }
+                        deviceToUse = device;
+                        break;
                     }
                 }
                 return await CreateSkillAsync(deviceToUse);

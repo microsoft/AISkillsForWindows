@@ -26,12 +26,14 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="FaceSentimentAnalyzer.def" />
-    <None Include="emotion_ferplus.crypt" />
   </ItemGroup>
   <ItemGroup>
     <Midl Include="FaceSentimentAnalyzerBinding.idl" />
     <Midl Include="FaceSentimentAnalyzerDescriptor.idl" />
     <Midl Include="FaceSentimentAnalyzerSkill.idl" />
     <Midl Include="Common.idl" />
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="emotion_ferplus.crypt" />
   </ItemGroup>
 </Project>
