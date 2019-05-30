@@ -39,7 +39,7 @@ However, some consumers may also want to tweak and optimize part of that pipelin
 
 ## System requirements
 
-**Client:** Windows 10 build **18870** or greater
+**Client:** Windows 10 build **18898** or greater
 
 ## Build the sample
 
