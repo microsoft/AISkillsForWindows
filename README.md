@@ -16,8 +16,8 @@ For how to use the framework to author a Skill to be consumed, and creating an a
 
 ## Other Samples
 
-- [ObjectDetector](samples/ObjectDetectorSample): detecting and classifying objects
-- [SkeletalDetector](samples/SkeletalDetectorSample): estimating poses of people in images
+- [ObjectDetector](samples/ObjectDetector): detecting and classifying objects
+- [SkeletalDetector](samples/SkeletalDetector): estimating poses of people in images
 
 -----
 

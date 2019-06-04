@@ -1,32 +1,29 @@
-# Object Detector Windows Vision Skill sample
+# Object Detector Windows Vision Skill samples
 
-This sample will show how to use the Object Detector Vision Skill NuGet package to create an app that can detect and classify objects in a video feed
+These samples will show how to use the Object Detector Vision Skill NuGet package to create apps that can detect and classify objects in a video feed
 
-![Screenshot of object detector skill in action](./doc/sample_app.jpg)
+![Screenshot of object detector skill in action in the UWP sample](./doc/sample_app.jpg)
+
+Follow these sample links:
+- [C# UWP sample app](./cs/ObjectDetectorSample_UWP)
+- [Win32 C++/Winrt Desktop console app](./cpp/ObjectDetectorSample_Desktop)
+- [.Net Core 3.0 C# console app](./cs/ObjectDetectorSample_NetCore3)
+
+## Build samples
+- refer to the [sample guidelines](../SampleGuidelines.md)
+- make sure the Microsoft.AI.Skills.Vision.ObjectDetectorPreview and Microsoft.AI.Skills.SkillInterfacePreview NuGet packages are installed on your app projects
 
 ## Related topics
 
 - [Microsoft.AI.Skills.SkillInterfacePreview API document](../../doc/Microsoft.AI.Skills.SkillInterfacePreview.md)
 - [Microsoft.AI.Skills.Vision.ObjectDetectorPreview API document](../../doc/Microsoft.AI.Skills.Vision.ObjectDetectorPreview.md)
 - [Creating a custom Windows Vision Skill](../SentimentAnalyzerCustomSkill)
-- [UWP Community Toolkit](https://docs.microsoft.com/en-us/windows/communitytoolkit/)
-  - [Expander control (used in sample app)](https://docs.microsoft.com/en-us/windows/communitytoolkit/controls/expander)
 
-## System requirements
+## Run the UWP sample
 
-**Client**: Windows 10 64-bit build 17763 or greater
-> **IMPORTANT NOTE**  
-> Due to the size of the model used for object detection and memory limitations in 32-bit architectures, the ObjectDetector skill is NOT supported in 32-bit (e.g. x86 and ARM32). As such, this sample will only build in x64 configuration.
+The app supports three types of media inputs: webcam, video file and image file. Use the buttons at the top of the window to select the media source you would like to use. Click the "Details and options" expander to view more details about the ObjectDetector skill as well as configure options such as the `ISkillExecutionDevice` to run the skill on as well as `ObjectKind` filters (more on that below).
 
-## Build the sample
-
-Open ObjectDetectorSample.csproj, and make sure the Microsoft.AI.Skills.Vision.ObjectDetectorPreview and Microsoft.AI.Skills.SkillInterfacePreview NuGet packages are installed
-
-## Run the sample
-
-The app supports two types of media inputs: webcam and video file. Use the buttons at the top of the window to select the media source you would like to use. Click the "Details and options" expander to view more details about the ObjectDetector skill as well as configure options such as the `ISkillExecutionDevice` to run the skill on as well as `ObjectKind` filters (more on that below).
-
-## Using the ObjectDetector skill
+### Using the ObjectDetector skill
 
 As with all Vision Skills, the Object Detector skill is composed of an `ISkillDescription` (which holds general skill information), the `ISkill` instance (which is bound to a specific `ISkillExecutionDevice`), and the skill's `ISkillBinding` (which holds skill inputs, outputs, and any state information). You can instantiate your Object Detector skill as follows.
 
@@ -65,7 +62,7 @@ IReadOnlyList<ObjectDetectorResult> filteredDetections = binding.DetectedObjects
     ).ToList();
 ```
 
-## Sample app code walkthrough
+### Sample app code walkthrough
 
 The core skill initialization logic is in the `InitializeObjectDetectorAsync` method:
 
@@ -86,7 +83,7 @@ private async Task InitializeObjectDetectorAsync(ISkillExecutionDevice device = 
 
 The method uses both overloads of `ISkillDescriptor.CreateSkillAsync` to show how they can be used: either let the skill select a default device, or specify the device you would like it to use.
 
-The core skill evaluation logic can be found in `DetectObjectsAsync`:
+The core skill evaluation logic can be found in `DetectObjectsAsync` and `DisplayFrameAndResultAsync`:
 
 ```csharp
 private async Task<IReadOnlyList<ObjectDetectorResult>> DetectObjectsAsync(VideoFrame frame)
@@ -97,20 +94,24 @@ private async Task<IReadOnlyList<ObjectDetectorResult>> DetectObjectsAsync(Video
     // Evaluate
     await m_skill.EvaluateAsync(m_binding);
     var results = m_binding.DetectedObjects;
+}
 
-    // Filter results if requested
-    if (m_objectKinds != null && m_objectKinds.Count > 0)
+private async Task DisplayFrameAndResultAsync(VideoFrame frame)
+{
+    ...
+    // Retrieve and filter results if requested
+    IReadOnlyList<ObjectDetectorResult> objectDetections = m_binding.DetectedObjects;
+    if (m_objectKinds?.Count > 0)
     {
-        results = results.Where(det => m_objectKinds.Contains(det.Kind)).ToList();
+        objectDetections = objectDetections.Where(det => m_objectKinds.Contains(det.Kind)).ToList();
     }
-
-    return results;
+    ...
 }
 ```
 
 Notice the `ObjectKind` filtering as discussed above.
 
-Overall application initialization is performed in `OnNavigatedTo`, which calls the previously mentioned `InitializeObjectDetectorAsync` method as well as some other UI initialization. The `UpdateSkillUIAsync` method that is also called may appear to be non-trivial, but in fact it simply populates the fields in the "Details and options..." expander UI. It should be noted that the `ISkillDescriptor` is created directly here:
+Overall application initialization is performed in `Page_Loaded`, which calls the previously mentioned `InitializeObjectDetectorAsync` method as well as some other UI initialization. The `UpdateSkillUIAsync` method that is also called may appear to be non-trivial, but in fact it simply populates the fields in the "Details and options..." expander UI. It should be noted that the `ISkillDescriptor` is created directly here:
 
 ```csharp
 // ...
@@ -131,3 +132,5 @@ The sample app also uses several helper classes. These may be safely treated as 
 - **IFrameSource** - Provides a common interface to wrap various media source types with
 - **FrameReaderFrameSource** - Wrapper for [MediaFrameReader](https://docs.microsoft.com/en-us/uwp/api/Windows.Media.Capture.Frames.MediaFrameReader) for camera streaming
 - **MediaPlayerFrameSource** - Wrapper for [MediaPlayer](https://docs.microsoft.com/en-us/uwp/api/Windows.Media.Playback.MediaPlayer) for video file playback
+
+
