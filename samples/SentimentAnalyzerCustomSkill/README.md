@@ -34,7 +34,7 @@ Specifically, this sample shows how to:
 
 ## System requirements
 
-- refer to the [sample guidelines](../SampleGuidelines.md)
+- refer to the [sample guidelines](../README.md)
 
 ## Build the samples
 ### 1. Build skills

@@ -10,7 +10,7 @@ Follow these sample links:
 - [.Net Core 3.0 C# console app](./cs/ObjectDetectorSample_NetCore3)
 
 ## Build samples
-- refer to the [sample guidelines](../SampleGuidelines.md)
+- refer to the [sample guidelines](../README.md)
 - make sure the Microsoft.AI.Skills.Vision.ObjectDetectorPreview and Microsoft.AI.Skills.SkillInterfacePreview NuGet packages are installed on your app projects
 
 ## Related topics
