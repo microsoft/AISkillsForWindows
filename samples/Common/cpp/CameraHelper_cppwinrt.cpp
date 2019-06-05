@@ -108,7 +108,7 @@ void CameraHelper::Initialize()
     if (!frameSourceIterator.HasCurrent())
     {
         std::cerr << "No valid video frame sources were found with source type color.";
-        winrt::throw_hresult(winrt::hresult(MF_E_INVALIDMEDIATYPE));
+        winrt::throw_hresult(MF_E_INVALIDMEDIATYPE);
     }
 
     // If initializing in ExclusiveControl mode, attempt to use a 15fps+ BGRA8 format natively from the camera.
@@ -128,7 +128,7 @@ void CameraHelper::Initialize()
         std::sort(
             sortedMediaFrameFormats.begin(),
             sortedMediaFrameFormats.end(),
-            [&](const MediaFrameFormat & format1, const MediaFrameFormat & format2) -> bool {
+            [&](const MediaFrameFormat& format1, const MediaFrameFormat& format2) -> bool {
                 return format1.VideoFormat().Width()* format1.VideoFormat().Height() > format2.VideoFormat().Width()* format2.VideoFormat().Height();
             });
 
@@ -157,7 +157,7 @@ void CameraHelper::Initialize()
         if (compatibleFormat == sortedMediaFrameFormats.end())
         {
             std::cerr << "No suitable media format found on the selected source";
-            winrt::throw_hresult(winrt::hresult(MF_E_INVALIDMEDIATYPE));
+            winrt::throw_hresult(MF_E_INVALIDMEDIATYPE);
         }
         selectedFormat = *compatibleFormat;
         selectedFrameSource.SetFormatAsync(selectedFormat).get();
