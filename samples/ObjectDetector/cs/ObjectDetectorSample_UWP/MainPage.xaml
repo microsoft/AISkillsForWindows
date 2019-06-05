@@ -1,0 +1,62 @@
+﻿<Page
+    x:Class="ObjectDetectorSkillSample.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ObjectDetectorSkillSample"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    Loaded="Page_Loaded">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="10*" />
+        </Grid.RowDefinitions>
+        <ScrollViewer Grid.Row="0" Grid.RowSpan="2">
+            <StackPanel>
+                <controls:Expander VerticalAlignment="Top"
+                               Header="Details and options.."
+                               HorizontalContentAlignment="Stretch"
+                               Foreground="Black"
+                               Background="#FF7F7F7F"
+                               BorderBrush="Black"
+                               IsExpanded="False"
+                               ExpandDirection="Down"
+                               Expanded="UIExpander_Expanded"
+                               Collapsed="UIExpander_Expanded">
+                    <StackPanel>
+                        <TextBlock Name="UISkillName" Text="Skill name" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+                        <TextBlock Text="Skill Description:" FontWeight="Bold"/>
+                        <TextBox Name="UISkillDescription" Text="Loading skill description..." IsReadOnly="True" AcceptsReturn="True"/>
+                        <TextBlock Text="Skill input description:" FontWeight="Bold"/>
+                        <TextBox Name="UISkillInputDescription" Text="Loading skill input var description..." IsReadOnly="True" AcceptsReturn="True"/>
+                        <TextBlock Text="Skill output1 description:" FontWeight="Bold"/>
+                        <TextBox Name="UISkillOutputDescription1" Text="Loading skill output var description..." IsReadOnly="True" AcceptsReturn="True"/>
+                        <TextBlock Text="Available execution devices:" FontWeight="Bold"/>
+                        <ListBox Name="UISkillExecutionDevices" SelectionChanged="UISkillExecutionDevices_SelectionChanged"/>
+                        <ListView Name="UIObjectKindFilters" SelectionMode="Multiple" ScrollViewer.VerticalScrollBarVisibility="Visible" SelectionChanged="UIObjectKindFilters_SelectionChanged" />
+                    </StackPanel>
+                </controls:Expander>
+
+                <TextBlock Name="UIMessageTextBlock" Text="Select an image source to start" HorizontalAlignment="Center" />
+            </StackPanel>
+        </ScrollViewer>
+
+        <Grid Grid.Row="1" Name="UIVideoFeed">
+            <!-- Video frame source controls -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Background="#B2000000">
+                <AppBarButton x:Name="UICameraButton" Icon="AttachCamera" Label="Attach Camera" Click="UICameraButton_Click" Foreground="White" />
+                <AppBarButton x:Name="UIFilePickerButton" Icon="BrowsePhotos" Label="Open File" ToolTipService.ToolTip="Load an image or video file from disk" Click="UIFilePickerButton_Click" Foreground="White" />
+            </StackPanel>
+            
+            <!-- Video display -->
+            <Image x:Name="UIProcessedPreview" Canvas.ZIndex="-1"  VerticalAlignment="Center" Stretch="Uniform" SizeChanged="UIProcessedPreview_SizeChanged" />
+            <Canvas Name="UIOverlayCanvas" Canvas.ZIndex="0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+            <TextBox Name="UIPerfTextBlock" HorizontalAlignment="Center" IsReadOnly="True" AcceptsReturn="True" VerticalAlignment="Bottom"/>
+        </Grid>
+    </Grid>
+</Page>
