@@ -168,11 +168,15 @@ void CameraHelper::Initialize()
             << "@" << std::to_wstring(selectedFormat.FrameRate().Numerator() / selectedFormat.FrameRate().Denominator()) << L"fps" << std::endl;
     }
 
+    std::wcout << "Frame source format: " << selectedFormat.Subtype().c_str()
+        << " : " << std::to_wstring(selectedFormat.VideoFormat().Width()) << "x" << std::to_wstring(selectedFormat.VideoFormat().Height())
+        << "@" << std::to_wstring(selectedFormat.FrameRate().Numerator() / selectedFormat.FrameRate().Denominator()) << L"fps" << std::endl;
+
     // Create FrameReader with the FrameSource that we selected in the loop above.
     m_frameReader = m_mediaCapture.CreateFrameReaderAsync(frameSourceIterator.Current().Value()).get();
 
     // Set up a delegate to handle the frames when they are ready
-    m_frameArrivedEventToken = m_frameReader.FrameArrived({ this, &CameraHelper::FirstFrameArrivedHandler });
+    m_frameArrivedEventToken = m_frameReader.FrameArrived({ this, &CameraHelper::FrameArrivedHandler});
 
     // Finally start the FrameReader
     m_frameReader.StartAsync().get();
@@ -219,42 +223,6 @@ void CameraHelper::FrameArrivedHandler(MediaFrameReader FrameReader, MediaFrameA
         }
         mediaFrame.Close();
     }
-}
-
-//
-// Function to handle the first frame when it arrives from FrameReader
-// and display its format then register the main handler.
-//
-void CameraHelper::FirstFrameArrivedHandler(MediaFrameReader FrameReader, MediaFrameArrivedEventArgs args)
-{
-    auto frame = FrameReader.TryAcquireLatestFrame();
-
-    if (frame == nullptr)
-    {
-        return;
-    }
-
-    lock.lock();
-    if (m_firstFrameReceived != 0)
-    {
-        lock.unlock();
-        return;
-    }
-    else
-    {
-        m_firstFrameReceived++;
-        lock.unlock();
-    }
-    FrameReader.StopAsync().get();
-
-    auto selectedFormat = frame.Format();
-    std::wcout << "Receiving frame " << selectedFormat.Subtype().c_str()
-        << " : " << std::to_wstring(selectedFormat.VideoFormat().Width()) << "x" << std::to_wstring(selectedFormat.VideoFormat().Height())
-        << "@" << std::to_wstring(selectedFormat.FrameRate().Numerator() / selectedFormat.FrameRate().Denominator()) << L"fps" << std::endl;
-
-    FrameReader.FrameArrived(m_frameArrivedEventToken);
-    m_frameArrivedEventToken = m_frameReader.FrameArrived({ this, &CameraHelper::FrameArrivedHandler });
-    FrameReader.StartAsync().get();
 }
 
 //

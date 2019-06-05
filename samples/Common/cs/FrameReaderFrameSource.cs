@@ -45,9 +45,14 @@ namespace FrameSourceHelper_UWP
         {
             lock (m_lock)
             {
-                m_frameReader.FrameArrived -= FrameReader_FrameArrived;
-                m_frameReader.Dispose();
-                m_mediaCapture.Dispose();
+                if (m_frameReader != null)
+                {
+                    m_frameReader.FrameArrived -= FrameReader_FrameArrived;
+                    m_frameReader.Dispose();
+                    m_frameReader = null;
+                }
+                m_mediaCapture?.Dispose();
+                m_mediaCapture = null;
             }
         }
 
@@ -97,9 +102,12 @@ namespace FrameSourceHelper_UWP
         /// <param name="errorEventArgs"></param>
         private async void MediaCapture_Failed(MediaCapture sender, MediaCaptureFailedEventArgs errorEventArgs)
         {
+            // if we failed to initialize MediaCapture ExclusiveControl with MF_E_HW_MFT_FAILED_START_STREAMING,
+            // let's retry in SharedReadOnly mode since this points to a camera already in use
             if (m_mediaCaptureInitializationSettings.SharingMode == MediaCaptureSharingMode.ExclusiveControl 
-                && errorEventArgs.Code == 3222091524) // if device is already in use
+                && errorEventArgs.Code == 0xc00d3704) // if device is already in use
             {
+                Dispose();
                 m_mediaCapture = new MediaCapture();
                 m_mediaCapture.Failed += MediaCapture_Failed;
                 m_mediaCaptureInitializationSettings.SharingMode = MediaCaptureSharingMode.SharedReadOnly;

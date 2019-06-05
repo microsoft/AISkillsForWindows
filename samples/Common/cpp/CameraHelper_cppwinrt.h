@@ -19,7 +19,6 @@ public:
 private:
     CameraHelper(){};
     void Initialize();
-    void FirstFrameArrivedHandler(winrt::Windows::Media::Capture::Frames::MediaFrameReader FrameReader, winrt::Windows::Media::Capture::Frames::MediaFrameArrivedEventArgs);
     void FrameArrivedHandler(winrt::Windows::Media::Capture::Frames::MediaFrameReader FrameReader, winrt::Windows::Media::Capture::Frames::MediaFrameArrivedEventArgs);
     void MediaCapture_Failed(winrt::Windows::Media::Capture::MediaCapture sender, winrt::Windows::Media::Capture::MediaCaptureFailedEventArgs errorEventArgs);
 

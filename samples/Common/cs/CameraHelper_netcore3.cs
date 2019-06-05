@@ -24,7 +24,6 @@ namespace CameraHelper_NetCore3
         private MediaCapture m_mediaCapture = null;
         private NewFrameArrivedHandler m_frameHandler = null;
         private CameraHelperFailedHandler m_failureHandler = null;
-        private int m_firstFrameReceived = 0;
         private MediaCaptureSharingMode m_sharingMode = MediaCaptureSharingMode.ExclusiveControl;
 
         /// <summary>
@@ -118,8 +117,12 @@ namespace CameraHelper_NetCore3
                     $"@{selectedFormat.FrameRate.Numerator / selectedFormat.FrameRate.Denominator}fps");
             }
 
+            Console.WriteLine($"Frame source format: {selectedFormat.Subtype} : " +
+                $"{selectedFormat.VideoFormat.Width}x{selectedFormat.VideoFormat.Height}" +
+                $"@{selectedFormat.FrameRate.Numerator / selectedFormat.FrameRate.Denominator}fps");
+
             m_frameReader = await m_mediaCapture.CreateFrameReaderAsync(selectedFrameSource);
-            m_frameReader.FrameArrived += FirstFrameArrivedHandler;
+            m_frameReader.FrameArrived += FrameArrivedHandler;
             m_frameReader.AcquisitionMode = MediaFrameReaderAcquisitionMode.Realtime;
             await m_frameReader.StartAsync();
         }
@@ -169,33 +172,6 @@ namespace CameraHelper_NetCore3
                 m_mediaCapture.Dispose();
             }
             m_mediaCapture = null;
-        }
-
-        /// <summary>
-        /// Function to handle the first frame when it arrives from FrameReader
-        /// and display its format then register the main handler.
-        /// </summary>
-        /// <param name="FrameReader"></param>
-        /// <param name="args"></param>
-        private async void FirstFrameArrivedHandler(MediaFrameReader FrameReader, MediaFrameArrivedEventArgs args)
-        {
-            using (var frame = FrameReader.TryAcquireLatestFrame())
-            {
-                if (frame == null) return;
-                if (0 == Interlocked.Exchange(ref m_firstFrameReceived, m_firstFrameReceived + 1))
-                {
-                    await FrameReader.StopAsync();
-
-                    var selectedFormat = frame.Format;
-                    Console.WriteLine($"Receiving frame {selectedFormat.Subtype} : " +
-                        $"{selectedFormat.VideoFormat.Width}x{selectedFormat.VideoFormat.Height}" +
-                        $"@{selectedFormat.FrameRate.Numerator / selectedFormat.FrameRate.Denominator}fps");
-
-                    FrameReader.FrameArrived -= FirstFrameArrivedHandler;
-                    FrameReader.FrameArrived += FrameArrivedHandler;
-                    await FrameReader.StartAsync();
-                }
-            }
         }
 
         /// <summary>
