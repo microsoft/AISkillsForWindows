@@ -23,7 +23,6 @@
     </Application>
   </Applications>
   <Capabilities>
-    <Capability Name="internetClient" />
     <DeviceCapability Name="webcam" />
   </Capabilities>
 </Package>

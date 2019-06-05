@@ -46,7 +46,7 @@ namespace CameraHelper_NetCore3
         {
             CameraHelper instance = new CameraHelper(failureHandler, frameHandler);
 
-            await instance.Initialize();
+            await instance.InitializeAsync();
 
             return instance;
         }
@@ -55,7 +55,7 @@ namespace CameraHelper_NetCore3
         /// Initialize camera pipeline resources and register a callback for when new VideoFrames become available.
         /// </summary>
         /// <returns></returns>
-        private async Task Initialize()
+        private async Task InitializeAsync()
         {
             // Initialize MediaCapture with default settings in video-only streaming mode. 
             // We first try to aquire exclusive sharing mode and if we fail, we then attempt again in shared mode 
@@ -83,7 +83,7 @@ namespace CameraHelper_NetCore3
             }
             if (selectedFrameSource == null)
             {
-                throw (new Exception("No valid video frame sources were found with source type color."));
+                throw new Exception("No valid video frame sources were found with source type color.");
             }
 
             Console.WriteLine($"{selectedFrameSource.Info.DeviceInformation?.Name} | MediaStreamType: {selectedFrameSource.Info.MediaStreamType} MediaFrameSourceKind: {selectedFrameSource.Info.SourceKind}");
@@ -134,14 +134,15 @@ namespace CameraHelper_NetCore3
             Console.WriteLine($"MediaCapture failed: {errorEventArgs.Message}");
             await CleanupAsync();
 
-            // if we failed to initialize MediaCapture ExclusiveControl, let's retry in SharedReadOnly mode
+            // if we failed to initialize MediaCapture ExclusiveControl with MF_E_HW_MFT_FAILED_START_STREAMING,
+            // let's retry in SharedReadOnly mode since this points to a camera already in use
             if (m_sharingMode == MediaCaptureSharingMode.ExclusiveControl
-                && errorEventArgs.Code == 3222091524)
+                && errorEventArgs.Code == 0xc00d3704)
             {
                 m_sharingMode = MediaCaptureSharingMode.SharedReadOnly;
 
                 Console.WriteLine("Retrying MediaCapture initialization");
-                await Initialize();
+                await InitializeAsync();
             }
             else
             {

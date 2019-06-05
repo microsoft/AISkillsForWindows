@@ -10,6 +10,7 @@
 #include <winrt\Windows.Media.MediaProperties.h>
 
 using namespace winrt;
+using namespace winrt::Windows::Media;
 using namespace winrt::Windows::Media::Capture;
 using namespace winrt::Windows::Media::Capture::Frames;
 using namespace winrt::Windows::Media::MediaProperties;
@@ -31,11 +32,11 @@ CameraHelper* CameraHelper::CreateCameraHelper(winrt::delegate<std::string> fail
 {
     if (failureHandler == nullptr)
     {
-        throw(hresult_invalid_argument(L"Error: attempting to intialize camera with a null failureHandler"));
+        throw hresult_invalid_argument(L"Error: attempting to intialize camera with a null failureHandler");
     }
     if (newFrameArrivedHandler == nullptr)
     {
-        throw(hresult_invalid_argument(L"Error: attempting to intialize camera with a null FrameArrivedHandler"));
+        throw hresult_invalid_argument(L"Error: attempting to intialize camera with a null FrameArrivedHandler");
     }
 
     CameraHelper* instance = new CameraHelper;
@@ -73,44 +74,41 @@ void CameraHelper::Initialize()
     // Register a callback in case MediaCapture fails. This can happen for example if another app is using the camera and we can't get ExclusiveControl
     m_mediaCapture.Failed({ this, &CameraHelper::MediaCapture_Failed });
 
+    // This call will throw if there are no cameras attached
     m_mediaCapture.InitializeAsync(mediaCaptureInitializationSettings).get();
 
-    // Get a list of available Frame source and iterate through them to find a video preview or 
+    // Get a list of available frame sources and iterate through them to find a video preview or 
     // a video record source with color images (and not IR, depth or other types)
     auto frameSourceIterator = m_mediaCapture.FrameSources().First();
     const wchar_t* cameraName;
-    do
+
+    // Look first for a MediaStreamType::VideoPreview source
+    auto mediaStreamTypeToLookFor = MediaStreamType::VideoPreview;
+    while (frameSourceIterator.HasCurrent())
     {
         auto mediaStreamType = frameSourceIterator.Current().Value().Info().MediaStreamType();
         auto sourceKind = frameSourceIterator.Current().Value().Info().SourceKind();
         cameraName = frameSourceIterator.Current().Value().Info().DeviceInformation().Name().c_str();
 
         std::wcout << cameraName << L" | MediaStreamType:" << (int)mediaStreamType << L" MediaFrameSourceKind:" << (int)sourceKind << std::endl;
-        if ((mediaStreamType == MediaStreamType::VideoPreview) && (sourceKind == MediaFrameSourceKind::Color))
+        if ((mediaStreamType == mediaStreamTypeToLookFor) && (sourceKind == MediaFrameSourceKind::Color))
         {
             break;
         }
-    } while (frameSourceIterator.MoveNext());
 
-    if (!frameSourceIterator.HasCurrent())
-    {
-        frameSourceIterator = m_mediaCapture.FrameSources().First();
-        do
+        // If we reach the end of the collection and did not find a source with MediaStreamType::VideoPreview
+        if (!frameSourceIterator.MoveNext() && mediaStreamTypeToLookFor == MediaStreamType::VideoPreview)
         {
-            auto mediaStreamType = frameSourceIterator.Current().Value().Info().MediaStreamType();
-            auto sourceKind = frameSourceIterator.Current().Value().Info().SourceKind();
-            cameraName = frameSourceIterator.Current().Value().Info().DeviceInformation().Name().c_str();
-
-            if ((mediaStreamType == MediaStreamType::VideoRecord) && (sourceKind == MediaFrameSourceKind::Color))
-            {
-                break;
-            }
-        } while (frameSourceIterator.MoveNext());
+            // Look for a MediaStreamType::VideoRecord source (1-pin cameras often expose only this type)
+            mediaStreamTypeToLookFor = MediaStreamType::VideoRecord;
+            frameSourceIterator = m_mediaCapture.FrameSources().First();
+        }
     }
+
     if (!frameSourceIterator.HasCurrent())
     {
         std::cerr << "No valid video frame sources were found with source type color.";
-        throw new winrt::hresult(MF_E_INVALIDMEDIATYPE);
+        winrt::throw_hresult(winrt::hresult(MF_E_INVALIDMEDIATYPE));
     }
 
     // If initializing in ExclusiveControl mode, attempt to use a 15fps+ BGRA8 format natively from the camera.
@@ -130,18 +128,18 @@ void CameraHelper::Initialize()
         std::sort(
             sortedMediaFrameFormats.begin(),
             sortedMediaFrameFormats.end(),
-            [&](const MediaFrameFormat& format1, const MediaFrameFormat& format2) -> bool {
-                return format1.VideoFormat().Width() * format1.VideoFormat().Height() > format2.VideoFormat().Width() * format2.VideoFormat().Height();
+            [&](const MediaFrameFormat & format1, const MediaFrameFormat & format2) -> bool {
+                return format1.VideoFormat().Width()* format1.VideoFormat().Height() > format2.VideoFormat().Width()* format2.VideoFormat().Height();
             });
 
         // Find a format in Bgra at 15+fps
         auto compatibleFormat = std::find_if(
             sortedMediaFrameFormats.begin(),
             sortedMediaFrameFormats.end(),
-            [&](const MediaFrameFormat& format) -> bool {
+            [&](const MediaFrameFormat & format) -> bool {
                 std::string formatUTF8 = ToUpperString(format.Subtype());
                 return format.FrameRate().Numerator() / format.FrameRate().Denominator() >= 15 //fps
-                       && 0 == formatUTF8.compare(ToUpperString(MediaEncodingSubtypes::Bgra8()));
+                    && 0 == formatUTF8.compare(ToUpperString(MediaEncodingSubtypes::Bgra8()));
             });
 
         // If not possible, then try to use other supported format at 15fps+
@@ -150,24 +148,24 @@ void CameraHelper::Initialize()
             compatibleFormat = std::find_if(
                 sortedMediaFrameFormats.begin(),
                 sortedMediaFrameFormats.end(),
-                [&](const MediaFrameFormat& format) -> bool {
+                [&](const MediaFrameFormat & format) -> bool {
                     std::string formatUTF8 = ToUpperString(format.Subtype());
                     return format.FrameRate().Numerator() / format.FrameRate().Denominator() >= 15 //fps
-                           && (0 == formatUTF8.compare(ToUpperString(MediaEncodingSubtypes::Nv12())) || 0 == formatUTF8.compare(ToUpperString(MediaEncodingSubtypes::Yuy2())) || 0 == formatUTF8.compare(ToUpperString(MediaEncodingSubtypes::Rgb32())));
+                        && (0 == formatUTF8.compare(ToUpperString(MediaEncodingSubtypes::Nv12())) || 0 == formatUTF8.compare(ToUpperString(MediaEncodingSubtypes::Yuy2())) || 0 == formatUTF8.compare(ToUpperString(MediaEncodingSubtypes::Rgb32())));
                 });
         }
         if (compatibleFormat == sortedMediaFrameFormats.end())
         {
             std::cerr << "No suitable media format found on the selected source";
-            throw new winrt::hresult(MF_E_INVALIDMEDIATYPE);
+            winrt::throw_hresult(winrt::hresult(MF_E_INVALIDMEDIATYPE));
         }
         selectedFormat = *compatibleFormat;
         selectedFrameSource.SetFormatAsync(selectedFormat).get();
         selectedFormat = selectedFrameSource.CurrentFormat();
 
         std::wcout << "Attempting to set camera source to " << selectedFormat.Subtype().c_str()
-                   << " : " << std::to_wstring(selectedFormat.VideoFormat().Width()) << "x" << std::to_wstring(selectedFormat.VideoFormat().Height())
-                   << "@" << std::to_wstring(selectedFormat.FrameRate().Numerator() / selectedFormat.FrameRate().Denominator()) << L"fps" << std::endl;
+            << " : " << std::to_wstring(selectedFormat.VideoFormat().Width()) << "x" << std::to_wstring(selectedFormat.VideoFormat().Height())
+            << "@" << std::to_wstring(selectedFormat.FrameRate().Numerator() / selectedFormat.FrameRate().Denominator()) << L"fps" << std::endl;
     }
 
     // Create FrameReader with the FrameSource that we selected in the loop above.
@@ -232,7 +230,10 @@ void CameraHelper::FirstFrameArrivedHandler(MediaFrameReader FrameReader, MediaF
     auto frame = FrameReader.TryAcquireLatestFrame();
 
     if (frame == nullptr)
+    {
         return;
+    }
+
     lock.lock();
     if (m_firstFrameReceived != 0)
     {
@@ -248,8 +249,8 @@ void CameraHelper::FirstFrameArrivedHandler(MediaFrameReader FrameReader, MediaF
 
     auto selectedFormat = frame.Format();
     std::wcout << "Receiving frame " << selectedFormat.Subtype().c_str()
-               << " : " << std::to_wstring(selectedFormat.VideoFormat().Width()) << "x" << std::to_wstring(selectedFormat.VideoFormat().Height())
-               << "@" << std::to_wstring(selectedFormat.FrameRate().Numerator() / selectedFormat.FrameRate().Denominator()) << L"fps" << std::endl;
+        << " : " << std::to_wstring(selectedFormat.VideoFormat().Width()) << "x" << std::to_wstring(selectedFormat.VideoFormat().Height())
+        << "@" << std::to_wstring(selectedFormat.FrameRate().Numerator() / selectedFormat.FrameRate().Denominator()) << L"fps" << std::endl;
 
     FrameReader.FrameArrived(m_frameArrivedEventToken);
     m_frameArrivedEventToken = m_frameReader.FrameArrived({ this, &CameraHelper::FrameArrivedHandler });
@@ -264,9 +265,10 @@ void CameraHelper::MediaCapture_Failed(MediaCapture sender, MediaCaptureFailedEv
     std::wcerr << L"MediaCapture failed: " << errorEventArgs.Message().c_str() << std::endl;
     Cleanup();
 
-    // if we failed to initialize MediaCapture ExclusiveControl, let's retry in SharedReadOnly mode
-    if (m_sharingMode == MediaCaptureSharingMode::ExclusiveControl 
-        && errorEventArgs.Code() == 3222091524)
+    // if we failed to initialize MediaCapture ExclusiveControl with MF_E_HW_MFT_FAILED_START_STREAMING,
+    // let's retry in SharedReadOnly mode since this points to a camera already in use
+    if (m_sharingMode == MediaCaptureSharingMode::ExclusiveControl
+        && errorEventArgs.Code() == 0xc00d3704)
     {
         m_sharingMode = MediaCaptureSharingMode::SharedReadOnly;
         std::cout << "Retrying MediaCapture initialization" << std::endl;

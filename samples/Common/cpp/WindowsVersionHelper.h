@@ -42,7 +42,7 @@ namespace WindowsVersionHelper
                     << LOWORD(pVer->dwProductVersionMS) << '.'
                     << HIWORD(pVer->dwProductVersionLS) << std::endl;
                 std::cerr << "This application will work only on windows version 10.0." << versionNumber << ".x or newer." << std::endl;
-                hr = E_ABORT;
+                hr = HRESULT_FROM_WIN32(ERROR_OLD_WIN_VERSION);
             }
         }
 
