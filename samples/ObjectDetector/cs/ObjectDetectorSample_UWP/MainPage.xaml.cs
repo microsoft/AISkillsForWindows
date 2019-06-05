@@ -262,6 +262,9 @@ namespace ObjectDetectorSkillSample
                 {
                     NotifyUser(message);
                 });
+
+                // TODO: Workaround for a bug in ObjectDetectorBinding when binding consecutively VideoFrames with Direct3DSurface and SoftwareBitmap
+                m_binding = await m_skill.CreateSkillBindingAsync() as ObjectDetectorBinding;
             }
             m_lock.Release();
 
