@@ -63,7 +63,7 @@ To run the test app and visualize the sample code for the skill:
 
     >**Important to note:** the file named *app.manifest* included in these two application projects must reference the dependent assemblies present in the NuGet packages ingested. This leverages the work done in the [previous step 4.1 in the previous section](#ManifestGeneration) when building your skill.
 
-In order for local NuGet packages to be available to your app project, you need to add a local NuGet repository pointing to where you built the skill NuGet package and where the base API package resides (i.e. in *./build/*). Follow the below steps to achieve this:
+In order for local NuGet packages to be available to your app project, you need to add a local NuGet repository pointing to where you built the skill NuGet package and where the base API package resides (i.e. in *./build/*). Follow the below steps to achieve this: <a name="PrivateNuGetFeed"></a>
 1. In Visual Studio, go to *Tools* \> *NuGet Package Manager* \> *Package Manager Settings*
 ![LocalNugetHowTo1](./doc/localNugetHowTo1.jpg)
 
