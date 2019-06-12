@@ -101,7 +101,7 @@
       <Message>Generates temporary .idl files from .winmd referenced via NuGet, then generates headers (.h) files from the previously generated .idl files.</Message>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget)</Command>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget) -PlatformToolsetVersion:$(PlatformToolsetVersion)</Command>
       <Message>Copies all required binaries to the specified target directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -128,7 +128,7 @@
       <Message>Generates temporary .idl files from .winmd referenced via NuGet, then generates headers (.h) files from the previously generated .idl files.</Message>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget) -PlatformToolsetVersion:$(PlatformToolsetVersion)</Command>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget) -PlatformToolsetVersion:$(PlatformToolsetVersion) -Debug</Command>
       <Message>Copies all required binaries to the specified target directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -155,7 +155,7 @@
       <Message>Generates temporary .idl files from .winmd referenced via NuGet, then generates headers (.h) files from the previously generated .idl files.</Message>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget) -PlatformToolsetVersion:$(PlatformToolsetVersion)</Command>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget) -PlatformToolsetVersion:$(PlatformToolsetVersion) -Debug</Command>
       <Message>Copies all required binaries to the specified target directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -189,7 +189,7 @@
       <Message>Generates temporary .idl files from .winmd referenced via NuGet, then generates headers (.h) files from the previously generated .idl files.</Message>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget)</Command>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget) -PlatformToolsetVersion:$(PlatformToolsetVersion)</Command>
       <Message>Copies all required binaries to the specified target directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>

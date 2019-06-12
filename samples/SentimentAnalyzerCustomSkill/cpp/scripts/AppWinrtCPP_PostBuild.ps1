@@ -11,7 +11,7 @@ Copies all required binaries to the specified target directory
 
 param($TargetDir,$VCRedistPath,$VCToolsRedistVersion,$PlatformTarget,$PlatformToolsetVersion,[switch] $Debug)
 
-if ($PlatformToolsetVersion -eq "")
+if ($null -eq $PlatformToolsetVersion -or "" -eq $PlatformToolsetVersion)
 {
     # Default platform version of 141
     $PlatformToolsetVersion = "141"
