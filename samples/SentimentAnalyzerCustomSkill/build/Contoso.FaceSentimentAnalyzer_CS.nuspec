@@ -4,7 +4,7 @@
         <!-- Required elements-->
         <id>Contoso.FaceSentimentAnalyzer_CS</id>
         <title>Contoso.FaceSentimentAnalyzer_CS</title>
-        <version>0.0.0.6-experimental</version>
+        <version>0.0.0.7-experimental</version>
         <description>Face Sentiment Analyzer skill sample that extends the Microsoft.AI.Skills.SkillInterfacePreview APIs</description>
         <authors>Contoso</authors>
         <owners>Contoso</owners>
@@ -13,7 +13,7 @@
         <licenseUrl>https://github.com/Microsoft/WindowsVisionSkillsPreview/blob/master/license/doc/LICENSE_package.md</licenseUrl>
         <projectUrl>https://github.com/Microsoft/WindowsVisionSkillsPreview</projectUrl>
         <iconUrl>https://github.com/Microsoft/WindowsVisionSkillsPreview/blob/master/doc/Logo.png?raw=true</iconUrl>
-        <releaseNotes>v0.0.0.6 experimental release with VPU support https://github.com/Microsoft/WindowsVisionSkillsPreview/releases</releaseNotes>
+        <releaseNotes>v0.0.0.7 experimental release with VPU support https://github.com/Microsoft/WindowsVisionSkillsPreview/releases</releaseNotes>
         <dependencies>
             <dependency id="Microsoft.AI.Skills.SkillInterfacePreview" version="0.5.2.15" />
             <dependency id="Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension" version="0.0.1.1-pre" />

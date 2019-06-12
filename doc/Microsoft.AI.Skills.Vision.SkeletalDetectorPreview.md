@@ -87,7 +87,7 @@ double Y
 The first of a pair of joints making up the limb.
 
 ```csharp
-Microsoft.AI.Skills.Vision.SkeletalDetector.Joint joint1
+Microsoft.AI.Skills.Vision.SkeletalDetector.Joint Joint1
 ```
 
 -----
@@ -97,7 +97,7 @@ Microsoft.AI.Skills.Vision.SkeletalDetector.Joint joint1
 The second of a pair of joints making up the limb.
 
 ```csharp
-Microsoft.AI.Skills.Vision.SkeletalDetector.Joint joint2
+Microsoft.AI.Skills.Vision.SkeletalDetector.Joint Joint2
 ```
 
 -----

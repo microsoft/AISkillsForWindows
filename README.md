@@ -12,12 +12,12 @@ While this preview focuses on vision-oriented scenarios and primitives, this API
 
 ## How To Use
 
-For how to use the framework to author a Skill to be consumed, and creating an app to consume the skill, see the [SentimentAnalzerCustomSkill](samples/SentimentAnalyzerCustomSkill) Sample. 
+For how to use the framework to author a Skill to be consumed, and creating an app to consume the skill, see the [SentimentAnalyzerCustomSkill](samples/SentimentAnalyzerCustomSkill) Sample. 
 
 ## Other Samples
 
-- [ObjectDetector](samples/ObjectDetectorSample): detecting and classifying objects
-- [SkeletalDetector](samples/SkeletalDetectorSample): estimating poses of people in images
+- [ObjectDetector](samples/ObjectDetector): detecting and classifying objects
+- [SkeletalDetector](samples/SkeletalDetector): estimating poses of people in images
 
 -----
 
