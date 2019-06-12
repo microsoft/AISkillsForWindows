@@ -22,8 +22,8 @@
     </metadata>
   <files>
     <!-- WinMD, Intellisense and resource files-->
-    <file src="..\cs\FaceSentimentAnalyzer\bin\Release\Contoso.FaceSentimentAnalyzer.winmd" target="lib\uap10.0.18898" />
-    <file src="..\cs\FaceSentimentAnalyzer\bin\Release\Contoso.FaceSentimentAnalyzer.pri" target="lib\uap10.0.18898" />
+    <file src="..\cs\Skill\FaceSentimentAnalyzer\bin\Release\Contoso.FaceSentimentAnalyzer.winmd" target="lib\uap10.0.18898" />
+    <file src="..\cs\Skill\FaceSentimentAnalyzer\bin\Release\Contoso.FaceSentimentAnalyzer.pri" target="lib\uap10.0.18898" />
     <file src="..\common\Contoso.FaceSentimentAnalyzer.xml" target="lib\uap10.0.18898" />
     <file src="..\common\emotion_ferplus.onnx" target="lib\uap10.0.18898\Contoso.FaceSentimentAnalyzer" />
     <!-- .targets -->
