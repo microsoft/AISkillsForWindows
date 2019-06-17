@@ -132,12 +132,7 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\GitHub-Mark-120px-plus.png" />
     <Content Include="Assets\GitHub-Mark-32px.png" />
-    <Content Include="Assets\GitHub-Mark-64px.png" />
-    <Content Include="Assets\GitHub-Mark-Light-120px-plus.png" />
-    <Content Include="Assets\GitHub-Mark-Light-32px.png" />
-    <Content Include="Assets\GitHub-Mark-Light-64px.png" />
     <Content Include="Assets\SkeletalDetectorSamplePhoto.jpg" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />

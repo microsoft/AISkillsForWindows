@@ -15,7 +15,67 @@
             <ColumnDefinition Width="30*"/>
         </Grid.ColumnDefinitions>
 
-        
+        <!--Left Panel-->
+        <Grid x:Name="LeftPanel" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="15*"/>
+                <RowDefinition Height="75*"/>
+                <RowDefinition Height="10*"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40*"/>
+                    <RowDefinition Height="60*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <!--Backward navigation button-->
+                <Button x:Name="BackButton" Grid.Row="0" Click="Back_Click" 
+                        VerticalAlignment="Top" HorizontalAlignment="Left" 
+                        Style="{StaticResource NavigationBackButtonNormalStyle}"/>
+
+                <!--Shortcut to GitHub documentation page-->
+                <HyperlinkButton x:Name="GithubButton" Grid.Row="1" Grid.Column="0"
+                                 HorizontalAlignment="Center"
+                                 NavigateUri="https://github.com/microsoft/WindowsVisionSkillsPreview/tree/master/samples/SkeletalDetector">
+                    <Image Source="./Assets/GitHub-Mark-32px.png" 
+                            Width="32"
+                            Height="32"/>
+                </HyperlinkButton>
+                <TextBlock Text="Skeletal Detector Page" Grid.Row="1" Grid.Column="1"
+                           HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlockStyle}" />
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <TextBlock Text="Skeletal Detector Page" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30"></TextBlock>
+            </Grid>
+        </Grid>
+
+        <!--Right Panel-->
+        <Grid x:Name="RightPanel" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="15*"/>
+                <RowDefinition Height="65*"/>
+                <RowDefinition Height="20*"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <TextBlock Text="Properties" HorizontalAlignment="Center" 
+                           VerticalAlignment="Bottom" Style="{StaticResource SubheaderTextBlockStyle}" />
+            </Grid>
+
+            <Grid Grid.Row="1">
+
+            </Grid>
+
+            <Grid Grid.Row="2">
+                <Button x:Name="RunSkill" Content="Run Skill" HorizontalAlignment="Center"></Button>
+            </Grid>
+        </Grid>
 
         <!--Grid Splitter-->
         <controls:GridSplitter
