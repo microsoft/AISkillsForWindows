@@ -42,42 +42,6 @@
                 <Button Height="400" Width="400" Opacity="0" Click="NavigateToSkillPage"/>
             </Grid>
 
-            <!--Template-->
-            <!--<GridView Grid.Column="1">
-                <GridView.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <ItemsWrapGrid Orientation="Horizontal" />
-                    </ItemsPanelTemplate>
-                </GridView.ItemsPanel>
-                <GridView.ItemContainerStyle>
-                    <Style TargetType="GridViewItem">
-                        <Style.Setters>
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate>
-                                        <Grid Background="LightGray" Margin="25" Height="400" Width="400" 
-                                          Padding="0, 0, 0, 0">
-                                            <Grid Height="200" Width="400" VerticalAlignment="Bottom">
-                                                <Rectangle Height="200" Width="400" VerticalAlignment="Bottom"
-                                                       Fill="Gray" Opacity="0.25"/>
-                                                <TextBlock Text="Skeletal Detector" Style="{StaticResource SubheaderTextBlockStyle}"
-                                                           Padding="10, 0, 0, 0"/>
-                                                <TextBlock Text="Description..." Style="{StaticResource BodyTextBlockStyle}"
-                                                           Padding="10, 60, 0, 0"/>
-                                            </Grid>
-                                            <Button Height="400" Width="400" Opacity="0" Click="NavigateToSkillPage"/>
-                                        </Grid>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style.Setters>
-                    </Style>
-                </GridView.ItemContainerStyle>
-
-                <GridViewItem />
-
-            </GridView>-->
-
         </Grid>
     </Grid>
 </Page>
