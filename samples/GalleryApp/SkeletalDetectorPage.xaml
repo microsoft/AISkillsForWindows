@@ -50,8 +50,8 @@
                            HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlockStyle}" />
             </Grid>
 
-            <Grid Grid.Row="1">
-                <TextBlock Text="Skeletal Detector Page" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30"></TextBlock>
+            <Grid Grid.Row="1" Loaded="Page_Loaded">
+                
             </Grid>
         </Grid>
 
@@ -69,7 +69,7 @@
             </Grid>
 
             <Grid Grid.Row="1">
-
+               
             </Grid>
 
             <Grid Grid.Row="2">
