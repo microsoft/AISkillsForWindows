@@ -50,7 +50,7 @@
                            HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlockStyle}" />
             </Grid>
 
-            <Grid Grid.Row="1" Loaded="Page_Loaded">
+            <Grid Grid.Row="1">
                 
             </Grid>
         </Grid>
