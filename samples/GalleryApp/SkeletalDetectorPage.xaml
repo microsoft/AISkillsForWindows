@@ -50,13 +50,46 @@
                            HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlockStyle}" />
             </Grid>
 
-            <Grid Grid.Row="1">
-                
+            <!--Skill output area-->
+            <Grid Grid.Row="1" Loaded="Page_Loaded">
+                <Grid Name="UIVideoFeed">
+                    <ScrollViewer>
+                        <StackPanel>
+                            <TextBlock Name="UIMessageTextBlock" Text="Select an image source to start" HorizontalAlignment="Center"/>
+
+                            <!-- Video frame source controls -->
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Background="#B2000000">
+                                <AppBarButton x:Name="UIButtonCamera" Icon="AttachCamera" Label="Attach Camera" Click="UIButtonCamera_Click" Foreground="White" />
+                                <AppBarButton x:Name="UIButtonFilePicker" Icon="BrowsePhotos" Label="Open File" ToolTipService.ToolTip="Load an image or video file from disk" Click="UIButtonFilePicker_Click" Foreground="White" />
+                            </StackPanel>
+
+                            <Grid>
+                                <!-- Video display -->
+                                <Image Name="UIImageViewer" 
+                                    Canvas.ZIndex="-1"  
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    Stretch="Uniform" 
+                                    SizeChanged="UIImageViewer_SizeChanged"/>
+
+                                <Canvas Name="UICanvasOverlay"
+                                    HorizontalAlignment="Center" 
+                                    VerticalAlignment="Center" 
+                                    Canvas.ZIndex="0"/>
+                            </Grid>
+
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+            </Grid>
+
+            <Grid Grid.Row="2">
+                <TextBox Name="UISkillOutputDetails" Text="Skill output var description" IsReadOnly="True" AcceptsReturn="True" VerticalAlignment="Top"/>
             </Grid>
         </Grid>
 
         <!--Right Panel-->
-        <Grid x:Name="RightPanel" Grid.Column="1">
+        <Grid x:Name="RightPanel" Grid.Column="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="15*"/>
                 <RowDefinition Height="65*"/>
@@ -68,8 +101,20 @@
                            VerticalAlignment="Bottom" Style="{StaticResource SubheaderTextBlockStyle}" />
             </Grid>
 
-            <Grid Grid.Row="1">
-               
+            <Grid Grid.Row="1" Padding="16, 0, 0, 0">
+                <ScrollViewer>
+                    <StackPanel>
+                        <TextBlock Name="UISkillName" Text="Skill name" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+                        <TextBlock Text="Skill Description:" FontWeight="Bold"/>
+                        <TextBox Name="UISkillDescription" Text="Loading skill description..." IsReadOnly="True" AcceptsReturn="True"/>
+                        <TextBlock Text="Skill input description:" FontWeight="Bold"/>
+                        <TextBox Name="UISkillInputDescription" Text="Loading skill input var description..." IsReadOnly="True" AcceptsReturn="True"/>
+                        <TextBlock Text="Skill output1 description:" FontWeight="Bold"/>
+                        <TextBox Name="UISkillOutputDescription1" Text="Loading skill output var description..." IsReadOnly="True" AcceptsReturn="True"/>
+                        <TextBlock Text="Available execution devices:" FontWeight="Bold"/>
+                        <ListBox Name="UISkillExecutionDevices" SelectionChanged="UISkillExecutionDevices_SelectionChanged"/>
+                    </StackPanel>
+                </ScrollViewer>
             </Grid>
 
             <Grid Grid.Row="2">
@@ -85,7 +130,6 @@
             ResizeDirection="Auto"
             ResizeBehavior="BasedOnAlignment"
             CursorBehavior="ChangeOnSplitterHover"
-            Width="16">
-        </controls:GridSplitter>
+            Width="16" />
     </Grid>
 </Page>

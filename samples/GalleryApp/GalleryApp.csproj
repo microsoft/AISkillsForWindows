@@ -115,21 +115,22 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\common\cs\FrameReaderFrameSource.cs">
+    <Compile Include="..\Common\cs\FrameReaderFrameSource.cs">
       <Link>FrameSource\FrameReaderFrameSource.cs</Link>
     </Compile>
-    <Compile Include="..\common\cs\IFrameSource.cs">
+    <Compile Include="..\Common\cs\IFrameSource.cs">
       <Link>FrameSource\IFrameSource.cs</Link>
     </Compile>
-    <Compile Include="..\common\cs\ImageFileFrameSource.cs">
+    <Compile Include="..\Common\cs\ImageFileFrameSource.cs">
       <Link>FrameSource\ImageFileFrameSource.cs</Link>
     </Compile>
-    <Compile Include="..\common\cs\MediaPlayerFrameSource.cs">
+    <Compile Include="..\Common\cs\MediaPlayerFrameSource.cs">
       <Link>FrameSource\MediaPlayerFrameSource.cs</Link>
     </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BodyRenderer.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
