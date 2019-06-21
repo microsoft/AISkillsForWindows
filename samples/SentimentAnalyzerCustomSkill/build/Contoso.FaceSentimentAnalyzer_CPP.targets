@@ -6,19 +6,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Reference Include="$(MSBuildThisFileDirectory)..\..\lib\uap10.0.17763\Contoso.FaceSentimentAnalyzer.winmd">
+        <Reference Include="$(MSBuildThisFileDirectory)..\..\lib\uap10.0.18898\Contoso.FaceSentimentAnalyzer.winmd">
             <Implementation>Contoso.FaceSentimentAnalyzer.dll</Implementation>
         </Reference>
         <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\runtimes\win10-$(FaceSentimentAnalyzer-Platform)\native\Contoso.FaceSentimentAnalyzer.dll" />
-        <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\contentFiles\any\uap10.0.17763\Contoso.FaceSentimentAnalyzer.pri" />
+        <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\contentFiles\any\uap10.0.18898\Contoso.FaceSentimentAnalyzer.pri" />
         <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\lib\win32\Contoso.FaceSentimentAnalyzer.manifest" />
 
-        <Reference Include="$(MSBuildThisFileDirectory)..\..\lib\uap10.0.17763\DeobfuscationHelper.winmd">
+        <Reference Include="$(MSBuildThisFileDirectory)..\..\lib\uap10.0.18898\DeobfuscationHelper.winmd">
             <Implementation>DeobfuscationHelper.dll</Implementation>
         </Reference>
         <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\runtimes\win10-$(FaceSentimentAnalyzer-Platform)\native\DeobfuscationHelper.dll" />
-        <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\contentFiles\any\uap10.0.17763\DeobfuscationHelper.pri" />
+        <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\contentFiles\any\uap10.0.18898\DeobfuscationHelper.pri" />
         <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\lib\win32\DeobfuscationHelper.manifest" />
-        <ReferenceCopyLocalPaths  Condition="'$(TargetPlatformIdentifier)' != 'UAP'" Include="$(MSBuildThisFileDirectory)..\..\contentFiles\any\uap10.0.17763\Contoso.FaceSentimentAnalyzer\emotion_ferplus.crypt" />
+        <ReferenceCopyLocalPaths  Condition="'$(TargetPlatformIdentifier)' != 'UAP'" Include="$(MSBuildThisFileDirectory)..\..\contentFiles\any\uap10.0.18898\Contoso.FaceSentimentAnalyzer\emotion_ferplus.crypt" />
     </ItemGroup>
 </Project>

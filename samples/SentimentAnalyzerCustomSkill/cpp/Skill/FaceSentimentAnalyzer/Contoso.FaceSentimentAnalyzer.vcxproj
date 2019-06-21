@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.props" Condition="Exists('..\..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.props')" />
+  <Import Project="..\..\packages\Microsoft.Windows.CppWinRT.2.0.190506.1\build\native\Microsoft.Windows.CppWinRT.props" Condition="Exists('..\..\packages\Microsoft.Windows.CppWinRT.2.0.190506.1\build\native\Microsoft.Windows.CppWinRT.props')" />
   <PropertyGroup Label="Globals">
     <MinimalCoreWin>true</MinimalCoreWin>
     <ProjectGuid>{e0320926-075f-46fc-9cc0-865b635bb1a1}</ProjectGuid>
@@ -11,8 +11,8 @@
     <AppContainerApplication>true</AppContainerApplication>
     <ApplicationType>Windows Store</ApplicationType>
     <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
-    <WindowsTargetPlatformVersion Condition=" '$(WindowsTargetPlatformVersion)' == '' ">10.0.17763.0</WindowsTargetPlatformVersion>
-    <WindowsTargetPlatformMinVersion>10.0.17763.0</WindowsTargetPlatformMinVersion>
+    <WindowsTargetPlatformVersion Condition=" '$(WindowsTargetPlatformVersion)' == '' ">10.0.18898.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>10.0.18898.0</WindowsTargetPlatformMinVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <ItemGroup Label="ProjectConfigurations">
@@ -43,7 +43,9 @@
   </ItemGroup>
   <PropertyGroup Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)' == '15.0'">v141</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)' == '16.0'">v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
@@ -119,7 +121,7 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">copying model file locally, running obfuscation, deleting local copy of model file</Message>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\Skills_PostBuild.ps1' -TargetName:'$(TargetFileName)' -TargetDir:'$(TargetDir)' -ProjectDir:'$(ProjectDir)'</Command>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\Skills_PostBuild.ps1' -TargetName:'$(TargetFileName)' -TargetDir:'$(TargetDir)' -ProjectDir:'$(ProjectDir)'</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">Generating manifest file for the WindowsRuntimeComponent to be merged into desktop app manifest for automatic registration of components</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Generating manifest file for the WindowsRuntimeComponent to be merged into desktop app manifest for automatic registration of components</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Generating manifest file for the WindowsRuntimeComponent to be merged into desktop app manifest for automatic registration of components</Message>
@@ -142,7 +144,7 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">copying model file locally, running obfuscation, deleting local copy of model file</Message>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>powershell -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\Skills_PostBuild.ps1' -TargetName:'$(TargetFileName)' -TargetDir:'$(TargetDir)' -ProjectDir:'$(ProjectDir)'</Command>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\Skills_PostBuild.ps1' -TargetName:'$(TargetFileName)' -TargetDir:'$(TargetDir)' -ProjectDir:'$(ProjectDir)'</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">Generating manifest file for the WindowsRuntimeComponent to be merged into desktop app manifest for automatic registration of components</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Generating manifest file for the WindowsRuntimeComponent to be merged into desktop app manifest for automatic registration of components</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Generating manifest file for the WindowsRuntimeComponent to be merged into desktop app manifest for automatic registration of components</Message>
@@ -197,15 +199,17 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.targets" Condition="Exists('..\..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.targets')" />
     <Import Project="..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.15\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets" Condition="Exists('..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.15\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets')" />
+    <Import Project="..\..\packages\Microsoft.Windows.CppWinRT.2.0.190506.1\build\native\Microsoft.Windows.CppWinRT.targets" Condition="Exists('..\..\packages\Microsoft.Windows.CppWinRT.2.0.190506.1\build\native\Microsoft.Windows.CppWinRT.targets')" />
+    <Import Project="..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension.0.0.1.2-pre\build\native\Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension.targets" Condition="Exists('..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension.0.0.1.2-pre\build\native\Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.props'))" />
-    <Error Condition="!Exists('..\..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.targets'))" />
     <Error Condition="!Exists('..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.15\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.15\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.Windows.CppWinRT.2.0.190506.1\build\native\Microsoft.Windows.CppWinRT.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Windows.CppWinRT.2.0.190506.1\build\native\Microsoft.Windows.CppWinRT.props'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.Windows.CppWinRT.2.0.190506.1\build\native\Microsoft.Windows.CppWinRT.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Windows.CppWinRT.2.0.190506.1\build\native\Microsoft.Windows.CppWinRT.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension.0.0.1.2-pre\build\native\Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension.0.0.1.2-pre\build\native\Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension.targets'))" />
   </Target>
 </Project>

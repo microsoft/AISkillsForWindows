@@ -71,14 +71,10 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
     {
         m_devices = single_threaded_vector<ISkillExecutionDevice>();
         m_devices.Append(SkillExecutionDeviceCPU::Create());
-        auto devices = SkillExecutionDeviceDirectX::GetAvailableDirectXExecutionDevices();
+        auto devices = DXCoreExtension::SkillExecutionDeviceDXCore::GetAvailableHardwareExecutionDevices();
         for (auto iter : devices)
         {
-            // Expose only D3D12 devices since WinML supports only those
-            if (iter.as<SkillExecutionDeviceDirectX>().MaxSupportedFeatureLevel() >= D3DFeatureLevelKind::D3D_FEATURE_LEVEL_12_0)
-            {
-                m_devices.Append(iter);
-            }
+            m_devices.Append(iter);
         }
         co_await resume_background();
         return m_devices.GetView();
@@ -92,18 +88,14 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
         auto supportedDevices = GetSupportedExecutionDevicesAsync().get();
         ISkillExecutionDevice deviceToUse = supportedDevices.First().Current();
 
-        // Either use the first device returned (CPU) or the highest performing GPU
-        int powerIndex = INT32_MAX;
+        // Use the first GPU or VPU device if available, otherwise default to CPU
         for (auto device : supportedDevices)
         {
-            if (device.ExecutionDeviceKind() == SkillExecutionDeviceKind::Gpu)
+            if (device.ExecutionDeviceKind() == SkillExecutionDeviceKind::Gpu
+                || device.ExecutionDeviceKind() == SkillExecutionDeviceKind::Vpu)
             {
-                auto directXDevice = device.as<SkillExecutionDeviceDirectX>();
-                if (directXDevice.HighPerformanceIndex() < powerIndex)
-                {
-                    deviceToUse = device;
-                    powerIndex = directXDevice.HighPerformanceIndex();
-                }
+                deviceToUse = device;
+                break;
             }
         }
         return CreateSkillAsync(deviceToUse);

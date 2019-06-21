@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Contoso.FaceSentimentAnalyzer_CPP" Version="0.0.0.6" />
+    <PackageReference Include="Contoso.FaceSentimentAnalyzer_CPP" Version="0.0.0.7-experimental" />
     <PackageReference Include="Microsoft.VCRTForwarders.140" Version="1.0.0-rc" />
   </ItemGroup>
 

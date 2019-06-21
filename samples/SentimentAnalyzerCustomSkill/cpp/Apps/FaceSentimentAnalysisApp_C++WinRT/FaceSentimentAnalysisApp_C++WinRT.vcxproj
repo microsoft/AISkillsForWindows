@@ -31,47 +31,16 @@
     <ProjectGuid>{425CE54A-C887-45C5-94A7-72738F49FE11}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>FaceSentimentAnalysiscpp</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.18898.0</WindowsTargetPlatformVersion>
     <ProjectName>FaceSentimentAnalysisApp_C++WinRT</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+  <PropertyGroup Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)' == '15.0'">v141</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)' == '16.0'">v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -139,6 +108,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
       <AdditionalOptions>/Zc:twoPhase- /await %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -155,7 +125,7 @@
       <Message>Generates headers (.h) files from a set of referenced .winmd files.</Message>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget)</Command>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget) -PlatformToolsetVersion:$(PlatformToolsetVersion)</Command>
       <Message>Copies all required binaries to the specified target directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -183,7 +153,7 @@
       <Message>Generates headers (.h) files from a set of referenced .winmd files.</Message>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget) -Debug</Command>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget) -PlatformToolsetVersion:$(PlatformToolsetVersion) -Debug</Command>
       <Message>Copies all required binaries to the specified target directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -211,7 +181,7 @@
       <Message>Generates headers (.h) files from a set of referenced .winmd files.</Message>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget) -Debug</Command>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget) -PlatformToolsetVersion:$(PlatformToolsetVersion) -Debug</Command>
       <Message>Copies all required binaries to the specified target directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -239,7 +209,7 @@
       <Message>Generates headers (.h) files from a set of referenced .winmd files.</Message>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget) -Debug</Command>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget) -PlatformToolsetVersion:$(PlatformToolsetVersion) -Debug</Command>
       <Message>Copies all required binaries to the specified target directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -258,6 +228,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
       <AdditionalOptions>/Zc:twoPhase- /await %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -274,7 +245,7 @@
       <Message>Generates headers (.h) files from a set of referenced .winmd files.</Message>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget)</Command>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget) -PlatformToolsetVersion:$(PlatformToolsetVersion)</Command>
       <Message>Copies all required binaries to the specified target directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -293,6 +264,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
       <AdditionalOptions>/Zc:twoPhase- /await %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -309,7 +281,7 @@
       <Message>Generates headers (.h) files from a set of referenced .winmd files.</Message>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget)</Command>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget) -PlatformToolsetVersion:$(PlatformToolsetVersion)</Command>
       <Message>Copies all required binaries to the specified target directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -330,7 +302,8 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\..\packages\Microsoft.VCRTForwarders.140.1.0.0-rc\build\native\Microsoft.VCRTForwarders.140.targets" Condition="Exists('..\..\packages\Microsoft.VCRTForwarders.140.1.0.0-rc\build\native\Microsoft.VCRTForwarders.140.targets')" />
     <Import Project="..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.15\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets" Condition="Exists('..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.15\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets')" />
-    <Import Project="..\..\packages\Contoso.FaceSentimentAnalyzer_CPP.0.0.0.7\build\native\Contoso.FaceSentimentAnalyzer_CPP.targets" Condition="Exists('..\..\packages\Contoso.FaceSentimentAnalyzer_CPP.0.0.0.7\build\native\Contoso.FaceSentimentAnalyzer_CPP.targets')" />
+    <Import Project="..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension.0.0.1.2-pre\build\native\Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension.targets" Condition="Exists('..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension.0.0.1.2-pre\build\native\Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension.targets')" />
+    <Import Project="..\..\packages\Contoso.FaceSentimentAnalyzer_CPP.0.0.0.7-experimental\build\native\Contoso.FaceSentimentAnalyzer_CPP.targets" Condition="Exists('..\..\packages\Contoso.FaceSentimentAnalyzer_CPP.0.0.0.7-experimental\build\native\Contoso.FaceSentimentAnalyzer_CPP.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -338,6 +311,7 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\Microsoft.VCRTForwarders.140.1.0.0-rc\build\native\Microsoft.VCRTForwarders.140.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.VCRTForwarders.140.1.0.0-rc\build\native\Microsoft.VCRTForwarders.140.targets'))" />
     <Error Condition="!Exists('..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.15\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.15\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets'))" />
-    <Error Condition="!Exists('..\..\packages\Contoso.FaceSentimentAnalyzer_CPP.0.0.0.7\build\native\Contoso.FaceSentimentAnalyzer_CPP.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Contoso.FaceSentimentAnalyzer_CPP.0.0.0.7\build\native\Contoso.FaceSentimentAnalyzer_CPP.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension.0.0.1.2-pre\build\native\Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension.0.0.1.2-pre\build\native\Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Contoso.FaceSentimentAnalyzer_CPP.0.0.0.7-experimental\build\native\Contoso.FaceSentimentAnalyzer_CPP.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Contoso.FaceSentimentAnalyzer_CPP.0.0.0.7-experimental\build\native\Contoso.FaceSentimentAnalyzer_CPP.targets'))" />
   </Target>
 </Project>

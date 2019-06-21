@@ -3,7 +3,7 @@
     <metadata>
         <!-- Required elements-->
         <id>Contoso.FaceSentimentAnalyzer_CPP</id>
-        <version>0.0.0.7</version>
+        <version>0.0.0.7-experimental</version>
         <description>Face Sentiment Analyzer skill sample that extends the Microsoft.AI.Skills.SkillInterfacePreview APIs</description>
         <authors>Contoso</authors>
         <owners>Contoso</owners>
@@ -12,46 +12,48 @@
         <licenseUrl>https://github.com/Microsoft/WindowsVisionSkillsPreview/blob/master/license/doc/LICENSE_package.md</licenseUrl>
         <projectUrl>https://github.com/Microsoft/WindowsVisionSkillsPreview</projectUrl>
         <iconUrl>https://github.com/Microsoft/WindowsVisionSkillsPreview/blob/master/doc/Logo.png?raw=true</iconUrl>
-        <releaseNotes>v0.0.0.7 release https://github.com/Microsoft/WindowsVisionSkillsPreview/releases</releaseNotes>
+        <releaseNotes>v0.0.0.7 experimental release with VPU support https://github.com/Microsoft/WindowsVisionSkillsPreview/releases</releaseNotes>
         <dependencies>
             <dependency id="Microsoft.AI.Skills.SkillInterfacePreview" version="0.5.2.15" />
+            <dependency id="Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension" version="0.0.1.2-pre" />
         </dependencies>
         <tags>ComputerVision AI VisionSkill</tags>
         <contentFiles>
           <!-- PackageReference metadata pointing to content files, e.g.  resource, ONNX model -->
-          <files include="any/uap10.0.17763/DeobfuscationHelper.pri" buildAction="None" />
-          <files include="any/uap10.0.17763/Contoso.FaceSentimentAnalyzer.pri" buildAction="None" />
-          <files include="any/uap10.0.17763/Contoso.FaceSentimentAnalyzer/emotion_ferplus.crypt" buildAction="None" copyToOutput="true" flatten="false" />
+          <files include="any/uap10.0.18898/DeobfuscationHelper.pri" buildAction="None" />
+          <files include="any/uap10.0.18898/Contoso.FaceSentimentAnalyzer.pri" buildAction="None" />
+          <files include="any/uap10.0.18898/Contoso.FaceSentimentAnalyzer/emotion_ferplus.crypt" buildAction="None" copyToOutput="true" flatten="false" />
         </contentFiles>
     </metadata>
-    <files>
-        <!-- Content files, e.g. resource, ONNX model -->
-        <file src="..\cpp\Skill\FaceSentimentAnalyzer\x64\Release\Contoso.FaceSentimentAnalyzer\emotion_ferplus.crypt" target="contentFiles\any\uap10.0.17763\Contoso.FaceSentimentAnalyzer" />
-        
-        <!-- WinMD and Intellisense files-->
-        <file src="..\cpp\Skill\Deobfuscator\x64\Release\DeobfuscationHelper\DeobfuscationHelper.winmd" target="lib\uap10.0.17763" />
-        <file src="..\cpp\Skill\Deobfuscator\x64\Release\DeobfuscationHelper\DeobfuscationHelper.manifest" target="lib\win32" />
-        <file src="..\cpp\Skill\Deobfuscator\x64\Release\DeobfuscationHelper\DeobfuscationHelper.pri" target="contentFiles\any\uap10.0.17763" />
-        
-        <file src="..\cpp\Skill\FaceSentimentAnalyzer\x64\Release\Contoso.FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer.winmd" target="lib\uap10.0.17763" />
-        <file src="..\cpp\Skill\FaceSentimentAnalyzer\x64\Release\Contoso.FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer.manifest" target="lib\win32" />
-        <file src="..\cpp\Skill\FaceSentimentAnalyzer\x64\Release\Contoso.FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer.pri" target="contentFiles\any\uap10.0.17763" />
-        
-        <file src="..\common\Contoso.FaceSentimentAnalyzer.xml" target="lib\uap10.0.17763" />
-        
-        <!-- Skill DLLs -->
-        <file src="..\cpp\Skill\FaceSentimentAnalyzer\x64\Release\Contoso.FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer.dll" target="runtimes\win10-x64\native" />
-        <file src="..\cpp\Skill\FaceSentimentAnalyzer\Win32\Release\Contoso.FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer.dll" target="runtimes\win10-x86\native" />
-        <file src="..\cpp\Skill\FaceSentimentAnalyzer\arm\Release\Contoso.FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer.dll" target="runtimes\win10-arm\native" />
-        
-        <!-- Deobfuscation DLLs -->
-        <file src="..\cpp\Skill\Deobfuscator\x64\Release\DeobfuscationHelper\DeobfuscationHelper.dll" target="runtimes\win10-x64\native" />
-        <file src="..\cpp\Skill\Deobfuscator\Win32\Release\DeobfuscationHelper\DeobfuscationHelper.dll" target="runtimes\win10-x86\native" />
-        <file src="..\cpp\Skill\Deobfuscator\arm\Release\DeobfuscationHelper\DeobfuscationHelper.dll" target="runtimes\win10-arm\native" />
+  <files>
 
-        <!-- .targets -->
-        <file src="Contoso.FaceSentimentAnalyzer_CPP.targets" target="build\native"/>
-        <file src="Contoso.FaceSentimentAnalyzer_CPP.targets" target="build\netcoreapp3.0"/>
-  
-    </files>
+    <!-- Content files, e.g. resource, ONNX model -->
+    <file src="..\cpp\Skill\FaceSentimentAnalyzer\x64\Release\Contoso.FaceSentimentAnalyzer\emotion_ferplus.crypt" target="contentFiles\any\uap10.0.18898\Contoso.FaceSentimentAnalyzer" />
+    <file src="..\cpp\Skill\FaceSentimentAnalyzer\x64\Release\Contoso.FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer.pri" target="contentFiles\any\uap10.0.18898" />
+    <file src="..\cpp\Skill\Deobfuscator\x64\Release\DeobfuscationHelper\DeobfuscationHelper.pri" target="contentFiles\any\uap10.0.18898" />
+
+    <!-- WinMD and Intellisense files-->
+    <file src="..\cpp\Skill\Deobfuscator\x64\Release\DeobfuscationHelper\DeobfuscationHelper.winmd" target="lib\uap10.0.18898" />
+    <file src="..\cpp\Skill\FaceSentimentAnalyzer\x64\Release\Contoso.FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer.winmd" target="lib\uap10.0.18898" />
+    <file src="..\common\Contoso.FaceSentimentAnalyzer.xml" target="lib\uap10.0.18898" />
+
+    <!-- Skill DLLs -->
+    <file src="..\cpp\Skill\FaceSentimentAnalyzer\x64\Release\Contoso.FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer.dll" target="runtimes\win10-x64\native" />
+    <file src="..\cpp\Skill\FaceSentimentAnalyzer\Win32\Release\Contoso.FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer.dll" target="runtimes\win10-x86\native" />
+    <file src="..\cpp\Skill\FaceSentimentAnalyzer\arm\Release\Contoso.FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer.dll" target="runtimes\win10-arm\native" />
+
+    <!-- Deobfuscation DLLs -->
+    <file src="..\cpp\Skill\Deobfuscator\x64\Release\DeobfuscationHelper\DeobfuscationHelper.dll" target="runtimes\win10-x64\native" />
+    <file src="..\cpp\Skill\Deobfuscator\Win32\Release\DeobfuscationHelper\DeobfuscationHelper.dll" target="runtimes\win10-x86\native" />
+    <file src="..\cpp\Skill\Deobfuscator\arm\Release\DeobfuscationHelper\DeobfuscationHelper.dll" target="runtimes\win10-arm\native" />
+
+    <!-- Manifest files (for Win32 and .NET Core) -->
+    <file src="..\cpp\Skill\FaceSentimentAnalyzer\x64\Release\Contoso.FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer.manifest" target="lib\win32" />
+    <file src="..\cpp\Skill\Deobfuscator\x64\Release\DeobfuscationHelper\DeobfuscationHelper.manifest" target="lib\win32" />
+
+    <!-- .targets -->
+    <file src="Contoso.FaceSentimentAnalyzer_CPP.targets" target="build\native"/>
+    <file src="Contoso.FaceSentimentAnalyzer_CPP.targets" target="build\netcoreapp3.0"/>
+
+  </files>
 </package>
