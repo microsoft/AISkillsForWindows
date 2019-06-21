@@ -213,6 +213,7 @@
     <Import Project="..\..\packages\Microsoft.VCRTForwarders.140.1.0.0-rc\build\native\Microsoft.VCRTForwarders.140.targets" Condition="Exists('..\..\packages\Microsoft.VCRTForwarders.140.1.0.0-rc\build\native\Microsoft.VCRTForwarders.140.targets')" />
     <Import Project="..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.15\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets" Condition="Exists('..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.15\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets')" />
     <Import Project="..\..\packages\Contoso.FaceSentimentAnalyzer_CPP.0.0.0.7-experimental\build\native\Contoso.FaceSentimentAnalyzer_CPP.targets" Condition="Exists('..\..\packages\Contoso.FaceSentimentAnalyzer_CPP.0.0.0.7-experimental\build\native\Contoso.FaceSentimentAnalyzer_CPP.targets')" />
+    <Import Project="..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension.0.0.1.2-pre\build\native\Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension.targets" Condition="Exists('..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension.0.0.1.2-pre\build\native\Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -221,5 +222,6 @@
     <Error Condition="!Exists('..\..\packages\Microsoft.VCRTForwarders.140.1.0.0-rc\build\native\Microsoft.VCRTForwarders.140.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.VCRTForwarders.140.1.0.0-rc\build\native\Microsoft.VCRTForwarders.140.targets'))" />
     <Error Condition="!Exists('..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.15\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.15\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets'))" />
     <Error Condition="!Exists('..\..\packages\Contoso.FaceSentimentAnalyzer_CPP.0.0.0.7-experimental\build\native\Contoso.FaceSentimentAnalyzer_CPP.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Contoso.FaceSentimentAnalyzer_CPP.0.0.0.7-experimental\build\native\Contoso.FaceSentimentAnalyzer_CPP.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension.0.0.1.2-pre\build\native\Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension.0.0.1.2-pre\build\native\Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension.targets'))" />
   </Target>
 </Project>
