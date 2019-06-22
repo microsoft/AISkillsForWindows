@@ -101,8 +101,16 @@ namespace GalleryApp
 
             // Ready to begin, enable buttons
             NotifyUser("Skill initialized. Select a media source from the top to begin.");
+
+            string path = Directory.GetCurrentDirectory();
+            StorageFile file = await StorageFile.GetFileFromPathAsync(path + "\\SampleImages\\People.jpg");
+            await ConfigureFrameSourceAsync(file);
+            RunSkill_Execution();
             await UpdateMediaSourceButtonsAsync(true);
         }
+
+
+
 
         /// <summary>
         /// Initialize the SkeletalDetector skill and binding instances
@@ -232,10 +240,21 @@ namespace GalleryApp
                 {
                     NotifyUser(message);
                 });
+
             }
             m_lock.Release();
 
-            // If we obtained a valid frame source, start it
+            RunSkill_Execution();
+        }
+
+
+        /// <summary>
+        /// If a valid frame source is obtained, run skill on it
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void RunSkill_Execution()
+        {
             if (m_frameSource != null)
             {
                 m_frameSource.FrameArrived += FrameSource_FrameAvailable;
@@ -344,6 +363,7 @@ namespace GalleryApp
             picker.FileTypeFilter.Add(".bmp");
 
             StorageFile file = await picker.PickSingleFileAsync();
+
             if (file != null)
             {
                 await ConfigureFrameSourceAsync(file);
