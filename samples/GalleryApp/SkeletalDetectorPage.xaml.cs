@@ -2,21 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-
-
 using Microsoft.AI.Skills.SkillInterfacePreview;
 using Microsoft.AI.Skills.Vision.SkeletalDetectorPreview;
-using Microsoft.Toolkit.Uwp.UI.Controls;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -104,7 +95,7 @@ namespace GalleryApp
 
             // Run skill on a default image
             string path = Directory.GetCurrentDirectory();
-            StorageFile file = await StorageFile.GetFileFromPathAsync(path + "\\SampleImages\\People.jpg");
+            StorageFile file = await StorageFile.GetFileFromPathAsync(path + "\\SampleImages\\People2.jpg");
             await ConfigureFrameSourceAsync(file);
             RunSkill_Execution();
             await UpdateMediaSourceButtonsAsync(true);
@@ -350,30 +341,30 @@ namespace GalleryApp
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void UIButtonFilePicker_Click(object sender, RoutedEventArgs e)
-        {
-            var picker = new FileOpenPicker();
-            picker.ViewMode = PickerViewMode.Thumbnail;
-            picker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
-            // Add common video file extensions
-            picker.FileTypeFilter.Add(".mp4");
-            picker.FileTypeFilter.Add(".avi");
-            // Add common image file extensions
-            picker.FileTypeFilter.Add(".jpg");
-            picker.FileTypeFilter.Add(".png");
-            picker.FileTypeFilter.Add(".bmp");
+        //private async void UIButtonFilePicker_Click(object sender, RoutedEventArgs e)
+        //{
+        //    var picker = new FileOpenPicker();
+        //    picker.ViewMode = PickerViewMode.Thumbnail;
+        //    picker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+        //    // Add common video file extensions
+        //    picker.FileTypeFilter.Add(".mp4");
+        //    picker.FileTypeFilter.Add(".avi");
+        //    // Add common image file extensions
+        //    picker.FileTypeFilter.Add(".jpg");
+        //    picker.FileTypeFilter.Add(".png");
+        //    picker.FileTypeFilter.Add(".bmp");
 
-            StorageFile file = await picker.PickSingleFileAsync();
+        //    StorageFile file = await picker.PickSingleFileAsync();
 
-            if (file != null)
-            {
-                await ConfigureFrameSourceAsync(file);
-                NotifyUser("Loading file: " + file.Path);
-            }
+        //    if (file != null)
+        //    {
+        //        await ConfigureFrameSourceAsync(file);
+        //        NotifyUser("Loading file: " + file.Path);
+        //    }
 
-            // Re-enable the top menu once done handling the click
-            await UpdateMediaSourceButtonsAsync(true);
-        }
+        //    // Re-enable the top menu once done handling the click
+        //    await UpdateMediaSourceButtonsAsync(true);
+        //}
 
         /// <summary>
         /// Update media source buttons (top row)
@@ -384,8 +375,8 @@ namespace GalleryApp
         {
             if (Dispatcher.HasThreadAccess)
             {
-                UIButtonCamera.IsEnabled = enableButtons;
-                UIButtonFilePicker.IsEnabled = enableButtons;
+                //UIButtonCamera.IsEnabled = enableButtons;
+                //UIButtonFilePicker.IsEnabled = enableButtons;
             }
             else
             {
@@ -414,38 +405,38 @@ namespace GalleryApp
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void UIButtonCamera_Click(object sender, RoutedEventArgs e)
-        {
-            // Disable the top menu while handling the click
-            await UpdateMediaSourceButtonsAsync(false);
+        //private async void UIButtonCamera_Click(object sender, RoutedEventArgs e)
+        //{
+        //    // Disable the top menu while handling the click
+        //    await UpdateMediaSourceButtonsAsync(false);
 
-            // Create a device picker
-            var devicePicker = new DevicePicker();
-            devicePicker.Filter.SupportedDeviceClasses.Add(DeviceClass.VideoCapture);
+        //    // Create a device picker
+        //    var devicePicker = new DevicePicker();
+        //    devicePicker.Filter.SupportedDeviceClasses.Add(DeviceClass.VideoCapture);
 
-            // Calculate the position to show the picker (right below the buttons)
-            GeneralTransform ge = UIButtonCamera.TransformToVisual(null);
-            Point point = ge.TransformPoint(new Point());
-            Rect rect = new Rect(point, new Point(point.X + UIButtonCamera.ActualWidth, point.Y + UIButtonCamera.ActualHeight));
+        //    // Calculate the position to show the picker (right below the buttons)
+        //    GeneralTransform ge = UIButtonCamera.TransformToVisual(null);
+        //    Point point = ge.TransformPoint(new Point());
+        //    Rect rect = new Rect(point, new Point(point.X + UIButtonCamera.ActualWidth, point.Y + UIButtonCamera.ActualHeight));
 
-            // Show the picker and obtain user selection
-            DeviceInformation di = await devicePicker.PickSingleDeviceAsync(rect);
-            if (di != null)
-            {
-                try
-                {
-                    NotifyUser("Attaching to camera " + di.Name);
-                    await ConfigureFrameSourceAsync(di);
-                }
-                catch (Exception ex)
-                {
-                    NotifyUser("Error occurred while initializating MediaCapture:\n" + ex.Message);
-                }
-            }
+        //    // Show the picker and obtain user selection
+        //    DeviceInformation di = await devicePicker.PickSingleDeviceAsync(rect);
+        //    if (di != null)
+        //    {
+        //        try
+        //        {
+        //            NotifyUser("Attaching to camera " + di.Name);
+        //            await ConfigureFrameSourceAsync(di);
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            NotifyUser("Error occurred while initializating MediaCapture:\n" + ex.Message);
+        //        }
+        //    }
 
-            // Re-enable the top menu once done handling the click
-            await UpdateMediaSourceButtonsAsync(true);
-        }
+        //    // Re-enable the top menu once done handling the click
+        //    await UpdateMediaSourceButtonsAsync(true);
+        //}
 
         /// <summary>
         /// Triggered when the execution device selected changes. We simply retrigger the image source toggle to reinitialize the skill accordingly. 
