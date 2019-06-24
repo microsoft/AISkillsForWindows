@@ -21,6 +21,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="40"/>
                 <ColumnDefinition />
+                <ColumnDefinition Width="40"/>
             </Grid.ColumnDefinitions>
 
             <!--Category bar-->
