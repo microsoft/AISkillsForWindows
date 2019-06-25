@@ -41,7 +41,7 @@
                 <!--Shortcut to GitHub documentation page-->
                 <HyperlinkButton x:Name="GithubButton" Grid.Row="1" Grid.Column="0"
                                  HorizontalAlignment="Center"
-                                 NavigateUri="https://github.com/microsoft/WindowsVisionSkillsPreview/tree/master/samples/SkeletalDetector">
+                                 NavigateUri="https://github.com/microsoft/WindowsVisionSkillsPreview/tree/master/samples/ObjectDetector">
                     <Image Source="./Assets/GitHub-Mark-32px.png" 
                             Width="32"
                             Height="32"/>
