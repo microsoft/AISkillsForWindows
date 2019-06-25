@@ -40,26 +40,7 @@
 - Windows 10 build 18362 with related SDK
 - [.NetCore 3.0 preview](https://dotnet.microsoft.com/download/dotnet-core/3.0) installed and enabled(follow instructions)
 
-> In the .NetCore 3.0 app project file *\<sample project>.csproj*, some assumption are made as to where the required Windows metadata files (*.winmd*) are stored on your computer (see ***HintPath*** below), double check they are correct if you encouter an error. Example of a .csproj with the aforementioned assumptions:
-```xml
-<ItemGroup>
-    <Reference Include="System.Runtime.WindowsRuntime">
-    <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETCore\v4.5\System.Runtime.WindowsRuntime.dll</HintPath>
-    </Reference>
-    <Reference Include="Windows">
-    <HintPath>C:\Program Files (x86)\Windows Kits\10\UnionMetadata\Facade\Windows.WinMD</HintPath>
-    <IsWinMDFile>true</IsWinMDFile>
-    </Reference>
-    <Reference Include="Windows.Foundation.FoundationContract">
-    <HintPath>C:\Program Files (x86)\Windows Kits\10\References\10.0.17763.0\Windows.Foundation.FoundationContract\3.0.0.0\Windows.Foundation.FoundationContract.winmd</HintPath>
-    <IsWinMDFile>true</IsWinMDFile>
-    </Reference>
-    <Reference Include="Windows.Foundation.UniversalApiContract">
-    <HintPath>C:\Program Files (x86)\Windows Kits\10\References\10.0.17763.0\Windows.Foundation.UniversalApiContract\7.0.0.0\Windows.Foundation.UniversalApiContract.winmd</HintPath>
-    <IsWinMDFile>true</IsWinMDFile>
-    </Reference>
-</ItemGroup>
-```
+> In the .NetCore 3.0 app project file *\<sample project>.csproj*, you need to ingest the [*Microsoft.Windows.SDK.Contracts* NuGet package](https://www.nuget.org/packages/Microsoft.Windows.SDK.Contracts) version 18362 or later that contains the required Windows metadata files (*.winmd*).
 
 ## Build the samples
 Open the provided solution file: ./VisionSkillsSamples.sln
