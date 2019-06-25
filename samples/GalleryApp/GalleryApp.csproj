@@ -127,10 +127,12 @@
     <Compile Include="..\Common\cs\MediaPlayerFrameSource.cs">
       <Link>FrameSource\MediaPlayerFrameSource.cs</Link>
     </Compile>
+    <Compile Include="..\SkeletalDetector\cs\SkeletalDetectorSample_UWP\BodyRenderer.cs">
+      <Link>BodyRenderer.cs</Link>
+    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BodyRenderer.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -146,7 +148,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\GitHub-Mark-32px.png" />
-    <Content Include="Assets\SkeletalDetectorSamplePhoto.jpg" />
+    <Content Include="Assets\ObjectDetectorThumbnailPhoto.jpg" />
+    <Content Include="Assets\SkeletalDetectorThumbnailPhoto.jpg" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -155,9 +158,8 @@
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
-    <Content Include="SampleImages\People.jpg" />
-    <Content Include="SampleImages\People2.jpg" />
-    <Content Include="SampleImages\people3.jpg" />
+    <Content Include="SampleImages\ObjectDetectorSampleImage.png" />
+    <Content Include="SampleImages\SkeletalDetectorSampleImage.png" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
