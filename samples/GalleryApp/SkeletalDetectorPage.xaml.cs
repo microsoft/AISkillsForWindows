@@ -97,9 +97,6 @@ namespace GalleryApp
             RunSkill_Execution();
         }
 
-
-
-
         /// <summary>
         /// Initialize the SkeletalDetector skill and binding instances
         /// </summary>
