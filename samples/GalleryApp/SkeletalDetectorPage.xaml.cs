@@ -90,12 +90,6 @@ namespace GalleryApp
 
             // Ready to begin, enable buttons
             NotifyUser("Skill initialized. Select a media source from the top to begin.");
-
-            // Run skill on a default image
-            string path = Directory.GetCurrentDirectory();
-            StorageFile file = await StorageFile.GetFileFromPathAsync(path + "\\SampleImages\\SkeletalDetectorSampleImage.png");
-            await ConfigureFrameSourceAsync(file);
-            RunSkill_Execution();
         }
 
         /// <summary>

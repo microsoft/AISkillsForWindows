@@ -148,8 +148,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\GitHub-Mark-32px.png" />
-    <Content Include="Assets\ObjectDetectorThumbnailPhoto.jpg" />
-    <Content Include="Assets\SkeletalDetectorThumbnailPhoto.jpg" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -158,8 +156,6 @@
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
-    <Content Include="SampleImages\ObjectDetectorSampleImage.png" />
-    <Content Include="SampleImages\SkeletalDetectorSampleImage.png" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -197,6 +193,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Pages\" />
+    <Folder Include="SampleImages\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GalleryAppClassDiagram.cd" />
