@@ -18,6 +18,7 @@ using Windows.Storage.Pickers;
 using Windows.UI.Xaml.Media.Imaging;
 using FrameSourceHelper_UWP;
 using Windows.Devices.Enumeration;
+using SkeletalDetectorSample;
 
 namespace GalleryApp
 {
