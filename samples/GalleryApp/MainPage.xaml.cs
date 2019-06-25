@@ -35,5 +35,10 @@ namespace GalleryApp
         {
             this.Frame.Navigate(typeof(SkeletalDetectorPage));
         }
+
+        private void NavigateToObjectDetectorPage(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(ObjectDetectorPage));
+        }
     }
 }
