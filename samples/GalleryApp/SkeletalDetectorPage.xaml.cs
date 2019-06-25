@@ -72,9 +72,6 @@ namespace GalleryApp
         /// <param name="e"></param>
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            // Disable buttons while we initialize
-            await UpdateMediaSourceButtonsAsync(false);
-
             // Initialize helper class used to render the skill results on screen
             m_bodyRenderer = new BodyRenderer(UICanvasOverlay);
 
@@ -93,16 +90,8 @@ namespace GalleryApp
             // Ready to begin, enable buttons
             NotifyUser("Skill initialized. Select a media source from the top to begin.");
 
-            // Run skill on a default image
-            string path = Directory.GetCurrentDirectory();
-            StorageFile file = await StorageFile.GetFileFromPathAsync(path + "\\SampleImages\\People2.jpg");
-            await ConfigureFrameSourceAsync(file);
-            RunSkill_Execution();
             await UpdateMediaSourceButtonsAsync(true);
         }
-
-
-
 
         /// <summary>
         /// Initialize the SkeletalDetector skill and binding instances

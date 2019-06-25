@@ -67,7 +67,6 @@
                        Stretch="Uniform" 
                        SizeChanged="UIImageViewer_SizeChanged"/>
 
-
                     <Canvas Name="UICanvasOverlay"
                     HorizontalAlignment="Center" 
                     VerticalAlignment="Center" 
