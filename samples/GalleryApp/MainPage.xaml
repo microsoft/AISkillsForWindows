@@ -9,37 +9,62 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
+    <Grid Background="{StaticResource SystemListLowColor}">
         <Grid.RowDefinitions>
             <RowDefinition Height="10*"/>
-            <RowDefinition Height="70*"/>
-            <RowDefinition Height="20*"/>
+            <RowDefinition Height="80*"/>
+            <RowDefinition Height="10*"/>
         </Grid.RowDefinitions>
 
+        <!--Thumbnails-->
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="40"/>
                 <ColumnDefinition />
+                <ColumnDefinition Width="40"/>
             </Grid.ColumnDefinitions>
 
-            <!--Skeletal Skill Thumbnail-->
-            <Grid Grid.Column="1" Background="LightGray" Margin="25" Height="400" 
+            <!--Category bar-->
+            <controls:TabView x:Name="Tabs"
+                Grid.Column="1" 
+                TabWidthBehavior="Actual"
+                CanCloseTabs="False"
+                IsCloseButtonOverlay="False"
+                CanDragItems="False"
+                CanReorderItems="False"
+                AllowDrop="False">
+
+                <!-- Tabs -->
+                <controls:TabViewItem Header="Vision" Icon="Camera">
+
+                    <!--Skeletal Skill Thumbnail-->
+                    <Grid Background="LightGray" Margin="25" Height="400" 
                   Width="400" HorizontalAlignment="Left" VerticalAlignment="Top">
-                <Grid Height="150" Width="400" VerticalAlignment="Bottom">
-                    <Rectangle Height="200" Width="400" VerticalAlignment="Bottom"
-                                                       Fill="Gray" Opacity="0.75"/>
-                    <TextBlock Text="Skeletal Detector" 
+
+                        <Grid Height="150" Width="400" VerticalAlignment="Bottom">
+                            <Rectangle Height="200" Width="400" VerticalAlignment="Bottom" />
+                            <Grid Height="150" Width="400" VerticalAlignment="Bottom">
+                                <Rectangle Height="200" Width="400" VerticalAlignment="Bottom"
+                               Fill="Gray" Opacity="0.75"/>
+                                <TextBlock Text="Skeletal Detector" 
                                Style="{StaticResource SubheaderTextBlockStyle}"
                                Foreground="White"
                                Padding="10, 0, 0, 0" />
-                    <TextBlock Text="A set of sample apps that can detect and identify the poses of the bodies of individuals in a video or image." 
+                                <TextBlock Text="A set of sample apps that can detect and identify the poses of the bodies of individuals in a video or image." 
                                Style="{StaticResource BodyTextBlockStyle}"
                                Foreground="White"
                                Padding="10, 60, 0, 0"
                                TextWrapping="Wrap"/>
-                </Grid>
-                <Button Height="400" Width="400" Opacity="0.5" Click="NavigateToSkillPage" Style="{StaticResource ButtonRevealStyle}"/>
-            </Grid>
+                            </Grid>
+                            <Button Height="400" Width="400" Opacity="0.5" Click="NavigateToSkillPage" Style="{StaticResource ButtonRevealStyle}"/>
+                        </Grid>
+                    </Grid>
+
+                </controls:TabViewItem>
+                <controls:TabViewItem Header="Audio" Icon="Audio">
+                    <TextBlock Padding="16">Coming soon...</TextBlock>
+                </controls:TabViewItem>
+            </controls:TabView>
 
         </Grid>
     </Grid>
