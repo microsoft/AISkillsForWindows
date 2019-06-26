@@ -148,7 +148,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\GitHub-Mark-32px.png" />
-    <Content Include="Assets\SkeletalDetectorSamplePhoto.jpg" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -192,9 +191,7 @@
       <Version>1.1.0</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Pages\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="GalleryAppClassDiagram.cd" />
   </ItemGroup>
