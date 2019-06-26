@@ -18,6 +18,7 @@ using Windows.Storage.Pickers;
 using Windows.UI.Xaml.Media.Imaging;
 using FrameSourceHelper_UWP;
 using Windows.Devices.Enumeration;
+using SkeletalDetectorSample;
 
 namespace GalleryApp
 {
@@ -89,16 +90,7 @@ namespace GalleryApp
 
             // Ready to begin, enable buttons
             NotifyUser("Skill initialized. Select a media source from the top to begin.");
-
-            // Run skill on a default image
-            string path = Directory.GetCurrentDirectory();
-            StorageFile file = await StorageFile.GetFileFromPathAsync(path + "\\SampleImages\\People2.jpg");
-            await ConfigureFrameSourceAsync(file);
-            RunSkill_Execution();
         }
-
-
-
 
         /// <summary>
         /// Initialize the SkeletalDetector skill and binding instances
