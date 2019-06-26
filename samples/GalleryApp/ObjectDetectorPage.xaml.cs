@@ -268,7 +268,7 @@ namespace GalleryApp
                     }
                 }
 
-                // Create new frame source and rgister a callback if the source fails along the way
+                // Create new frame source and register a callback if the source fails along the way
                 m_frameSource = await FrameSourceFactory.CreateFrameSourceAsync(source, (sender, message) =>
                 {
                     NotifyUser(message);
