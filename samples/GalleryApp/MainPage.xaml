@@ -39,7 +39,7 @@
 
                     <!--Skeletal Skill Thumbnail-->
                     <Grid Background="LightGray" Margin="25" Height="400" 
-                  Width="400" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        Width="400" HorizontalAlignment="Left" VerticalAlignment="Top">
 
                         <Grid Height="150" Width="400" VerticalAlignment="Bottom">
                             <Rectangle Height="200" Width="400" VerticalAlignment="Bottom" />
