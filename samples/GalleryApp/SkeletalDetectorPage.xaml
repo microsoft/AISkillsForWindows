@@ -19,8 +19,8 @@
         <Grid x:Name="LeftPanel" Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="15*"/>
-                <RowDefinition Height="75*"/>
-                <RowDefinition Height="10*"/>
+                <RowDefinition Height="85*"/>
+
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0">
@@ -50,30 +50,64 @@
                            HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlockStyle}" />
             </Grid>
 
-            <Grid Grid.Row="1">
-                <TextBlock Text="Skeletal Detector Page" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30"></TextBlock>
+            <!--Skill output area-->
+            <Grid Grid.Row="1" Loaded="Page_Loaded">
+                <Grid Name="UIVideoFeed">
+                    <!-- Video display -->
+                    <Image Name="UIImageViewer" 
+                       Canvas.ZIndex="-1"  
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       Stretch="Uniform" 
+                       SizeChanged="UIImageViewer_SizeChanged"/>
+
+                    <Canvas Name="UICanvasOverlay"
+                    HorizontalAlignment="Center" 
+                    VerticalAlignment="Center" 
+                    Canvas.ZIndex="0"/>
+
+                    <TextBox Name="UISkillOutputDetails" Text="Skill output var description" IsReadOnly="True" AcceptsReturn="True" VerticalAlignment="Bottom"/>
+                </Grid>
             </Grid>
         </Grid>
 
         <!--Right Panel-->
-        <Grid x:Name="RightPanel" Grid.Column="1">
+        <Grid x:Name="RightPanel" Grid.Column="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="15*"/>
-                <RowDefinition Height="65*"/>
-                <RowDefinition Height="20*"/>
+                <RowDefinition Height="10*"/>
+                <RowDefinition Height="70*"/>
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0">
+            <Grid Grid.Row="0" >
                 <TextBlock Text="Properties" HorizontalAlignment="Center" 
                            VerticalAlignment="Bottom" Style="{StaticResource SubheaderTextBlockStyle}" />
-            </Grid>
-
-            <Grid Grid.Row="1">
 
             </Grid>
 
-            <Grid Grid.Row="2">
-                <Button x:Name="RunSkill" Content="Run Skill" HorizontalAlignment="Center"></Button>
+            <Grid Grid.Row="1" Padding="16, 0, 0, 0" HorizontalAlignment="Center">
+                <Border BorderBrush="#66000000" BorderThickness="2">
+                    <StackPanel>
+                        <TextBlock Text="Status" TextDecorations="Underline" Style="{StaticResource TitleTextBlockStyle}" HorizontalAlignment="Center"/>
+                        <TextBlock Name="UIMessageTextBlock" Text="Select an image source to start" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <Grid Grid.Row="2" Padding="16, 0, 0, 0" Background="#FFF2F2F2">
+                <ScrollViewer>
+                    <StackPanel>
+                        <TextBlock Name="UISkillName" Text="Skill name" HorizontalAlignment="Center" Style="{StaticResource TitleTextBlockStyle}"/>
+                        <TextBlock Text="Skill Description:" FontWeight="Bold"/>
+                        <TextBox Name="UISkillDescription" Text="Loading skill description..." IsReadOnly="True" AcceptsReturn="True"/>
+                        <TextBlock Text="Skill input description:" FontWeight="Bold"/>
+                        <TextBox Name="UISkillInputDescription" Text="Loading skill input var description..." IsReadOnly="True" AcceptsReturn="True"/>
+                        <TextBlock Text="Skill output1 description:" FontWeight="Bold"/>
+                        <TextBox Name="UISkillOutputDescription1" Text="Loading skill output var description..." IsReadOnly="True" AcceptsReturn="True"/>
+                        <TextBlock Text="Available execution devices:" FontWeight="Bold"/>
+                        <ListBox Name="UISkillExecutionDevices" SelectionChanged="UISkillExecutionDevices_SelectionChanged"/>
+                    </StackPanel>
+                </ScrollViewer>
             </Grid>
         </Grid>
 
@@ -85,7 +119,6 @@
             ResizeDirection="Auto"
             ResizeBehavior="BasedOnAlignment"
             CursorBehavior="ChangeOnSplitterHover"
-            Width="16">
-        </controls:GridSplitter>
+            Width="16" />
     </Grid>
 </Page>
