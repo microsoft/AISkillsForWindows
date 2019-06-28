@@ -16,16 +16,16 @@
         <releaseNotes>v0.0.0.7 experimental release with VPU support https://github.com/Microsoft/WindowsVisionSkillsPreview/releases</releaseNotes>
         <dependencies>
             <dependency id="Microsoft.AI.Skills.SkillInterfacePreview" version="0.5.2.15" />
-            <dependency id="Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension" version="0.0.1.2-pre" />
+            <dependency id="Microsoft.AI.Skills.SkillInterfacePreview.DXCoreExtension" version="0.0.1.3-pre" />
         </dependencies>
         <tags>ComputerVision AI VisionSkill</tags>
     </metadata>
   <files>
     <!-- WinMD, Intellisense and resource files-->
-    <file src="..\cs\Skill\FaceSentimentAnalyzer\bin\Release\Contoso.FaceSentimentAnalyzer.winmd" target="lib\uap10.0.18898" />
-    <file src="..\cs\Skill\FaceSentimentAnalyzer\bin\Release\Contoso.FaceSentimentAnalyzer.pri" target="lib\uap10.0.18898" />
-    <file src="..\common\Contoso.FaceSentimentAnalyzer.xml" target="lib\uap10.0.18898" />
-    <file src="..\common\emotion_ferplus.onnx" target="lib\uap10.0.18898\Contoso.FaceSentimentAnalyzer" />
+    <file src="..\cs\Skill\FaceSentimentAnalyzer\bin\Release\Contoso.FaceSentimentAnalyzer.winmd" target="lib\uap10.0.18925" />
+    <file src="..\cs\Skill\FaceSentimentAnalyzer\bin\Release\Contoso.FaceSentimentAnalyzer.pri" target="lib\uap10.0.18925" />
+    <file src="..\common\Contoso.FaceSentimentAnalyzer.xml" target="lib\uap10.0.18925" />
+    <file src="..\common\emotion_ferplus.onnx" target="lib\uap10.0.18925\Contoso.FaceSentimentAnalyzer" />
     <!-- .targets -->
     <file src="Contoso.FaceSentimentAnalyzer_CS.targets" target="build\native"/>
 

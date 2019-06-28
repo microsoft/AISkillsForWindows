@@ -12,7 +12,6 @@
 #include <winrt/windows.media.capture.h>
 #include <winrt/windows.media.capture.frames.h>
 #include <winrt/Windows.System.Threading.h>
-#include <winrt/coroutine.h>
 #include "winrt/Contoso.FaceSentimentAnalyzer.h"
 #include "winrt/Microsoft.AI.Skills.SkillInterfacePreview.h"
 

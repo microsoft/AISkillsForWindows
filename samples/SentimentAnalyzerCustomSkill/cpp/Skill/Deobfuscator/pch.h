@@ -14,4 +14,3 @@
 #include <winrt/Windows.Security.Cryptography.h>
 #include <winrt/Windows.Security.Cryptography.Core.h>
 #include <winrt/Windows.AI.MachineLearning.h>
-#include <winrt/coroutine.h>
