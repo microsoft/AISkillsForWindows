@@ -9,7 +9,6 @@ namespace GalleryApp
     public class Skill
     {
         public string Name { get; set; }
-        public string CategoryName { get; set; }
         public string Description { get; set; }
         public Type PageType { get; set; }
 
