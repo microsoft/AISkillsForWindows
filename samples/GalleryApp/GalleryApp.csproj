@@ -139,6 +139,7 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\Skill.cs" />
     <Compile Include="ObjectDetectorPage.xaml.cs">
       <DependentUpon>ObjectDetectorPage.xaml</DependentUpon>
     </Compile>
@@ -211,7 +212,9 @@
       <Version>1.1.0</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Pages\" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="GalleryAppClassDiagram.cd" />
   </ItemGroup>

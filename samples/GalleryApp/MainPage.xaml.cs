@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.Toolkit.Uwp;
+using System.Collections.ObjectModel;
 
 namespace GalleryApp
 {
@@ -21,24 +22,42 @@ namespace GalleryApp
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        public ObservableCollection<Skill> SkillPages { get; } = new ObservableCollection<Skill>();
+
         public MainPage()
         {
             this.InitializeComponent();
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            if (SkillPages.Count == 0)
+            {
+                GetItem();
+            }
+            base.OnNavigatedTo(e);
+        }
+
+        private void GetItem()
+        {
+            SkillPages.Add(new Skill("Skeletal Detector Page", "Description", typeof(SkeletalDetectorPage)));
+            SkillPages.Add(new Skill("Object Detector Page", "Description", typeof(ObjectDetectorPage)));
+        }
+
+        private void SampleGridView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            NavigateToSkillPage(e.ClickedItem as Skill);
+        }
+
         /// <summary>
-        /// Navigation to Skeletal Detector Page
+        /// Navigation to Skill Page
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void NavigateToSkillPage(object sender, RoutedEventArgs e)
+        public void NavigateToSkillPage(Skill sample)
         {
-            this.Frame.Navigate(typeof(SkeletalDetectorPage));
-        }
-
-        private void NavigateToObjectDetectorPage(object sender, RoutedEventArgs e)
-        {
-            this.Frame.Navigate(typeof(ObjectDetectorPage));
+            Type type = sample.PageType;
+            this.Frame.Navigate(type);
         }
     }
 }
