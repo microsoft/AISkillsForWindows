@@ -39,7 +39,7 @@
                                Padding="10, 60, 0, 0"
                                TextWrapping="Wrap"/>
                 </Grid>
-                <Button Height="400" Width="400" Opacity="0.5" Click="NavigateToSkillPage" Style="{StaticResource ButtonRevealStyle}"/>
+                <Button Height="400" Width="400" Opacity="0.5" Click="NavigateToSkeletalDetectorPage" Style="{StaticResource ButtonRevealStyle}"/>
             </Grid>
 
             <Grid Grid.Column="2" Background="LightGray" Margin="25" Height="400" 

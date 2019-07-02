@@ -17,7 +17,7 @@ using Microsoft.Toolkit.Uwp;
 namespace GalleryApp
 {
     /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// Application's main page
     /// </summary>
     public sealed partial class MainPage : Page
     {
@@ -31,11 +31,16 @@ namespace GalleryApp
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void NavigateToSkillPage(object sender, RoutedEventArgs e)
+        private void NavigateToSkeletalDetectorPage(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(SkeletalDetectorPage));
         }
 
+        /// <summary>
+        /// Navigation to Object Detector Page
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void NavigateToObjectDetectorPage(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(ObjectDetectorPage));
