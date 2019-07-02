@@ -1,0 +1,17 @@
+[
+  {
+    "Name": "Vision",
+    "Skills": [
+      {
+        "Name": "Skeletal Detector",
+        "Description": "A set of sample apps that can detect and identify the poses of the bodies of individuals in a video or image.",
+        "Type": "SkeletalDetectorPage"
+      },
+      {
+        "Name": "Object Detector",
+        "Description": "A set of sample apps that detect and classify 80 objects using the Object Detector NuGet package.",
+        "Type": "ObjectDetectorPage"
+      }
+    ]
+  }
+]
