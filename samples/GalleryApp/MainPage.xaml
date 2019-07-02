@@ -20,6 +20,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="40"/>
                 <ColumnDefinition />
+                <ColumnDefinition />
             </Grid.ColumnDefinitions>
 
             <!--Skeletal Skill Thumbnail-->
@@ -38,7 +39,25 @@
                                Padding="10, 60, 0, 0"
                                TextWrapping="Wrap"/>
                 </Grid>
-                <Button Height="400" Width="400" Opacity="0.5" Click="NavigateToSkillPage" Style="{StaticResource ButtonRevealStyle}"/>
+                <Button Height="400" Width="400" Opacity="0.5" Click="NavigateToSkeletalDetectorPage" Style="{StaticResource ButtonRevealStyle}"/>
+            </Grid>
+
+            <Grid Grid.Column="2" Background="LightGray" Margin="25" Height="400" 
+                  Width="400" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <Grid Height="150" Width="400" VerticalAlignment="Bottom">
+                    <Rectangle Height="200" Width="400" VerticalAlignment="Bottom"
+                                                       Fill="Gray" Opacity="0.75"/>
+                    <TextBlock Text="Object Detector" 
+                               Style="{StaticResource SubheaderTextBlockStyle}"
+                               Foreground="White"
+                               Padding="10, 0, 0, 0" />
+                    <TextBlock Text="A set of sample apps that detect and classify 80 objects using the Object Detector NuGet package." 
+                               Style="{StaticResource BodyTextBlockStyle}"
+                               Foreground="White"
+                               Padding="10, 60, 0, 0"
+                               TextWrapping="Wrap"/>
+                </Grid>
+                <Button Height="400" Width="400" Opacity="0.5" Click="NavigateToObjectDetectorPage" Style="{StaticResource ButtonRevealStyle}"/>
             </Grid>
 
         </Grid>
