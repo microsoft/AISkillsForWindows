@@ -55,7 +55,7 @@
                 CanDragItems="False"
                 CanReorderItems="False"
                 AllowDrop="False">
-
+                
                 <!-- Tabs -->
                 <controls:TabViewItem Header="Vision" Icon="Camera">
                     <controls:WrapPanel Grid.Column="1" HorizontalSpacing="50" VerticalSpacing="50"

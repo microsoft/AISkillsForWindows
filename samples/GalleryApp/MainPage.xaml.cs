@@ -18,7 +18,7 @@ using System.Collections.ObjectModel;
 namespace GalleryApp
 {
     /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// Application's main page
     /// </summary>
     public sealed partial class MainPage : Page
     {
