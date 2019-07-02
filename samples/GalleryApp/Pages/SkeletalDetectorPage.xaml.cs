@@ -348,8 +348,8 @@ namespace GalleryApp
 
             if (file != null)
             {
-                await ConfigureFrameSourceAsync(file);
                 NotifyUser("Loading file: " + file.Path);
+                await ConfigureFrameSourceAsync(file);
             }
 
             // Re-enable the top menu once done handling the click

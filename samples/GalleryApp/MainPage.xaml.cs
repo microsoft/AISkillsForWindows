@@ -56,6 +56,7 @@ namespace GalleryApp
         /// </summary>
         private async void LoadAllSkills()
         {
+            // Task: bind category to UI tab
             var SkillsCategory = await GetCategoriesAsync();
             foreach (var category in SkillsCategory)
             {
@@ -88,6 +89,8 @@ namespace GalleryApp
             await _semaphore.WaitAsync();
             if (allCategories == null)
             {
+                // NOTE: Investigate on how to package JSON file for non-visual studio execution
+                // Task #: 
                 var path = Directory.GetCurrentDirectory();
 
                 using (StreamReader file = File.OpenText(path + "\\Pages\\Skills.json"))
