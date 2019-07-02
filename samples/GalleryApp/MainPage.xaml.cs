@@ -14,6 +14,12 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.Toolkit.Uwp;
 using System.Collections.ObjectModel;
+using GalleryApp.Models;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Toolkit.Uwp.Helpers;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace GalleryApp
 {
@@ -23,6 +29,9 @@ namespace GalleryApp
     public sealed partial class MainPage : Page
     {
         public ObservableCollection<Skill> SkillPages { get; } = new ObservableCollection<Skill>();
+
+        private static List<SkillCategory> allCategories;
+        private static SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
         public MainPage()
         {
@@ -45,10 +54,16 @@ namespace GalleryApp
         /// <summary>
         /// Load all the skills available
         /// </summary>
-        private void LoadAllSkills()
+        private async void LoadAllSkills()
         {
-            SkillPages.Add(new Skill("Skeletal Detector Page", "A set of sample apps that can detect and identify the poses of the bodies of individuals in a video or image.", typeof(SkeletalDetectorPage)));
-            SkillPages.Add(new Skill("Object Detector Page", "A set of sample apps that detect and classify 80 objects using the Object Detector NuGet package.", typeof(ObjectDetectorPage)));
+            var SkillsCategory = await GetCategoriesAsync();
+            foreach (var category in SkillsCategory)
+            {
+                foreach (var skill in category.Skills)
+                {
+                    SkillPages.Add(skill);
+                }
+            }
         }
 
         /// <summary>
@@ -66,6 +81,24 @@ namespace GalleryApp
         public void NavigateToSkillPage(Skill skill)
         {
             this.Frame.Navigate(skill.PageType);
+        }
+
+        public static async Task<List<SkillCategory>> GetCategoriesAsync()
+        {
+            await _semaphore.WaitAsync();
+            if (allCategories == null)
+            {
+                var path = Directory.GetCurrentDirectory();
+
+                using (StreamReader file = File.OpenText(path + "\\Pages\\Skills.json"))
+                {
+                    var jsonString = file.ReadToEnd();
+                    allCategories = JsonConvert.DeserializeObject<List<SkillCategory>>(jsonString);
+                }
+            }
+
+            _semaphore.Release();
+            return allCategories;
         }
     }
 }
