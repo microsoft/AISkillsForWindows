@@ -53,6 +53,12 @@
             <!--Skill output area-->
             <Grid Grid.Row="1" Loaded="Page_Loaded">
                 <Grid Name="UIVideoFeed">
+                    <!-- Video frame source controls -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Background="#B2000000">
+                        <AppBarButton x:Name="UIButtonCamera" Icon="AttachCamera" Label="Attach Camera" Click="UIButtonCamera_Click" Foreground="White" />
+                        <AppBarButton x:Name="UIButtonFilePicker" Icon="BrowsePhotos" Label="Open File" ToolTipService.ToolTip="Load an image or video file from disk" Click="UIButtonFilePicker_Click" Foreground="White" />
+                    </StackPanel>
+
                     <!-- Video display -->
                     <Image Name="UIImageViewer" 
                        Canvas.ZIndex="-1"  
