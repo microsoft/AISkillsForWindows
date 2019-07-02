@@ -58,16 +58,13 @@
                 
                 <!-- Tabs -->
                 <controls:TabViewItem Header="Vision" Icon="Camera">
-                    <controls:WrapPanel Grid.Column="1" HorizontalSpacing="50" VerticalSpacing="50"
-                                        Padding="25, 25, 0, 0">
-                        <GridView x:Name="ImageGridView" ItemsSource="{x:Bind SkillPages}"
+                    <GridView x:Name="ImageGridView" ItemsSource="{x:Bind SkillPages}"
                         Margin="20" IsItemClickEnabled="True"                     
                         ItemTemplate="{StaticResource ImageGridView_DefaultItemTemplate}"
                         ItemContainerStyle="{StaticResource ImageGridView_DefaultItemContainerStyle}"
                         ItemClick="SampleGridView_ItemClick">
-                        </GridView>
-                    </controls:WrapPanel>
-                    
+                    </GridView>
+
                 </controls:TabViewItem>
                 <controls:TabViewItem Header="Audio" Icon="Audio">
                     <TextBlock Padding="16">Coming soon...</TextBlock>
