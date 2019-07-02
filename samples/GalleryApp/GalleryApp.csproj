@@ -140,10 +140,7 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\Skill.cs" />
-<<<<<<< HEAD
-=======
     <Compile Include="Models\SkillCategory.cs" />
->>>>>>> user/t-kazhua/galleryapp-loadSkills
     <Compile Include="Pages\ObjectDetectorPage.xaml.cs">
       <DependentUpon>ObjectDetectorPage.xaml</DependentUpon>
     </Compile>
