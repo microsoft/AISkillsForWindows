@@ -127,6 +127,9 @@
     <Compile Include="..\Common\cs\MediaPlayerFrameSource.cs">
       <Link>FrameSource\MediaPlayerFrameSource.cs</Link>
     </Compile>
+    <Compile Include="..\ObjectDetector\cs\ObjectDetectorSample_UWP\BoundingBoxRenderer.cs">
+      <Link>BoundingBoxRenderer.cs</Link>
+    </Compile>
     <Compile Include="..\SkeletalDetector\cs\SkeletalDetectorSample_UWP\BodyRenderer.cs">
       <Link>BodyRenderer.cs</Link>
     </Compile>
@@ -135,6 +138,9 @@
     </Compile>
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ObjectDetectorPage.xaml.cs">
+      <DependentUpon>ObjectDetectorPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SkeletalDetectorPage.xaml.cs">
@@ -166,6 +172,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="ObjectDetectorPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="SkeletalDetectorPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -174,6 +184,9 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AI.Skills.SkillInterfacePreview">
       <Version>0.5.2.15</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AI.Skills.Vision.ObjectDetectorPreview">
+      <Version>0.1.0.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AI.Skills.Vision.SkeletalDetectorPreview">
       <Version>0.1.0.1</Version>
