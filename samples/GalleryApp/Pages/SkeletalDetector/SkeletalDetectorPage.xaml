@@ -56,7 +56,7 @@
                     <!-- Video frame source controls -->
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Background="#B2000000">
                         <AppBarButton x:Name="UIButtonCamera" Icon="AttachCamera" Label="Attach Camera" Click="UIButtonCamera_Click" Foreground="White" />
-                        <AppBarButton x:Name="UIButtonFilePicker" Icon="BrowsePhotos" Label="Open File" ToolTipService.ToolTip="Load an image or video file from disk" Click="UIButtonFilePicker_Click" Foreground="White" />
+                        <AppBarButton x:Name="UIButtonFilePicker" Icon="BrowsePhotos" Label="Open File" ToolTipService.ToolTip="Load an image or video file from disk" Click="{x:Bind local:UIHelper.PickFileAsync}" Foreground="White" />
                     </StackPanel>
 
                     <!-- Video display -->

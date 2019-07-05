@@ -52,6 +52,9 @@ namespace GalleryApp
         /// <param name="message"></param>
         public static void NotifyUser(String message, TextBlock UIMessageTextBlock)
         {
+            //var frame = Window.Current.Content as Frame;
+            //Type currentPageType = frame.SourcePageType;
+
             if (Window.Current.Dispatcher.HasThreadAccess)
             {
                 UIMessageTextBlock.Text = message;
