@@ -8,9 +8,9 @@ namespace GalleryApp
 {
     public class Skill
     {
-        public string Name { get; }
-        public string Description { get; }
-        public string Type { get; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string Type { get; set; }
         private const string m_namespace = "GalleryApp";
         public Type PageType => System.Type.GetType(m_namespace + "." + Type);
     }
