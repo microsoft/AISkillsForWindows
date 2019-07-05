@@ -18,8 +18,8 @@ namespace GalleryApp
     {
         public ObservableCollection<Skill> SkillPages { get; } = new ObservableCollection<Skill>();
 
-        private static List<SkillCategory> allCategories;
-        private static SemaphoreSlim _semaphore = new SemaphoreSlim(1);
+        private static List<SkillCategory> m_allCategories;
+        private static SemaphoreSlim m_semaphore = new SemaphoreSlim(1);
 
         public MainPage()
         {
@@ -44,7 +44,6 @@ namespace GalleryApp
         /// </summary>
         private async void LoadAllSkills()
         {
-            // Task: bind category to UI tab
             var SkillsCategory = await GetCategoriesAsync();
             foreach (var category in SkillsCategory)
             {
@@ -74,8 +73,8 @@ namespace GalleryApp
 
         public static async Task<List<SkillCategory>> GetCategoriesAsync()
         {
-            await _semaphore.WaitAsync();
-            if (allCategories == null)
+            await m_semaphore.WaitAsync();
+            if (m_allCategories == null)
             {
                 // NOTE: Investigate on how to package JSON file for non-visual studio execution
                 // Task #: 
@@ -84,12 +83,12 @@ namespace GalleryApp
                 using (StreamReader file = File.OpenText(path + "\\Pages\\Skills.json"))
                 {
                     var jsonString = file.ReadToEnd();
-                    allCategories = JsonConvert.DeserializeObject<List<SkillCategory>>(jsonString);
+                    m_allCategories = JsonConvert.DeserializeObject<List<SkillCategory>>(jsonString);
                 }
             }
 
-            _semaphore.Release();
-            return allCategories;
+            m_semaphore.Release();
+            return m_allCategories;
         }
     }
 }
