@@ -68,7 +68,7 @@ namespace GalleryApp
             // Initialize skill-related instances and populate UI options
             m_lock.Wait();
             {
-                NotifyUser("Initializing skill...");
+                UIHelper.NotifyUser("Initializing skill...", UIMessageTextBlock);
                 m_descriptor = new SkeletalDetectorDescriptor();
                 m_availableExecutionDevices = await m_descriptor.GetSupportedExecutionDevicesAsync();
 
@@ -78,7 +78,7 @@ namespace GalleryApp
             m_lock.Release();
 
             // Ready to begin, enable buttons
-            NotifyUser("Skill initialized. Select a media source from the top to begin.");
+            UIHelper.NotifyUser("Skill initialized. Select a media source from the top to begin.", UIMessageTextBlock);
 
             await UpdateMediaSourceButtonsAsync(true);
         }
@@ -154,7 +154,7 @@ namespace GalleryApp
 
                 if (m_availableExecutionDevices.Count == 0)
                 {
-                    NotifyUser("No execution devices available, this skill cannot run on this device");
+                    UIHelper.NotifyUser("No execution devices available, this skill cannot run on this device",UIMessageTextBlock);
                 }
                 else
                 {
@@ -209,7 +209,7 @@ namespace GalleryApp
                 // Create new frame source and register a callback if the source fails along the way
                 m_frameSource = await FrameSourceFactory.CreateFrameSourceAsync(source, (sender, message) =>
                 {
-                    NotifyUser(message);
+                    UIHelper.NotifyUser(message, UIMessageTextBlock);
                 });
 
             }
@@ -258,7 +258,7 @@ namespace GalleryApp
                     }
                     catch (Exception ex)
                     {
-                        NotifyUser(ex.Message);
+                        UIHelper.NotifyUser(ex.Message, UIMessageTextBlock);
                     }
                     finally
                     {
@@ -310,7 +310,7 @@ namespace GalleryApp
                 }
                 catch (Exception ex)
                 {
-                    NotifyUser($"Exception while rendering results: {ex.Message}");
+                    UIHelper.NotifyUser($"Exception while rendering results: {ex.Message}", UIMessageTextBlock);
                 }
             });
         }
@@ -322,22 +322,11 @@ namespace GalleryApp
         /// <param name="e"></param>
         private async void UIButtonFilePicker_Click(object sender, RoutedEventArgs e)
         {
-            var picker = new FileOpenPicker();
-            picker.ViewMode = PickerViewMode.Thumbnail;
-            picker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
-            // Add common video file extensions
-            picker.FileTypeFilter.Add(".mp4");
-            picker.FileTypeFilter.Add(".avi");
-            // Add common image file extensions
-            picker.FileTypeFilter.Add(".jpg");
-            picker.FileTypeFilter.Add(".png");
-            picker.FileTypeFilter.Add(".bmp");
-
-            StorageFile file = await picker.PickSingleFileAsync();
+            var file = await UIHelper.PickFileAsync();
 
             if (file != null)
             {
-                NotifyUser("Loading file: " + file.Path);
+                UIHelper.NotifyUser("Loading file: " + file.Path, UIMessageTextBlock);
                 await ConfigureFrameSourceAsync(file);
             }
 
@@ -360,22 +349,6 @@ namespace GalleryApp
             else
             {
                 await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () => await UpdateMediaSourceButtonsAsync(enableButtons));
-            }
-        }
-
-        /// <summary>
-        /// Print a message to the UI
-        /// </summary>
-        /// <param name="message"></param>
-        private void NotifyUser(String message)
-        {
-            if (Dispatcher.HasThreadAccess)
-            {
-                UIMessageTextBlock.Text = message;
-            }
-            else
-            {
-                Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => UIMessageTextBlock.Text = message).AsTask().Wait();
             }
         }
 
@@ -404,12 +377,12 @@ namespace GalleryApp
             {
                 try
                 {
-                    NotifyUser("Attaching to camera " + di.Name);
+                    UIHelper.NotifyUser("Attaching to camera " + di.Name, UIMessageTextBlock);
                     await ConfigureFrameSourceAsync(di);
                 }
                 catch (Exception ex)
                 {
-                    NotifyUser("Error occurred while initializating MediaCapture:\n" + ex.Message);
+                    UIHelper.NotifyUser("Error occurred while initializating MediaCapture:\n" + ex.Message, UIMessageTextBlock);
                 }
             }
 
