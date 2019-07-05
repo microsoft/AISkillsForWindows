@@ -54,16 +54,6 @@ namespace GalleryApp
         }
 
         /// <summary>
-        /// Backward navigation to MainPage
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Back_Click(object sender, RoutedEventArgs e)
-        {
-            this.Frame.Navigate(typeof(MainPage));
-        }
-
-        /// <summary>
         /// Called when page is loaded
         /// Initialize app assets such as skills
         /// </summary>

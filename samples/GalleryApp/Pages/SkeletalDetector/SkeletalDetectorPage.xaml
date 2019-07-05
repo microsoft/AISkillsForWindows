@@ -34,7 +34,7 @@
                 </Grid.ColumnDefinitions>
 
                 <!--Backward navigation button-->
-                <Button x:Name="BackButton" Grid.Row="0" Click="Back_Click" 
+                <Button x:Name="BackButton" Grid.Row="0" Click="{x:Bind local:UIHelper.Back_Click}" 
                         VerticalAlignment="Top" HorizontalAlignment="Left" 
                         Style="{StaticResource NavigationBackButtonNormalStyle}"/>
 

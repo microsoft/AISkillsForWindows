@@ -49,20 +49,9 @@ namespace GalleryApp
         private float m_bindTime = 0;
         private float m_evalTime = 0;
 
-
         public SkeletalDetectorPage()
         {
             this.InitializeComponent();
-        }
-
-        /// <summary>
-        /// Backward navigation to MainPage
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Back_Click(object sender, RoutedEventArgs e)
-        {
-            this.Frame.Navigate(typeof(MainPage));
         }
 
         /// <summary>
