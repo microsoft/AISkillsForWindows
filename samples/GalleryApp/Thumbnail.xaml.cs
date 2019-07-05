@@ -19,22 +19,12 @@ namespace GalleryApp
 {
     public sealed partial class Thumbnail : UserControl
     {
-        public string SkillName { get; }
-        public string SkillDescription { get; }
+        public string Name { get; }
+        public string Description { get; }
 
         public Thumbnail()
         {
             this.InitializeComponent();
-        }
-
-        /// <summary>
-        /// Navigation to Skeletal Detector Page
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void NavigateToSkillPage(object sender, RoutedEventArgs e)
-        {
-            ((Frame)Window.Current.Content).Navigate(typeof(SkeletalDetectorPage));
         }
     }
 }

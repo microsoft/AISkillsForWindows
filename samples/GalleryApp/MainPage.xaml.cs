@@ -44,7 +44,6 @@ namespace GalleryApp
         /// </summary>
         private async void LoadAllSkills()
         {
-            // Task: bind category to UI tab
             var SkillsCategory = await GetCategoriesAsync();
             foreach (var category in SkillsCategory)
             {
