@@ -139,7 +139,7 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Models\Skill.cs" />
+    <Compile Include="Models\SkillView.cs" />
     <Compile Include="Models\SkillCategory.cs" />
     <Compile Include="Pages\ObjectDetectorPage.xaml.cs">
       <DependentUpon>ObjectDetectorPage.xaml</DependentUpon>

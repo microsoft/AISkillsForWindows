@@ -444,6 +444,7 @@ namespace GalleryApp
         }
 
         /// <summary>
+        /// Triggered when object kind filter is modified (select or unselect a filter)
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

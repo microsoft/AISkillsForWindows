@@ -1,7 +1,7 @@
 [
   {
     "Name": "Vision",
-    "Skills": [
+    "SkillViews": [
       {
         "Name": "Skeletal Detector",
         "Description": "A set of sample apps that can detect and identify the poses of the bodies of individuals in a video or image.",

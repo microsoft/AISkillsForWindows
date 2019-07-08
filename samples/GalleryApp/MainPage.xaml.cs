@@ -16,7 +16,7 @@ namespace GalleryApp
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        public ObservableCollection<Skill> SkillPages { get; } = new ObservableCollection<Skill>();
+        public ObservableCollection<SkillView> SkillPages { get; } = new ObservableCollection<SkillView>();
 
         private static List<SkillCategory> m_allCategories;
         private static SemaphoreSlim m_semaphore = new SemaphoreSlim(1);
@@ -47,7 +47,7 @@ namespace GalleryApp
             var SkillsCategory = await GetCategoriesAsync();
             foreach (var category in SkillsCategory)
             {
-                foreach (var skill in category.Skills)
+                foreach (var skill in category.SkillViews)
                 {
                     SkillPages.Add(skill);
                 }
@@ -59,14 +59,14 @@ namespace GalleryApp
         /// </summary>
         private void SampleGridView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            NavigateToSkillPage(e.ClickedItem as Skill);
+            NavigateToSkillPage(e.ClickedItem as SkillView);
         }
 
         /// <summary>
         /// Navigate to the specific skill page
         /// </summary>
         /// <param name="skill"> Skill passed from the thumbnail item </param>
-        public void NavigateToSkillPage(Skill skill)
+        public void NavigateToSkillPage(SkillView skill)
         {
             this.Frame.Navigate(skill.PageType);
         }

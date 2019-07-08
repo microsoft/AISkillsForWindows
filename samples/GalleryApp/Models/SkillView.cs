@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GalleryApp
 {
-    public class Skill
+    public class SkillView
     {
         public string Name { get; set; }
         public string Description { get; set; }

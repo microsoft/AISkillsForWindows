@@ -11,7 +11,7 @@
 
     <Page.Resources>
         <DataTemplate x:Key="ImageGridView_DefaultItemTemplate"
-                      x:DataType="local:Skill">
+                      x:DataType="local:SkillView">
             <Grid Background="LightGray" Height="400" Width="400">
                 <Grid Height="200" Width="400" VerticalAlignment="Bottom" 
                       HorizontalAlignment="Center">
