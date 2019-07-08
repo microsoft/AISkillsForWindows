@@ -1,5 +1,6 @@
 ﻿// Copyright (C) Microsoft Corporation. All rights reserved.
 
+using Microsoft.AI.Skills.SkillInterfacePreview;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,6 +20,8 @@ namespace FrameSourceHelper_UWP
         private MediaPlayer m_mediaPlayer = null;
 
         private VideoFrame m_videoFrame;
+        private ISkillFeatureImageDescriptor m_desiredImageDescriptor = null;
+        private VideoFrame m_stagingVideoFrame = null;
         private EventWaitHandle m_frameSourceReadyEvent = new EventWaitHandle(false, EventResetMode.ManualReset);
         private EventHandler<string> m_failureHandler;
         public uint FrameWidth { get; private set; }
@@ -31,18 +34,23 @@ namespace FrameSourceHelper_UWP
         /// <returns></returns>
         public static async Task<MediaPlayerFrameSource> CreateFromStorageFileAsyncTask(
             StorageFile storageFile,
+            ISkillFeatureImageDescriptor imageDescriptor,
             EventHandler<string> failureHandler)
         {
-            var result = new MediaPlayerFrameSource();
+            var result = new MediaPlayerFrameSource()
+            {
+                m_desiredImageDescriptor = imageDescriptor,
+                m_mediaPlayer = new MediaPlayer()
+                {
+                    Source = MediaSource.CreateFromStorageFile(storageFile),
+                    IsVideoFrameServerEnabled = true,
+                    RealTimePlayback = true,
+                    IsMuted = true,
+                    IsLoopingEnabled = true
+                }
+            };
 
-            result.m_mediaPlayer = new MediaPlayer();
-            result.m_mediaPlayer.Source = MediaSource.CreateFromStorageFile(storageFile);
-            result.m_mediaPlayer.IsVideoFrameServerEnabled = true;
-            result.m_mediaPlayer.RealTimePlayback = true;
-            result.m_mediaPlayer.IsMuted = true;
-            result.m_mediaPlayer.IsLoopingEnabled = true;
             result.m_mediaPlayer.CommandManager.IsEnabled = false;
-
             result.m_mediaPlayer.MediaOpened += result.MediaPlayer_MediaOpened;
             result.m_mediaPlayer.MediaEnded += result.MediaPlayer_MediaEnded;
             result.m_mediaPlayer.MediaFailed += result.MediaPlayer_MediaFailed;
@@ -93,6 +101,16 @@ namespace FrameSourceHelper_UWP
                             (int)FrameWidth,
                             (int)FrameHeight);
 
+            // If a desired format was specified, create a staging VideoFrame to convert to when an image is obtained form the source before sending it out
+            if (m_desiredImageDescriptor != null)
+            {
+                m_stagingVideoFrame = new VideoFrame(
+                    m_desiredImageDescriptor.SupportedBitmapPixelFormat,
+                    m_desiredImageDescriptor.Width == -1 ? (int)FrameWidth : m_desiredImageDescriptor.Width,
+                    m_desiredImageDescriptor.Height == -1 ? (int)FrameHeight : m_desiredImageDescriptor.Height,
+                    m_desiredImageDescriptor.SupportedBitmapAlphaMode);
+            }
+
             m_mediaPlayer.VideoFrameAvailable += MediaPlayer_VideoFrameAvailable;
 
             m_frameSourceReadyEvent.Set();
@@ -103,11 +121,21 @@ namespace FrameSourceHelper_UWP
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        private void MediaPlayer_VideoFrameAvailable(MediaPlayer sender, object args)
+        private async void MediaPlayer_VideoFrameAvailable(MediaPlayer sender, object args)
         {
             m_mediaPlayer.CopyFrameToVideoSurface(m_videoFrame.Direct3DSurface);
-            m_videoFrame.SystemRelativeTime = m_mediaPlayer.PlaybackSession.Position;
-            FrameArrived?.Invoke(this, m_videoFrame);
+            
+            if(m_desiredImageDescriptor != null)
+            {
+                await m_videoFrame.CopyToAsync(m_stagingVideoFrame);
+                m_stagingVideoFrame.SystemRelativeTime = m_mediaPlayer.PlaybackSession.Position;
+                FrameArrived?.Invoke(this, m_stagingVideoFrame);
+            }
+            else
+            {
+                m_videoFrame.SystemRelativeTime = m_mediaPlayer.PlaybackSession.Position;
+                FrameArrived?.Invoke(this, m_videoFrame);
+            }
         }
 
         /// <summary>

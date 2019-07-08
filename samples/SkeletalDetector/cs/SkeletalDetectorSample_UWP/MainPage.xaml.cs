@@ -34,12 +34,14 @@ namespace SkeletalDetectorSample
         private SkeletalDetectorSkill m_skill;
         private SkeletalDetectorBinding m_binding;
         private SkeletalDetectorDescriptor m_descriptor;
+        private ISkillFeatureImageDescriptor m_inputImageFeatureDescriptor = null;
 
         // UI Related
         private BodyRenderer m_bodyRenderer;
         private IReadOnlyList<ISkillExecutionDevice> m_availableExecutionDevices;
 
         // Frames
+        private VideoFrame m_renderTargetFrame = null;
         private SoftwareBitmapSource m_processedBitmapSource;
 
         // Synchronization
@@ -141,24 +143,28 @@ namespace SkeletalDetectorSample
                 // Show skill description members in UI
                 UISkillName.Text = m_descriptor.Name;
 
-                UISkillDescription.Text = $"{m_descriptor.Description}" +
-                $"\n\tauthored by: {m_descriptor.Version.Author}" +
-                $"\n\tpublished by: {m_descriptor.Version.Author}" +
-                $"\n\tversion: {m_descriptor.Version.Major}.{m_descriptor.Version.Minor}" +
-                $"\n\tunique ID: {m_descriptor.Id}";
+                UISkillDescription.Text = SkillHelper.SkillHelperMethods.GetSkillDescriptorString(m_descriptor);
 
-                var inputDesc = m_descriptor.InputFeatureDescriptors[0] as SkillFeatureImageDescriptor;
-                UISkillInputDescription.Text = $"\tName: {inputDesc.Name}" +
-                $"\n\tDescription: {inputDesc.Description}" +
-                $"\n\tType: {inputDesc.FeatureKind}" +
-                $"\n\tWidth: {inputDesc.Width}" +
-                $"\n\tHeight: {inputDesc.Height}" +
-                $"\n\tSupportedBitmapPixelFormat: {inputDesc.SupportedBitmapPixelFormat}" +
-                $"\n\tSupportedBitmapAlphaMode: {inputDesc.SupportedBitmapAlphaMode}";
+                int featureIndex = 0;
+                foreach(var featureDesc in m_descriptor.InputFeatureDescriptors)
+                {
+                    UISkillInputDescription.Text += SkillHelper.SkillHelperMethods.GetSkillFeatureDescriptorString(featureDesc);
+                    if(featureIndex++ > 0 && featureIndex < m_descriptor.InputFeatureDescriptors.Count - 1)
+                    {
+                        UISkillInputDescription.Text += "\n----\n";
+                    }
+                }
 
-                var outputDesc1 = m_descriptor.OutputFeatureDescriptors[0] as SkeletalDetectorResultListDescriptor;
-                UISkillOutputDescription1.Text = $"\tName: {outputDesc1.Name}, Description: {outputDesc1.Description} \n\tType: Custom";
-
+                featureIndex = 0;
+                foreach (var featureDesc in m_descriptor.OutputFeatureDescriptors)
+                {
+                    UISkillOutputDescription.Text += SkillHelper.SkillHelperMethods.GetSkillFeatureDescriptorString(featureDesc);
+                    if (featureIndex++ > 0 && featureIndex < m_descriptor.OutputFeatureDescriptors.Count - 1)
+                    {
+                        UISkillOutputDescription.Text += "\n----\n";
+                    }
+                }
+                
                 if (m_availableExecutionDevices.Count == 0)
                 {
                     NotifyUser("No execution devices available, this skill cannot run on this device");
@@ -187,16 +193,17 @@ namespace SkeletalDetectorSample
         }
 
         /// <summary>
-        /// Configure an IFrameSource from a StorageFile or MediaCapture instance
+        /// Configure an IFrameSource from a StorageFile or MediaCapture instance to produce optionaly a specified format of frame
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        private async Task ConfigureFrameSourceAsync(object source)
+        private async Task ConfigureFrameSourceAsync(object source, ISkillFeatureImageDescriptor inputImageDescriptor = null)
         {
             await m_lock.WaitAsync();
             {
                 // Reset bitmap rendering component
                 UIImageViewer.Source = null;
+                m_renderTargetFrame = null;
                 m_processedBitmapSource = new SoftwareBitmapSource();
                 UIImageViewer.Source = m_processedBitmapSource;
                 m_bodyRenderer.IsVisible = false;
@@ -214,10 +221,13 @@ namespace SkeletalDetectorSample
                 }
 
                 // Create new frame source and register a callback if the source fails along the way
-                m_frameSource = await FrameSourceFactory.CreateFrameSourceAsync(source, (sender, message) =>
-                {
-                    NotifyUser(message);
-                });
+                m_frameSource = await FrameSourceFactory.CreateFrameSourceAsync(
+                    source, 
+                    (sender, message) =>
+                    {
+                        NotifyUser(message);
+                    },
+                    inputImageDescriptor);
             }
             m_lock.Release();
 
@@ -278,20 +288,40 @@ namespace SkeletalDetectorSample
                 {
                     // Enable results to be displayed
                     m_bodyRenderer.IsVisible = true;
-                    
+
                     // Display the input frame
-                    if (frame.SoftwareBitmap != null)
+                    SoftwareBitmap targetSoftwareBitmap = frame.SoftwareBitmap;
+
+                    // If we receive a Direct3DSurface backed VideoFrame, convert to a SoftwareBitmap in a format that can be rendered via the UI element
+                    if (targetSoftwareBitmap == null)
                     {
-                        await m_processedBitmapSource.SetBitmapAsync(frame.SoftwareBitmap);
+                        if (m_renderTargetFrame == null)
+                        {
+                            m_renderTargetFrame = new VideoFrame(BitmapPixelFormat.Bgra8, frame.Direct3DSurface.Description.Width, frame.Direct3DSurface.Description.Height, BitmapAlphaMode.Ignore);
+                        }
+
+                        // Encapsulate the Direct3DSurface in a VideoFrame to leverage the VideoFrame.CopyToAsync() method that can convert it to a SoftwareBitmap-backed VideoFrame
+                        VideoFrame stagingFrame = VideoFrame.CreateWithDirect3D11Surface(frame.Direct3DSurface);
+                        await stagingFrame.CopyToAsync(m_renderTargetFrame);
+                        targetSoftwareBitmap = m_renderTargetFrame.SoftwareBitmap;
                     }
+                    // Else, if we receive a SoftwareBitmap backed VideoFrame, if its format cannot already be rendered via the UI element, convert it accordingly
                     else
                     {
-                        var bitmap = await SoftwareBitmap.CreateCopyFromSurfaceAsync(frame.Direct3DSurface, BitmapAlphaMode.Ignore);
-                        await m_processedBitmapSource.SetBitmapAsync(bitmap);
+                        if (targetSoftwareBitmap.BitmapPixelFormat != BitmapPixelFormat.Bgra8 || targetSoftwareBitmap.BitmapAlphaMode != BitmapAlphaMode.Ignore)
+                        {
+                            if (m_renderTargetFrame == null)
+                            {
+                                m_renderTargetFrame = new VideoFrame(BitmapPixelFormat.Bgra8, targetSoftwareBitmap.PixelWidth, targetSoftwareBitmap.PixelHeight, BitmapAlphaMode.Ignore);
+                                await frame.CopyToAsync(m_renderTargetFrame);
+                                targetSoftwareBitmap = m_renderTargetFrame.SoftwareBitmap;
+                            }
+                        }
                     }
+                    await m_processedBitmapSource.SetBitmapAsync(targetSoftwareBitmap);
 
                     // If our canvas overlay is properly resized, update displayed results
-                    if(UICanvasOverlay.ActualWidth != 0)
+                    if (UICanvasOverlay.ActualWidth != 0)
                     {
                         m_bodyRenderer.Update(m_binding.Bodies, m_frameSource.FrameSourceType != FrameSourceType.Camera);
                     }                    
@@ -400,7 +430,7 @@ namespace SkeletalDetectorSample
                 try
                 {
                     NotifyUser("Attaching to camera " + di.Name);
-                    await ConfigureFrameSourceAsync(di);
+                    await ConfigureFrameSourceAsync(di, m_inputImageFeatureDescriptor);
                 }
                 catch (Exception ex)
                 {

@@ -57,6 +57,9 @@
     <Compile Include="..\..\..\Common\cs\MediaPlayerFrameSource.cs">
       <Link>FrameSource\MediaPlayerFrameSource.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\Common\cs\SkillHelper.cs">
+      <Link>SkillHelper.cs</Link>
+    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>

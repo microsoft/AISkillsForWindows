@@ -1,7 +1,9 @@
 ﻿// Copyright (C) Microsoft Corporation. All rights reserved.
 
+using Microsoft.AI.Skills.SkillInterfacePreview;
 using System;
 using System.Threading.Tasks;
+using Windows.Graphics.Imaging;
 using Windows.Media;
 
 namespace FrameSourceHelper_UWP
@@ -36,8 +38,10 @@ namespace FrameSourceHelper_UWP
         /// and Windows.Media.Capture.MediaCapture source objects.
         /// </summary>
         /// <param name="source"></param>
+        /// <param name="failureHandler"></param>
+        /// <param name="imageDescriptor"></param>
         /// <returns></returns>
-        public static async Task<IFrameSource> CreateFrameSourceAsync(object source, EventHandler<string> failureHandler)
+        public static async Task<IFrameSource> CreateFrameSourceAsync(object source, EventHandler<string> failureHandler, ISkillFeatureImageDescriptor imageDescriptor = null)
         {
             try
             {
@@ -46,11 +50,11 @@ namespace FrameSourceHelper_UWP
                     var sourceFile = source as Windows.Storage.StorageFile;
                     if (sourceFile.ContentType.StartsWith("image"))
                     {
-                        return await ImageFileFrameSource.CreateFromStorageFileAsyncTask(sourceFile);
+                        return await ImageFileFrameSource.CreateFromStorageFileAsyncTask(sourceFile, imageDescriptor);
                     }
                     else if (sourceFile.ContentType.StartsWith("video"))
                     {
-                        return await MediaPlayerFrameSource.CreateFromStorageFileAsyncTask(sourceFile, failureHandler);
+                        return await MediaPlayerFrameSource.CreateFromStorageFileAsyncTask(sourceFile, imageDescriptor, failureHandler);
                     }
                     else
                     {
@@ -59,7 +63,7 @@ namespace FrameSourceHelper_UWP
                 }
                 else if (source is Windows.Devices.Enumeration.DeviceInformation)
                 {
-                    return await FrameReaderFrameSource.CreateFromVideoDeviceInformationAsync(source as Windows.Devices.Enumeration.DeviceInformation, failureHandler);
+                    return await FrameReaderFrameSource.CreateFromVideoDeviceInformationAsync(source as Windows.Devices.Enumeration.DeviceInformation, imageDescriptor, failureHandler);
                 }
                 else
                 {

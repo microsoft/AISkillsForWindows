@@ -1,10 +1,12 @@
 ﻿// Copyright (C) Microsoft Corporation. All rights reserved.
 
+using Microsoft.AI.Skills.SkillInterfacePreview;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
+using Windows.Graphics.Imaging;
 using Windows.Media;
 using Windows.Media.Capture;
 using Windows.Media.Capture.Frames;
@@ -22,6 +24,7 @@ namespace FrameSourceHelper_UWP
         private MediaFrameReader m_frameReader;
         private MediaFrameSource m_frameSource;
         private EventHandler<string> m_failureHandler;
+        private ISkillFeatureImageDescriptor m_desiredImageDescriptor = null;
         private readonly object m_lock = new object();
 
         public uint FrameHeight { get; private set; }
@@ -59,26 +62,31 @@ namespace FrameSourceHelper_UWP
         /// <summary>
         /// Static factory method
         /// </summary>
-        /// <param name="mediaCapture"></param>
+        /// <param name="videoDeviceInformation"></param>
+        /// <param name="imageDescriptor"></param>
+        /// <param name="failureHandler"></param>
         /// <returns></returns>
         public static async Task<FrameReaderFrameSource> CreateFromVideoDeviceInformationAsync(
-            DeviceInformation videoDeviceInformation, 
+            DeviceInformation videoDeviceInformation,
+            ISkillFeatureImageDescriptor imageDescriptor,
             EventHandler<string> failureHandler)
         {
-            var result = new FrameReaderFrameSource();
-
             // Create new MediaCapture connected to our device
-            result.m_mediaCapture = new MediaCapture();
-            result.m_failureHandler = failureHandler;
-            result.m_mediaCapture.Failed += result.MediaCapture_Failed;
-
-            result.m_mediaCaptureInitializationSettings = new MediaCaptureInitializationSettings
+            var result = new FrameReaderFrameSource()
             {
-                SharingMode = MediaCaptureSharingMode.ExclusiveControl,
-                MemoryPreference = MediaCaptureMemoryPreference.Auto,
-                StreamingCaptureMode = StreamingCaptureMode.Video,
-                VideoDeviceId = videoDeviceInformation.Id,
+                m_mediaCapture = new MediaCapture(),
+                m_desiredImageDescriptor = imageDescriptor,
+                m_failureHandler = failureHandler,
+                m_mediaCaptureInitializationSettings = new MediaCaptureInitializationSettings
+                {
+                    SharingMode = MediaCaptureSharingMode.ExclusiveControl,
+                    MemoryPreference = MediaCaptureMemoryPreference.Auto,
+                    StreamingCaptureMode = StreamingCaptureMode.Video,
+                    VideoDeviceId = videoDeviceInformation.Id,
+                }
             };
+            result.m_mediaCapture.Failed += result.MediaCapture_Failed;
+            
             await result.IntializeFrameSourceAsync();
 
             return result;
@@ -147,24 +155,30 @@ namespace FrameSourceHelper_UWP
                 throw new Exception("No preview or record stream available");
             }
 
+            // Get preferred camera frame format described in a ISkillFeatureImageDescriptor if specified
+            int preferredFrameWidth = m_desiredImageDescriptor == null || m_desiredImageDescriptor.Width == -1 ? 1920 : m_desiredImageDescriptor.Width;
+            int preferredFrameHeight = m_desiredImageDescriptor == null || m_desiredImageDescriptor.Height == -1 ? 1080 : m_desiredImageDescriptor.Height;
+            string preferredMediaEncodingSubtype = m_desiredImageDescriptor == null ? MediaEncodingSubtypes.Bgra8 : BitmapPixelFormatToMediaEncodingSubtype(m_desiredImageDescriptor.SupportedBitmapPixelFormat);
+
             // If we can, let's attempt to change the format set on the source to our preferences
             if (m_mediaCaptureInitializationSettings.SharingMode == MediaCaptureSharingMode.ExclusiveControl)
             {
-                // Filter MediaType given resolution and framerate preference, and filter out non-compatible subtypes
-                // Prefer a BGRA8 format and defer to other supported subtypes if none is supported on the source
+                // Filter camera MediaType given frame format preference, and filter out non-compatible subtypes
                 var selectedFormat = m_frameSource.SupportedFormats.Where(format =>
                         format.FrameRate.Numerator / format.FrameRate.Denominator > 15
-                        && string.Compare(format.Subtype, MediaEncodingSubtypes.Bgra8, true) == 0
-                        )?.OrderBy(format => Math.Abs((int)(format.VideoFormat.Width * format.VideoFormat.Height) - (1920 * 1080))).FirstOrDefault();
+                        && string.Compare(format.Subtype, preferredMediaEncodingSubtype, true) == 0
+                        )?.OrderBy(format => Math.Abs((int)(format.VideoFormat.Width * format.VideoFormat.Height) - (preferredFrameWidth * preferredFrameHeight))).FirstOrDefault();
 
+                // Defer to other supported subtypes if the one prescribed is not supported on the source
                 if (selectedFormat == null)
                 {
                     selectedFormat = m_frameSource.SupportedFormats.Where(format =>
                         format.FrameRate.Numerator / format.FrameRate.Denominator > 15
-                        && (string.Compare(format.Subtype, MediaEncodingSubtypes.Nv12, true) == 0
+                        && (string.Compare(format.Subtype, MediaEncodingSubtypes.Bgra8, true) == 0 
+                            || string.Compare(format.Subtype, MediaEncodingSubtypes.Nv12, true) == 0
                             || string.Compare(format.Subtype, MediaEncodingSubtypes.Yuy2, true) == 0
                             || string.Compare(format.Subtype, MediaEncodingSubtypes.Rgb32, true) == 0)
-                        )?.OrderBy(format => Math.Abs((int)(format.VideoFormat.Width * format.VideoFormat.Height) - (1920 * 1080))).FirstOrDefault();
+                        )?.OrderBy(format => Math.Abs((int)(format.VideoFormat.Width * format.VideoFormat.Height) - (preferredFrameWidth * preferredFrameHeight))).FirstOrDefault();
                 }
                 if (selectedFormat == null)
                 {
@@ -178,6 +192,33 @@ namespace FrameSourceHelper_UWP
         }
 
         /// <summary>
+        /// Return a MediaEncodingSubtype string corrolary to a BitmapPixelFormat
+        /// </summary>
+        /// <param name="supportedBitmapPixelFormat"></param>
+        /// <returns></returns>
+        private string BitmapPixelFormatToMediaEncodingSubtype(BitmapPixelFormat supportedBitmapPixelFormat)
+        {
+            switch(supportedBitmapPixelFormat)
+            {
+                case BitmapPixelFormat.Nv12:
+                    return MediaEncodingSubtypes.Nv12;
+                case BitmapPixelFormat.Yuy2:
+                    return MediaEncodingSubtypes.Yuy2;
+                case BitmapPixelFormat.Gray8:
+                    return MediaEncodingSubtypes.L8;
+                case BitmapPixelFormat.Gray16:
+                    return MediaEncodingSubtypes.L16;
+                case BitmapPixelFormat.P010:
+                    return MediaEncodingSubtypes.P010;
+                case BitmapPixelFormat.Rgba8:
+                case BitmapPixelFormat.Bgra8:
+                    return MediaEncodingSubtypes.Bgra8;
+            }
+            // By default return BGRA8
+            return MediaEncodingSubtypes.Bgra8;
+        }
+
+        /// <summary>
         /// Initializes MediaFrameReader and registers for MediaCapture callback
         /// </summary>
         /// <returns></returns>
@@ -187,9 +228,10 @@ namespace FrameSourceHelper_UWP
             {
                 return;
             }
-            
-            // Create Bgra8 encoded FrameReader stream
-            m_frameReader = await m_mediaCapture.CreateFrameReaderAsync(m_frameSource, MediaEncodingSubtypes.Bgra8);
+
+            // Create a FrameReader stream using the desired image format is specified
+            string preferredMediaEncodingSubtype = m_desiredImageDescriptor == null ? MediaEncodingSubtypes.Bgra8 : BitmapPixelFormatToMediaEncodingSubtype(m_desiredImageDescriptor.SupportedBitmapPixelFormat);
+            m_frameReader = await m_mediaCapture.CreateFrameReaderAsync(m_frameSource, preferredMediaEncodingSubtype);
             m_frameReader.AcquisitionMode = MediaFrameReaderAcquisitionMode.Realtime;
             m_frameReader.FrameArrived += FrameReader_FrameArrived;
         }
