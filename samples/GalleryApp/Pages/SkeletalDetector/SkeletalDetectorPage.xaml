@@ -56,7 +56,7 @@
                     <!-- Video frame source controls -->
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Background="#B2000000">
                         <AppBarButton x:Name="UIButtonCamera" Icon="AttachCamera" Label="Attach Camera" Click="UIButtonCamera_Click" Foreground="White" />
-                        <AppBarButton x:Name="UIButtonFilePicker" Icon="BrowsePhotos" Label="Open File" ToolTipService.ToolTip="Load an image or video file from disk" Click="{x:Bind local:UIHelper.PickFileAsync}" Foreground="White" />
+                        <AppBarButton x:Name="UIButtonFilePicker" Icon="BrowsePhotos" Label="Open File" ToolTipService.ToolTip="Load an image or video file from disk" Click="UIButtonFilePicker_Click" Foreground="White" />
                     </StackPanel>
 
                     <!-- Video display -->
@@ -104,13 +104,13 @@
             <Grid Grid.Row="2" Padding="16, 0, 0, 0" Background="#FFF2F2F2">
                 <ScrollViewer>
                     <StackPanel>
-                        <TextBlock Name="UISkillName" Text="Skill name" HorizontalAlignment="Center" Style="{StaticResource TitleTextBlockStyle}"/>
+                        <TextBlock Name="UISkillName" Text="Skill name" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold"/>
                         <TextBlock Text="Skill Description:" FontWeight="Bold"/>
-                        <TextBox Name="UISkillDescription" Text="Loading skill description..." IsReadOnly="True" AcceptsReturn="True"/>
-                        <TextBlock Text="Skill input description:" FontWeight="Bold"/>
-                        <TextBox Name="UISkillInputDescription" Text="Loading skill input var description..." IsReadOnly="True" AcceptsReturn="True"/>
-                        <TextBlock Text="Skill output1 description:" FontWeight="Bold"/>
-                        <TextBox Name="UISkillOutputDescription1" Text="Loading skill output var description..." IsReadOnly="True" AcceptsReturn="True"/>
+                        <TextBox Name="UISkillDescription" IsReadOnly="True" AcceptsReturn="True"/>
+                        <TextBlock Text="Skill input descriptions:" FontWeight="Bold" FontFamily="Segoe UI"/>
+                        <TextBox Name="UISkillInputDescription" IsReadOnly="True" AcceptsReturn="True"/>
+                        <TextBlock Text="Skill output descriptions:" FontWeight="Bold"/>
+                        <TextBox Name="UISkillOutputDescription" IsReadOnly="True" AcceptsReturn="True" FontFamily="Segoe UI"/>
                         <TextBlock Text="Available execution devices:" FontWeight="Bold"/>
                         <ListBox Name="UISkillExecutionDevices" SelectionChanged="UISkillExecutionDevices_SelectionChanged"/>
                     </StackPanel>

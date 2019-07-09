@@ -1,20 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Windows.Foundation;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
+﻿// Copyright (C) Microsoft Corporation. All rights reserved.
+
 using Microsoft.AI.Skills.SkillInterfacePreview;
 using Microsoft.AI.Skills.Vision.SkeletalDetectorPreview;
+using Microsoft.Toolkit.Uwp.UI.Controls;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using Windows.Graphics.Imaging;
 using Windows.Media;
 using Windows.Storage;
 using Windows.Storage.Pickers;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using FrameSourceHelper_UWP;
 using Windows.Devices.Enumeration;
@@ -26,19 +28,22 @@ namespace GalleryApp
     /// Skeletal Detector Skill Page
     /// </summary>
     public sealed partial class SkeletalDetectorPage : Page
-    {
+    
+        {
         private IFrameSource m_frameSource = null;
 
         // Skill-related variables
         private SkeletalDetectorSkill m_skill;
         private SkeletalDetectorBinding m_binding;
         private SkeletalDetectorDescriptor m_descriptor;
+        private ISkillFeatureImageDescriptor m_inputImageFeatureDescriptor = null;
 
         // UI Related
         private BodyRenderer m_bodyRenderer;
         private IReadOnlyList<ISkillExecutionDevice> m_availableExecutionDevices;
 
         // Frames
+        private VideoFrame m_renderTargetFrame = null;
         private SoftwareBitmapSource m_processedBitmapSource;
 
         // Synchronization
@@ -49,6 +54,10 @@ namespace GalleryApp
         private float m_bindTime = 0;
         private float m_evalTime = 0;
 
+
+        /// <summary>
+        /// SkeletalDetectorPage constructor
+        /// </summary
         public SkeletalDetectorPage()
         {
             this.InitializeComponent();
@@ -62,13 +71,16 @@ namespace GalleryApp
         /// <param name="e"></param>
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            // Disable buttons while we initialize
+            await UpdateMediaSourceButtonsAsync(false);
+
             // Initialize helper class used to render the skill results on screen
             m_bodyRenderer = new BodyRenderer(UICanvasOverlay);
 
             // Initialize skill-related instances and populate UI options
             m_lock.Wait();
             {
-                UIHelper.NotifyUser("Initializing skill...", UIMessageTextBlock);
+                NotifyUser("Initializing skill...");
                 m_descriptor = new SkeletalDetectorDescriptor();
                 m_availableExecutionDevices = await m_descriptor.GetSupportedExecutionDevicesAsync();
 
@@ -78,8 +90,7 @@ namespace GalleryApp
             m_lock.Release();
 
             // Ready to begin, enable buttons
-            UIHelper.NotifyUser("Skill initialized. Select a media source from the top to begin.", UIMessageTextBlock);
-
+            NotifyUser("Skill initialized. Select a media source from the top to begin.");
             await UpdateMediaSourceButtonsAsync(true);
         }
 
@@ -99,6 +110,8 @@ namespace GalleryApp
                 m_skill = await m_descriptor.CreateSkillAsync() as SkeletalDetectorSkill;
             }
             m_binding = await m_skill.CreateSkillBindingAsync() as SkeletalDetectorBinding;
+
+            m_inputImageFeatureDescriptor = m_binding["InputImage"].Descriptor as SkillFeatureImageDescriptor;
         }
 
         /// <summary>
@@ -134,27 +147,31 @@ namespace GalleryApp
                 // Show skill description members in UI
                 UISkillName.Text = m_descriptor.Name;
 
-                UISkillDescription.Text = $"{m_descriptor.Description}" +
-                $"\n\tauthored by: {m_descriptor.Version.Author}" +
-                $"\n\tpublished by: {m_descriptor.Version.Author}" +
-                $"\n\tversion: {m_descriptor.Version.Major}.{m_descriptor.Version.Minor}" +
-                $"\n\tunique ID: {m_descriptor.Id}";
+                UISkillDescription.Text = SkillHelper.SkillHelperMethods.GetSkillDescriptorString(m_descriptor);
 
-                var inputDesc = m_descriptor.InputFeatureDescriptors[0] as SkillFeatureImageDescriptor;
-                UISkillInputDescription.Text = $"\tName: {inputDesc.Name}" +
-                $"\n\tDescription: {inputDesc.Description}" +
-                $"\n\tType: {inputDesc.FeatureKind}" +
-                $"\n\tWidth: {inputDesc.Width}" +
-                $"\n\tHeight: {inputDesc.Height}" +
-                $"\n\tSupportedBitmapPixelFormat: {inputDesc.SupportedBitmapPixelFormat}" +
-                $"\n\tSupportedBitmapAlphaMode: {inputDesc.SupportedBitmapAlphaMode}";
+                int featureIndex = 0;
+                foreach (var featureDesc in m_descriptor.InputFeatureDescriptors)
+                {
+                    UISkillInputDescription.Text += SkillHelper.SkillHelperMethods.GetSkillFeatureDescriptorString(featureDesc);
+                    if (featureIndex++ > 0 && featureIndex < m_descriptor.InputFeatureDescriptors.Count - 1)
+                    {
+                        UISkillInputDescription.Text += "\n----\n";
+                    }
+                }
 
-                var outputDesc1 = m_descriptor.OutputFeatureDescriptors[0] as SkeletalDetectorResultListDescriptor;
-                UISkillOutputDescription1.Text = $"\tName: {outputDesc1.Name}, Description: {outputDesc1.Description} \n\tType: Custom";
+                featureIndex = 0;
+                foreach (var featureDesc in m_descriptor.OutputFeatureDescriptors)
+                {
+                    UISkillOutputDescription.Text += SkillHelper.SkillHelperMethods.GetSkillFeatureDescriptorString(featureDesc);
+                    if (featureIndex++ > 0 && featureIndex < m_descriptor.OutputFeatureDescriptors.Count - 1)
+                    {
+                        UISkillOutputDescription.Text += "\n----\n";
+                    }
+                }
 
                 if (m_availableExecutionDevices.Count == 0)
                 {
-                    UIHelper.NotifyUser("No execution devices available, this skill cannot run on this device",UIMessageTextBlock);
+                    NotifyUser("No execution devices available, this skill cannot run on this device");
                 }
                 else
                 {
@@ -180,16 +197,17 @@ namespace GalleryApp
         }
 
         /// <summary>
-        /// Configure an IFrameSource from a StorageFile or MediaCapture instance
+        /// Configure an IFrameSource from a StorageFile or MediaCapture instance to produce optionally a specified format of frame
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        private async Task ConfigureFrameSourceAsync(object source)
+        private async Task ConfigureFrameSourceAsync(object source, ISkillFeatureImageDescriptor inputImageDescriptor = null)
         {
             await m_lock.WaitAsync();
             {
                 // Reset bitmap rendering component
                 UIImageViewer.Source = null;
+                m_renderTargetFrame = null;
                 m_processedBitmapSource = new SoftwareBitmapSource();
                 UIImageViewer.Source = m_processedBitmapSource;
                 m_bodyRenderer.IsVisible = false;
@@ -207,25 +225,17 @@ namespace GalleryApp
                 }
 
                 // Create new frame source and register a callback if the source fails along the way
-                m_frameSource = await FrameSourceFactory.CreateFrameSourceAsync(source, (sender, message) =>
-                {
-                    UIHelper.NotifyUser(message, UIMessageTextBlock);
-                });
-
+                m_frameSource = await FrameSourceFactory.CreateFrameSourceAsync(
+                    source,
+                    (sender, message) =>
+                    {
+                        NotifyUser(message);
+                    },
+                    inputImageDescriptor);
             }
             m_lock.Release();
 
-            RunSkill_Execution();
-        }
-
-
-        /// <summary>
-        /// If a valid frame source is obtained, run skill on it
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private async void RunSkill_Execution()
-        {
+            // If we obtained a valid frame source, start it
             if (m_frameSource != null)
             {
                 m_frameSource.FrameArrived += FrameSource_FrameAvailable;
@@ -258,7 +268,7 @@ namespace GalleryApp
                     }
                     catch (Exception ex)
                     {
-                        UIHelper.NotifyUser(ex.Message, UIMessageTextBlock);
+                        NotifyUser(ex.Message);
                     }
                     finally
                     {
@@ -284,15 +294,36 @@ namespace GalleryApp
                     m_bodyRenderer.IsVisible = true;
 
                     // Display the input frame
-                    if (frame.SoftwareBitmap != null)
+                    SoftwareBitmap targetSoftwareBitmap = frame.SoftwareBitmap;
+
+                    // If we receive a Direct3DSurface-backed VideoFrame, convert to a SoftwareBitmap in a format that can be rendered via the UI element
+                    if (targetSoftwareBitmap == null)
                     {
-                        await m_processedBitmapSource.SetBitmapAsync(frame.SoftwareBitmap);
+                        if (m_renderTargetFrame == null)
+                        {
+                            m_renderTargetFrame = new VideoFrame(BitmapPixelFormat.Bgra8, frame.Direct3DSurface.Description.Width, frame.Direct3DSurface.Description.Height, BitmapAlphaMode.Ignore);
+                        }
+
+                        // Leverage the VideoFrame.CopyToAsync() method that can convert the input Direct3DSurface-backed VideoFrame to a SoftwareBitmap-backed VideoFrame
+                        await frame.CopyToAsync(m_renderTargetFrame);
+                        targetSoftwareBitmap = m_renderTargetFrame.SoftwareBitmap;
                     }
+                    // Else, if we receive a SoftwareBitmap-backed VideoFrame, if its format cannot already be rendered via the UI element, convert it accordingly
                     else
                     {
-                        var bitmap = await SoftwareBitmap.CreateCopyFromSurfaceAsync(frame.Direct3DSurface, BitmapAlphaMode.Ignore);
-                        await m_processedBitmapSource.SetBitmapAsync(bitmap);
+                        if (targetSoftwareBitmap.BitmapPixelFormat != BitmapPixelFormat.Bgra8 || targetSoftwareBitmap.BitmapAlphaMode != BitmapAlphaMode.Ignore)
+                        {
+                            if (m_renderTargetFrame == null)
+                            {
+                                m_renderTargetFrame = new VideoFrame(BitmapPixelFormat.Bgra8, targetSoftwareBitmap.PixelWidth, targetSoftwareBitmap.PixelHeight, BitmapAlphaMode.Ignore);
+                            }
+
+                            // Leverage the VideoFrame.CopyToAsync() method that can convert the input SoftwareBitmap-backed VideoFrame to a different format
+                            await frame.CopyToAsync(m_renderTargetFrame);
+                            targetSoftwareBitmap = m_renderTargetFrame.SoftwareBitmap;
+                        }
                     }
+                    await m_processedBitmapSource.SetBitmapAsync(targetSoftwareBitmap);
 
                     // If our canvas overlay is properly resized, update displayed results
                     if (UICanvasOverlay.ActualWidth != 0)
@@ -310,7 +341,7 @@ namespace GalleryApp
                 }
                 catch (Exception ex)
                 {
-                    UIHelper.NotifyUser($"Exception while rendering results: {ex.Message}", UIMessageTextBlock);
+                    NotifyUser($"Exception while rendering results: {ex.Message}");
                 }
             });
         }
@@ -322,12 +353,22 @@ namespace GalleryApp
         /// <param name="e"></param>
         private async void UIButtonFilePicker_Click(object sender, RoutedEventArgs e)
         {
-            var file = await UIHelper.PickFileAsync();
+            var picker = new FileOpenPicker();
+            picker.ViewMode = PickerViewMode.Thumbnail;
+            picker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+            // Add common video file extensions
+            picker.FileTypeFilter.Add(".mp4");
+            picker.FileTypeFilter.Add(".avi");
+            // Add common image file extensions
+            picker.FileTypeFilter.Add(".jpg");
+            picker.FileTypeFilter.Add(".png");
+            picker.FileTypeFilter.Add(".bmp");
 
+            StorageFile file = await picker.PickSingleFileAsync();
             if (file != null)
             {
-                UIHelper.NotifyUser("Loading file: " + file.Path, UIMessageTextBlock);
                 await ConfigureFrameSourceAsync(file);
+                NotifyUser("Loading file: " + file.Path);
             }
 
             // Re-enable the top menu once done handling the click
@@ -349,6 +390,22 @@ namespace GalleryApp
             else
             {
                 await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () => await UpdateMediaSourceButtonsAsync(enableButtons));
+            }
+        }
+
+        /// <summary>
+        /// Print a message to the UI
+        /// </summary>
+        /// <param name="message"></param>
+        private void NotifyUser(String message)
+        {
+            if (Dispatcher.HasThreadAccess)
+            {
+                UIMessageTextBlock.Text = message;
+            }
+            else
+            {
+                Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => UIMessageTextBlock.Text = message).AsTask().Wait();
             }
         }
 
@@ -377,12 +434,12 @@ namespace GalleryApp
             {
                 try
                 {
-                    UIHelper.NotifyUser("Attaching to camera " + di.Name, UIMessageTextBlock);
-                    await ConfigureFrameSourceAsync(di);
+                    NotifyUser("Attaching to camera " + di.Name);
+                    await ConfigureFrameSourceAsync(di, m_inputImageFeatureDescriptor);
                 }
                 catch (Exception ex)
                 {
-                    UIHelper.NotifyUser("Error occurred while initializating MediaCapture:\n" + ex.Message, UIMessageTextBlock);
+                    NotifyUser("Error occurred while initializating MediaCapture:\n" + ex.Message);
                 }
             }
 
@@ -424,5 +481,24 @@ namespace GalleryApp
 
             m_bodyRenderer.Update(m_binding.Bodies, m_frameSource.FrameSourceType != FrameSourceType.Camera);
         }
+
+        /// <summary>
+        /// Triggered when the expander is expanded and collapsed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UIExpander_Expanded(object sender, EventArgs e)
+        {
+            var expander = (sender as Expander);
+            if (expander.IsExpanded)
+            {
+                UIVideoFeed.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                UIVideoFeed.Visibility = Visibility.Visible;
+            }
+        }
     }
 }
+

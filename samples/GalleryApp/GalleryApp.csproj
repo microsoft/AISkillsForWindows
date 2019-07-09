@@ -115,18 +115,6 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\Common\cs\FrameReaderFrameSource.cs">
-      <Link>FrameSource\FrameReaderFrameSource.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\cs\IFrameSource.cs">
-      <Link>FrameSource\IFrameSource.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\cs\ImageFileFrameSource.cs">
-      <Link>FrameSource\ImageFileFrameSource.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\cs\MediaPlayerFrameSource.cs">
-      <Link>FrameSource\MediaPlayerFrameSource.cs</Link>
-    </Compile>
     <Compile Include="..\ObjectDetector\cs\ObjectDetectorSample_UWP\BoundingBoxRenderer.cs">
       <Link>Pages\ObjectDetector\BoundingBoxRenderer.cs</Link>
     </Compile>
@@ -136,6 +124,10 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FrameSource\FrameReaderFrameSource.cs" />
+    <Compile Include="FrameSource\IFrameSource.cs" />
+    <Compile Include="FrameSource\ImageFileFrameSource.cs" />
+    <Compile Include="FrameSource\MediaPlayerFrameSource.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -148,6 +140,7 @@
     <Compile Include="Pages\SkeletalDetector\SkeletalDetectorPage.xaml.cs">
       <DependentUpon>SkeletalDetectorPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SkillHelper.cs" />
     <Compile Include="Thumbnail.xaml.cs">
       <DependentUpon>Thumbnail.xaml</DependentUpon>
     </Compile>
@@ -199,7 +192,7 @@
       <Version>0.1.0.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AI.Skills.Vision.SkeletalDetectorPreview">
-      <Version>0.1.0.1</Version>
+      <Version>0.1.0.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.8</Version>
@@ -211,7 +204,7 @@
       <Version>5.1.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
-      <Version>1.1.0</Version>
+      <Version>2.0.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup />
