@@ -101,7 +101,7 @@ namespace FrameSourceHelper_UWP
                             (int)FrameWidth,
                             (int)FrameHeight);
 
-            // If a desired format was specified, create a staging VideoFrame to convert to when an image is obtained form the source before sending it out
+            // If a desired format was specified, create a staging VideoFrame to convert to when an image is obtained from the source before sending it out
             if (m_desiredImageDescriptor != null)
             {
                 m_stagingVideoFrame = new VideoFrame(

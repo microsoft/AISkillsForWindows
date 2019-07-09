@@ -156,9 +156,21 @@ namespace FrameSourceHelper_UWP
             }
 
             // Get preferred camera frame format described in a ISkillFeatureImageDescriptor if specified
-            int preferredFrameWidth = m_desiredImageDescriptor == null || m_desiredImageDescriptor.Width == -1 ? 1920 : m_desiredImageDescriptor.Width;
-            int preferredFrameHeight = m_desiredImageDescriptor == null || m_desiredImageDescriptor.Height == -1 ? 1080 : m_desiredImageDescriptor.Height;
-            string preferredMediaEncodingSubtype = m_desiredImageDescriptor == null ? MediaEncodingSubtypes.Bgra8 : BitmapPixelFormatToMediaEncodingSubtype(m_desiredImageDescriptor.SupportedBitmapPixelFormat);
+            int preferredFrameWidth = 1920;
+            if (m_desiredImageDescriptor != null && m_desiredImageDescriptor.Width != -1)
+            {
+                preferredFrameWidth = m_desiredImageDescriptor.Width;
+            }
+            int preferredFrameHeight = 1080;
+            if(m_desiredImageDescriptor != null && m_desiredImageDescriptor.Height != -1)
+            {
+                preferredFrameHeight = m_desiredImageDescriptor.Height;
+            }
+            string preferredMediaEncodingSubtype = MediaEncodingSubtypes.Bgra8;
+            if (m_desiredImageDescriptor != null)
+            {
+                preferredMediaEncodingSubtype = BitmapPixelFormatToMediaEncodingSubtype(m_desiredImageDescriptor.SupportedBitmapPixelFormat);
+            }
 
             // If we can, let's attempt to change the format set on the source to our preferences
             if (m_mediaCaptureInitializationSettings.SharingMode == MediaCaptureSharingMode.ExclusiveControl)
