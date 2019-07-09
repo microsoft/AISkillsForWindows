@@ -195,7 +195,7 @@ namespace SkeletalDetectorSample
         }
 
         /// <summary>
-        /// Configure an IFrameSource from a StorageFile or MediaCapture instance to produce optionaly a specified format of frame
+        /// Configure an IFrameSource from a StorageFile or MediaCapture instance to produce optionally a specified format of frame
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>

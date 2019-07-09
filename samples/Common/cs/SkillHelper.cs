@@ -15,7 +15,7 @@ namespace SkillHelper
         {
             if (desc == null)
             {
-                return null;
+                return "";
             }
 
             return $"Description: {desc.Description}" +
@@ -34,7 +34,7 @@ namespace SkillHelper
         {
             if (desc == null)
             {
-                return null;
+                return "";
             }
             string result = $"Name: {desc.Name}" +
                     $"\nDescription: {desc.Description}" +
