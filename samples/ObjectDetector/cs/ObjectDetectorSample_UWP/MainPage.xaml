@@ -34,7 +34,7 @@
                         <TextBlock Text="Skill input descriptions:" FontWeight="Bold" FontFamily="Segoe UI"/>
                         <TextBox Name="UISkillInputDescription" IsReadOnly="True" AcceptsReturn="True"/>
                         <TextBlock Text="Skill output descriptions:" FontWeight="Bold"/>
-                        <TextBox Name="UISkillOutputDescription" Text="Loading skill output var description..." IsReadOnly="True" AcceptsReturn="True"/>
+                        <TextBox Name="UISkillOutputDescription" IsReadOnly="True" AcceptsReturn="True"/>
                         <TextBlock Text="Available execution devices:" FontWeight="Bold"/>
                         <ListBox Name="UISkillExecutionDevices" SelectionChanged="UISkillExecutionDevices_SelectionChanged"/>
                         <ListView Name="UIObjectKindFilters" SelectionMode="Multiple" ScrollViewer.VerticalScrollBarVisibility="Visible" SelectionChanged="UIObjectKindFilters_SelectionChanged" />

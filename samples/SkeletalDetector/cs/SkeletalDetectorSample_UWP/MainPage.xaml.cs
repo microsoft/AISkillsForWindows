@@ -108,6 +108,8 @@ namespace SkeletalDetectorSample
                 m_skill = await m_descriptor.CreateSkillAsync() as SkeletalDetectorSkill;
             }
             m_binding = await m_skill.CreateSkillBindingAsync() as SkeletalDetectorBinding;
+
+            m_inputImageFeatureDescriptor = m_binding["InputImage"].Descriptor as SkillFeatureImageDescriptor;
         }
 
         /// <summary>
@@ -292,7 +294,7 @@ namespace SkeletalDetectorSample
                     // Display the input frame
                     SoftwareBitmap targetSoftwareBitmap = frame.SoftwareBitmap;
 
-                    // If we receive a Direct3DSurface backed VideoFrame, convert to a SoftwareBitmap in a format that can be rendered via the UI element
+                    // If we receive a Direct3DSurface-backed VideoFrame, convert to a SoftwareBitmap in a format that can be rendered via the UI element
                     if (targetSoftwareBitmap == null)
                     {
                         if (m_renderTargetFrame == null)
@@ -300,12 +302,11 @@ namespace SkeletalDetectorSample
                             m_renderTargetFrame = new VideoFrame(BitmapPixelFormat.Bgra8, frame.Direct3DSurface.Description.Width, frame.Direct3DSurface.Description.Height, BitmapAlphaMode.Ignore);
                         }
 
-                        // Encapsulate the Direct3DSurface in a VideoFrame to leverage the VideoFrame.CopyToAsync() method that can convert it to a SoftwareBitmap-backed VideoFrame
-                        VideoFrame stagingFrame = VideoFrame.CreateWithDirect3D11Surface(frame.Direct3DSurface);
-                        await stagingFrame.CopyToAsync(m_renderTargetFrame);
+                        // Leverage the VideoFrame.CopyToAsync() method that can convert the input Direct3DSurface-backed VideoFrame to a SoftwareBitmap-backed VideoFrame
+                        await frame.CopyToAsync(m_renderTargetFrame);
                         targetSoftwareBitmap = m_renderTargetFrame.SoftwareBitmap;
                     }
-                    // Else, if we receive a SoftwareBitmap backed VideoFrame, if its format cannot already be rendered via the UI element, convert it accordingly
+                    // Else, if we receive a SoftwareBitmap-backed VideoFrame, if its format cannot already be rendered via the UI element, convert it accordingly
                     else
                     {
                         if (targetSoftwareBitmap.BitmapPixelFormat != BitmapPixelFormat.Bgra8 || targetSoftwareBitmap.BitmapAlphaMode != BitmapAlphaMode.Ignore)
@@ -313,9 +314,11 @@ namespace SkeletalDetectorSample
                             if (m_renderTargetFrame == null)
                             {
                                 m_renderTargetFrame = new VideoFrame(BitmapPixelFormat.Bgra8, targetSoftwareBitmap.PixelWidth, targetSoftwareBitmap.PixelHeight, BitmapAlphaMode.Ignore);
-                                await frame.CopyToAsync(m_renderTargetFrame);
-                                targetSoftwareBitmap = m_renderTargetFrame.SoftwareBitmap;
                             }
+
+                            // Leverage the VideoFrame.CopyToAsync() method that can convert the input SoftwareBitmap-backed VideoFrame to a different format
+                            await frame.CopyToAsync(m_renderTargetFrame);
+                            targetSoftwareBitmap = m_renderTargetFrame.SoftwareBitmap;
                         }
                     }
                     await m_processedBitmapSource.SetBitmapAsync(targetSoftwareBitmap);
