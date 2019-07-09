@@ -37,14 +37,11 @@ Copyright (C) Microsoft Corporation. All rights reserved.
                     <TextBlock Text="Skill Description:" FontWeight="Bold"/>
                     <TextBox Name="UISkillDescription" Text="Skill description" IsReadOnly="True" AcceptsReturn="True"/>
 
-                    <TextBlock Text="Skill input description:" FontWeight="Bold"/>
-                    <TextBox Name="UISkillInputDescription" Text="Skill input var description" IsReadOnly="True" AcceptsReturn="True"/>
+                    <TextBlock Text="Skill input descriptions:" FontWeight="Bold"/>
+                    <TextBox Name="UISkillInputDescription" IsReadOnly="True" AcceptsReturn="True"/>
 
-                    <TextBlock Text="Skill output1 description:" FontWeight="Bold"/>
-                    <TextBox Name="UISkillOutputDescription1" Text="Skill output var description" IsReadOnly="True" AcceptsReturn="True"/>
-
-                    <TextBlock Text="Skill output2 description:" FontWeight="Bold"/>
-                    <TextBox Name="UISkillOutputDescription2" Text="Skill output var description" IsReadOnly="True" AcceptsReturn="True"/>
+                    <TextBlock Text="Skill output descriptions:" FontWeight="Bold"/>
+                    <TextBox Name="UISkillOutputDescription" IsReadOnly="True" AcceptsReturn="True"/>
 
                     <TextBlock Text="Available execution devices:" FontWeight="Bold"/>
                     <ListBox Name="UISkillExecutionDevices" SelectionChanged="UISkillExecutionDevices_SelectionChanged"/>
