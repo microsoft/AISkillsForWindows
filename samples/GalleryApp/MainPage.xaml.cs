@@ -80,8 +80,7 @@ namespace GalleryApp
         {
             if (m_allCategories == null)
             {
-                // NOTE: Investigate on how to package JSON file for non-visual studio execution
-                // Task #: 22514335
+                //Task 22514335: Investigate on how to package JSON file for non - visual studio execution
                 try
                 {
                     var directoryPath = Directory.GetCurrentDirectory();

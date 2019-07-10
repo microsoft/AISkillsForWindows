@@ -45,6 +45,8 @@
                 <ColumnDefinition />
                 <ColumnDefinition Width="40"/>
             </Grid.ColumnDefinitions>
+            
+            <!--Task 22514227: Load category tabs in MainPage using template & data binding-->
 
             <!--Category bar-->
             <controls:TabView x:Name="Tabs"
