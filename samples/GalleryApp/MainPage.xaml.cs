@@ -81,7 +81,7 @@ namespace GalleryApp
             if (m_allCategories == null)
             {
                 // NOTE: Investigate on how to package JSON file for non-visual studio execution
-                // Task #: 
+                // Task #: 22514335
                 try
                 {
                     var directoryPath = Directory.GetCurrentDirectory();
