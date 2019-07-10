@@ -1,66 +1,79 @@
 ﻿// Copyright (C) Microsoft Corporation. All rights reserved.
 
 using Microsoft.AI.Skills.SkillInterfacePreview;
-using Microsoft.AI.Skills.Vision.SkeletalDetectorPreview;
-using Microsoft.Toolkit.Uwp.UI.Controls;
+using Microsoft.AI.Skills.Vision.ObjectDetectorPreview;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Graphics.Imaging;
 using Windows.Media;
-using Windows.Storage;
-using Windows.Storage.Pickers;
+using Windows.Graphics.Imaging;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
-using FrameSourceHelper_UWP;
 using Windows.Devices.Enumeration;
-using SkeletalDetectorSample;
+using Microsoft.Toolkit.Uwp.UI.Controls;
+using FrameSourceHelper_UWP;
+using ObjectDetectorSkillSample;
 
 namespace GalleryApp
 {
     /// <summary>
-    /// Skeletal Detector Skill Page
+    /// Object Detector Skill Page
     /// </summary>
-    public sealed partial class SkeletalDetectorPage : Page
-    
-        {
+    public sealed partial class ObjectDetectorPage : Page, ISkillViewPage
+    {
         private IFrameSource m_frameSource = null;
 
-        // Skill-related variables
-        private SkeletalDetectorSkill m_skill;
-        private SkeletalDetectorBinding m_binding;
-        private SkeletalDetectorDescriptor m_descriptor;
+        // Vision Skills
+        private ObjectDetectorDescriptor m_descriptor = null;
+        private ObjectDetectorBinding m_binding = null;
+        private ObjectDetectorSkill m_skill = null;
+        private IReadOnlyList<ISkillExecutionDevice> m_availableExecutionDevices = null;
         private ISkillFeatureImageDescriptor m_inputImageFeatureDescriptor = null;
 
-        // UI Related
-        private BodyRenderer m_bodyRenderer;
-        private IReadOnlyList<ISkillExecutionDevice> m_availableExecutionDevices;
+        // Misc
+        private BoundingBoxRenderer m_bboxRenderer = null;
+        private HashSet<ObjectKind> m_objectKinds = null;
 
         // Frames
-        private VideoFrame m_renderTargetFrame = null;
         private SoftwareBitmapSource m_processedBitmapSource;
-
-        // Synchronization
-        private SemaphoreSlim m_lock = new SemaphoreSlim(1);
+        private VideoFrame m_renderTargetFrame = null;
 
         // Performance metrics
-        private Stopwatch m_evalPerfStopwatch = new Stopwatch();
+        private Stopwatch m_evalStopwatch = new Stopwatch();
         private float m_bindTime = 0;
         private float m_evalTime = 0;
+        private Stopwatch m_renderStopwatch = new Stopwatch();
 
+        // Locks
+        private SemaphoreSlim m_lock = new SemaphoreSlim(1);
 
-        /// <summary>
-        /// SkeletalDetectorPage constructor
-        /// </summary
-        public SkeletalDetectorPage()
+        public ObjectDetectorPage()
         {
             this.InitializeComponent();
+        }
+
+        /// <summary>
+        /// Create a skill descriptor object to display skill information on UI thumbnail
+        /// </summary>
+        /// <returns></returns>
+        ISkillDescriptor ISkillViewPage.GetSkillDescriptor()
+        {
+            return new ObjectDetectorDescriptor();
+        }
+
+        /// <summary>
+        /// Backward navigation to MainPage
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Back_Click(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(MainPage));
         }
 
         /// <summary>
@@ -75,16 +88,15 @@ namespace GalleryApp
             await UpdateMediaSourceButtonsAsync(false);
 
             // Initialize helper class used to render the skill results on screen
-            m_bodyRenderer = new BodyRenderer(UICanvasOverlay);
+            m_bboxRenderer = new BoundingBoxRenderer(UIOverlayCanvas);
 
-            // Initialize skill-related instances and populate UI options
             m_lock.Wait();
             {
                 NotifyUser("Initializing skill...");
-                m_descriptor = new SkeletalDetectorDescriptor();
+                m_descriptor = new ObjectDetectorDescriptor();
                 m_availableExecutionDevices = await m_descriptor.GetSupportedExecutionDevicesAsync();
 
-                await InitializeSkeletalDetectorAsync();
+                await InitializeObjectDetectorAsync();
                 await UpdateSkillUIAsync();
             }
             m_lock.Release();
@@ -92,48 +104,6 @@ namespace GalleryApp
             // Ready to begin, enable buttons
             NotifyUser("Skill initialized. Select a media source from the top to begin.");
             await UpdateMediaSourceButtonsAsync(true);
-        }
-
-        /// <summary>
-        /// Initialize the SkeletalDetector skill and binding instances
-        /// </summary>
-        /// <param name="device"></param>
-        /// <returns></returns>
-        private async Task InitializeSkeletalDetectorAsync(ISkillExecutionDevice device = null)
-        {
-            if (device != null)
-            {
-                m_skill = await m_descriptor.CreateSkillAsync(device) as SkeletalDetectorSkill;
-            }
-            else
-            {
-                m_skill = await m_descriptor.CreateSkillAsync() as SkeletalDetectorSkill;
-            }
-            m_binding = await m_skill.CreateSkillBindingAsync() as SkeletalDetectorBinding;
-
-            m_inputImageFeatureDescriptor = m_binding["InputImage"].Descriptor as SkillFeatureImageDescriptor;
-        }
-
-        /// <summary>
-        /// Run the skill against the frame passed as parameter
-        /// </summary>
-        /// <param name="frame"></param>
-        /// <returns></returns>
-        private async Task RunSkillAsync(VideoFrame frame)
-        {
-            m_evalPerfStopwatch.Restart();
-
-            // Update bound input image
-            await m_binding.SetInputImageAsync(frame);
-
-            m_bindTime = (float)m_evalPerfStopwatch.ElapsedTicks / Stopwatch.Frequency * 1000f;
-            m_evalPerfStopwatch.Restart();
-
-            // Run the skill against the binding
-            await m_skill.EvaluateAsync(m_binding);
-
-            m_evalTime = (float)m_evalPerfStopwatch.ElapsedTicks / Stopwatch.Frequency * 1000f;
-            m_evalPerfStopwatch.Stop();
         }
 
         /// <summary>
@@ -189,6 +159,10 @@ namespace GalleryApp
                         }
                     }
                 }
+
+                // Populate ObjectKind filters list with all possible classes supported by the detector
+                // Exclude Undefined label (not used by the detector) from selector list
+                UIObjectKindFilters.ItemsSource = Enum.GetValues(typeof(ObjectKind)).Cast<ObjectKind>().Where(kind => kind != ObjectKind.Undefined);
             }
             else
             {
@@ -197,92 +171,52 @@ namespace GalleryApp
         }
 
         /// <summary>
-        /// Configure an IFrameSource from a StorageFile or MediaCapture instance to produce optionally a specified format of frame
+        /// Initialize the ObjectDetector skill
         /// </summary>
-        /// <param name="source"></param>
+        /// <param name="device"></param>
         /// <returns></returns>
-        private async Task ConfigureFrameSourceAsync(object source, ISkillFeatureImageDescriptor inputImageDescriptor = null)
+        private async Task InitializeObjectDetectorAsync(ISkillExecutionDevice device = null)
         {
-            await m_lock.WaitAsync();
+            if (device != null)
             {
-                // Reset bitmap rendering component
-                UIImageViewer.Source = null;
-                m_renderTargetFrame = null;
-                m_processedBitmapSource = new SoftwareBitmapSource();
-                UIImageViewer.Source = m_processedBitmapSource;
-                m_bodyRenderer.IsVisible = false;
-
-                // Clean up previous frame source
-                if (m_frameSource != null)
-                {
-                    m_frameSource.FrameArrived -= FrameSource_FrameAvailable;
-                    var disposableFrameSource = m_frameSource as IDisposable;
-                    if (disposableFrameSource != null)
-                    {
-                        // Lock disposal based on frame source consumers
-                        disposableFrameSource.Dispose();
-                    }
-                }
-
-                // Create new frame source and register a callback if the source fails along the way
-                m_frameSource = await FrameSourceFactory.CreateFrameSourceAsync(
-                    source,
-                    (sender, message) =>
-                    {
-                        NotifyUser(message);
-                    },
-                    inputImageDescriptor);
+                m_skill = await m_descriptor.CreateSkillAsync(device) as ObjectDetectorSkill;
             }
-            m_lock.Release();
-
-            // If we obtained a valid frame source, start it
-            if (m_frameSource != null)
+            else
             {
-                m_frameSource.FrameArrived += FrameSource_FrameAvailable;
-                await m_frameSource.StartAsync();
+                m_skill = await m_descriptor.CreateSkillAsync() as ObjectDetectorSkill;
             }
+            m_binding = await m_skill.CreateSkillBindingAsync() as ObjectDetectorBinding;
+
+            m_inputImageFeatureDescriptor = m_binding["InputImage"].Descriptor as SkillFeatureImageDescriptor;
         }
 
         /// <summary>
-        /// FrameAvailable event handler
+        /// Bind and evaluate the frame with the ObjectDetector skill
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="frame"></param>
-        private void FrameSource_FrameAvailable(object sender, VideoFrame frame)
+        /// <returns></returns>
+        private async Task DetectObjectsAsync(VideoFrame frame)
         {
-            // Locking behavior, so only one skill execution happens at a time
-            if (m_lock.Wait(0))
-            {
-#pragma warning disable CS4014
-                // Purposely don't await this: want handler to exit ASAP
-                // so that realtime capture doesn't wait for completion.
-                // Instead, we unlock only when processing finishes ensuring that
-                // only one execution is active at a time, dropping frames or
-                // aborting skill runs as necessary
-                Task.Run(async () =>
-                {
-                    try
-                    {
-                        await RunSkillAsync(frame);
-                        await DisplayFrameAndResultAsync(frame);
-                    }
-                    catch (Exception ex)
-                    {
-                        NotifyUser(ex.Message);
-                    }
-                    finally
-                    {
-                        m_lock.Release();
-                    }
-                });
-#pragma warning restore CS4014
-            }
+            m_evalStopwatch.Restart();
+
+            // Bind
+            await m_binding.SetInputImageAsync(frame);
+
+            m_bindTime = (float)m_evalStopwatch.ElapsedTicks / Stopwatch.Frequency * 1000f;
+            m_evalStopwatch.Restart();
+
+            // Evaluate
+            await m_skill.EvaluateAsync(m_binding);
+
+            m_evalTime = (float)m_evalStopwatch.ElapsedTicks / Stopwatch.Frequency * 1000f;
+            m_evalStopwatch.Stop();
         }
 
         /// <summary>
-        /// Display a frame and the evaluation results on the UI
+        /// Render ObjectDetector skill results
         /// </summary>
         /// <param name="frame"></param>
+        /// <param name="objectDetections"></param>
         /// <returns></returns>
         private async Task DisplayFrameAndResultAsync(VideoFrame frame)
         {
@@ -290,10 +224,6 @@ namespace GalleryApp
             {
                 try
                 {
-                    // Enable results to be displayed
-                    m_bodyRenderer.IsVisible = true;
-
-                    // Display the input frame
                     SoftwareBitmap targetSoftwareBitmap = frame.SoftwareBitmap;
 
                     // If we receive a Direct3DSurface-backed VideoFrame, convert to a SoftwareBitmap in a format that can be rendered via the UI element
@@ -325,14 +255,18 @@ namespace GalleryApp
                     }
                     await m_processedBitmapSource.SetBitmapAsync(targetSoftwareBitmap);
 
-                    // If our canvas overlay is properly resized, update displayed results
-                    if (UICanvasOverlay.ActualWidth != 0)
+                    // Retrieve and filter results if requested
+                    IReadOnlyList<ObjectDetectorResult> objectDetections = m_binding.DetectedObjects;
+                    if (m_objectKinds?.Count > 0)
                     {
-                        m_bodyRenderer.Update(m_binding.Bodies, m_frameSource.FrameSourceType != FrameSourceType.Camera);
+                        objectDetections = objectDetections.Where(det => m_objectKinds.Contains(det.Kind)).ToList();
                     }
 
-                    // Output result and perf text
-                    UISkillOutputDetails.Text = $"Found {m_binding.Bodies.Count} bodies (bind: {m_bindTime.ToString("F2")}ms, eval: {m_evalTime.ToString("F2")}ms";
+                    // Update displayed results
+                    m_bboxRenderer.Render(objectDetections);
+
+                    // Update the displayed performance text
+                    UIPerfTextBlock.Text = $"bind: {m_bindTime.ToString("F2")}ms, eval: {m_evalTime.ToString("F2")}ms";
                 }
                 catch (TaskCanceledException)
                 {
@@ -347,49 +281,52 @@ namespace GalleryApp
         }
 
         /// <summary>
-        /// Triggered when UIButtonFilePick is clicked, grabs a frame from an image file.
+        /// Configure an IFrameSource from a StorageFile or MediaCapture instance to produce optionally a specified format of frame
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private async void UIButtonFilePicker_Click(object sender, RoutedEventArgs e)
-        {
-            var picker = new FileOpenPicker();
-            picker.ViewMode = PickerViewMode.Thumbnail;
-            picker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
-            // Add common video file extensions
-            picker.FileTypeFilter.Add(".mp4");
-            picker.FileTypeFilter.Add(".avi");
-            // Add common image file extensions
-            picker.FileTypeFilter.Add(".jpg");
-            picker.FileTypeFilter.Add(".png");
-            picker.FileTypeFilter.Add(".bmp");
-
-            StorageFile file = await picker.PickSingleFileAsync();
-            if (file != null)
-            {
-                await ConfigureFrameSourceAsync(file);
-                NotifyUser("Loading file: " + file.Path);
-            }
-
-            // Re-enable the top menu once done handling the click
-            await UpdateMediaSourceButtonsAsync(true);
-        }
-
-        /// <summary>
-        /// Update media source buttons (top row)
-        /// </summary>
-        /// <param name="enableButtons"></param>
+        /// <param name="source"></param>
+        /// <param name="inputImageDescriptor"></param>
         /// <returns></returns>
-        private async Task UpdateMediaSourceButtonsAsync(bool enableButtons)
+        private async Task ConfigureFrameSourceAsync(object source, ISkillFeatureImageDescriptor inputImageDescriptor = null)
         {
-            if (Dispatcher.HasThreadAccess)
+            await m_lock.WaitAsync();
             {
-                UIButtonCamera.IsEnabled = enableButtons;
-                UIButtonFilePicker.IsEnabled = enableButtons;
+                // Reset bitmap rendering component
+                UIProcessedPreview.Source = null;
+                m_renderTargetFrame = null;
+                m_processedBitmapSource = new SoftwareBitmapSource();
+                UIProcessedPreview.Source = m_processedBitmapSource;
+
+                // Clean up previous frame source
+                if (m_frameSource != null)
+                {
+                    m_frameSource.FrameArrived -= FrameSource_FrameAvailable;
+                    var disposableFrameSource = m_frameSource as IDisposable;
+                    if (disposableFrameSource != null)
+                    {
+                        // Lock disposal based on frame source consumers
+                        disposableFrameSource.Dispose();
+                    }
+                }
+
+                // Create new frame source and register a callback if the source fails along the way
+                m_frameSource = await FrameSourceFactory.CreateFrameSourceAsync(
+                    source,
+                    (sender, message) =>
+                    {
+                        NotifyUser(message);
+                    },
+                    inputImageDescriptor);
+
+                // TODO: Workaround for a bug in ObjectDetectorBinding when binding consecutively VideoFrames with Direct3DSurface and SoftwareBitmap
+                m_binding = await m_skill.CreateSkillBindingAsync() as ObjectDetectorBinding;
             }
-            else
+            m_lock.Release();
+
+            // If we obtained a valid frame source, start it
+            if (m_frameSource != null)
             {
-                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () => await UpdateMediaSourceButtonsAsync(enableButtons));
+                m_frameSource.FrameArrived += FrameSource_FrameAvailable;
+                await m_frameSource.StartAsync();
             }
         }
 
@@ -410,25 +347,109 @@ namespace GalleryApp
         }
 
         /// <summary>
-        /// Triggered when UIButtonCamera is clicked, initializes frame grabbing from the camera stream
+        /// Update media source buttons (top row)
+        /// </summary>
+        /// <param name="enableButtons"></param>
+        /// <returns></returns>
+        private async Task UpdateMediaSourceButtonsAsync(bool enableButtons)
+        {
+            if (Dispatcher.HasThreadAccess)
+            {
+                UICameraButton.IsEnabled = enableButtons;
+                UIFilePickerButton.IsEnabled = enableButtons;
+            }
+            else
+            {
+                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () => await UpdateMediaSourceButtonsAsync(enableButtons));
+            }
+        }
+
+        /// <summary>
+        /// FrameAvailable event handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="frame"></param>
+        private void FrameSource_FrameAvailable(object sender, VideoFrame frame)
+        {
+            // Locking behavior, so only one skill execution happens at a time
+            if (m_lock.Wait(0))
+            {
+#pragma warning disable CS4014
+                // Purposely don't await this: want handler to exit ASAP
+                // so that realtime capture doesn't wait for completion.
+                // Instead, we unlock only when processing finishes ensuring that
+                // only one execution is active at a time, dropping frames or
+                // aborting skill runs as necessary
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        await DetectObjectsAsync(frame);
+                        await DisplayFrameAndResultAsync(frame);
+                    }
+                    catch (Exception ex)
+                    {
+                        NotifyUser(ex.Message);
+                    }
+                    finally
+                    {
+                        m_lock.Release();
+                    }
+                });
+#pragma warning restore CS4014
+            }
+        }
+
+        /// <summary>
+        /// Click handler for video file button. Spawns file picker UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void UIButtonCamera_Click(object sender, RoutedEventArgs e)
+        private async void UIFilePickerButton_Click(object sender, RoutedEventArgs e)
         {
             // Disable the top menu while handling the click
             await UpdateMediaSourceButtonsAsync(false);
 
-            // Create a device picker
+            var picker = new Windows.Storage.Pickers.FileOpenPicker();
+            picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
+            picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.PicturesLibrary;
+            // Add common video file extensions
+            picker.FileTypeFilter.Add(".mp4");
+            picker.FileTypeFilter.Add(".avi");
+            // Add common image file extensions
+            picker.FileTypeFilter.Add(".jpg");
+            picker.FileTypeFilter.Add(".png");
+            picker.FileTypeFilter.Add(".bmp");
+
+            Windows.Storage.StorageFile file = await picker.PickSingleFileAsync();
+            if (file != null)
+            {
+                await ConfigureFrameSourceAsync(file);
+                NotifyUser("Loading file: " + file.Path);
+            }
+
+            // Re-enable the top menu once done handling the click
+            await UpdateMediaSourceButtonsAsync(true);
+        }
+
+        /// <summary>
+        /// Click handler for camera button. Spawns device picker UI
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void UICameraButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Disable the top menu while handling the click
+            await UpdateMediaSourceButtonsAsync(false);
+
             var devicePicker = new DevicePicker();
             devicePicker.Filter.SupportedDeviceClasses.Add(DeviceClass.VideoCapture);
 
             // Calculate the position to show the picker (right below the buttons)
-            GeneralTransform ge = UIButtonCamera.TransformToVisual(null);
-            Point point = ge.TransformPoint(new Point());
-            Rect rect = new Rect(point, new Point(point.X + UIButtonCamera.ActualWidth, point.Y + UIButtonCamera.ActualHeight));
+            GeneralTransform ge = UICameraButton.TransformToVisual(null);
+            Windows.Foundation.Point point = ge.TransformPoint(new Windows.Foundation.Point());
+            Windows.Foundation.Rect rect = new Windows.Foundation.Rect(point, new Windows.Foundation.Point(point.X + UICameraButton.ActualWidth, point.Y + UICameraButton.ActualHeight));
 
-            // Show the picker and obtain user selection
             DeviceInformation di = await devicePicker.PickSingleDeviceAsync(rect);
             if (di != null)
             {
@@ -448,7 +469,7 @@ namespace GalleryApp
         }
 
         /// <summary>
-        /// Triggered when the execution device selected changes. We simply retrigger the image source toggle to reinitialize the skill accordingly. 
+        /// Triggers when a skill execution device is selected from the UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -457,7 +478,7 @@ namespace GalleryApp
             var selectedDevice = m_availableExecutionDevices[UISkillExecutionDevices.SelectedIndex];
             await m_lock.WaitAsync();
             {
-                await InitializeSkeletalDetectorAsync(selectedDevice);
+                await InitializeObjectDetectorAsync(selectedDevice);
             }
             m_lock.Release();
             if (m_frameSource != null)
@@ -467,19 +488,33 @@ namespace GalleryApp
         }
 
         /// <summary>
+        /// Triggered when object kind filter is modified (select or unselect a filter)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void UIObjectKindFilters_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            await m_lock.WaitAsync();
+            {
+                m_objectKinds = UIObjectKindFilters.SelectedItems.Cast<ObjectKind>().ToHashSet();
+            }
+            m_lock.Release();
+        }
+
+        /// <summary>
         /// Triggered when the image control is resized, making sure the canvas size stays in sync with the frame display control.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void UIImageViewer_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void UIProcessedPreview_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             // Make sure the aspect ratio is honored when rendering the body limbs
             float cameraAspectRatio = (float)m_frameSource.FrameWidth / m_frameSource.FrameHeight;
-            float previewAspectRatio = (float)(UIImageViewer.ActualWidth / UIImageViewer.ActualHeight);
-            UICanvasOverlay.Width = cameraAspectRatio >= previewAspectRatio ? UIImageViewer.ActualWidth : UIImageViewer.ActualHeight * cameraAspectRatio;
-            UICanvasOverlay.Height = cameraAspectRatio >= previewAspectRatio ? UIImageViewer.ActualWidth / cameraAspectRatio : UIImageViewer.ActualHeight;
+            float previewAspectRatio = (float)(UIProcessedPreview.ActualWidth / UIProcessedPreview.ActualHeight);
+            UIOverlayCanvas.Width = cameraAspectRatio >= previewAspectRatio ? UIProcessedPreview.ActualWidth : UIProcessedPreview.ActualHeight * cameraAspectRatio;
+            UIOverlayCanvas.Height = cameraAspectRatio >= previewAspectRatio ? UIProcessedPreview.ActualWidth / cameraAspectRatio : UIProcessedPreview.ActualHeight;
 
-            m_bodyRenderer.Update(m_binding.Bodies, m_frameSource.FrameSourceType != FrameSourceType.Camera);
+            m_bboxRenderer.ResizeContent(e);
         }
 
         /// <summary>
@@ -501,4 +536,3 @@ namespace GalleryApp
         }
     }
 }
-
