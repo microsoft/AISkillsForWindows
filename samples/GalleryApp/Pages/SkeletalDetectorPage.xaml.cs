@@ -25,7 +25,7 @@ namespace GalleryApp
     /// <summary>
     /// Skeletal Detector Skill Page
     /// </summary>
-    public sealed partial class SkeletalDetectorPage : Page
+    public sealed partial class SkeletalDetectorPage : Page, ISkillViewPage
     {
         private IFrameSource m_frameSource = null;
 
@@ -53,6 +53,15 @@ namespace GalleryApp
         public SkeletalDetectorPage()
         {
             this.InitializeComponent();
+        }
+
+        /// <summary>
+        /// Create a skill descriptor object to display skill information on UI thumbnail
+        /// </summary>
+        /// <returns></returns>
+        ISkillDescriptor ISkillViewPage.GetSkillDescriptor()
+        {
+            return new SkeletalDetectorDescriptor();
         }
 
         /// <summary>

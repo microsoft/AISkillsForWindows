@@ -22,7 +22,7 @@ namespace GalleryApp
     /// <summary>
     /// Object Detector Skill Page
     /// </summary>
-    public sealed partial class ObjectDetectorPage : Page
+    public sealed partial class ObjectDetectorPage : Page, ISkillViewPage
     {
         private IFrameSource m_frameSource = null;
 
@@ -51,6 +51,15 @@ namespace GalleryApp
         public ObjectDetectorPage()
         {
             this.InitializeComponent();
+        }
+
+        /// <summary>
+        /// Create a skill descriptor object to display skill information on UI thumbnail
+        /// </summary>
+        /// <returns></returns>
+        ISkillDescriptor ISkillViewPage.GetSkillDescriptor()
+        {
+            return new ObjectDetectorDescriptor();
         }
 
         /// <summary>
