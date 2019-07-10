@@ -18,6 +18,8 @@ namespace GalleryApp
     {
         public ObservableCollection<SkillView> SkillPages { get; } = new ObservableCollection<SkillView>();
 
+        private static string m_filePath = "\\Pages\\SkillViewGlossary.json";
+
         private static List<SkillCategory> m_allCategories;
         private static SemaphoreSlim m_semaphore = new SemaphoreSlim(1);
 
@@ -78,9 +80,9 @@ namespace GalleryApp
             {
                 // NOTE: Investigate on how to package JSON file for non-visual studio execution
                 // Task #: 
-                var path = Directory.GetCurrentDirectory();
+                var directoryPath = Directory.GetCurrentDirectory();
 
-                using (StreamReader file = File.OpenText(path + "\\Pages\\Skills.json"))
+                using (StreamReader file = File.OpenText(directoryPath + m_filePath))
                 {
                     var jsonString = file.ReadToEnd();
                     m_allCategories = JsonConvert.DeserializeObject<List<SkillCategory>>(jsonString);

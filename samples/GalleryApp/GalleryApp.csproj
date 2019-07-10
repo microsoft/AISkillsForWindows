@@ -217,7 +217,7 @@
   <ItemGroup />
   <ItemGroup>
     <None Include="GalleryAppClassDiagram.cd" />
-    <Content Include="Pages\Skills.json">
+    <Content Include="Pages\SkillViewGlossary.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
