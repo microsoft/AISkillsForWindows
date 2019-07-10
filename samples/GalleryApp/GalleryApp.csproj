@@ -149,9 +149,6 @@
     <Compile Include="Pages\SkeletalDetectorPage.xaml.cs">
       <DependentUpon>SkeletalDetectorPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Thumbnail.xaml.cs">
-      <DependentUpon>Thumbnail.xaml</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -186,10 +183,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Thumbnail.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AI.Skills.SkillInterfacePreview">
@@ -216,7 +209,6 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <None Include="GalleryAppClassDiagram.cd" />
     <Content Include="Pages\SkillViewGlossary.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

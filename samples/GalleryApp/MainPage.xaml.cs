@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using System.Collections.ObjectModel;
@@ -21,7 +22,6 @@ namespace GalleryApp
         private static string m_filePath = "\\Pages\\SkillViewGlossary.json";
 
         private static List<SkillCategory> m_allCategories;
-        private static SemaphoreSlim m_semaphore = new SemaphoreSlim(1);
 
         public MainPage()
         {
@@ -46,12 +46,15 @@ namespace GalleryApp
         /// </summary>
         private async void LoadAllSkills()
         {
-            var SkillsCategory = await GetCategoriesAsync();
-            foreach (var category in SkillsCategory)
+            var SkillsCategory = GetSkillCategories();
+            if (SkillsCategory != null)
             {
-                foreach (var skill in category.SkillViews)
+                foreach (var category in SkillsCategory)
                 {
-                    SkillPages.Add(skill);
+                    foreach (var skill in category.SkillViews)
+                    {
+                        SkillPages.Add(skill);
+                    }
                 }
             }
         }
@@ -73,24 +76,34 @@ namespace GalleryApp
             this.Frame.Navigate(skill.PageType);
         }
 
-        public static async Task<List<SkillCategory>> GetCategoriesAsync()
+        public List<SkillCategory> GetSkillCategories()
         {
-            await m_semaphore.WaitAsync();
             if (m_allCategories == null)
             {
                 // NOTE: Investigate on how to package JSON file for non-visual studio execution
                 // Task #: 
-                var directoryPath = Directory.GetCurrentDirectory();
-
-                using (StreamReader file = File.OpenText(directoryPath + m_filePath))
+                try
                 {
-                    var jsonString = file.ReadToEnd();
-                    m_allCategories = JsonConvert.DeserializeObject<List<SkillCategory>>(jsonString);
+                    var directoryPath = Directory.GetCurrentDirectory();
+
+                    using (StreamReader file = File.OpenText(directoryPath + m_filePath))
+                    {
+                        var jsonString = file.ReadToEnd();
+                        m_allCategories = JsonConvert.DeserializeObject<List<SkillCategory>>(jsonString);
+                    }
+                }
+                catch (Exception exception)
+                {
+                    NotifyUser(exception.Message);
                 }
             }
-
-            m_semaphore.Release();
             return m_allCategories;
+        }
+
+        private void NotifyUser(string message)
+        {
+            ExceptionTextBlock.Visibility = Visibility.Visible;
+            ExceptionTextBlock.Text = message;
         }
     }
 }

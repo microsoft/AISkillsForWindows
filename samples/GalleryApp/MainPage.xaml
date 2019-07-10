@@ -64,12 +64,16 @@
                         ItemContainerStyle="{StaticResource ImageGridView_DefaultItemContainerStyle}"
                         ItemClick="SampleGridView_ItemClick">
                     </GridView>
-
                 </controls:TabViewItem>
+
                 <controls:TabViewItem Header="Audio" Icon="Audio">
                     <TextBlock Padding="16">Coming soon...</TextBlock>
                 </controls:TabViewItem>
             </controls:TabView>
+            <TextBlock x:Name="ExceptionTextBlock" Text="Exception Message" Grid.Column="1" 
+                       VerticalAlignment="Center" HorizontalAlignment="Center"
+                       Style="{StaticResource TitleTextBlockStyle}"
+                       Visibility="Collapsed"/>
         </Grid>
     </Grid>
 </Page>
