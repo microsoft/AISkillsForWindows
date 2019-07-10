@@ -1,21 +1,21 @@
-﻿using System;
+﻿using FrameSourceHelper_UWP;
+using Microsoft.AI.Skills.SkillInterfacePreview;
+using Microsoft.AI.Skills.Vision.ObjectDetectorPreview;
+using Microsoft.Toolkit.Uwp.UI.Controls;
+using ObjectDetectorSkillSample;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Windows.Devices.Enumeration;
+using Windows.Graphics.Imaging;
+using Windows.Media;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
-using Microsoft.AI.Skills.SkillInterfacePreview;
-using Microsoft.AI.Skills.Vision.ObjectDetectorPreview;
-using System.Threading;
-using System.Threading.Tasks;
-using Windows.Media;
-using Windows.Graphics.Imaging;
-using Windows.Devices.Enumeration;
-using Microsoft.Toolkit.Uwp.UI.Controls;
-using FrameSourceHelper_UWP;
-using ObjectDetectorSkillSample;
-using System.Diagnostics;
 
 namespace GalleryApp
 {

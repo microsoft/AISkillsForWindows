@@ -1,14 +1,12 @@
-﻿using System;
+﻿using GalleryApp.Models;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using System.Collections.ObjectModel;
-using GalleryApp.Models;
-using System.Threading;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace GalleryApp
 {
@@ -44,7 +42,7 @@ namespace GalleryApp
         /// <summary>
         /// Load all the skills available
         /// </summary>
-        private async void LoadAllSkills()
+        private void LoadAllSkills()
         {
             var SkillsCategory = GetSkillCategories();
             if (SkillsCategory != null)
