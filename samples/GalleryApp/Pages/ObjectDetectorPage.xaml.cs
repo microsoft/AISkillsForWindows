@@ -1,23 +1,40 @@
+<<<<<<< HEAD
 ﻿// Copyright (C) Microsoft Corporation. All rights reserved.
 
 using Microsoft.AI.Skills.SkillInterfacePreview;
 using Microsoft.AI.Skills.Vision.ObjectDetectorPreview;
+=======
+﻿using FrameSourceHelper_UWP;
+using Microsoft.AI.Skills.SkillInterfacePreview;
+using Microsoft.AI.Skills.Vision.ObjectDetectorPreview;
+using Microsoft.Toolkit.Uwp.UI.Controls;
+using ObjectDetectorSkillSample;
+>>>>>>> user/t-kazhua/galleryapp-template
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+<<<<<<< HEAD
 using Windows.Media;
 using Windows.Graphics.Imaging;
+=======
+using Windows.Devices.Enumeration;
+using Windows.Graphics.Imaging;
+using Windows.Media;
+>>>>>>> user/t-kazhua/galleryapp-template
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
+<<<<<<< HEAD
 using Windows.Devices.Enumeration;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using FrameSourceHelper_UWP;
 using ObjectDetectorSkillSample;
+=======
+>>>>>>> user/t-kazhua/galleryapp-template
 
 namespace GalleryApp
 {
