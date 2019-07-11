@@ -127,6 +127,9 @@
     <Compile Include="..\Common\cs\MediaPlayerFrameSource.cs">
       <Link>FrameSource\MediaPlayerFrameSource.cs</Link>
     </Compile>
+    <Compile Include="..\Common\cs\SkillHelper.cs">
+      <Link>SkillHelper.cs</Link>
+    </Compile>
     <Compile Include="..\ObjectDetector\cs\ObjectDetectorSample_UWP\BoundingBoxRenderer.cs">
       <Link>BoundingBoxRenderer.cs</Link>
     </Compile>
@@ -136,14 +139,17 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\ISkillViewPage.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ObjectDetectorPage.xaml.cs">
+    <Compile Include="Models\SkillView.cs" />
+    <Compile Include="Models\SkillCategory.cs" />
+    <Compile Include="Pages\ObjectDetectorPage.xaml.cs">
       <DependentUpon>ObjectDetectorPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SkeletalDetectorPage.xaml.cs">
+    <Compile Include="Pages\SkeletalDetectorPage.xaml.cs">
       <DependentUpon>SkeletalDetectorPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -172,11 +178,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ObjectDetectorPage.xaml">
+    <Page Include="Pages\ObjectDetectorPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SkeletalDetectorPage.xaml">
+    <Page Include="Pages\SkeletalDetectorPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -206,12 +212,15 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <None Include="GalleryAppClassDiagram.cd" />
+    <Content Include="Pages\SkillViewGlossary.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <ProjectExtensions />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

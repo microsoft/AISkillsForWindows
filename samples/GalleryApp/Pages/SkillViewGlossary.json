@@ -1,0 +1,13 @@
+[
+  {
+    "Name": "Vision",
+    "SkillViews": [
+      {
+        "PageTypeStr": "SkeletalDetectorPage"
+      },
+      {
+        "PageTypeStr": "ObjectDetectorPage"
+      }
+    ]
+  }
+]

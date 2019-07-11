@@ -75,26 +75,27 @@ namespace FaceSentimentAnalysisTestApp
                 // Show skill description members in UI
                 UISkillName.Text = m_skillDescriptor.Name;
 
-                UISkillDescription.Text = $"{m_skillDescriptor.Description}" +
-                $"\n\tauthored by: {m_skillDescriptor.Version.Author}" +
-                $"\n\tpublished by: {m_skillDescriptor.Version.Author}" +
-                $"\n\tversion: {m_skillDescriptor.Version.Major}.{m_skillDescriptor.Version.Minor}" +
-                $"\n\tunique ID: {m_skillDescriptor.Id}";
+                UISkillDescription.Text = SkillHelper.SkillHelperMethods.GetSkillDescriptorString(m_skillDescriptor);
 
-                var inputDesc = m_skillDescriptor.InputFeatureDescriptors[0] as SkillFeatureImageDescriptor;
-                UISkillInputDescription.Text = $"\tName: {inputDesc.Name}" +
-                $"\n\tDescription: {inputDesc.Description}" +
-                $"\n\tType: {inputDesc.FeatureKind}" +
-                $"\n\tWidth: {inputDesc.Width}" +
-                $"\n\tHeight: {inputDesc.Height}" +
-                $"\n\tSupportedBitmapPixelFormat: {inputDesc.SupportedBitmapPixelFormat}" +
-                $"\n\tSupportedBitmapAlphaMode: {inputDesc.SupportedBitmapAlphaMode}";
+                int featureIndex = 0;
+                foreach (var featureDesc in m_skillDescriptor.InputFeatureDescriptors)
+                {
+                    UISkillInputDescription.Text += SkillHelper.SkillHelperMethods.GetSkillFeatureDescriptorString(featureDesc);
+                    if (featureIndex++ < m_skillDescriptor.InputFeatureDescriptors.Count - 1)
+                    {
+                        UISkillInputDescription.Text += "\n----\n";
+                    }
+                }
 
-                var outputDesc1 = m_skillDescriptor.OutputFeatureDescriptors[0] as SkillFeatureTensorDescriptor;
-                UISkillOutputDescription1.Text = $"\tName: {outputDesc1.Name}, Description: {outputDesc1.Description} \n\tType: {outputDesc1.FeatureKind} of {outputDesc1.ElementKind} with shape [{outputDesc1.Shape.Select(i => i.ToString()).Aggregate((a, b) => a + ", " + b)}]";
-
-                var outputDesc2 = m_skillDescriptor.OutputFeatureDescriptors[1] as SkillFeatureTensorDescriptor;
-                UISkillOutputDescription2.Text = $"\tName: {outputDesc2.Name} \n\tDescription: {outputDesc2.Description} \n\tType: {outputDesc2.FeatureKind} of {outputDesc2.ElementKind} with shape [{outputDesc2.Shape.Select(i => i.ToString()).Aggregate((a, b) => a + ", " + b)}]";
+                featureIndex = 0;
+                foreach (var featureDesc in m_skillDescriptor.OutputFeatureDescriptors)
+                {
+                    UISkillOutputDescription.Text += SkillHelper.SkillHelperMethods.GetSkillFeatureDescriptorString(featureDesc);
+                    if (featureIndex++ < m_skillDescriptor.OutputFeatureDescriptors.Count - 1)
+                    {
+                        UISkillOutputDescription.Text += "\n----\n";
+                    }
+                }
 
                 if (m_availableExecutionDevices.Count == 0)
                 {
