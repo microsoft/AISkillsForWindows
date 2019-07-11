@@ -1,4 +1,6 @@
-﻿using FrameSourceHelper_UWP;
+﻿// Copyright (C) Microsoft Corporation. All rights reserved.
+
+using FrameSourceHelper_UWP;
 using Microsoft.AI.Skills.SkillInterfacePreview;
 using Microsoft.AI.Skills.Vision.ObjectDetectorPreview;
 using Microsoft.Toolkit.Uwp.UI.Controls;
@@ -17,6 +19,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
+
 namespace GalleryApp
 {
     /// <summary>
@@ -31,6 +34,7 @@ namespace GalleryApp
         private ObjectDetectorBinding m_binding = null;
         private ObjectDetectorSkill m_skill = null;
         private IReadOnlyList<ISkillExecutionDevice> m_availableExecutionDevices = null;
+        private ISkillFeatureImageDescriptor m_inputImageFeatureDescriptor = null;
 
         // Misc
         private BoundingBoxRenderer m_bboxRenderer = null;
@@ -38,6 +42,7 @@ namespace GalleryApp
 
         // Frames
         private SoftwareBitmapSource m_processedBitmapSource;
+        private VideoFrame m_renderTargetFrame = null;
 
         // Performance metrics
         private Stopwatch m_evalStopwatch = new Stopwatch();
@@ -113,23 +118,27 @@ namespace GalleryApp
                 // Show skill description members in UI
                 UISkillName.Text = m_descriptor.Name;
 
-                UISkillDescription.Text = $"{m_descriptor.Description}" +
-                $"\n\tauthored by: {m_descriptor.Version.Author}" +
-                $"\n\tpublished by: {m_descriptor.Version.Author}" +
-                $"\n\tversion: {m_descriptor.Version.Major}.{m_descriptor.Version.Minor}" +
-                $"\n\tunique ID: {m_descriptor.Id}";
+                UISkillDescription.Text = SkillHelper.SkillHelperMethods.GetSkillDescriptorString(m_descriptor);
 
-                var inputDesc = m_descriptor.InputFeatureDescriptors[0] as SkillFeatureImageDescriptor;
-                UISkillInputDescription.Text = $"\tName: {inputDesc.Name}" +
-                $"\n\tDescription: {inputDesc.Description}" +
-                $"\n\tType: {inputDesc.FeatureKind}" +
-                $"\n\tWidth: {inputDesc.Width}" +
-                $"\n\tHeight: {inputDesc.Height}" +
-                $"\n\tSupportedBitmapPixelFormat: {inputDesc.SupportedBitmapPixelFormat}" +
-                $"\n\tSupportedBitmapAlphaMode: {inputDesc.SupportedBitmapAlphaMode}";
+                int featureIndex = 0;
+                foreach (var featureDesc in m_descriptor.InputFeatureDescriptors)
+                {
+                    UISkillInputDescription.Text += SkillHelper.SkillHelperMethods.GetSkillFeatureDescriptorString(featureDesc);
+                    if (featureIndex++ > 0 && featureIndex < m_descriptor.InputFeatureDescriptors.Count - 1)
+                    {
+                        UISkillInputDescription.Text += "\n----\n";
+                    }
+                }
 
-                var outputDesc = m_descriptor.OutputFeatureDescriptors[0] as ObjectDetectorResultListDescriptor;
-                UISkillOutputDescription1.Text = $"\tName: {outputDesc.Name}, Description: {outputDesc.Description} \n\tType: Custom";
+                featureIndex = 0;
+                foreach (var featureDesc in m_descriptor.OutputFeatureDescriptors)
+                {
+                    UISkillOutputDescription.Text += SkillHelper.SkillHelperMethods.GetSkillFeatureDescriptorString(featureDesc);
+                    if (featureIndex++ > 0 && featureIndex < m_descriptor.OutputFeatureDescriptors.Count - 1)
+                    {
+                        UISkillOutputDescription.Text += "\n----\n";
+                    }
+                }
 
                 if (m_availableExecutionDevices.Count == 0)
                 {
@@ -178,6 +187,8 @@ namespace GalleryApp
                 m_skill = await m_descriptor.CreateSkillAsync() as ObjectDetectorSkill;
             }
             m_binding = await m_skill.CreateSkillBindingAsync() as ObjectDetectorBinding;
+
+            m_inputImageFeatureDescriptor = m_binding["InputImage"].Descriptor as SkillFeatureImageDescriptor;
         }
 
         /// <summary>
@@ -214,15 +225,36 @@ namespace GalleryApp
             {
                 try
                 {
-                    if (frame.SoftwareBitmap != null)
+                    SoftwareBitmap targetSoftwareBitmap = frame.SoftwareBitmap;
+
+                    // If we receive a Direct3DSurface-backed VideoFrame, convert to a SoftwareBitmap in a format that can be rendered via the UI element
+                    if (targetSoftwareBitmap == null)
                     {
-                        await m_processedBitmapSource.SetBitmapAsync(frame.SoftwareBitmap);
+                        if (m_renderTargetFrame == null)
+                        {
+                            m_renderTargetFrame = new VideoFrame(BitmapPixelFormat.Bgra8, frame.Direct3DSurface.Description.Width, frame.Direct3DSurface.Description.Height, BitmapAlphaMode.Ignore);
+                        }
+
+                        // Leverage the VideoFrame.CopyToAsync() method that can convert the input Direct3DSurface-backed VideoFrame to a SoftwareBitmap-backed VideoFrame
+                        await frame.CopyToAsync(m_renderTargetFrame);
+                        targetSoftwareBitmap = m_renderTargetFrame.SoftwareBitmap;
                     }
+                    // Else, if we receive a SoftwareBitmap-backed VideoFrame, if its format cannot already be rendered via the UI element, convert it accordingly
                     else
                     {
-                        var bitmap = await SoftwareBitmap.CreateCopyFromSurfaceAsync(frame.Direct3DSurface, BitmapAlphaMode.Ignore);
-                        await m_processedBitmapSource.SetBitmapAsync(bitmap);
+                        if (targetSoftwareBitmap.BitmapPixelFormat != BitmapPixelFormat.Bgra8 || targetSoftwareBitmap.BitmapAlphaMode != BitmapAlphaMode.Ignore)
+                        {
+                            if (m_renderTargetFrame == null)
+                            {
+                                m_renderTargetFrame = new VideoFrame(BitmapPixelFormat.Bgra8, targetSoftwareBitmap.PixelWidth, targetSoftwareBitmap.PixelHeight, BitmapAlphaMode.Ignore);
+                            }
+
+                            // Leverage the VideoFrame.CopyToAsync() method that can convert the input SoftwareBitmap-backed VideoFrame to a different format
+                            await frame.CopyToAsync(m_renderTargetFrame);
+                            targetSoftwareBitmap = m_renderTargetFrame.SoftwareBitmap;
+                        }
                     }
+                    await m_processedBitmapSource.SetBitmapAsync(targetSoftwareBitmap);
 
                     // Retrieve and filter results if requested
                     IReadOnlyList<ObjectDetectorResult> objectDetections = m_binding.DetectedObjects;
@@ -250,16 +282,18 @@ namespace GalleryApp
         }
 
         /// <summary>
-        /// Configure an IFrameSource from a StorageFile or MediaCapture instance
+        /// Configure an IFrameSource from a StorageFile or MediaCapture instance to produce optionally a specified format of frame
         /// </summary>
         /// <param name="source"></param>
+        /// <param name="inputImageDescriptor"></param>
         /// <returns></returns>
-        private async Task ConfigureFrameSourceAsync(object source)
+        private async Task ConfigureFrameSourceAsync(object source, ISkillFeatureImageDescriptor inputImageDescriptor = null)
         {
             await m_lock.WaitAsync();
             {
                 // Reset bitmap rendering component
                 UIProcessedPreview.Source = null;
+                m_renderTargetFrame = null;
                 m_processedBitmapSource = new SoftwareBitmapSource();
                 UIProcessedPreview.Source = m_processedBitmapSource;
 
@@ -276,10 +310,13 @@ namespace GalleryApp
                 }
 
                 // Create new frame source and register a callback if the source fails along the way
-                m_frameSource = await FrameSourceFactory.CreateFrameSourceAsync(source, (sender, message) =>
-                {
-                    NotifyUser(message);
-                });
+                m_frameSource = await FrameSourceFactory.CreateFrameSourceAsync(
+                    source,
+                    (sender, message) =>
+                    {
+                        NotifyUser(message);
+                    },
+                    inputImageDescriptor);
 
                 // TODO: Workaround for a bug in ObjectDetectorBinding when binding consecutively VideoFrames with Direct3DSurface and SoftwareBitmap
                 m_binding = await m_skill.CreateSkillBindingAsync() as ObjectDetectorBinding;
@@ -386,11 +423,10 @@ namespace GalleryApp
             picker.FileTypeFilter.Add(".bmp");
 
             Windows.Storage.StorageFile file = await picker.PickSingleFileAsync();
-
             if (file != null)
             {
-                NotifyUser("Loading file: " + file.Path);
                 await ConfigureFrameSourceAsync(file);
+                NotifyUser("Loading file: " + file.Path);
             }
 
             // Re-enable the top menu once done handling the click
@@ -421,7 +457,7 @@ namespace GalleryApp
                 try
                 {
                     NotifyUser("Attaching to camera " + di.Name);
-                    await ConfigureFrameSourceAsync(di);
+                    await ConfigureFrameSourceAsync(di, m_inputImageFeatureDescriptor);
                 }
                 catch (Exception ex)
                 {
@@ -453,7 +489,6 @@ namespace GalleryApp
         }
 
         /// <summary>
-        /// Triggered when object kind filter is modified (select or unselect a filter)
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -480,24 +515,6 @@ namespace GalleryApp
             UIOverlayCanvas.Height = cameraAspectRatio >= previewAspectRatio ? UIProcessedPreview.ActualWidth / cameraAspectRatio : UIProcessedPreview.ActualHeight;
 
             m_bboxRenderer.ResizeContent(e);
-        }
-
-        /// <summary>
-        /// Triggered when the expander is expanded and collapsed
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void UIExpander_Expanded(object sender, EventArgs e)
-        {
-            var expander = (sender as Expander);
-            if (expander.IsExpanded)
-            {
-                UIVideoFeed.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                UIVideoFeed.Visibility = Visibility.Visible;
-            }
         }
     }
 }

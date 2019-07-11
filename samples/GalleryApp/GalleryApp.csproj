@@ -127,6 +127,9 @@
     <Compile Include="..\Common\cs\MediaPlayerFrameSource.cs">
       <Link>FrameSource\MediaPlayerFrameSource.cs</Link>
     </Compile>
+    <Compile Include="..\Common\cs\SkillHelper.cs">
+      <Link>SkillHelper.cs</Link>
+    </Compile>
     <Compile Include="..\ObjectDetector\cs\ObjectDetectorSample_UWP\BoundingBoxRenderer.cs">
       <Link>BoundingBoxRenderer.cs</Link>
     </Compile>
