@@ -152,6 +152,7 @@
     <Compile Include="Pages\SkeletalDetectorPage.xaml.cs">
       <DependentUpon>SkeletalDetectorPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SkillPageBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

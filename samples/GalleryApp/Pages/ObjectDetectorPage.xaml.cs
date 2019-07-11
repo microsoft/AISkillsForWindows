@@ -1,47 +1,30 @@
-<<<<<<< HEAD
-﻿// Copyright (C) Microsoft Corporation. All rights reserved.
+// Copyright (C) Microsoft Corporation. All rights reserved.
 
-using Microsoft.AI.Skills.SkillInterfacePreview;
-using Microsoft.AI.Skills.Vision.ObjectDetectorPreview;
-=======
-﻿using FrameSourceHelper_UWP;
+using FrameSourceHelper_UWP;
 using Microsoft.AI.Skills.SkillInterfacePreview;
 using Microsoft.AI.Skills.Vision.ObjectDetectorPreview;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using ObjectDetectorSkillSample;
->>>>>>> user/t-kazhua/galleryapp-template
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-<<<<<<< HEAD
-using Windows.Media;
-using Windows.Graphics.Imaging;
-=======
 using Windows.Devices.Enumeration;
 using Windows.Graphics.Imaging;
 using Windows.Media;
->>>>>>> user/t-kazhua/galleryapp-template
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
-<<<<<<< HEAD
-using Windows.Devices.Enumeration;
-using Microsoft.Toolkit.Uwp.UI.Controls;
-using FrameSourceHelper_UWP;
-using ObjectDetectorSkillSample;
-=======
->>>>>>> user/t-kazhua/galleryapp-template
 
 namespace GalleryApp
 {
     /// <summary>
     /// Object Detector Skill Page
     /// </summary>
-    public sealed partial class ObjectDetectorPage : Page, ISkillViewPage
+    public sealed partial class ObjectDetectorPage : SkillPageBase, ISkillViewPage
     {
         private IFrameSource m_frameSource = null;
 
@@ -81,16 +64,6 @@ namespace GalleryApp
         ISkillDescriptor ISkillViewPage.GetSkillDescriptor()
         {
             return new ObjectDetectorDescriptor();
-        }
-
-        /// <summary>
-        /// Backward navigation to MainPage
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Back_Click(object sender, RoutedEventArgs e)
-        {
-            this.Frame.Navigate(typeof(MainPage));
         }
 
         /// <summary>
@@ -303,7 +276,7 @@ namespace GalleryApp
         /// <param name="source"></param>
         /// <param name="inputImageDescriptor"></param>
         /// <returns></returns>
-        private async Task ConfigureFrameSourceAsync(object source, ISkillFeatureImageDescriptor inputImageDescriptor = null)
+        protected override async Task ConfigureFrameSourceAsync(object source, ISkillFeatureImageDescriptor inputImageDescriptor = null)
         {
             await m_lock.WaitAsync();
             {
@@ -348,40 +321,6 @@ namespace GalleryApp
         }
 
         /// <summary>
-        /// Print a message to the UI
-        /// </summary>
-        /// <param name="message"></param>
-        private void NotifyUser(String message)
-        {
-            if (Dispatcher.HasThreadAccess)
-            {
-                UIMessageTextBlock.Text = message;
-            }
-            else
-            {
-                Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => UIMessageTextBlock.Text = message).AsTask().Wait();
-            }
-        }
-
-        /// <summary>
-        /// Update media source buttons (top row)
-        /// </summary>
-        /// <param name="enableButtons"></param>
-        /// <returns></returns>
-        private async Task UpdateMediaSourceButtonsAsync(bool enableButtons)
-        {
-            if (Dispatcher.HasThreadAccess)
-            {
-                UICameraButton.IsEnabled = enableButtons;
-                UIFilePickerButton.IsEnabled = enableButtons;
-            }
-            else
-            {
-                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () => await UpdateMediaSourceButtonsAsync(enableButtons));
-            }
-        }
-
-        /// <summary>
         /// FrameAvailable event handler
         /// </summary>
         /// <param name="sender"></param>
@@ -393,7 +332,7 @@ namespace GalleryApp
             {
 #pragma warning disable CS4014
                 // Purposely don't await this: want handler to exit ASAP
-                // so that realtime capture doesn't wait for completion.
+                // so that real time capture doesn't wait for completion.
                 // Instead, we unlock only when processing finishes ensuring that
                 // only one execution is active at a time, dropping frames or
                 // aborting skill runs as necessary
@@ -418,43 +357,11 @@ namespace GalleryApp
         }
 
         /// <summary>
-        /// Click handler for video file button. Spawns file picker UI
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private async void UIFilePickerButton_Click(object sender, RoutedEventArgs e)
-        {
-            // Disable the top menu while handling the click
-            await UpdateMediaSourceButtonsAsync(false);
-
-            var picker = new Windows.Storage.Pickers.FileOpenPicker();
-            picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
-            picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.PicturesLibrary;
-            // Add common video file extensions
-            picker.FileTypeFilter.Add(".mp4");
-            picker.FileTypeFilter.Add(".avi");
-            // Add common image file extensions
-            picker.FileTypeFilter.Add(".jpg");
-            picker.FileTypeFilter.Add(".png");
-            picker.FileTypeFilter.Add(".bmp");
-
-            Windows.Storage.StorageFile file = await picker.PickSingleFileAsync();
-            if (file != null)
-            {
-                await ConfigureFrameSourceAsync(file);
-                NotifyUser("Loading file: " + file.Path);
-            }
-
-            // Re-enable the top menu once done handling the click
-            await UpdateMediaSourceButtonsAsync(true);
-        }
-
-        /// <summary>
         /// Click handler for camera button. Spawns device picker UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void UICameraButton_Click(object sender, RoutedEventArgs e)
+        private async void UIButtonCamera_Click(object sender, RoutedEventArgs e)
         {
             // Disable the top menu while handling the click
             await UpdateMediaSourceButtonsAsync(false);
@@ -463,9 +370,9 @@ namespace GalleryApp
             devicePicker.Filter.SupportedDeviceClasses.Add(DeviceClass.VideoCapture);
 
             // Calculate the position to show the picker (right below the buttons)
-            GeneralTransform ge = UICameraButton.TransformToVisual(null);
+            GeneralTransform ge = UIButtonCamera.TransformToVisual(null);
             Windows.Foundation.Point point = ge.TransformPoint(new Windows.Foundation.Point());
-            Windows.Foundation.Rect rect = new Windows.Foundation.Rect(point, new Windows.Foundation.Point(point.X + UICameraButton.ActualWidth, point.Y + UICameraButton.ActualHeight));
+            Windows.Foundation.Rect rect = new Windows.Foundation.Rect(point, new Windows.Foundation.Point(point.X + UIButtonCamera.ActualWidth, point.Y + UIButtonCamera.ActualHeight));
 
             DeviceInformation di = await devicePicker.PickSingleDeviceAsync(rect);
             if (di != null)

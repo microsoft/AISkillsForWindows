@@ -15,8 +15,6 @@ using Windows.Devices.Enumeration;
 using Windows.Foundation;
 using Windows.Graphics.Imaging;
 using Windows.Media;
-using Windows.Storage;
-using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -28,7 +26,7 @@ namespace GalleryApp
     /// Skeletal Detector Skill Page
     /// </summary>
 
-    public sealed partial class SkeletalDetectorPage : Page, ISkillViewPage
+    public sealed partial class SkeletalDetectorPage : SkillPageBase, ISkillViewPage
     {
         private IFrameSource m_frameSource = null;
 
@@ -64,23 +62,12 @@ namespace GalleryApp
         }
 
         /// <summary>
-
         /// Create a skill descriptor object to display skill information on UI thumbnail
         /// </summary>
         /// <returns></returns>
         ISkillDescriptor ISkillViewPage.GetSkillDescriptor()
         {
             return new SkeletalDetectorDescriptor();
-        }
-
-        /// <summary>
-        /// Backward navigation to MainPage
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Back_Click(object sender, RoutedEventArgs e)
-        {
-            this.Frame.Navigate(typeof(MainPage));
         }
 
         /// <summary>
@@ -221,7 +208,7 @@ namespace GalleryApp
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        private async Task ConfigureFrameSourceAsync(object source, ISkillFeatureImageDescriptor inputImageDescriptor = null)
+        protected override async Task ConfigureFrameSourceAsync(object source, ISkillFeatureImageDescriptor inputImageDescriptor = null)
         {
             await m_lock.WaitAsync();
             {
@@ -364,69 +351,6 @@ namespace GalleryApp
                     NotifyUser($"Exception while rendering results: {ex.Message}");
                 }
             });
-        }
-
-        /// <summary>
-        /// Triggered when UIButtonFilePick is clicked, grabs a frame from an image file.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private async void UIButtonFilePicker_Click(object sender, RoutedEventArgs e)
-        {
-            var picker = new FileOpenPicker();
-            picker.ViewMode = PickerViewMode.Thumbnail;
-            picker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
-            // Add common video file extensions
-            picker.FileTypeFilter.Add(".mp4");
-            picker.FileTypeFilter.Add(".avi");
-            // Add common image file extensions
-            picker.FileTypeFilter.Add(".jpg");
-            picker.FileTypeFilter.Add(".png");
-            picker.FileTypeFilter.Add(".bmp");
-
-            StorageFile file = await picker.PickSingleFileAsync();
-            if (file != null)
-            {
-                await ConfigureFrameSourceAsync(file);
-                NotifyUser("Loading file: " + file.Path);
-            }
-
-            // Re-enable the top menu once done handling the click
-            await UpdateMediaSourceButtonsAsync(true);
-        }
-
-        /// <summary>
-        /// Update media source buttons (top row)
-        /// </summary>
-        /// <param name="enableButtons"></param>
-        /// <returns></returns>
-        private async Task UpdateMediaSourceButtonsAsync(bool enableButtons)
-        {
-            if (Dispatcher.HasThreadAccess)
-            {
-                UIButtonCamera.IsEnabled = enableButtons;
-                UIButtonFilePicker.IsEnabled = enableButtons;
-            }
-            else
-            {
-                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () => await UpdateMediaSourceButtonsAsync(enableButtons));
-            }
-        }
-
-        /// <summary>
-        /// Print a message to the UI
-        /// </summary>
-        /// <param name="message"></param>
-        private void NotifyUser(String message)
-        {
-            if (Dispatcher.HasThreadAccess)
-            {
-                UIMessageTextBlock.Text = message;
-            }
-            else
-            {
-                Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => UIMessageTextBlock.Text = message).AsTask().Wait();
-            }
         }
 
         /// <summary>
