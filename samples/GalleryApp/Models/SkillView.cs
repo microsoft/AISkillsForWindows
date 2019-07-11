@@ -3,7 +3,7 @@
 namespace GalleryApp
 {
     /// <summary>
-    /// This class represents the a skill and its related xaml page information
+    /// This class represents a skill and contains skill related information
     /// </summary>
     public class SkillView
     {
@@ -40,9 +40,6 @@ namespace GalleryApp
             Description = descriptor.Description;
         }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
         private SkillView()
         {
             Name = "";
