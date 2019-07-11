@@ -19,6 +19,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
+
 namespace GalleryApp
 {
     /// <summary>
@@ -412,7 +413,6 @@ namespace GalleryApp
         }
 
         /// <summary>
-        /// Triggered when object kind filter is modified (select or unselect a filter)
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -439,24 +439,6 @@ namespace GalleryApp
             UIOverlayCanvas.Height = cameraAspectRatio >= previewAspectRatio ? UIProcessedPreview.ActualWidth / cameraAspectRatio : UIProcessedPreview.ActualHeight;
 
             m_bboxRenderer.ResizeContent(e);
-        }
-
-        /// <summary>
-        /// Triggered when the expander is expanded and collapsed
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void UIExpander_Expanded(object sender, EventArgs e)
-        {
-            var expander = (sender as Expander);
-            if (expander.IsExpanded)
-            {
-                UIVideoFeed.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                UIVideoFeed.Visibility = Visibility.Visible;
-            }
         }
     }
 }

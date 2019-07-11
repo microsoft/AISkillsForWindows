@@ -44,10 +44,10 @@ namespace GalleryApp
         /// </summary>
         private void LoadAllSkills()
         {
-            var SkillsCategory = GetSkillCategories();
-            if (SkillsCategory != null)
+            GetSkillCategories();
+            if (m_allCategories != null)
             {
-                foreach (var category in SkillsCategory)
+                foreach (var category in m_allCategories)
                 {
                     foreach (var skill in category.SkillViews)
                     {
@@ -74,7 +74,10 @@ namespace GalleryApp
             this.Frame.Navigate(skill.PageType);
         }
 
-        public List<SkillCategory> GetSkillCategories()
+        /// <summary>
+        /// Load all skills from the JSON file
+        /// </summary>
+        private void GetSkillCategories()
         {
             if (m_allCategories == null)
             {
@@ -94,9 +97,12 @@ namespace GalleryApp
                     NotifyUser(exception.Message);
                 }
             }
-            return m_allCategories;
         }
 
+        /// <summary>
+        /// Notify user with message
+        /// </summary>
+        /// <param name="message"></param>
         private void NotifyUser(string message)
         {
             ExceptionTextBlock.Visibility = Visibility.Visible;

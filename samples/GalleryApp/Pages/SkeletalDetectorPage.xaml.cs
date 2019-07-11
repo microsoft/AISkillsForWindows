@@ -1,4 +1,4 @@
-// Copyright (C) Microsoft Corporation. All rights reserved.
+﻿// Copyright (C) Microsoft Corporation. All rights reserved.
 
 using FrameSourceHelper_UWP;
 using Microsoft.AI.Skills.SkillInterfacePreview;
@@ -52,10 +52,6 @@ namespace GalleryApp
         private float m_bindTime = 0;
         private float m_evalTime = 0;
 
-
-        /// <summary>
-        /// SkeletalDetectorPage constructor
-        /// </summary
         public SkeletalDetectorPage()
         {
             this.InitializeComponent();
@@ -424,24 +420,6 @@ namespace GalleryApp
             UICanvasOverlay.Height = cameraAspectRatio >= previewAspectRatio ? UIImageViewer.ActualWidth / cameraAspectRatio : UIImageViewer.ActualHeight;
 
             m_bodyRenderer.Update(m_binding.Bodies, m_frameSource.FrameSourceType != FrameSourceType.Camera);
-        }
-
-        /// <summary>
-        /// Triggered when the expander is expanded and collapsed
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void UIExpander_Expanded(object sender, EventArgs e)
-        {
-            var expander = (sender as Expander);
-            if (expander.IsExpanded)
-            {
-                UIVideoFeed.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                UIVideoFeed.Visibility = Visibility.Visible;
-            }
         }
     }
 }
