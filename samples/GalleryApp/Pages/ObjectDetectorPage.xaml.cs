@@ -3,7 +3,6 @@
 using FrameSourceHelper_UWP;
 using Microsoft.AI.Skills.SkillInterfacePreview;
 using Microsoft.AI.Skills.Vision.ObjectDetectorPreview;
-using Microsoft.Toolkit.Uwp.UI.Controls;
 using ObjectDetectorSkillSample;
 using System;
 using System.Collections.Generic;
@@ -11,12 +10,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.Devices.Enumeration;
 using Windows.Graphics.Imaging;
 using Windows.Media;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
 
@@ -34,7 +31,6 @@ namespace GalleryApp
         private ObjectDetectorBinding m_binding = null;
         private ObjectDetectorSkill m_skill = null;
         private IReadOnlyList<ISkillExecutionDevice> m_availableExecutionDevices = null;
-        private ISkillFeatureImageDescriptor m_inputImageFeatureDescriptor = null;
 
         // Misc
         private BoundingBoxRenderer m_bboxRenderer = null;
@@ -355,42 +351,6 @@ namespace GalleryApp
                 });
 #pragma warning restore CS4014
             }
-        }
-
-        /// <summary>
-        /// Click handler for camera button. Spawns device picker UI
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private async void UIButtonCamera_Click(object sender, RoutedEventArgs e)
-        {
-            // Disable the top menu while handling the click
-            await UpdateMediaSourceButtonsAsync(false);
-
-            var devicePicker = new DevicePicker();
-            devicePicker.Filter.SupportedDeviceClasses.Add(DeviceClass.VideoCapture);
-
-            // Calculate the position to show the picker (right below the buttons)
-            GeneralTransform ge = UIButtonCamera.TransformToVisual(null);
-            Windows.Foundation.Point point = ge.TransformPoint(new Windows.Foundation.Point());
-            Windows.Foundation.Rect rect = new Windows.Foundation.Rect(point, new Windows.Foundation.Point(point.X + UIButtonCamera.ActualWidth, point.Y + UIButtonCamera.ActualHeight));
-
-            DeviceInformation di = await devicePicker.PickSingleDeviceAsync(rect);
-            if (di != null)
-            {
-                try
-                {
-                    NotifyUser("Attaching to camera " + di.Name);
-                    await ConfigureFrameSourceAsync(di, m_inputImageFeatureDescriptor);
-                }
-                catch (Exception ex)
-                {
-                    NotifyUser("Error occurred while initializating MediaCapture:\n" + ex.Message);
-                }
-            }
-
-            // Re-enable the top menu once done handling the click
-            await UpdateMediaSourceButtonsAsync(true);
         }
 
         /// <summary>

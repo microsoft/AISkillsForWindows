@@ -3,10 +3,13 @@ using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Windows.Devices.Enumeration;
+using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 
 namespace GalleryApp
 {
@@ -40,6 +43,9 @@ namespace GalleryApp
         }
 
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
+
+        // Skill-related variable
+        protected ISkillFeatureImageDescriptor m_inputImageFeatureDescriptor = null;
 
         // Abstract methods
         /// <summary>
@@ -77,15 +83,11 @@ namespace GalleryApp
         {
             if (Dispatcher.HasThreadAccess)
             {
-                //UIMessageTextBlock.Text = message;
                 UIMessageTextBlockText = message;
-                //GetUIMessageTextBlock().Text = message;
             }
             else
             {
-                //Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => UIMessageTextBlock.Text = message).AsTask().Wait();
                 Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => UIMessageTextBlockText = message).AsTask().Wait();
-                //Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => GetUIMessageTextBlock().Text = message).AsTask().Wait();
             }
         }
 
@@ -94,7 +96,7 @@ namespace GalleryApp
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected async void UIButtonFilePicker_Click(object sender, RoutedEventArgs e)
+        protected async void UIFilePickerButton_Click(object sender, RoutedEventArgs e)
         {
             var picker = new FileOpenPicker();
             picker.ViewMode = PickerViewMode.Thumbnail;
@@ -119,6 +121,47 @@ namespace GalleryApp
         }
 
         /// <summary>
+        /// Triggered when UIButtonCamera is clicked, initializes frame grabbing from the camera stream
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected async void UICameraButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Disable the top menu while handling the click
+            await UpdateMediaSourceButtonsAsync(false);
+
+            // Create a device picker
+            var devicePicker = new DevicePicker();
+            devicePicker.Filter.SupportedDeviceClasses.Add(DeviceClass.VideoCapture);
+
+            // Get UIButtonCamera
+            var UIButtonCamera = sender as AppBarButton;
+
+            // Calculate the position to show the picker (right below the buttons)
+            GeneralTransform ge = UIButtonCamera.TransformToVisual(null);
+            Point point = ge.TransformPoint(new Point());
+            Rect rect = new Rect(point, new Point(point.X + UIButtonCamera.ActualWidth, point.Y + UIButtonCamera.ActualHeight));
+
+            // Show the picker and obtain user selection
+            DeviceInformation di = await devicePicker.PickSingleDeviceAsync(rect);
+            if (di != null)
+            {
+                try
+                {
+                    NotifyUser("Attaching to camera " + di.Name);
+                    await ConfigureFrameSourceAsync(di, m_inputImageFeatureDescriptor);
+                }
+                catch (Exception ex)
+                {
+                    NotifyUser("Error occurred while initializating MediaCapture:\n" + ex.Message);
+                }
+            }
+
+            // Re-enable the top menu once done handling the click
+            await UpdateMediaSourceButtonsAsync(true);
+        }
+
+        /// <summary>
         /// Update media source buttons (top row)
         /// </summary>
         /// <param name="enableButtons"></param>
@@ -127,7 +170,6 @@ namespace GalleryApp
         {
             if (Dispatcher.HasThreadAccess)
             {
-                m_enableButtons = enableButtons;
                 m_enableButtons = enableButtons;
             }
             else
