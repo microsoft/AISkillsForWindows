@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="GalleryApp.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -57,7 +57,7 @@
                 CanDragItems="False"
                 CanReorderItems="False"
                 AllowDrop="False">
-                
+              
                 <!-- Tabs -->
                 <controls:TabViewItem Header="Vision" Icon="Camera">
                     <GridView x:Name="ImageGridView" ItemsSource="{x:Bind SkillPages}"
