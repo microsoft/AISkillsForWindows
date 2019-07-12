@@ -131,10 +131,10 @@
       <Link>SkillHelper.cs</Link>
     </Compile>
     <Compile Include="..\ObjectDetector\cs\ObjectDetectorSample_UWP\BoundingBoxRenderer.cs">
-      <Link>BoundingBoxRenderer.cs</Link>
+      <Link>Pages\BoundingBoxRenderer.cs</Link>
     </Compile>
     <Compile Include="..\SkeletalDetector\cs\SkeletalDetectorSample_UWP\BodyRenderer.cs">
-      <Link>BodyRenderer.cs</Link>
+      <Link>Pages\BodyRenderer.cs</Link>
     </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
@@ -152,6 +152,7 @@
     <Compile Include="Pages\SkeletalDetectorPage.xaml.cs">
       <DependentUpon>SkeletalDetectorPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SkillPageBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -195,7 +196,7 @@
       <Version>0.1.0.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AI.Skills.Vision.SkeletalDetectorPreview">
-      <Version>0.1.0.1</Version>
+      <Version>0.1.0.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.8</Version>
@@ -207,7 +208,7 @@
       <Version>5.1.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
-      <Version>1.1.0</Version>
+      <Version>2.0.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup />

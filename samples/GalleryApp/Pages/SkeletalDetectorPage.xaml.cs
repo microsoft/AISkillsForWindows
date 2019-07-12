@@ -10,15 +10,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.Devices.Enumeration;
-using Windows.Foundation;
 using Windows.Graphics.Imaging;
 using Windows.Media;
-using Windows.Storage;
-using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace GalleryApp
@@ -26,7 +21,8 @@ namespace GalleryApp
     /// <summary>
     /// Skeletal Detector Skill Page
     /// </summary>
-    public sealed partial class SkeletalDetectorPage : Page, ISkillViewPage
+
+    public sealed partial class SkeletalDetectorPage : SkillPageBase, ISkillViewPage
     {
         private IFrameSource m_frameSource = null;
 
@@ -34,7 +30,6 @@ namespace GalleryApp
         private SkeletalDetectorSkill m_skill;
         private SkeletalDetectorBinding m_binding;
         private SkeletalDetectorDescriptor m_descriptor;
-        private ISkillFeatureImageDescriptor m_inputImageFeatureDescriptor = null;
 
         // UI Related
         private BodyRenderer m_bodyRenderer;
@@ -64,16 +59,6 @@ namespace GalleryApp
         ISkillDescriptor ISkillViewPage.GetSkillDescriptor()
         {
             return new SkeletalDetectorDescriptor();
-        }
-
-        /// <summary>
-        /// Backward navigation to MainPage
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Back_Click(object sender, RoutedEventArgs e)
-        {
-            this.Frame.Navigate(typeof(MainPage));
         }
 
         /// <summary>
@@ -214,7 +199,7 @@ namespace GalleryApp
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        private async Task ConfigureFrameSourceAsync(object source, ISkillFeatureImageDescriptor inputImageDescriptor = null)
+        protected override async Task ConfigureFrameSourceAsync(object source, ISkillFeatureImageDescriptor inputImageDescriptor = null)
         {
             await m_lock.WaitAsync();
             {
@@ -360,107 +345,6 @@ namespace GalleryApp
         }
 
         /// <summary>
-        /// Triggered when UIButtonFilePick is clicked, grabs a frame from an image file.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private async void UIButtonFilePicker_Click(object sender, RoutedEventArgs e)
-        {
-            var picker = new FileOpenPicker();
-            picker.ViewMode = PickerViewMode.Thumbnail;
-            picker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
-            // Add common video file extensions
-            picker.FileTypeFilter.Add(".mp4");
-            picker.FileTypeFilter.Add(".avi");
-            // Add common image file extensions
-            picker.FileTypeFilter.Add(".jpg");
-            picker.FileTypeFilter.Add(".png");
-            picker.FileTypeFilter.Add(".bmp");
-
-            StorageFile file = await picker.PickSingleFileAsync();
-            if (file != null)
-            {
-                NotifyUser("Loading file: " + file.Path);
-                await ConfigureFrameSourceAsync(file);
-            }
-
-            // Re-enable the top menu once done handling the click
-            await UpdateMediaSourceButtonsAsync(true);
-        }
-
-        /// <summary>
-        /// Update media source buttons (top row)
-        /// </summary>
-        /// <param name="enableButtons"></param>
-        /// <returns></returns>
-        private async Task UpdateMediaSourceButtonsAsync(bool enableButtons)
-        {
-            if (Dispatcher.HasThreadAccess)
-            {
-                UIButtonCamera.IsEnabled = enableButtons;
-                UIButtonFilePicker.IsEnabled = enableButtons;
-            }
-            else
-            {
-                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () => await UpdateMediaSourceButtonsAsync(enableButtons));
-            }
-        }
-
-        /// <summary>
-        /// Print a message to the UI
-        /// </summary>
-        /// <param name="message"></param>
-        private void NotifyUser(String message)
-        {
-            if (Dispatcher.HasThreadAccess)
-            {
-                UIMessageTextBlock.Text = message;
-            }
-            else
-            {
-                Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => UIMessageTextBlock.Text = message).AsTask().Wait();
-            }
-        }
-
-        /// <summary>
-        /// Triggered when UIButtonCamera is clicked, initializes frame grabbing from the camera stream
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private async void UIButtonCamera_Click(object sender, RoutedEventArgs e)
-        {
-            // Disable the top menu while handling the click
-            await UpdateMediaSourceButtonsAsync(false);
-
-            // Create a device picker
-            var devicePicker = new DevicePicker();
-            devicePicker.Filter.SupportedDeviceClasses.Add(DeviceClass.VideoCapture);
-
-            // Calculate the position to show the picker (right below the buttons)
-            GeneralTransform ge = UIButtonCamera.TransformToVisual(null);
-            Point point = ge.TransformPoint(new Point());
-            Rect rect = new Rect(point, new Point(point.X + UIButtonCamera.ActualWidth, point.Y + UIButtonCamera.ActualHeight));
-
-            // Show the picker and obtain user selection
-            DeviceInformation di = await devicePicker.PickSingleDeviceAsync(rect);
-            if (di != null)
-            {
-                try
-                {
-                    NotifyUser("Attaching to camera " + di.Name);
-                    await ConfigureFrameSourceAsync(di, m_inputImageFeatureDescriptor);
-                }
-                catch (Exception ex)
-                {
-                    NotifyUser("Error occurred while initializating MediaCapture:\n" + ex.Message);
-                }
-            }
-
-            // Re-enable the top menu once done handling the click
-            await UpdateMediaSourceButtonsAsync(true);
-        }
-
-        /// <summary>
         /// Triggered when the execution device selected changes. We simply retrigger the image source toggle to reinitialize the skill accordingly. 
         /// </summary>
         /// <param name="sender"></param>
@@ -496,3 +380,4 @@ namespace GalleryApp
         }
     }
 }
+

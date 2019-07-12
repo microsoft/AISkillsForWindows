@@ -1,4 +1,4 @@
-﻿<Page
+﻿<local:SkillPageBase
     x:Class="GalleryApp.ObjectDetectorPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -42,7 +42,7 @@
                 <HyperlinkButton x:Name="GithubButton" Grid.Row="1" Grid.Column="0"
                                  HorizontalAlignment="Center"
                                  NavigateUri="https://github.com/microsoft/WindowsVisionSkillsPreview/tree/master/samples/ObjectDetector">
-                    <Image Source="../Assets/GitHub-Mark-32px.png" 
+                    <Image Source="../../Assets/GitHub-Mark-32px.png" 
                             Width="32"
                             Height="32"/>
                 </HyperlinkButton>
@@ -55,8 +55,10 @@
                 <Grid Grid.Row="1" Name="UIVideoFeed">
                     <!-- Video frame source controls -->
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Background="#B2000000">
-                        <AppBarButton x:Name="UICameraButton" Icon="AttachCamera" Label="Attach Camera" Click="UICameraButton_Click" Foreground="White" />
-                        <AppBarButton x:Name="UIFilePickerButton" Icon="BrowsePhotos" Label="Open File" ToolTipService.ToolTip="Load an image or video file from disk" Click="UIFilePickerButton_Click" Foreground="White" />
+                        <AppBarButton x:Name="UICameraButton" Icon="AttachCamera" Label="Attach Camera" 
+                                      Click="UICameraButton_Click" Foreground="White" IsEnabled="{x:Bind EnableButtons}"/>
+                        <AppBarButton x:Name="UIFilePickerButton" Icon="BrowsePhotos" Label="Open File" ToolTipService.ToolTip="Load an image or video file from disk" 
+                                      Click="UIFilePickerButton_Click" Foreground="White" IsEnabled="{x:Bind EnableButtons}"/>
                     </StackPanel>
 
                     <!-- Video display -->
@@ -120,4 +122,4 @@
             CursorBehavior="ChangeOnSplitterHover"
             Width="16" />
     </Grid>
-</Page>
+</local:SkillPageBase>
