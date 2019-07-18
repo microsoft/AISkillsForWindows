@@ -88,7 +88,7 @@
                 <Border BorderBrush="#66000000" BorderThickness="2">
                     <StackPanel>
                         <TextBlock Text="Status" TextDecorations="Underline" Style="{StaticResource TitleTextBlockStyle}" HorizontalAlignment="Center"/>
-                        <TextBlock Name="UIMessageTextBlock" Text="Select an image source to start" 
+                        <TextBlock Name="UIMessageTextBlock" Text="{x:Bind UIMessageTextBlockText, Mode=OneWay}"
                                    HorizontalAlignment="Center" TextWrapping="Wrap"/>
                     </StackPanel>
                 </Border>
