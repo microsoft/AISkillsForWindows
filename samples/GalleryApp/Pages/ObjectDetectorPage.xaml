@@ -73,9 +73,9 @@
         <!--Right Panel-->
         <Grid x:Name="RightPanel" Grid.Column="2">
             <Grid.RowDefinitions>
-                <RowDefinition Height="15*"/>
+                <RowDefinition Height="5*"/>
                 <RowDefinition Height="10*"/>
-                <RowDefinition Height="70*"/>
+                <RowDefinition Height="85*"/>
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0" >
@@ -106,7 +106,13 @@
                         <TextBox Name="UISkillOutputDescription" IsReadOnly="True" AcceptsReturn="True"/>
                         <TextBlock Text="Available execution devices:" FontWeight="Bold"/>
                         <ListBox Name="UISkillExecutionDevices" SelectionChanged="UISkillExecutionDevices_SelectionChanged"/>
-                        <ListView Name="UIObjectKindFilters" SelectionMode="Multiple" ScrollViewer.VerticalScrollBarVisibility="Visible" SelectionChanged="UIObjectKindFilters_SelectionChanged" />
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox x:Name="TriStateCheckBox" Content="Select All" IsThreeState="True"
+                                      Checked="SelectAllObjectKinds" Unchecked="UnselectAllObjectKinds"/>
+                            <TextBlock Text="Object Kind Filters:" FontWeight="Bold" Margin="5"/>
+                        </StackPanel>
+                        <ListView Name="UIObjectKindFilters" SelectionMode="Multiple" 
+                                  ScrollViewer.VerticalScrollBarVisibility="Visible" SelectionChanged="UIObjectKindFilters_SelectionChanged" />
                     </StackPanel>
                 </ScrollViewer>
             </Grid>

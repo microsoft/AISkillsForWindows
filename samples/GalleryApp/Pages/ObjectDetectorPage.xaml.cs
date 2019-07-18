@@ -49,6 +49,9 @@ namespace GalleryApp
         // Locks
         private SemaphoreSlim m_lock = new SemaphoreSlim(1);
 
+        // Filter count
+        private int m_allObjectKindFiltersCount = 0;
+
         public ObjectDetectorPage()
         {
             this.InitializeComponent();
@@ -150,6 +153,9 @@ namespace GalleryApp
                 // Populate ObjectKind filters list with all possible classes supported by the detector
                 // Exclude Undefined label (not used by the detector) from selector list
                 UIObjectKindFilters.ItemsSource = Enum.GetValues(typeof(ObjectKind)).Cast<ObjectKind>().Where(kind => kind != ObjectKind.Undefined);
+                m_allObjectKindFiltersCount = UIObjectKindFilters.Items.Count;
+                TriStateCheckBox.IsChecked = true;
+                //UIObjectKindFilters.SelectAll();
             }
             else
             {
@@ -242,12 +248,8 @@ namespace GalleryApp
                     }
                     await m_processedBitmapSource.SetBitmapAsync(targetSoftwareBitmap);
 
-                    // Retrieve and filter results if requested
-                    IReadOnlyList<ObjectDetectorResult> objectDetections = m_binding.DetectedObjects;
-                    if (m_objectKinds?.Count > 0)
-                    {
-                        objectDetections = objectDetections.Where(det => m_objectKinds.Contains(det.Kind)).ToList();
-                    }
+                    // Retrieve and filter results
+                    IReadOnlyList<ObjectDetectorResult> objectDetections = m_binding.DetectedObjects.Where(det => m_objectKinds.Contains(det.Kind)).ToList();
 
                     // Update displayed results
                     m_bboxRenderer.Render(objectDetections);
@@ -366,10 +368,7 @@ namespace GalleryApp
                 await InitializeObjectDetectorAsync(selectedDevice);
             }
             m_lock.Release();
-            if (m_frameSource != null)
-            {
-                await m_frameSource.StartAsync();
-            }
+            FrameSourceStartAsync();
         }
 
         /// <summary>
@@ -383,10 +382,25 @@ namespace GalleryApp
                 m_objectKinds = UIObjectKindFilters.SelectedItems.Cast<ObjectKind>().ToHashSet();
             }
             m_lock.Release();
+
+            // Update tri-state checkbox in UI based on the number of filter selected
+            if (m_objectKinds.Count == m_allObjectKindFiltersCount)
+            {
+                TriStateCheckBox.IsChecked = true;
+            }
+            else if (m_objectKinds.Count > 0)
+            {
+                TriStateCheckBox.IsChecked = null;
+                FrameSourceStartAsync();
+            }
+            else
+            {
+                TriStateCheckBox.IsChecked = false;
+            }
         }
 
         /// <summary>
-        /// Triggered when the image control is resized, making sure the canvas size stays in sync with the frame display control.
+        /// Triggers when the image control is resized, making sure the canvas size stays in sync with the frame display control.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -400,5 +414,40 @@ namespace GalleryApp
 
             m_bboxRenderer.ResizeContent(e);
         }
+
+        /// <summary>
+        /// Triggers when all object kind filters are selected
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SelectAllObjectKinds(object sender, RoutedEventArgs e)
+        {
+            UIObjectKindFilters.SelectAll();
+            FrameSourceStartAsync();
+        }
+
+        /// <summary>
+        /// Triggers when all object kind filters are unselected
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UnselectAllObjectKinds(object sender, RoutedEventArgs e)
+        {
+            m_objectKinds = null;
+            UIObjectKindFilters.SelectedIndex = -1;
+            FrameSourceStartAsync();
+        }
+
+        /// <summary>
+        /// If valid frame source is obtained, run skill
+        /// </summary>
+        private async void FrameSourceStartAsync()
+        {
+            if (m_frameSource != null)
+            {
+                await m_frameSource.StartAsync();
+            }
+        }
+
     }
 }
