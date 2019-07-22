@@ -1,0 +1,175 @@
+﻿<!--
+*@@@+++@@@@******************************************************************
+
+Microsoft Windows Media Foundation
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+*@@@+++@@@@******************************************************************
+-->
+
+<Page
+    x:Class="ConceptTaggerSample.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ConceptTagSampleApp"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    mc:Ignorable="d"
+    Loaded="Page_Loaded"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <!--Setting a data template for displaying skill information-->
+        <Style TargetType="controls:HeaderedContentControl">
+            <Setter Property="HeaderTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <Border Background="Black" >
+                            <TextBlock Text="{Binding}" FontWeight="Bold" FontSize="12" Foreground="White"/>
+                        </Border>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ContentTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <Border Background="White" >
+                            <TextBlock Text="{Binding}" FontSize="12" Foreground="Black"/>
+                        </Border>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Orientation" Value="Vertical"/>
+        </Style>
+        <Style TargetType="controls:Expander" x:Key="UISubExpanderStyle">
+            <Setter Property="HeaderTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" FontSize="12"/>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
+    <ScrollViewer>
+        <StackPanel>
+            <!--Display skill information-->
+            <controls:Expander Name="UIOptionPanel"
+                               VerticalAlignment="Top"
+                               Header="Details and options.."
+                               HorizontalContentAlignment="Stretch"
+                               Foreground="Black"
+                               BorderBrush="Black"
+                               ExpandDirection="Down"
+                               IsExpanded="False">
+                <StackPanel>
+                    <controls:Expander VerticalAlignment="Top"
+                                       Header="Skill Information"
+                                       HorizontalContentAlignment="Stretch"
+                                       Foreground="Black"
+                                       BorderBrush="Black"
+                                       ExpandDirection="Down"
+                                       IsExpanded="False"
+                                       Style="{StaticResource ResourceKey=UISubExpanderStyle}">
+                        <StackPanel Name="UISkillInformation">
+                        </StackPanel>
+                    </controls:Expander>
+                    <controls:Expander VerticalAlignment="Top"
+                                       Header="Skill input feature descriptions"
+                                       HorizontalContentAlignment="Stretch"
+                                       Foreground="Black"
+                                       BorderBrush="Black"
+                                       ExpandDirection="Down"
+                                       IsExpanded="False" 
+                                       Style="{StaticResource ResourceKey=UISubExpanderStyle}">
+                        <StackPanel Name="UISkillInputDescription">
+                        </StackPanel>
+                    </controls:Expander>
+                    <controls:Expander VerticalAlignment="Top"
+                                       Header="Skill output feature descriptions"
+                                       HorizontalContentAlignment="Stretch"
+                                       Foreground="Black"
+                                       BorderBrush="Black"
+                                       ExpandDirection="Down"
+                                       IsExpanded="False" 
+                                       Style="{StaticResource ResourceKey=UISubExpanderStyle}">
+                        <StackPanel Name="UISkillOutputDescription">
+                        </StackPanel>
+                    </controls:Expander>
+                    <controls:Expander VerticalAlignment="Top"
+                                       Header="Available execution device selected"
+                                       HorizontalContentAlignment="Stretch"
+                                       Foreground="Black"
+                                       BorderBrush="Black"
+                                       ExpandDirection="Down"
+                                       IsExpanded="False" 
+                                       Style="{StaticResource ResourceKey=UISubExpanderStyle}">
+                        <ListBox Name="UISkillExecutionDevices" SelectionChanged="UISkillExecutionDevices_SelectionChanged"/>
+                    </controls:Expander>
+
+                </StackPanel>
+            </controls:Expander>
+
+            <!--Alert user if an error occurs-->
+            <Border x:Name="UIStatusBorder">
+                <TextBlock Name="UIStatusBlock"/>
+            </Border>
+
+            <TextBlock Text="Select images" HorizontalAlignment="Center"/>
+
+            <!--Select images to analyze with the skill-->
+            <Button Name="UIButtonFilePick"
+                    ToolTipService.ToolTip="Pick images from storage"
+                    HorizontalAlignment="Center"
+                    Click="UIButtonFilePick_Click" 
+                    FontWeight="Bold" 
+                    IsEnabled="False" Margin="0,10,0,10">
+                <Button.Content>
+                    <SymbolIcon Symbol="Add"/>
+                </Button.Content>
+            </Button>
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Filters" FontSize="24" FontWeight="Bold"/>
+                <Button Name="UIClearFilterButton" ToolTipService.ToolTip="Clear Filter" Click="UIClearFilterButton_Click">
+                    <Button.Content>
+                        <SymbolIcon Symbol="Cancel"/>
+                    </Button.Content>
+                </Button>
+            </StackPanel>
+            <ListView Name="UIHashTagBrowser" SelectionChanged="UIHashTagBrowser_SelectionChanged" Background="Black">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Border CornerRadius="7" Background="DarkViolet" HorizontalAlignment="Center">
+                            <TextBlock Foreground="White" Text="{Binding Name}"/>
+                        </Border>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <controls:WrapPanel
+                                VerticalSpacing="5"
+                                HorizontalSpacing="5" 
+                                VerticalAlignment="Bottom"/>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+            </ListView>
+
+            <ListView Name="UIResultPanel" Margin="0,10,0,10">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+
+                        <controls:WrapPanel
+                            VerticalSpacing="5"
+                            HorizontalSpacing="5" 
+                            VerticalAlignment="Bottom"/>
+
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ListView>
+
+        </StackPanel>
+    </ScrollViewer>
+</Page>
