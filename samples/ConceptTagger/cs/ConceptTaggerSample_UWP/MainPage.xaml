@@ -77,7 +77,7 @@ Copyright (C) Microsoft Corporation. All rights reserved.
                         </StackPanel>
                     </controls:Expander>
                     <controls:Expander VerticalAlignment="Top"
-                                       Header="Skill input feature descriptions"
+                                       Header="Skill inputf feature descriptions"
                                        HorizontalContentAlignment="Stretch"
                                        Foreground="Black"
                                        BorderBrush="Black"
@@ -114,48 +114,73 @@ Copyright (C) Microsoft Corporation. All rights reserved.
 
             <!--Alert user if an error occurs-->
             <Border x:Name="UIStatusBorder">
-                <TextBlock Name="UIStatusBlock"/>
+                <TextBlock Name="UIStatusBlock" Text="Select a set of images to start"/>
             </Border>
 
-            <TextBlock Text="Select images" HorizontalAlignment="Center"/>
-
-            <!--Select images to analyze with the skill-->
-            <Button Name="UIButtonFilePick"
-                    ToolTipService.ToolTip="Pick images from storage"
-                    HorizontalAlignment="Center"
-                    Click="UIButtonFilePick_Click" 
-                    FontWeight="Bold" 
-                    IsEnabled="False" Margin="0,10,0,10">
-                <Button.Content>
-                    <SymbolIcon Symbol="Add"/>
-                </Button.Content>
-            </Button>
-
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Filters" FontSize="24" FontWeight="Bold"/>
-                <Button Name="UIClearFilterButton" ToolTipService.ToolTip="Clear Filter" Click="UIClearFilterButton_Click">
+
+                <!--Select images to analyze with the skill-->
+                <Button Name="UIButtonFilePick"
+                        ToolTipService.ToolTip="Pick images from storage"
+                        HorizontalAlignment="Center"
+                        Click="UIButtonFilePick_Click" 
+                        FontWeight="Bold" 
+                        IsEnabled="False" 
+                        Margin="0,10,0,10"
+                        Width="50"
+                        Height="50">
                     <Button.Content>
-                        <SymbolIcon Symbol="Cancel"/>
+                        <SymbolIcon Symbol="BrowsePhotos"/>
                     </Button.Content>
                 </Button>
+
+                <!--Control to display execution progress-->
+                <StackPanel Name="UIProgressPanel" Orientation="Horizontal" Visibility="Collapsed">
+                    <ProgressRing Name="UIExecutionProgressRing" Width="50" Height="50" />
+                    <StackPanel VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <TextBlock Name="UIProgressTick" VerticalAlignment="Center" />
+                            <AppBarSeparator />
+                            <TextBlock Name="UIProgressMaxValue" VerticalAlignment="Center" />
+                        </StackPanel>
+                        <ProgressBar Name="UIProgressBar" Width="100" Margin="10,0,10,0"
+                                     Value="{Binding Text, ElementName=UIProgressTick, Mode=TwoWay}" 
+                                     Maximum="{Binding Text, ElementName=UIProgressMaxValue, Mode=TwoWay}" />
+                    </StackPanel>
+
+                    <controls:HeaderedContentControl Name="UITotalTime" Header="Total execution time" VerticalAlignment="Center"/>
+                </StackPanel>
             </StackPanel>
-            <ListView Name="UIHashTagBrowser" SelectionChanged="UIHashTagBrowser_SelectionChanged" Background="Black">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <Border CornerRadius="7" Background="DarkViolet" HorizontalAlignment="Center">
-                            <TextBlock Foreground="White" Text="{Binding Name}"/>
-                        </Border>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-                <ListView.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <controls:WrapPanel
-                                VerticalSpacing="5"
-                                HorizontalSpacing="5" 
-                                VerticalAlignment="Bottom"/>
-                    </ItemsPanelTemplate>
-                </ListView.ItemsPanel>
-            </ListView>
+
+            <StackPanel Name="UIFilterPanel" Visibility="Collapsed">
+                <TextBlock Text="Filters" FontSize="24" FontWeight="Bold"/>
+
+                <StackPanel Orientation="Horizontal">
+                    <Button Name="UIClearFilterButton" ToolTipService.ToolTip="Clear Filter" Click="UIClearFilterButton_Click">
+                        <Button.Content>
+                            <SymbolIcon Symbol="Cancel"/>
+                        </Button.Content>
+                    </Button>
+
+                    <ListView Name="UIHashTagBrowser" SelectionChanged="UIHashTagBrowser_SelectionChanged" Background="Black">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Border CornerRadius="7" Background="DarkViolet" HorizontalAlignment="Center">
+                                    <TextBlock Foreground="White" Text="{Binding Name}"/>
+                                </Border>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <controls:WrapPanel
+                                        VerticalSpacing="5"
+                                        HorizontalSpacing="5" 
+                                        VerticalAlignment="Bottom"/>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                    </ListView>
+                </StackPanel>
+            </StackPanel>
 
             <ListView Name="UIResultPanel" Margin="0,10,0,10">
                 <ItemsControl.ItemsPanel>
@@ -170,6 +195,22 @@ Copyright (C) Microsoft Corporation. All rights reserved.
                 </ItemsControl.ItemsPanel>
             </ListView>
 
+            <ContentDialog x:Name="UIParameterDialog"
+                   CloseButtonText="OK"
+                   Title="Select ConceptTagger parameters">
+                <StackPanel>
+                    <TextBlock Text="Retrieve at most the top X concept tags for each image.."/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Slider Width="200" Minimum="1" Maximum="20" StepFrequency="1" Value="{Binding Text, ElementName=UITopX, Mode=TwoWay}" />
+                        <TextBlock Name="UITopX" Text="{x:Bind m_topX, Mode=TwoWay}"/>
+                    </StackPanel>
+                    <TextBlock Text="With a confidence score above.."/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Slider Width="200" Minimum="0" Maximum="1" StepFrequency="0.1" Value="{Binding Text, ElementName=UIThreshold, Mode=TwoWay}" />
+                        <TextBlock Name="UIThreshold" Text="{x:Bind m_threshold, Mode=TwoWay}"/>
+                    </StackPanel>
+                </StackPanel>
+            </ContentDialog>
         </StackPanel>
     </ScrollViewer>
 </Page>

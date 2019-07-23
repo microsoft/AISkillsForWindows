@@ -20,6 +20,9 @@ using Microsoft.AI.Skills.SkillInterfacePreview;
 using System.Diagnostics;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Media;
+using System.Collections.Immutable;
+using System.Collections.Concurrent;
+using ConceptTaggerSample.Helper;
 
 namespace ConceptTaggerSample
 {
@@ -28,13 +31,28 @@ namespace ConceptTaggerSample
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        // Skill specific
         private ConceptTaggerDescriptor m_skillDescriptor = new ConceptTaggerDescriptor();
-        private ConceptTaggerSkill m_skill = null;
-        private ConceptTaggerBinding m_binding = null;
-        private SemaphoreSlim m_lock = new SemaphoreSlim(1);
+        private ConcurrentQueue<ConceptTaggerSkill> m_skillQueue = new ConcurrentQueue<ConceptTaggerSkill>();
+        private ConcurrentQueue<ConceptTaggerBinding> m_bindingQueue = new ConcurrentQueue<ConceptTaggerBinding>();
+
+        // Threading and UI specific
+        public int m_concurrentSkillCount = 1;
+        public int m_concurrentBindingCount = 1;
+        private static int m_imageProcessedCount = 0;
+        private static float m_e2eRunTime = 0.0f;
+        private SemaphoreSlim m_bindingLock = new SemaphoreSlim(1);
+        private SemaphoreSlim m_evaluationLock = new SemaphoreSlim(1);
+        private ImmutableHashSet<ConceptTagScore>.Builder m_hashTags = ImmutableHashSet.CreateBuilder(new TagEqualityComparer());
         private IReadOnlyList<ISkillExecutionDevice> m_availableDevices = null;
         private Stopwatch m_perfWatch = new Stopwatch();
+        private int m_topX = 5;
+        private double m_threshold = 0.7;
 
+        /// <summary>
+        /// Internal functor to evaluate equality between 2 ConceptTagScore instances
+        /// This is required when instantiating a HashSet
+        /// </summary>
         class TagEqualityComparer : IEqualityComparer<ConceptTagScore>
         {
             public bool Equals(ConceptTagScore t1, ConceptTagScore t2)
@@ -54,60 +72,6 @@ namespace ConceptTaggerSample
                 return tag.Name.GetHashCode();
             }
         }
-        private HashSet<ConceptTagScore> m_hashTags = new HashSet<ConceptTagScore>(new TagEqualityComparer());
-
-        /// <summary>
-        /// Helper class to render image and results correctly in the UI
-        /// </summary>
-        private class ResultItem : StackPanel
-        {
-            private SoftwareBitmapSource m_softwareBitmapSource = new SoftwareBitmapSource();
-
-            /// <summary>
-            /// ResultItem class constructor
-            /// </summary>
-            private ResultItem() { }
-
-            /// <summary>
-            /// Expose image and results in UI
-            /// </summary>
-            /// <param name="softwareBitmap"></param>
-            /// <param name="result"></param>
-            /// <param name="additionalMessage"></param>
-            /// <returns></returns>
-            public static async Task<ResultItem> CreateResultItemAsync(SoftwareBitmap softwareBitmap, IEnumerable<ConceptTagScore> result, string additionalMessage = null)
-            {
-                var resultItem = new ResultItem();
-                resultItem.m_result = result;
-                await resultItem.m_softwareBitmapSource.SetBitmapAsync(SoftwareBitmap.Convert(softwareBitmap, BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied));
-                resultItem.Children.Add(new Image() { Source = resultItem.m_softwareBitmapSource, MaxWidth = 200, MaxHeight = 200, Stretch = Stretch.Uniform });
-                var hashtagContainer = new WrapPanel();
-
-                foreach (var tag in result)
-                {
-                    var hashTag = new Border() { BorderThickness = new Thickness(2.0), CornerRadius = new CornerRadius(5.0), Background = new SolidColorBrush(Windows.UI.Colors.DarkViolet) };
-                    hashTag.Child = new TextBlock() { Text = "#" + tag.Name.Split(';')[0], Foreground = new SolidColorBrush(Windows.UI.Colors.White) };
-                    hashtagContainer.Children.Add(hashTag);
-                }
-                resultItem.Children.Add(hashtagContainer);
-                resultItem.Children.Add(new Expander()
-                {
-                    Header = "Scores",
-                    IsExpanded = false,
-                    ExpandDirection = ExpandDirection.Down,
-                    Content = new ListView() { ItemsSource = result.Select(x => new HeaderedContentControl() { Header = x.Name, Content = x.Score }) }
-                });
-
-                if (additionalMessage != null)
-                {
-                    ToolTipService.SetToolTip(resultItem, additionalMessage);
-                }
-
-                return resultItem;
-            }
-
-            internal IEnumerable<ConceptTagScore> m_result = null;
-        }
 
         /// <summary>
         /// MainPage constructor
@@ -124,14 +88,13 @@ namespace ConceptTaggerSample
         /// <param name="e"></param>
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            m_availableDevices = await m_skillDescriptor.GetSupportedExecutionDevicesAsync();
-
-            // Refresh UI with skill description, feature descriptions, available execution devices
-            foreach(var information in SkillHelper.SkillHelperMethods.GetSkillInformationStrings(m_skillDescriptor))
+            // Refresh UI with skill information (name, description, etc.) feature descriptions, available execution devices
+            foreach (var information in SkillHelper.SkillHelperMethods.GetSkillInformationStrings(m_skillDescriptor))
             {
                 UISkillInformation.Children.Add(new HeaderedContentControl() { Header = information.Key, Content = information.Value });
             }
 
+            // Refresh UI with skill input feature descriptions
             foreach (var featureDesc in m_skillDescriptor.InputFeatureDescriptors)
             {
                 foreach (var information in SkillHelper.SkillHelperMethods.GetSkillFeatureDescriptorStrings(featureDesc))
@@ -140,6 +103,7 @@ namespace ConceptTaggerSample
                 }
             }
 
+            // Refresh UI with skill output feature descriptions
             foreach (var featureDesc in m_skillDescriptor.OutputFeatureDescriptors)
             {
                 foreach (var information in SkillHelper.SkillHelperMethods.GetSkillFeatureDescriptorStrings(featureDesc))
@@ -148,20 +112,105 @@ namespace ConceptTaggerSample
                 }
             }
 
+            // Refresh UI with available execution devices on the system supported by the skill
+            m_availableDevices = await m_skillDescriptor.GetSupportedExecutionDevicesAsync();
             if (m_availableDevices.Count == 0)
             {
                 await (new MessageDialog("No execution devices available, this skill cannot run on this device")).ShowAsync();
             }
             else
             {
-                // Display available execution devices
+                // Display available execution devices and select the CPU
                 UISkillExecutionDevices.ItemsSource = m_availableDevices.Select((device) => device.Name);
-                UISkillExecutionDevices.SelectedIndex = 0;
+                SkillExecutionDeviceCPU executionDeviceCPU = null;
+                int selectionIndex = 0;
+                for (int i = 0; i < m_availableDevices.Count; i++)
+                {
+                    if (m_availableDevices[i].ExecutionDeviceKind == SkillExecutionDeviceKind.Cpu)
+                    {
+                        selectionIndex = i;
+                        executionDeviceCPU = m_availableDevices[i] as SkillExecutionDeviceCPU;
+                        break;
+                    }
+                }
+
+                UISkillExecutionDevices.SelectedIndex = selectionIndex;
 
                 // Alow user to interact with the app
                 UIButtonFilePick.IsEnabled = true;
                 UIButtonFilePick.Focus(FocusState.Keyboard);
             }
+        }
+
+        /// <summary>
+        /// Evaluate the specified ConceptTaggerBinding and update the specified ResultItem with the outcome
+        /// </summary>
+        /// <param name="binding"></param>
+        /// <param name="resultItem"></param>
+        /// <returns></returns>
+        private async Task EvaluateBinding(ConceptTaggerBinding binding, ResultItemUserControl resultItem)
+        {
+            // Take a lock for using a skill if one is available, or wait if not
+            m_evaluationLock.Wait();
+            ConceptTaggerSkill skill = null;
+            try
+            {
+                if (!m_skillQueue.TryDequeue(out skill))
+                {
+                    throw new Exception("Could not access skill");
+                }
+
+                var baseTime = (float)m_perfWatch.ElapsedTicks / Stopwatch.Frequency * 1000f;
+
+                // Evaluate binding
+                await skill.EvaluateAsync(binding);
+
+                // Record evaluation time for display
+                resultItem.EvalTime = (float)m_perfWatch.ElapsedTicks / Stopwatch.Frequency * 1000f - baseTime;
+
+                m_skillQueue.Enqueue(skill);
+                m_evaluationLock.Release();
+            }
+            catch (Exception ex)
+            {
+                NotifyUser(ex.Message, NotifyType.ErrorMessage);
+                if (binding != null)
+                {
+                    m_bindingQueue.Enqueue(binding);
+                }
+                m_bindingLock.Release();
+                if (skill != null)
+                {
+                    m_skillQueue.Enqueue(skill);
+                }
+                m_evaluationLock.Release();
+                return;
+            }
+            m_imageProcessedCount++;
+
+            // Attempt to obtain top 5 concept tags identified in image that scored a confidence of above 0.7
+            var result = binding.GetTopXTagsAboveThreshold(m_topX, (float)m_threshold);
+
+            m_bindingQueue.Enqueue(binding);
+            m_bindingLock.Release();
+
+            if (result != null)
+            {
+                foreach (var conceptTag in result)
+                {
+                    m_hashTags.Add(conceptTag);
+                }
+            }
+
+            // Display image and results
+            await UIResultPanel.Dispatcher.RunAsync(
+                CoreDispatcherPriority.Normal,
+                () =>
+                {
+                    resultItem.UpdateResultItemScore(result);
+                    UIProgressTick.Text = m_imageProcessedCount.ToString();
+                    UITotalTime.Content = $"{((float)m_perfWatch.ElapsedTicks / Stopwatch.Frequency - m_e2eRunTime)}s";
+                });
         }
 
         /// <summary>
@@ -174,6 +223,7 @@ namespace ConceptTaggerSample
             FileOpenPicker fileOpenPicker = new FileOpenPicker();
             fileOpenPicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
             fileOpenPicker.FileTypeFilter.Add(".jpg");
+            fileOpenPicker.FileTypeFilter.Add(".png");
             fileOpenPicker.ViewMode = PickerViewMode.Thumbnail;
             var selectedStorageFiles = await fileOpenPicker.PickMultipleFilesAsync();
 
@@ -220,69 +270,94 @@ namespace ConceptTaggerSample
             {
                 return;
             }
+            await UIParameterDialog.ShowAsync();
 
             UIResultPanel.Items.Clear();
-            m_hashTags = new HashSet<ConceptTagScore>(new TagEqualityComparer());
+            UIProgressMaxValue.Text = imageFiles.Count.ToString();
+            m_hashTags = ImmutableHashSet.CreateBuilder(new TagEqualityComparer());
 
             // Disable UI
             UIOptionPanel.IsEnabled = false;
             UIButtonFilePick.IsEnabled = false;
             UIHashTagBrowser.IsEnabled = false;
             UIClearFilterButton.IsEnabled = false;
+            NotifyUser("", NotifyType.ClearMessage);
 
-            m_lock.Wait();
+            // Start our stopwatch to measure the time it takes to process all of this
+            m_perfWatch.Restart();
+            m_e2eRunTime = (float)m_perfWatch.ElapsedTicks / Stopwatch.Frequency * 1000f;
+            m_imageProcessedCount = 0;
+            UIFilterPanel.Visibility = Visibility.Collapsed;
+            UIProgressPanel.Visibility = Visibility.Visible;
+            UIExecutionProgressRing.Visibility = Visibility.Visible;
+            UIExecutionProgressRing.IsActive = true;
+
+            // Process each image selected
             foreach (var file in imageFiles)
             {
-                var frame = await LoadVideoFrameFromFileAsync(file);
-                if (frame == null)
-                {
-                    return;
-                }
+                // Take a lock for using a binding if one is available, or wait if not
+                await m_bindingLock.WaitAsync();
 
-                // Execute concept tag skill
-                try
+                // Display a staging content in our UI
+                ResultItemUserControl resultItem = new ResultItemUserControl();
+                UIResultPanel.Items.Add(resultItem);
+
+                // Start a task that will Load the frame, display it in the UI, binf it and schedule 
+                // execution of the skill against that binding
+                // (fire and forget)
+                var bindingTask = Task.Run(async () =>
                 {
-                    // Lazy initialize the binding instance
-                    if (m_binding == null)
+                    ConceptTaggerBinding binding = null;
+
+                    // Execute concept tag skill
+                    try
                     {
-                        m_binding = await m_skill.CreateSkillBindingAsync() as ConceptTaggerBinding;
+                        var frame = await LoadVideoFrameFromFileAsync(file);
+                        if (frame == null)
+                        {
+                            throw new Exception($"Error reading image file: {file.Path}");
+                        }
+
+
+                        if (!m_bindingQueue.TryDequeue(out binding))
+                        {
+                            throw new Exception("Could not access binding");
+                        }
+
+                        var baseTime = (float)m_perfWatch.ElapsedTicks / Stopwatch.Frequency * 1000f;
+
+                        // Bind input image
+                        await binding.SetInputImageAsync(frame);
+
+                        // Record bind time for display
+                        resultItem.BindTime = (float)m_perfWatch.ElapsedTicks / Stopwatch.Frequency * 1000f - baseTime;
+
+                        // Display image and results
+                        await Dispatcher.RunAsync(
+                            CoreDispatcherPriority.Normal,
+                            async () =>
+                            {
+                                await resultItem.UpdateResultItemImageAsync(frame.SoftwareBitmap);
+                            });
+
+                        // Evaluate binding (fire and forget)
+                        var evalTask = Task.Run(() => EvaluateBinding(binding, resultItem));
                     }
-
-                    m_perfWatch.Restart();
-
-                    // Bind input image
-                    await m_binding.SetInputImageAsync(frame);
-
-                    // Record bind time for display
-                    var bindTime = (float)m_perfWatch.ElapsedTicks / Stopwatch.Frequency * 1000F;
-                    m_perfWatch.Restart();
-
-                    // Evaluate binding
-                    await m_skill.EvaluateAsync(m_binding);
-
-                    // Record evaluation time for display
-                    var evalTime = (float)m_perfWatch.ElapsedTicks / Stopwatch.Frequency * 1000F;
-                    var additionalMessage = $"Bind: {bindTime}ms\nEval: {evalTime}ms";
-
-                    // Attempt to obtain top 5 concept tags identified in image that scored above 0.7
-                    var result = m_binding.GetTopXTagsAboveThreshold(5, 0.7f);
-
-                    foreach (var conceptTag in result)
+                    catch (Exception ex)
                     {
-                        m_hashTags.Add(conceptTag);
+                        NotifyUser(ex.Message, NotifyType.ErrorMessage);
+                        if (binding != null)
+                        {
+                            m_bindingQueue.Enqueue(binding);
+                        }
+                        m_bindingLock.Release();
+                        await UIProgressMaxValue.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                            () => UIProgressMaxValue.Text = (int.Parse(UIProgressMaxValue.Text) - 1).ToString());
                     }
-
-                    // Display image and results
-                    UIResultPanel.Items.Add(await ResultItem.CreateResultItemAsync(frame.SoftwareBitmap, result, additionalMessage));
-                }
-                catch (Exception ex)
-                {
-                    NotifyUser(ex.Message, NotifyType.ErrorMessage);
-                }
-                m_perfWatch.Stop();
+                });
             }
-            m_lock.Release();
 
+            // Refresh the set of hashtag filters in the UI
             UIHashTagBrowser.ItemsSource = null;
             UIHashTagBrowser.ItemsSource = m_hashTags;
 
@@ -291,6 +366,9 @@ namespace ConceptTaggerSample
             UIButtonFilePick.IsEnabled = true;
             UIHashTagBrowser.IsEnabled = true;
             UIClearFilterButton.IsEnabled = true;
+            UIFilterPanel.Visibility = Visibility.Visible;
+            UIExecutionProgressRing.Visibility = Visibility.Collapsed;
+            UIExecutionProgressRing.IsActive = false;
         }
 
         /// <summary>
@@ -303,17 +381,44 @@ namespace ConceptTaggerSample
             int selectedIndex = UISkillExecutionDevices.SelectedIndex;
             if (selectedIndex >= 0)
             {
-                m_lock.Wait();
+                for (int i = 0; i < m_concurrentBindingCount; i++)
+                {
+                    m_bindingLock.Wait();
+                }
+                for (int i = 0; i < m_concurrentSkillCount; i++)
+                {
+                    m_evaluationLock.Wait();
+                }
+
+                ISkillExecutionDevice device = m_availableDevices[selectedIndex];
+
+                // If we selected the CPU, let's distribute the workload among a number of binding and skill instances running in parallel equivalent 
+                // to half the amount of cores available
+                // If we select the GPU, let's use only 1 instance of each and run as fast as possible instead
+                m_concurrentSkillCount = device is SkillExecutionDeviceCPU ? Math.Max(1, (device as SkillExecutionDeviceCPU).CoreCount / 2) : 1;
+                m_concurrentBindingCount = m_concurrentSkillCount;
+                m_bindingLock = new SemaphoreSlim(m_concurrentBindingCount);
+                m_evaluationLock = new SemaphoreSlim(m_concurrentSkillCount);
+
                 try
                 {
-                    m_binding = null;
-                    m_skill = await m_skillDescriptor.CreateSkillAsync(m_availableDevices[selectedIndex]) as ConceptTaggerSkill;
+                    m_bindingQueue.Clear();
+                    m_skillQueue.Clear();
+                    ConceptTaggerSkill skill = null;
+                    for (int i = 0; i < m_concurrentSkillCount; i++)
+                    {
+                        skill = await m_skillDescriptor.CreateSkillAsync(m_availableDevices[selectedIndex]) as ConceptTaggerSkill;
+                        m_skillQueue.Enqueue(skill);
+                    }
+                    for (int i = 0; i < m_concurrentBindingCount; i++)
+                    {
+                        m_bindingQueue.Enqueue(await skill.CreateSkillBindingAsync() as ConceptTaggerBinding);
+                    }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     NotifyUser(ex.Message, NotifyType.ErrorMessage);
                 }
-                m_lock.Release();
             }
         }
 
@@ -334,7 +439,6 @@ namespace ConceptTaggerSample
             else
             {
                 var task = Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => UpdateStatus(strMessage, type));
-                task.AsTask().Wait();
             }
         }
 
@@ -347,6 +451,9 @@ namespace ConceptTaggerSample
         {
             switch (type)
             {
+                case NotifyType.ClearMessage:
+                    UIStatusBorder.Background = new SolidColorBrush(Windows.UI.Colors.Transparent);
+                    break;
                 case NotifyType.StatusMessage:
                     UIStatusBorder.Background = new SolidColorBrush(Windows.UI.Colors.Green);
                     break;
@@ -360,6 +467,7 @@ namespace ConceptTaggerSample
 
         public enum NotifyType
         {
+            ClearMessage,
             StatusMessage,
             ErrorMessage
         };
@@ -385,7 +493,7 @@ namespace ConceptTaggerSample
             {
                 foreach (var item in UIResultPanel.Items)
                 {
-                    ResultItem result = item as ResultItem;
+                    ResultItemUserControl result = item as ResultItemUserControl;
                     result.Visibility = Visibility.Visible;
                 }
 
@@ -395,8 +503,8 @@ namespace ConceptTaggerSample
                 var tag = UIHashTagBrowser.SelectedItem as ConceptTagScore;
                 foreach (var item in UIResultPanel.Items)
                 {
-                    ResultItem result = item as ResultItem;
-                    if (result.m_result.Any(x => x.Name == tag.Name))
+                    ResultItemUserControl result = item as ResultItemUserControl;
+                    if (result.Results != null && result.Results.Any(x => x.Name == tag.Name))
                     {
                         result.Visibility = Visibility.Visible;
                     }
