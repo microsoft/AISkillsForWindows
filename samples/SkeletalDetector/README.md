@@ -25,7 +25,7 @@ The app supports three types of media inputs: webcam, video file and image file.
 
 ### Using the SkeletalDetector skill
 
-As with all Vision Skills, the Skeletal Detector skill is composed of an `ISkillDescription` (which holds general skill information), the `ISkill` instance (which is bound to a specific `ISkillExecutionDevice`), and the skill's `ISkillBinding` (which holds skill inputs, outputs, and any state information). You can instantiate your Skeletal Detector skill as follows.
+As with all Vision Skills, the Skeletal Detector skill is composed of an `ISkillDescriptor` (which holds general skill information), the `ISkill` instance (which is bound to a specific `ISkillExecutionDevice`), and the skill's `ISkillBinding` (which holds skill inputs, outputs, and any state information). You can instantiate your Skeletal Detector skill as follows.
 
 ```csharp
 SkeletalDetectorDescriptor descriptor = new SkeletalDetectorDescriptor();

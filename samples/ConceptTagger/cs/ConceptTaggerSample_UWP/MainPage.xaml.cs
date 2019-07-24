@@ -39,7 +39,8 @@ namespace ConceptTaggerSample
         // Threading and UI specific
         public int m_concurrentSkillCount = 1;
         public int m_concurrentBindingCount = 1;
-        private static int m_imageProcessedCount = 0;
+        private volatile int m_imageProcessedCount = 0;
+        private volatile int m_imageToProcessTotal = 0;
         private static float m_e2eRunTime = 0.0f;
         private SemaphoreSlim m_bindingLock = new SemaphoreSlim(1);
         private SemaphoreSlim m_evaluationLock = new SemaphoreSlim(1);
@@ -122,14 +123,12 @@ namespace ConceptTaggerSample
             {
                 // Display available execution devices and select the CPU
                 UISkillExecutionDevices.ItemsSource = m_availableDevices.Select((device) => device.Name);
-                SkillExecutionDeviceCPU executionDeviceCPU = null;
                 int selectionIndex = 0;
                 for (int i = 0; i < m_availableDevices.Count; i++)
                 {
                     if (m_availableDevices[i].ExecutionDeviceKind == SkillExecutionDeviceKind.Cpu)
                     {
                         selectionIndex = i;
-                        executionDeviceCPU = m_availableDevices[i] as SkillExecutionDeviceCPU;
                         break;
                     }
                 }
@@ -203,13 +202,21 @@ namespace ConceptTaggerSample
             }
 
             // Display image and results
-            await UIResultPanel.Dispatcher.RunAsync(
+            await Dispatcher.RunAsync(
                 CoreDispatcherPriority.Normal,
                 () =>
                 {
                     resultItem.UpdateResultItemScore(result);
-                    UIProgressTick.Text = m_imageProcessedCount.ToString();
                     UITotalTime.Content = $"{((float)m_perfWatch.ElapsedTicks / Stopwatch.Frequency - m_e2eRunTime)}s";
+
+                    UIProgressTick.Text = m_imageProcessedCount.ToString();
+
+                    // Refresh the set of hashtag filters in the UI if we reached the end
+                    if (m_imageProcessedCount == m_imageToProcessTotal)
+                    {
+                        UIHashTagBrowser.ItemsSource = null;
+                        UIHashTagBrowser.ItemsSource = m_hashTags;
+                    }
                 });
         }
 
@@ -273,7 +280,8 @@ namespace ConceptTaggerSample
             await UIParameterDialog.ShowAsync();
 
             UIResultPanel.Items.Clear();
-            UIProgressMaxValue.Text = imageFiles.Count.ToString();
+            m_imageToProcessTotal = imageFiles.Count;
+            UIProgressMaxValue.Text = m_imageToProcessTotal.ToString();
             m_hashTags = ImmutableHashSet.CreateBuilder(new TagEqualityComparer());
 
             // Disable UI
@@ -312,6 +320,7 @@ namespace ConceptTaggerSample
                     // Execute concept tag skill
                     try
                     {
+                        // Load the VideoFrame from the image file
                         var frame = await LoadVideoFrameFromFileAsync(file);
                         if (frame == null)
                         {
@@ -351,15 +360,12 @@ namespace ConceptTaggerSample
                             m_bindingQueue.Enqueue(binding);
                         }
                         m_bindingLock.Release();
+                        m_imageToProcessTotal--;
                         await UIProgressMaxValue.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                            () => UIProgressMaxValue.Text = (int.Parse(UIProgressMaxValue.Text) - 1).ToString());
+                            () => UIProgressMaxValue.Text = m_imageToProcessTotal.ToString());
                     }
                 });
             }
-
-            // Refresh the set of hashtag filters in the UI
-            UIHashTagBrowser.ItemsSource = null;
-            UIHashTagBrowser.ItemsSource = m_hashTags;
 
             // Enable UI
             UIOptionPanel.IsEnabled = true;
@@ -407,7 +413,7 @@ namespace ConceptTaggerSample
                     ConceptTaggerSkill skill = null;
                     for (int i = 0; i < m_concurrentSkillCount; i++)
                     {
-                        skill = await m_skillDescriptor.CreateSkillAsync(m_availableDevices[selectedIndex]) as ConceptTaggerSkill;
+                        skill = await m_skillDescriptor.CreateSkillAsync(device) as ConceptTaggerSkill;
                         m_skillQueue.Enqueue(skill);
                     }
                     for (int i = 0; i < m_concurrentBindingCount; i++)

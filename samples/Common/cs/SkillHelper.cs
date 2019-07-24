@@ -6,6 +6,9 @@ using System.Collections.Generic;
 
 namespace SkillHelper
 {
+    /// <summary>
+    /// Class that exposes several facilities to handle skill information
+    /// </summary>
     public static class SkillHelperMethods
     {
         /// <summary>
