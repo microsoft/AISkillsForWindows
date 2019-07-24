@@ -99,6 +99,14 @@
                         <TextBlock Text="Status" TextDecorations="Underline" Style="{StaticResource TitleTextBlockStyle}" HorizontalAlignment="Center"/>
                         <TextBlock Name="UIMessageTextBlock" Text="{x:Bind UIMessageTextBlockText, Mode=OneWay}" 
                                    HorizontalAlignment="Center" TextWrapping="Wrap"/>
+
+                        <!--progress bar to indicate skill status-->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10">
+                            <Rectangle x:Name="BindSkillIndicator" Width="20" Height="20" Stroke="{StaticResource SystemBaseMediumLowColor}" 
+                                       StrokeThickness="2" Fill="{x:Bind BindSkillIndicatorColor, Mode=OneWay}"/>
+                            <Rectangle x:Name="EvaluateSkillIndicator" Width="20" Height="20" Stroke="{StaticResource SystemBaseMediumLowColor}" 
+                                       StrokeThickness="2" Fill="{x:Bind EvaluateSkillIndicatorColor, Mode=OneWay}"/>
+                        </StackPanel>
                     </StackPanel>
                 </Border>
             </Grid>

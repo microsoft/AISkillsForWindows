@@ -122,16 +122,21 @@ namespace GalleryApp
             m_evalPerfStopwatch.Restart();
 
             // Update bound input image
+            NotifyUser("Binding skill...");
             await m_binding.SetInputImageAsync(frame);
 
             m_bindTime = (float)m_evalPerfStopwatch.ElapsedTicks / Stopwatch.Frequency * 1000f;
+            await UpdateIndicators(Green, Yellow);
+
             m_evalPerfStopwatch.Restart();
 
             // Run the skill against the binding
+            NotifyUser("Running skill over your binding object...");
             await m_skill.EvaluateAsync(m_binding);
 
             m_evalTime = (float)m_evalPerfStopwatch.ElapsedTicks / Stopwatch.Frequency * 1000f;
             m_evalPerfStopwatch.Stop();
+            await UpdateIndicators(Green, Green);
         }
 
         /// <summary>
@@ -261,6 +266,7 @@ namespace GalleryApp
                 {
                     try
                     {
+                        await UpdateIndicators(Yellow, Yellow);
                         await RunSkillAsync(frame);
                         await DisplayFrameAndResultAsync(frame);
                     }
@@ -330,6 +336,7 @@ namespace GalleryApp
                     }
 
                     // Output result and perf text
+                    NotifyUser("Displaying result...");
                     UISkillOutputDetails.Text = $"Found {m_binding.Bodies.Count} bodies (bind: {m_bindTime.ToString("F2")}ms, eval: {m_evalTime.ToString("F2")}ms";
                 }
                 catch (TaskCanceledException)
