@@ -44,6 +44,7 @@ in a different format than the one required).
   + [ISkillBinding](#ISkillBinding)
   + [ISkill](#ISkill)
 + [Classes](#Classes)
+  + [SkillInformation](#SkillInformation)
   + [SkillExecutionDeviceCPU](#SkillExecutionDeviceCPU)
   + [SkillExecutionDeviceDirectX](#SkillExecutionDeviceDirectX)
   + [SkillFeature](#SkillFeature)
@@ -502,39 +503,12 @@ Base interface for providing information about a [ISkill](#ISkill) implementatio
 #### Properties
 -----
 
-##### Id
+##### Information
 
-Skill [Guid](https://docs.microsoft.com/en-us/dotnet/api/system.guid?view=netcore-2.2) identifier.
-
-```csharp
-Guid Id{ get; }
-```
------
-
-##### Name
-
-User readable name for the skill.
+Skill [Information](#SkillInformation).
 
 ```csharp
-string Name{ get; }
-```
------
-
-##### Description
-
-User readable description for the skill.
-
-```csharp
-string Description{ get; }
-```
------
-
-##### Version
-
-[SkillVersion](#SkillVersion) used to differentiate between versions of the same skill contract.
-
-```csharp
-SkillVersion Version{ get; }
+SkillInformation Information{ get; }
 ```
 -----
 
@@ -706,6 +680,50 @@ The [ISkill](#ISkill) created.
 
 
 ## Classes <a name="Classes"></a>
+
+### SkillInformation <a name="SkillInformation"></a>
+
+Contains all descriptive information about the skill and its origins.
+
+#### Properties
+-----
+
+##### Id
+
+Skill [Guid](https://docs.microsoft.com/en-us/dotnet/api/system.guid?view=netcore-2.2) identifier.
+
+```csharp
+Guid Id{ get; }
+```
+-----
+
+##### Name
+
+User readable name for the skill.
+
+```csharp
+string Name{ get; }
+```
+-----
+
+##### Description
+
+User readable description for the skill.
+
+```csharp
+string Description{ get; }
+```
+-----
+
+##### Version
+
+[PackageVersion](#PackageVersion) used to differentiate between versions of the same skill contract.
+
+```csharp
+Windows.ApplicationModel.PackageVersion Version{ get; }
+```
+-----
+
 
 ### SkillExecutionDeviceCPU <a name="SkillExecutionDeviceCPU"></a>
 ``implements`` [ISkillExecutionDevice](#ISkillExecutionDevice)
@@ -1777,5 +1795,6 @@ The [ISkillFeatureValue](#ISkillFeatureValue) created from the value passed as a
 [BitmapAlphaMode]: https://docs.microsoft.com/en-us/uwp/api/windows.graphics.imaging.bitmapalphamode
 [IClosable]: https://docs.microsoft.com/en-us/uwp/api/windows.foundation.iclosable
 [VideoFrame]: https://docs.microsoft.com/en-us/uwp/api/Windows.Media.VideoFrame
+[PackageVersion]: https://docs.microsoft.com/en-us/uwp/api/Windows.ApplicationModel.PackageVersion
 
 ###### Copyright (c) Microsoft Corporation. All rights reserved.
