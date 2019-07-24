@@ -51,7 +51,7 @@ namespace GalleryApp
 
         // Filter count
         private int m_allObjectKindFiltersCount = 0;
-
+                
         public ObjectDetectorPage()
         {
             this.InitializeComponent();
@@ -193,16 +193,21 @@ namespace GalleryApp
             m_evalStopwatch.Restart();
 
             // Bind
+            NotifyUser("Binding skill...");
             await m_binding.SetInputImageAsync(frame);
 
             m_bindTime = (float)m_evalStopwatch.ElapsedTicks / Stopwatch.Frequency * 1000f;
+            await UpdateIndicators(Green, Yellow);   
+
             m_evalStopwatch.Restart();
 
             // Evaluate
+            NotifyUser("Running skill over your binding object...");
             await m_skill.EvaluateAsync(m_binding);
 
             m_evalTime = (float)m_evalStopwatch.ElapsedTicks / Stopwatch.Frequency * 1000f;
             m_evalStopwatch.Stop();
+            await UpdateIndicators(Green, Green);
         }
 
         /// <summary>
@@ -251,6 +256,7 @@ namespace GalleryApp
                     // Retrieve and filter results
                     IReadOnlyList<ObjectDetectorResult> objectDetections = m_binding.DetectedObjects.Where(det => m_objectKinds.Contains(det.Kind)).ToList();
 
+                    NotifyUser("Displaying result...");
                     // Update displayed results
                     m_bboxRenderer.Render(objectDetections);
 
@@ -339,6 +345,7 @@ namespace GalleryApp
                 {
                     try
                     {
+                        await UpdateIndicators(Yellow, Yellow);
                         await DetectObjectsAsync(frame);
                         await DisplayFrameAndResultAsync(frame);
                     }
