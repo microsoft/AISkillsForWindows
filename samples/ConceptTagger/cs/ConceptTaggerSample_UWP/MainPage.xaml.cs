@@ -39,8 +39,8 @@ namespace ConceptTaggerSample
         // Threading and UI specific
         public int m_concurrentSkillCount = 1;
         public int m_concurrentBindingCount = 1;
-        private volatile int m_imageProcessedCount = 0;
-        private volatile int m_imageToProcessTotal = 0;
+        private static int m_imageProcessedCount = 0;
+        private static int m_imageToProcessTotal = 0;
         private static float m_e2eRunTime = 0.0f;
         private SemaphoreSlim m_bindingLock = new SemaphoreSlim(1);
         private SemaphoreSlim m_evaluationLock = new SemaphoreSlim(1);
@@ -202,7 +202,7 @@ namespace ConceptTaggerSample
             }
 
             // Display image and results
-            await Dispatcher.RunAsync(
+            await UIResultPanel.Dispatcher.RunAsync(
                 CoreDispatcherPriority.Normal,
                 () =>
                 {

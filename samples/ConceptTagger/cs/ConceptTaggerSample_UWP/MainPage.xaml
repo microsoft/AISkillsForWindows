@@ -155,14 +155,18 @@ Copyright (C) Microsoft Corporation. All rights reserved.
             <StackPanel Name="UIFilterPanel" Visibility="Collapsed">
                 <TextBlock Text="Filters" FontSize="24" FontWeight="Bold"/>
 
-                <StackPanel Orientation="Horizontal">
-                    <Button Name="UIClearFilterButton" ToolTipService.ToolTip="Clear Filter" Click="UIClearFilterButton_Click">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button Name="UIClearFilterButton" ToolTipService.ToolTip="Clear Filter" Click="UIClearFilterButton_Click" Grid.Column="0">
                         <Button.Content>
                             <SymbolIcon Symbol="Cancel"/>
                         </Button.Content>
                     </Button>
 
-                    <ListView Name="UIHashTagBrowser" SelectionChanged="UIHashTagBrowser_SelectionChanged" Background="Black">
+                    <ListView Name="UIHashTagBrowser" SelectionChanged="UIHashTagBrowser_SelectionChanged" Background="Black" Grid.Column="1">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <Border CornerRadius="7" Background="DarkViolet" HorizontalAlignment="Center">
@@ -179,7 +183,7 @@ Copyright (C) Microsoft Corporation. All rights reserved.
                             </ItemsPanelTemplate>
                         </ListView.ItemsPanel>
                     </ListView>
-                </StackPanel>
+                </Grid>
             </StackPanel>
 
             <ListView Name="UIResultPanel" Margin="0,10,0,10">
