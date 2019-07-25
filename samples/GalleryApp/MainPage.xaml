@@ -45,32 +45,30 @@
                 <ColumnDefinition />
                 <ColumnDefinition Width="40"/>
             </Grid.ColumnDefinitions>
-            
-            <!--Task 22514227: Load category tabs in MainPage using template & data binding-->
 
             <!--Category bar-->
-            <controls:TabView x:Name="Tabs"
-                Grid.Column="1" 
-                TabWidthBehavior="Actual"
-                CanCloseTabs="False"
-                IsCloseButtonOverlay="False"
-                CanDragItems="False"
-                CanReorderItems="False"
-                AllowDrop="False">
-              
-                <!-- Tabs -->
-                <controls:TabViewItem Header="Vision" Icon="Camera">
-                    <GridView x:Name="ImageGridView" ItemsSource="{x:Bind SkillPages}"
-                        Margin="20" IsItemClickEnabled="True"                     
-                        ItemTemplate="{StaticResource ImageGridView_DefaultItemTemplate}"
-                        ItemContainerStyle="{StaticResource ImageGridView_DefaultItemContainerStyle}"
-                        ItemClick="SampleGridView_ItemClick">
-                    </GridView>
-                </controls:TabViewItem>
+            <controls:TabView x:Name="Tabs" Grid.Column="1" 
+                              TabWidthBehavior="Actual" CanCloseTabs="False"
+                              IsCloseButtonOverlay="False" CanDragItems="False"
+                              CanReorderItems="False" AllowDrop="False"
+                              ItemsSource="{x:Bind AllCategories}">
 
-                <controls:TabViewItem Header="Audio" Icon="Audio">
-                    <TextBlock Padding="16">Coming soon...</TextBlock>
-                </controls:TabViewItem>
+                <controls:TabView.ItemHeaderTemplate>
+                    <DataTemplate x:DataType="local:SkillCategory">
+                        <TextBlock Text="{x:Bind Name}"/>
+                    </DataTemplate>
+                </controls:TabView.ItemHeaderTemplate>
+
+                <controls:TabView.ItemTemplate>
+                    <DataTemplate x:DataType="local:SkillCategory">
+                        <GridView x:Name="ImageGridView" ItemsSource="{x:Bind SkillViews}"
+                            Margin="20" IsItemClickEnabled="True"                     
+                            ItemTemplate="{StaticResource ImageGridView_DefaultItemTemplate}"
+                            ItemContainerStyle="{StaticResource ImageGridView_DefaultItemContainerStyle}"
+                            ItemClick="SampleGridView_ItemClick">
+                        </GridView>
+                    </DataTemplate>
+                </controls:TabView.ItemTemplate>
             </controls:TabView>
             <TextBlock x:Name="ExceptionTextBlock" Text="Exception Message" Grid.Column="1" 
                        VerticalAlignment="Center" HorizontalAlignment="Center"

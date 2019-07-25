@@ -1,4 +1,4 @@
-﻿namespace GalleryApp.Models
+﻿namespace GalleryApp
 {
     /// <summary>
     /// This class represents a skill category and contains a list of skills that belongs to this category
