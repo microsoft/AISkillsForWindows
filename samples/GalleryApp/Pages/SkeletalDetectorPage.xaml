@@ -41,10 +41,11 @@
                 <!--Shortcut to GitHub documentation page-->
                 <HyperlinkButton x:Name="GithubButton" Grid.Row="1" Grid.Column="0"
                                  HorizontalAlignment="Center"
+                                 VerticalAlignment="Center"
                                  NavigateUri="https://github.com/microsoft/WindowsVisionSkillsPreview/tree/master/samples/SkeletalDetector">
-                    <Image Source="../Assets/GitHub-Mark-32px.png" 
-                            Width="32"
-                            Height="32"/>
+                    <Image Source="../../Assets/GitHub-Mark-32px.png" 
+                            Width="45"
+                            Height="45"/>
                 </HyperlinkButton>
                 <TextBlock Text="Skeletal Detector Page" Grid.Row="1" Grid.Column="1"
                            HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlockStyle}" />
@@ -52,7 +53,7 @@
 
             <!--Skill output area-->
             <Grid Grid.Row="1" Loaded="Page_Loaded">
-                <Grid Name="UIVideoFeed">
+                <Grid Name="UIVideoFeed" Background="#FFF2F2F2">
                     <!-- Video frame source controls -->
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Background="#B2000000">
                         <AppBarButton x:Name="UICameraButton" Icon="AttachCamera" Label="Attach Camera" 
@@ -74,7 +75,23 @@
                     VerticalAlignment="Center" 
                     Canvas.ZIndex="0"/>
 
-                    <TextBox Name="UISkillOutputDetails" Text="Skill output var description" IsReadOnly="True" AcceptsReturn="True" VerticalAlignment="Bottom"/>
+                    <Grid VerticalAlignment="Bottom">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="100"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox Name="UISkillOutputDetails" Text="Skill output var description" IsReadOnly="True" AcceptsReturn="True"
+                                 Grid.Column="0"/>
+                        <!--progress bar to indicate skill status-->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10" Grid.Column="1">
+                            <Ellipse x:Name="BindSkillIndicator" Width="20" Height="20" Stroke="{StaticResource SystemBaseMediumLowColor}" 
+                                       StrokeThickness="2" Fill="{x:Bind BindSkillIndicatorColor, Mode=OneWay}"/>
+                            <Ellipse x:Name="EvaluateSkillIndicator" Width="20" Height="20" Stroke="{StaticResource SystemBaseMediumLowColor}" 
+                                       StrokeThickness="2" Fill="{x:Bind EvaluateSkillIndicatorColor, Mode=OneWay}"/>
+                        </StackPanel>
+                    </Grid>
+
                 </Grid>
             </Grid>
         </Grid>
@@ -82,34 +99,21 @@
         <!--Right Panel-->
         <Grid x:Name="RightPanel" Grid.Column="2">
             <Grid.RowDefinitions>
-                <RowDefinition Height="15*"/>
+                <RowDefinition Height="5*"/>
                 <RowDefinition Height="10*"/>
-                <RowDefinition Height="70*"/>
+                <RowDefinition Height="85*"/>
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" >
-                <TextBlock Text="Properties" HorizontalAlignment="Center" 
-                           VerticalAlignment="Bottom" Style="{StaticResource SubheaderTextBlockStyle}" />
+            <TextBlock Text="Properties" HorizontalAlignment="Center" Grid.Row="0" 
+                       VerticalAlignment="Bottom" Style="{StaticResource SubheaderTextBlockStyle}" />
 
-            </Grid>
-
-            <Grid Grid.Row="1" Padding="16, 0, 0, 0" HorizontalAlignment="Center">
-                <Border BorderBrush="#66000000" BorderThickness="2">
-                    <StackPanel>
-                        <TextBlock Text="Status" TextDecorations="Underline" Style="{StaticResource TitleTextBlockStyle}" HorizontalAlignment="Center"/>
-                        <TextBlock Name="UIMessageTextBlock" Text="{x:Bind UIMessageTextBlockText, Mode=OneWay}" 
+            <Border Grid.Row="1" Margin="16, 0, 0, 0" BorderBrush="#66000000" BorderThickness="2" >
+                <StackPanel>
+                    <TextBlock Text="Status" TextDecorations="Underline" Style="{StaticResource TitleTextBlockStyle}" HorizontalAlignment="Center"/>
+                    <TextBlock Name="UIMessageTextBlock" Text="{x:Bind UIMessageTextBlockText, Mode=OneWay}" 
                                    HorizontalAlignment="Center" TextWrapping="Wrap"/>
-
-                        <!--progress bar to indicate skill status-->
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10">
-                            <Rectangle x:Name="BindSkillIndicator" Width="20" Height="20" Stroke="{StaticResource SystemBaseMediumLowColor}" 
-                                       StrokeThickness="2" Fill="{x:Bind BindSkillIndicatorColor, Mode=OneWay}"/>
-                            <Rectangle x:Name="EvaluateSkillIndicator" Width="20" Height="20" Stroke="{StaticResource SystemBaseMediumLowColor}" 
-                                       StrokeThickness="2" Fill="{x:Bind EvaluateSkillIndicatorColor, Mode=OneWay}"/>
-                        </StackPanel>
-                    </StackPanel>
-                </Border>
-            </Grid>
+                </StackPanel>
+            </Border>
 
             <Grid Grid.Row="2" Padding="16, 0, 0, 0" Background="#FFF2F2F2">
                 <ScrollViewer>
