@@ -1,5 +1,6 @@
 ﻿using Microsoft.AI.Skills.SkillInterfacePreview;
 using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -24,11 +25,11 @@ namespace GalleryApp
         public static readonly SolidColorBrush Yellow = new SolidColorBrush(Colors.Yellow);
         public static readonly SolidColorBrush White = new SolidColorBrush(Colors.White);
 
-        // Data binding related variables
+        // Data binding UI components
         private string m_UIMessageTextBlockText = "Select an image source to start";
         private bool m_enableButtons = true;
-        private SolidColorBrush m_bindSkillIndicatorColor = White;
-        private SolidColorBrush m_evaluateSkillIndicatorColor = White;
+
+        protected ObservableCollection<SolidColorBrush> IndicatorColorList { get; set; } = new ObservableCollection<SolidColorBrush>() { White, White };
 
         protected string UIMessageTextBlockText
         {
@@ -46,26 +47,6 @@ namespace GalleryApp
             set
             {
                 this.m_enableButtons = value;
-                this.OnPropertyChanged();
-            }
-        }
-
-        protected SolidColorBrush BindSkillIndicatorColor
-        {
-            get { return m_bindSkillIndicatorColor; }
-            set
-            {
-                this.m_bindSkillIndicatorColor = value;
-                this.OnPropertyChanged();
-            }
-        }
-
-        protected SolidColorBrush EvaluateSkillIndicatorColor
-        {
-            get { return m_evaluateSkillIndicatorColor; }
-            set
-            {
-                this.m_evaluateSkillIndicatorColor = value;
                 this.OnPropertyChanged();
             }
         }
@@ -144,7 +125,8 @@ namespace GalleryApp
                 NotifyUser("Loading file: " + file.Path);
             }
 
-            await UpdateIndicators(White, White);
+            await UpdateIndicator(0, White);
+            await UpdateIndicator(1, White);
             // Re-enable the top menu once done handling the click
             await UpdateMediaSourceButtonsAsync(true);
         }
@@ -213,16 +195,15 @@ namespace GalleryApp
         /// <param name="newBindSkillIndicatorColor"></param>
         /// <param name="newEvaluateSkillIndicatorColor"></param>
         /// <returns></returns>
-        protected async Task UpdateIndicators(SolidColorBrush newBindSkillIndicatorColor, SolidColorBrush newEvaluateSkillIndicatorColor)
+        protected async Task UpdateIndicator(int index, SolidColorBrush newIndicatorColor)
         {
             if (Dispatcher.HasThreadAccess)
             {
-                BindSkillIndicatorColor = newBindSkillIndicatorColor;
-                EvaluateSkillIndicatorColor = newEvaluateSkillIndicatorColor;
+                IndicatorColorList[index] = newIndicatorColor;
             }
             else
             {
-                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () => await UpdateIndicators(newBindSkillIndicatorColor, newEvaluateSkillIndicatorColor));
+                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () => await UpdateIndicator(index, newIndicatorColor));
             }
         }
     }

@@ -122,11 +122,12 @@ namespace GalleryApp
             m_evalPerfStopwatch.Restart();
 
             // Update bound input image
-            NotifyUser("Binding skill...");
+            NotifyUser("Binding input image...");
             await m_binding.SetInputImageAsync(frame);
 
             m_bindTime = (float)m_evalPerfStopwatch.ElapsedTicks / Stopwatch.Frequency * 1000f;
-            await UpdateIndicators(Green, Yellow);
+            await UpdateIndicator(0, Green);
+            await UpdateIndicator(1, Yellow);
 
             m_evalPerfStopwatch.Restart();
 
@@ -136,7 +137,7 @@ namespace GalleryApp
 
             m_evalTime = (float)m_evalPerfStopwatch.ElapsedTicks / Stopwatch.Frequency * 1000f;
             m_evalPerfStopwatch.Stop();
-            await UpdateIndicators(Green, Green);
+            await UpdateIndicator(1, Green);
         }
 
         /// <summary>
@@ -266,7 +267,8 @@ namespace GalleryApp
                 {
                     try
                     {
-                        await UpdateIndicators(Yellow, Yellow);
+                        UpdateIndicator(0, Yellow);
+                        UpdateIndicator(1, Yellow);
                         await RunSkillAsync(frame);
                         await DisplayFrameAndResultAsync(frame);
                     }

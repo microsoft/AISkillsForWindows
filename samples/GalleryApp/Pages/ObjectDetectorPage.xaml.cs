@@ -51,7 +51,7 @@ namespace GalleryApp
 
         // Filter count
         private int m_allObjectKindFiltersCount = 0;
-                
+
         public ObjectDetectorPage()
         {
             this.InitializeComponent();
@@ -197,7 +197,8 @@ namespace GalleryApp
             await m_binding.SetInputImageAsync(frame);
 
             m_bindTime = (float)m_evalStopwatch.ElapsedTicks / Stopwatch.Frequency * 1000f;
-            await UpdateIndicators(Green, Yellow);   
+            await UpdateIndicator(0, Green);
+            await UpdateIndicator(1, Yellow);
 
             m_evalStopwatch.Restart();
 
@@ -207,7 +208,7 @@ namespace GalleryApp
 
             m_evalTime = (float)m_evalStopwatch.ElapsedTicks / Stopwatch.Frequency * 1000f;
             m_evalStopwatch.Stop();
-            await UpdateIndicators(Green, Green);
+            await UpdateIndicator(1, Green);
         }
 
         /// <summary>
@@ -345,7 +346,8 @@ namespace GalleryApp
                 {
                     try
                     {
-                        await UpdateIndicators(Yellow, Yellow);
+                        await UpdateIndicator(0, Yellow);
+                        await UpdateIndicator(1, Yellow);
                         await DetectObjectsAsync(frame);
                         await DisplayFrameAndResultAsync(frame);
                     }
