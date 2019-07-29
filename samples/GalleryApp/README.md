@@ -1,7 +1,7 @@
 # GalleryApp
 
 ## Summary
-The Gallery App contains a set of vision skills released on WindowsVisionSkillsPreview. It demonstrates the capabilities of the new vision skills without the need to enlist in the GitHub repo.
+The Gallery App contains a set of Windows Vision Skills released on WindowsVisionSkillsPreview. It demonstrates the capabilities of the Windows Vision Skills without the need to enlist in the GitHub repo.
 
 ## Getting started
 Please read the [Windows Vision Skills (Preview)](https://docs.microsoft.com/en-us/windows/ai/windows-vision-skills/) page for more detailed information about Windows Vision Skills.
