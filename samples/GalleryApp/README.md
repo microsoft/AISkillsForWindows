@@ -14,9 +14,7 @@ Please read the [Windows Vision Skills (Preview)](https://docs.microsoft.com/en-
     - .Net desktop development
     - .Net Core cross-platform development
   - Select the following SDK versions: 
-    - 17134
     - 17763
-    - 18362
 - The [Windows 10 SDK](https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk) version 1809 (10.0; Build 17763)
 
 ## Gallery App configurations
