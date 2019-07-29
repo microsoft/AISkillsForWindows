@@ -44,13 +44,13 @@ namespace GalleryApp
         private Stopwatch m_evalStopwatch = new Stopwatch();
         private float m_bindTime = 0;
         private float m_evalTime = 0;
-        private Stopwatch m_renderStopwatch = new Stopwatch();
 
         // Locks
         private SemaphoreSlim m_lock = new SemaphoreSlim(1);
-
-        // Filter count
+        
+        // Object kind filters related
         private int m_allObjectKindFiltersCount = 0;
+        private bool m_IsTriStateCheckBoxClick = false;
 
         public ObjectDetectorPage()
         {
@@ -154,8 +154,7 @@ namespace GalleryApp
                 // Exclude Undefined label (not used by the detector) from selector list
                 UIObjectKindFilters.ItemsSource = Enum.GetValues(typeof(ObjectKind)).Cast<ObjectKind>().Where(kind => kind != ObjectKind.Undefined);
                 m_allObjectKindFiltersCount = UIObjectKindFilters.Items.Count;
-                TriStateCheckBox.IsChecked = true;
-                //UIObjectKindFilters.SelectAll();
+                UIObjectKindFilters.SelectAll();
             }
             else
             {
@@ -381,6 +380,7 @@ namespace GalleryApp
         }
 
         /// <summary>
+        /// Triggers when the object kind filter list is changed
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -392,20 +392,26 @@ namespace GalleryApp
             }
             m_lock.Release();
 
-            // Update tri-state checkbox in UI based on the number of filter selected
-            if (m_objectKinds.Count == m_allObjectKindFiltersCount)
+            // Update the tri-state checkbox if the filter update are not trigger by the tri-state checkbox
+            if (!m_IsTriStateCheckBoxClick)
             {
-                TriStateCheckBox.IsChecked = true;
+                if (m_objectKinds.Count == m_allObjectKindFiltersCount)
+                {
+                    TriStateCheckBox.IsChecked = true;
+                }
+                else if (m_objectKinds.Count > 0)
+                {
+                    TriStateCheckBox.IsChecked = null;
+                }
+                else
+                {
+                    TriStateCheckBox.IsChecked = false;
+                }
             }
-            else if (m_objectKinds.Count > 0)
-            {
-                TriStateCheckBox.IsChecked = null;
-                FrameSourceStartAsync();
-            }
-            else
-            {
-                TriStateCheckBox.IsChecked = false;
-            }
+
+            m_IsTriStateCheckBoxClick = false;
+
+            FrameSourceStartAsync();
         }
 
         /// <summary>
@@ -425,26 +431,22 @@ namespace GalleryApp
         }
 
         /// <summary>
-        /// Triggers when all object kind filters are selected
+        /// Triggers when Tri
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void SelectAllObjectKinds(object sender, RoutedEventArgs e)
+        private void TriStateCheckBox_Click(object sender, RoutedEventArgs e)
         {
-            UIObjectKindFilters.SelectAll();
-            FrameSourceStartAsync();
-        }
+            m_IsTriStateCheckBoxClick = true;
 
-        /// <summary>
-        /// Triggers when all object kind filters are unselected
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void UnselectAllObjectKinds(object sender, RoutedEventArgs e)
-        {
-            m_objectKinds = null;
-            UIObjectKindFilters.SelectedIndex = -1;
-            FrameSourceStartAsync();
+            if (TriStateCheckBox.IsChecked == true)
+            {
+                UIObjectKindFilters.SelectAll();
+            }
+            else if (TriStateCheckBox.IsChecked == false)
+            {
+                UIObjectKindFilters.SelectedIndex = -1;
+            }
         }
 
         /// <summary>

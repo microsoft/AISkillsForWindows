@@ -118,7 +118,7 @@
                         <ListBox Name="UISkillExecutionDevices" SelectionChanged="UISkillExecutionDevices_SelectionChanged"/>
                         <StackPanel Orientation="Horizontal">
                             <CheckBox x:Name="TriStateCheckBox" Content="Select All" IsThreeState="True"
-                                      Checked="SelectAllObjectKinds" Unchecked="UnselectAllObjectKinds"/>
+                                      Click='TriStateCheckBox_Click'/>
                             <TextBlock Text="Object Kind Filters:" FontWeight="Bold" Margin="5"/>
                         </StackPanel>
                         <ListView Name="UIObjectKindFilters" SelectionMode="Multiple" 
