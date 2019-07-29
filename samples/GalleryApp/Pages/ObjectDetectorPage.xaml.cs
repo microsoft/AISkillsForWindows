@@ -193,7 +193,7 @@ namespace GalleryApp
             m_evalStopwatch.Restart();
 
             // Bind
-            NotifyUser("Binding skill...");
+            NotifyUser("Binding input image...");
             await m_binding.SetInputImageAsync(frame);
 
             m_bindTime = (float)m_evalStopwatch.ElapsedTicks / Stopwatch.Frequency * 1000f;
