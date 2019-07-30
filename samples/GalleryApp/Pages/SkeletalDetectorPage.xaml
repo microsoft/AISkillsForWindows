@@ -16,7 +16,7 @@
         </Grid.ColumnDefinitions>
 
         <!--Left Panel-->
-        <Grid x:Name="LeftPanel" Grid.Column="0">
+        <Grid x:Name="UILeftPanel" Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="15*"/>
                 <RowDefinition Height="85*"/>
@@ -34,12 +34,12 @@
                 </Grid.ColumnDefinitions>
 
                 <!--Backward navigation button-->
-                <Button x:Name="BackButton" Grid.Row="0" Click="Back_Click" 
+                <Button x:Name="UIBackButton" Grid.Row="0" Click="Back_Click" 
                         VerticalAlignment="Top" HorizontalAlignment="Left" 
                         Style="{StaticResource NavigationBackButtonNormalStyle}"/>
 
                 <!--Shortcut to GitHub documentation page-->
-                <HyperlinkButton x:Name="GithubButton" Grid.Row="1" Grid.Column="0"
+                <HyperlinkButton x:Name="UIGitHubButton" Grid.Row="1" Grid.Column="0"
                                  HorizontalAlignment="Center"
                                  VerticalAlignment="Center"
                                  NavigateUri="https://github.com/microsoft/WindowsVisionSkillsPreview/tree/master/samples/SkeletalDetector">
@@ -85,9 +85,9 @@
                                  Grid.Column="0"/>
                         <!--progress bar to indicate skill status-->
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10" Grid.Column="1">
-                            <Ellipse x:Name="BindSkillIndicator" Width="20" Height="20" Stroke="{StaticResource SystemBaseMediumLowColor}" 
+                            <Ellipse x:Name="UIBindSkillIndicator" Width="20" Height="20" Stroke="{StaticResource SystemBaseMediumLowColor}" 
                                        StrokeThickness="2" Fill="{x:Bind IndicatorColorList[0], Mode=OneWay}"/>
-                            <Ellipse x:Name="EvaluateSkillIndicator" Width="20" Height="20" Stroke="{StaticResource SystemBaseMediumLowColor}" 
+                            <Ellipse x:Name="UIEvaluateSkillIndicator" Width="20" Height="20" Stroke="{StaticResource SystemBaseMediumLowColor}" 
                                        StrokeThickness="2" Fill="{x:Bind IndicatorColorList[1], Mode=OneWay}"/>
                         </StackPanel>
                     </Grid>

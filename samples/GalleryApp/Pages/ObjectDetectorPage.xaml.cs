@@ -397,15 +397,15 @@ namespace GalleryApp
             {
                 if (m_objectKinds.Count == m_allObjectKindFiltersCount)
                 {
-                    TriStateCheckBox.IsChecked = true;
+                    UITriStateCheckBox.IsChecked = true;
                 }
                 else if (m_objectKinds.Count > 0)
                 {
-                    TriStateCheckBox.IsChecked = null;
+                    UITriStateCheckBox.IsChecked = null;
                 }
                 else
                 {
-                    TriStateCheckBox.IsChecked = false;
+                    UITriStateCheckBox.IsChecked = false;
                 }
             }
 
@@ -439,11 +439,11 @@ namespace GalleryApp
         {
             m_IsTriStateCheckBoxClick = true;
 
-            if (TriStateCheckBox.IsChecked == true)
+            if (UITriStateCheckBox.IsChecked == true)
             {
                 UIObjectKindFilters.SelectAll();
             }
-            else if (TriStateCheckBox.IsChecked == false)
+            else if (UITriStateCheckBox.IsChecked == false)
             {
                 UIObjectKindFilters.SelectedIndex = -1;
             }

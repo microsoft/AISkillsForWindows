@@ -34,12 +34,12 @@
                 </Grid.ColumnDefinitions>
 
                 <!--Backward navigation button-->
-                <Button x:Name="BackButton" Grid.Row="0" Click="Back_Click" 
+                <Button x:Name="UIBackButton" Grid.Row="0" Click="Back_Click" 
                         VerticalAlignment="Top" HorizontalAlignment="Left" 
                         Style="{StaticResource NavigationBackButtonNormalStyle}"/>
 
                 <!--Shortcut to GitHub documentation page-->
-                <HyperlinkButton x:Name="GithubButton" Grid.Row="1" Grid.Column="0"
+                <HyperlinkButton x:Name="UIGitHubButton" Grid.Row="1" Grid.Column="0"
                                  HorizontalAlignment="Center"
                                  NavigateUri="https://github.com/microsoft/WindowsVisionSkillsPreview/tree/master/samples/ObjectDetector">
                     <Image Source="../../Assets/GitHub-Mark-32px.png" 
@@ -75,9 +75,9 @@
                                  Grid.Column="0"/>
                         <!--progress bar to indicate skill status-->
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10" Grid.Column="1">
-                            <Ellipse x:Name="BindSkillIndicator" Width="20" Height="20" Stroke="{StaticResource SystemBaseMediumLowColor}" 
+                            <Ellipse x:Name="UIBindSkillIndicator" Width="20" Height="20" Stroke="{StaticResource SystemBaseMediumLowColor}" 
                                        StrokeThickness="2" Fill="{x:Bind IndicatorColorList[0], Mode=OneWay}"/>
-                            <Ellipse x:Name="EvaluateSkillIndicator" Width="20" Height="20" Stroke="{StaticResource SystemBaseMediumLowColor}" 
+                            <Ellipse x:Name="UIEvaluateSkillIndicator" Width="20" Height="20" Stroke="{StaticResource SystemBaseMediumLowColor}" 
                                        StrokeThickness="2" Fill="{x:Bind IndicatorColorList[1], Mode=OneWay}"/>
                         </StackPanel>
                     </Grid>
@@ -86,7 +86,7 @@
         </Grid>
 
         <!--Right Panel-->
-        <Grid x:Name="RightPanel" Grid.Column="2">
+        <Grid x:Name="UIRightPanel" Grid.Column="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="5*"/>
                 <RowDefinition Height="10*"/>
@@ -117,7 +117,7 @@
                         <TextBlock Text="Available execution devices:" FontWeight="Bold"/>
                         <ListBox Name="UISkillExecutionDevices" SelectionChanged="UISkillExecutionDevices_SelectionChanged"/>
                         <StackPanel Orientation="Horizontal">
-                            <CheckBox x:Name="TriStateCheckBox" Content="Select All" IsThreeState="True"
+                            <CheckBox x:Name="UITriStateCheckBox" Content="Select All" IsThreeState="True"
                                       Click='TriStateCheckBox_Click'/>
                             <TextBlock Text="Object Kind Filters:" FontWeight="Bold" Margin="5"/>
                         </StackPanel>
