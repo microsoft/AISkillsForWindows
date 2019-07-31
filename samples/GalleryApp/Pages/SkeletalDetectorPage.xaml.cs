@@ -79,7 +79,7 @@ namespace GalleryApp
             m_lock.Wait();
             {
                 NotifyUser("Initializing skill...");
-                await UpdateIndicator(Indicator.initialization, ExecutionState.start);
+                await UpdateIndicator(IndicatorKind.initialization, ExecutionState.start);
                 m_descriptor = new SkeletalDetectorDescriptor();
                 m_availableExecutionDevices = await m_descriptor.GetSupportedExecutionDevicesAsync();
 
@@ -91,7 +91,7 @@ namespace GalleryApp
             // Ready to begin, enable buttons
             NotifyUser("Skill initialized. Select a media source from the top to begin.");
             await UpdateMediaSourceButtonsAsync(true);
-            await UpdateIndicator(Indicator.initialization, ExecutionState.end);
+            await UpdateIndicator(IndicatorKind.initialization, ExecutionState.end);
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace GalleryApp
         /// <returns></returns>
         private async Task RunSkillAsync(VideoFrame frame)
         {
-            await UpdateIndicator(Indicator.binding, ExecutionState.start);
+            await UpdateIndicator(IndicatorKind.binding, ExecutionState.start);
             m_evalPerfStopwatch.Restart();
 
             // Update bound input image
@@ -129,18 +129,18 @@ namespace GalleryApp
             await m_binding.SetInputImageAsync(frame);
 
             m_bindTime = (float)m_evalPerfStopwatch.ElapsedTicks / Stopwatch.Frequency * 1000f;
-            await UpdateIndicator(Indicator.binding, ExecutionState.end);
+            await UpdateIndicator(IndicatorKind.binding, ExecutionState.end);
 
             m_evalPerfStopwatch.Restart();
 
             // Run the skill against the binding
             NotifyUser("Running skill over your binding object...");
-            await UpdateIndicator(Indicator.evaluating, ExecutionState.start);
+            await UpdateIndicator(IndicatorKind.evaluating, ExecutionState.start);
             await m_skill.EvaluateAsync(m_binding);
 
             m_evalTime = (float)m_evalPerfStopwatch.ElapsedTicks / Stopwatch.Frequency * 1000f;
             m_evalPerfStopwatch.Stop();
-            await UpdateIndicator(Indicator.evaluating, ExecutionState.end);
+            await UpdateIndicator(IndicatorKind.evaluating, ExecutionState.end);
         }
 
         /// <summary>
@@ -270,18 +270,18 @@ namespace GalleryApp
                 {
                     try
                     {
-                        await UpdateIndicator(Indicator.binding, ExecutionState.reset);
-                        await UpdateIndicator(Indicator.evaluating, ExecutionState.reset);
-                        await UpdateIndicator(Indicator.done, ExecutionState.reset);
+                        await UpdateIndicator(IndicatorKind.binding, ExecutionState.reset);
+                        await UpdateIndicator(IndicatorKind.evaluating, ExecutionState.reset);
+                        await UpdateIndicator(IndicatorKind.done, ExecutionState.reset);
 
                         await RunSkillAsync(frame);
                         await DisplayFrameAndResultAsync(frame);
-                        UpdateIndicator(Indicator.done, ExecutionState.end);
+                        UpdateIndicator(IndicatorKind.done, ExecutionState.end);
                     }
                     catch (Exception ex)
                     {
                         NotifyUser(ex.Message);
-                        UpdateIndicator(Indicator.done, ExecutionState.error);
+                        UpdateIndicator(IndicatorKind.done, ExecutionState.error);
                     }
                     finally
                     {
@@ -356,7 +356,7 @@ namespace GalleryApp
                 catch (Exception ex)
                 {
                     NotifyUser($"Exception while rendering results: {ex.Message}");
-                    await UpdateIndicator(Indicator.done, ExecutionState.error);
+                    await UpdateIndicator(IndicatorKind.done, ExecutionState.error);
                 }
             });
         }

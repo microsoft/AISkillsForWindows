@@ -16,7 +16,7 @@ using Windows.UI.Xaml.Media;
 namespace GalleryApp
 {
     // Indexes of all skill execution steps
-    public enum Indicator { initialization = 0, binding, evaluating, done };
+    public enum IndicatorKind { initialization = 0, binding, evaluating, done };
 
     // Possible states of an execution state
     public enum ExecutionState { start, end, reset, error }
@@ -202,7 +202,7 @@ namespace GalleryApp
         /// <param name="newBindSkillIndicatorColor"></param>
         /// <param name="newEvaluateSkillIndicatorColor"></param>
         /// <returns></returns>
-        protected async Task UpdateIndicator(Indicator indicator, ExecutionState executionState)
+        protected async Task UpdateIndicator(IndicatorKind indicator, ExecutionState executionState)
         {
             if (Dispatcher.HasThreadAccess)
             {
