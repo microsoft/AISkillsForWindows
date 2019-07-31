@@ -15,6 +15,12 @@ using Windows.UI.Xaml.Media;
 
 namespace GalleryApp
 {
+    // Indexes of all skill execution steps
+    public enum Indicator { initialization = 0, binding, evaluating, done };
+
+    // Possible states of an execution state
+    public enum ExecutionState { start, end, reset, error }
+
     /// <summary>
     /// This class contains methods that are all skill pages have
     /// </summary>
@@ -24,12 +30,15 @@ namespace GalleryApp
         public static readonly SolidColorBrush Green = new SolidColorBrush(Colors.Green);
         public static readonly SolidColorBrush Yellow = new SolidColorBrush(Colors.Yellow);
         public static readonly SolidColorBrush White = new SolidColorBrush(Colors.White);
+        public static readonly SolidColorBrush Red = new SolidColorBrush(Colors.Red);
 
         // Data binding UI components
         private string m_UIMessageTextBlockText = "Select an image source to start";
         private bool m_enableButtons = true;
 
-        protected ObservableCollection<SolidColorBrush> IndicatorColorList { get; set; } = new ObservableCollection<SolidColorBrush>() { White, White };
+        // UIIndicators related variables
+        public ObservableCollection<SolidColorBrush> IndicatorsList { get; set; } = new ObservableCollection<SolidColorBrush>() { White, White, White, White };
+        public ObservableCollection<SolidColorBrush> ColorsList { get; set; } = new ObservableCollection<SolidColorBrush>() { Yellow, Green, White, Red };
 
         protected string UIMessageTextBlockText
         {
@@ -125,8 +134,6 @@ namespace GalleryApp
                 NotifyUser("Loading file: " + file.Path);
             }
 
-            await UpdateIndicator(0, White);
-            await UpdateIndicator(1, White);
             // Re-enable the top menu once done handling the click
             await UpdateMediaSourceButtonsAsync(true);
         }
@@ -195,15 +202,15 @@ namespace GalleryApp
         /// <param name="newBindSkillIndicatorColor"></param>
         /// <param name="newEvaluateSkillIndicatorColor"></param>
         /// <returns></returns>
-        protected async Task UpdateIndicator(int index, SolidColorBrush newIndicatorColor)
+        protected async Task UpdateIndicator(Indicator indicator, ExecutionState executionState)
         {
             if (Dispatcher.HasThreadAccess)
             {
-                IndicatorColorList[index] = newIndicatorColor;
+                IndicatorsList[(int)indicator] = ColorsList[(int)executionState];
             }
             else
             {
-                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () => await UpdateIndicator(index, newIndicatorColor));
+                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () => await UpdateIndicator(indicator, executionState));
             }
         }
     }
