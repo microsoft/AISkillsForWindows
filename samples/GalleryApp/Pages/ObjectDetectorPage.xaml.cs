@@ -44,10 +44,13 @@ namespace GalleryApp
         private Stopwatch m_evalStopwatch = new Stopwatch();
         private float m_bindTime = 0;
         private float m_evalTime = 0;
-        private Stopwatch m_renderStopwatch = new Stopwatch();
 
         // Locks
         private SemaphoreSlim m_lock = new SemaphoreSlim(1);
+
+        // Object kind filters related
+        private int m_allObjectKindFiltersCount = 0;
+        private bool m_IsTriStateCheckBoxClick = false;
 
         public ObjectDetectorPage()
         {
@@ -80,6 +83,7 @@ namespace GalleryApp
             m_lock.Wait();
             {
                 NotifyUser("Initializing skill...");
+                await UpdateIndicator(IndicatorKind.initialization, ExecutionState.start);
                 m_descriptor = new ObjectDetectorDescriptor();
                 m_availableExecutionDevices = await m_descriptor.GetSupportedExecutionDevicesAsync();
 
@@ -91,6 +95,7 @@ namespace GalleryApp
             // Ready to begin, enable buttons
             NotifyUser("Skill initialized. Select a media source from the top to begin.");
             await UpdateMediaSourceButtonsAsync(true);
+            await UpdateIndicator(IndicatorKind.initialization, ExecutionState.end);
         }
 
         /// <summary>
@@ -150,6 +155,8 @@ namespace GalleryApp
                 // Populate ObjectKind filters list with all possible classes supported by the detector
                 // Exclude Undefined label (not used by the detector) from selector list
                 UIObjectKindFilters.ItemsSource = Enum.GetValues(typeof(ObjectKind)).Cast<ObjectKind>().Where(kind => kind != ObjectKind.Undefined);
+                m_allObjectKindFiltersCount = UIObjectKindFilters.Items.Count;
+                UIObjectKindFilters.SelectAll();
             }
             else
             {
@@ -184,19 +191,26 @@ namespace GalleryApp
         /// <returns></returns>
         private async Task DetectObjectsAsync(VideoFrame frame)
         {
+            await UpdateIndicator(IndicatorKind.binding, ExecutionState.start);
             m_evalStopwatch.Restart();
 
             // Bind
+            NotifyUser("Binding input image...");
             await m_binding.SetInputImageAsync(frame);
 
             m_bindTime = (float)m_evalStopwatch.ElapsedTicks / Stopwatch.Frequency * 1000f;
+            await UpdateIndicator(IndicatorKind.binding, ExecutionState.end);
+
             m_evalStopwatch.Restart();
 
             // Evaluate
+            NotifyUser("Running skill over your binding object...");
+            await UpdateIndicator(IndicatorKind.evaluating, ExecutionState.start);
             await m_skill.EvaluateAsync(m_binding);
 
             m_evalTime = (float)m_evalStopwatch.ElapsedTicks / Stopwatch.Frequency * 1000f;
             m_evalStopwatch.Stop();
+            await UpdateIndicator(IndicatorKind.evaluating, ExecutionState.end);
         }
 
         /// <summary>
@@ -242,13 +256,10 @@ namespace GalleryApp
                     }
                     await m_processedBitmapSource.SetBitmapAsync(targetSoftwareBitmap);
 
-                    // Retrieve and filter results if requested
-                    IReadOnlyList<ObjectDetectorResult> objectDetections = m_binding.DetectedObjects;
-                    if (m_objectKinds?.Count > 0)
-                    {
-                        objectDetections = objectDetections.Where(det => m_objectKinds.Contains(det.Kind)).ToList();
-                    }
+                    // Retrieve and filter results
+                    IReadOnlyList<ObjectDetectorResult> objectDetections = m_binding.DetectedObjects.Where(det => m_objectKinds.Contains(det.Kind)).ToList();
 
+                    NotifyUser("Displaying result...");
                     // Update displayed results
                     m_bboxRenderer.Render(objectDetections);
 
@@ -263,6 +274,7 @@ namespace GalleryApp
                 catch (Exception ex)
                 {
                     NotifyUser($"Exception while rendering results: {ex.Message}");
+                    await UpdateIndicator(IndicatorKind.done, ExecutionState.error);
                 }
             });
         }
@@ -337,12 +349,18 @@ namespace GalleryApp
                 {
                     try
                     {
+                        await UpdateIndicator(IndicatorKind.binding, ExecutionState.reset);
+                        await UpdateIndicator(IndicatorKind.evaluating, ExecutionState.reset);
+                        await UpdateIndicator(IndicatorKind.done, ExecutionState.reset);
+
                         await DetectObjectsAsync(frame);
                         await DisplayFrameAndResultAsync(frame);
+                        UpdateIndicator(IndicatorKind.done, ExecutionState.end);
                     }
                     catch (Exception ex)
                     {
                         NotifyUser(ex.Message);
+                        UpdateIndicator(IndicatorKind.done, ExecutionState.error);
                     }
                     finally
                     {
@@ -366,13 +384,11 @@ namespace GalleryApp
                 await InitializeObjectDetectorAsync(selectedDevice);
             }
             m_lock.Release();
-            if (m_frameSource != null)
-            {
-                await m_frameSource.StartAsync();
-            }
+            FrameSourceStartAsync();
         }
 
         /// <summary>
+        /// Triggers when the object kind filter list is changed
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -383,10 +399,31 @@ namespace GalleryApp
                 m_objectKinds = UIObjectKindFilters.SelectedItems.Cast<ObjectKind>().ToHashSet();
             }
             m_lock.Release();
+
+            // Update the tri-state checkbox if the filter update are not trigger by the tri-state checkbox
+            if (!m_IsTriStateCheckBoxClick)
+            {
+                if (m_objectKinds.Count == m_allObjectKindFiltersCount)
+                {
+                    UITriStateCheckBox.IsChecked = true;
+                }
+                else if (m_objectKinds.Count > 0)
+                {
+                    UITriStateCheckBox.IsChecked = null;
+                }
+                else
+                {
+                    UITriStateCheckBox.IsChecked = false;
+                }
+            }
+
+            m_IsTriStateCheckBoxClick = false;
+
+            FrameSourceStartAsync();
         }
 
         /// <summary>
-        /// Triggered when the image control is resized, making sure the canvas size stays in sync with the frame display control.
+        /// Triggers when the image control is resized, making sure the canvas size stays in sync with the frame display control.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -400,5 +437,36 @@ namespace GalleryApp
 
             m_bboxRenderer.ResizeContent(e);
         }
+
+        /// <summary>
+        /// Triggers when Tri
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TriStateCheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            m_IsTriStateCheckBoxClick = true;
+
+            if (UITriStateCheckBox.IsChecked == true)
+            {
+                UIObjectKindFilters.SelectAll();
+            }
+            else if (UITriStateCheckBox.IsChecked == false)
+            {
+                UIObjectKindFilters.SelectedIndex = -1;
+            }
+        }
+
+        /// <summary>
+        /// If valid frame source is obtained, run skill
+        /// </summary>
+        private async void FrameSourceStartAsync()
+        {
+            if (m_frameSource != null)
+            {
+                await m_frameSource.StartAsync();
+            }
+        }
+
     }
 }

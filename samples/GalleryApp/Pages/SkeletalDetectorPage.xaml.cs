@@ -79,6 +79,7 @@ namespace GalleryApp
             m_lock.Wait();
             {
                 NotifyUser("Initializing skill...");
+                await UpdateIndicator(IndicatorKind.initialization, ExecutionState.start);
                 m_descriptor = new SkeletalDetectorDescriptor();
                 m_availableExecutionDevices = await m_descriptor.GetSupportedExecutionDevicesAsync();
 
@@ -90,6 +91,7 @@ namespace GalleryApp
             // Ready to begin, enable buttons
             NotifyUser("Skill initialized. Select a media source from the top to begin.");
             await UpdateMediaSourceButtonsAsync(true);
+            await UpdateIndicator(IndicatorKind.initialization, ExecutionState.end);
         }
 
         /// <summary>
@@ -119,19 +121,26 @@ namespace GalleryApp
         /// <returns></returns>
         private async Task RunSkillAsync(VideoFrame frame)
         {
+            await UpdateIndicator(IndicatorKind.binding, ExecutionState.start);
             m_evalPerfStopwatch.Restart();
 
             // Update bound input image
+            NotifyUser("Binding input image...");
             await m_binding.SetInputImageAsync(frame);
 
             m_bindTime = (float)m_evalPerfStopwatch.ElapsedTicks / Stopwatch.Frequency * 1000f;
+            await UpdateIndicator(IndicatorKind.binding, ExecutionState.end);
+
             m_evalPerfStopwatch.Restart();
 
             // Run the skill against the binding
+            NotifyUser("Running skill over your binding object...");
+            await UpdateIndicator(IndicatorKind.evaluating, ExecutionState.start);
             await m_skill.EvaluateAsync(m_binding);
 
             m_evalTime = (float)m_evalPerfStopwatch.ElapsedTicks / Stopwatch.Frequency * 1000f;
             m_evalPerfStopwatch.Stop();
+            await UpdateIndicator(IndicatorKind.evaluating, ExecutionState.end);
         }
 
         /// <summary>
@@ -261,12 +270,18 @@ namespace GalleryApp
                 {
                     try
                     {
+                        await UpdateIndicator(IndicatorKind.binding, ExecutionState.reset);
+                        await UpdateIndicator(IndicatorKind.evaluating, ExecutionState.reset);
+                        await UpdateIndicator(IndicatorKind.done, ExecutionState.reset);
+
                         await RunSkillAsync(frame);
                         await DisplayFrameAndResultAsync(frame);
+                        UpdateIndicator(IndicatorKind.done, ExecutionState.end);
                     }
                     catch (Exception ex)
                     {
                         NotifyUser(ex.Message);
+                        UpdateIndicator(IndicatorKind.done, ExecutionState.error);
                     }
                     finally
                     {
@@ -330,6 +345,7 @@ namespace GalleryApp
                     }
 
                     // Output result and perf text
+                    NotifyUser("Displaying result...");
                     UISkillOutputDetails.Text = $"Found {m_binding.Bodies.Count} bodies (bind: {m_bindTime.ToString("F2")}ms, eval: {m_evalTime.ToString("F2")}ms";
                 }
                 catch (TaskCanceledException)
@@ -340,6 +356,7 @@ namespace GalleryApp
                 catch (Exception ex)
                 {
                     NotifyUser($"Exception while rendering results: {ex.Message}");
+                    await UpdateIndicator(IndicatorKind.done, ExecutionState.error);
                 }
             });
         }

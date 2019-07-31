@@ -1,5 +1,6 @@
 ﻿using Microsoft.AI.Skills.SkillInterfacePreview;
 using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -7,20 +8,37 @@ using Windows.Devices.Enumeration;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Pickers;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 
 namespace GalleryApp
 {
+    // Indexes of all skill execution steps
+    public enum IndicatorKind { initialization = 0, binding, evaluating, done };
+
+    // Possible states of an execution state
+    public enum ExecutionState { start, end, reset, error }
+
     /// <summary>
     /// This class contains methods that are all skill pages have
     /// </summary>
     public abstract class SkillPageBase : Page, INotifyPropertyChanged
     {
-        // Data binding related variables
+        // Colors for indicating execution status
+        public static readonly SolidColorBrush Green = new SolidColorBrush(Colors.Green);
+        public static readonly SolidColorBrush Yellow = new SolidColorBrush(Colors.Yellow);
+        public static readonly SolidColorBrush White = new SolidColorBrush(Colors.White);
+        public static readonly SolidColorBrush Red = new SolidColorBrush(Colors.Red);
+
+        // Data binding UI components
         private string m_UIMessageTextBlockText = "Select an image source to start";
         private bool m_enableButtons = true;
+
+        // UIIndicators related variables
+        public ObservableCollection<SolidColorBrush> IndicatorsList { get; set; } = new ObservableCollection<SolidColorBrush>() { White, White, White, White };
+        public ObservableCollection<SolidColorBrush> ColorsList { get; set; } = new ObservableCollection<SolidColorBrush>() { Yellow, Green, White, Red };
 
         protected string UIMessageTextBlockText
         {
@@ -175,6 +193,24 @@ namespace GalleryApp
             else
             {
                 await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () => await UpdateMediaSourceButtonsAsync(enableButtons));
+            }
+        }
+
+        /// <summary>
+        /// Update skill status indicators' colors (inside the Status box)
+        /// </summary>
+        /// <param name="newBindSkillIndicatorColor"></param>
+        /// <param name="newEvaluateSkillIndicatorColor"></param>
+        /// <returns></returns>
+        protected async Task UpdateIndicator(IndicatorKind indicator, ExecutionState executionState)
+        {
+            if (Dispatcher.HasThreadAccess)
+            {
+                IndicatorsList[(int)indicator] = ColorsList[(int)executionState];
+            }
+            else
+            {
+                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () => await UpdateIndicator(indicator, executionState));
             }
         }
     }

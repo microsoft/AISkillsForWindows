@@ -1,8 +1,6 @@
-﻿using GalleryApp.Models;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -15,11 +13,10 @@ namespace GalleryApp
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        public ObservableCollection<SkillView> SkillPages { get; } = new ObservableCollection<SkillView>();
-
         private static string m_filePath = "\\Pages\\SkillViewGlossary.json";
 
         private static List<SkillCategory> m_allCategories;
+        public List<SkillCategory> AllCategories { get; } = new List<SkillCategory>();
 
         public MainPage()
         {
@@ -32,7 +29,7 @@ namespace GalleryApp
         /// <param name="e"></param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (SkillPages.Count == 0)
+            if (AllCategories.Count == 0)
             {
                 LoadAllSkills();
             }
@@ -49,10 +46,7 @@ namespace GalleryApp
             {
                 foreach (var category in m_allCategories)
                 {
-                    foreach (var skill in category.SkillViews)
-                    {
-                        SkillPages.Add(skill);
-                    }
+                    AllCategories.Add(category);
                 }
             }
         }
