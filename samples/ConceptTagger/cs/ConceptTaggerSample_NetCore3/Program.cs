@@ -82,7 +82,7 @@ namespace ConceptTaggerSample_NetCore3
                     if (args.Length < 1)
                     {
                         Console.WriteLine("Allowed command arguments: <file path to .jpg or .png> <optional top X concept tag count> <optional concept tag filter ranging between 0 and 1>");
-                        Console.WriteLine("i.e.: \n> ConceptTaggerSample_Desktop.exe test.jpg 5 0.7\n\n");
+                        Console.WriteLine("i.e.: \n> ConceptTaggerSample_NetCore3.exe test.jpg 5 0.7\n\n");
                         return;
                     }
 
@@ -128,7 +128,7 @@ namespace ConceptTaggerSample_NetCore3
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("Error:: " + e.Message.ToString() + e.TargetSite.ToString() + e.Source.ToString() + e.StackTrace.ToString());
+                    Console.WriteLine("Error: " + e.Message.ToString() + e.TargetSite.ToString() + e.Source.ToString() + e.StackTrace.ToString());
                     Console.WriteLine("To get more insight on the parameter format, call the executable without any parameters");
                     Environment.Exit(e.HResult);
                 }
