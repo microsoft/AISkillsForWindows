@@ -19,9 +19,11 @@
                     <Rectangle Height="200" Width="400" VerticalAlignment="Bottom" 
                                Fill="Gray" Opacity="0.8"/>
                     <TextBlock Text="{x:Bind Name}" Padding="10, 0, 10, 0"
-                               Style="{StaticResource SubheaderTextBlockStyle}"/>
+                               Style="{StaticResource SubheaderTextBlockStyle}"
+                               Foreground="White"/>
                     <TextBlock Text="{x:Bind Description}" Padding="10, 60, 10, 0"
-                               Style="{StaticResource BodyTextBlockStyle}"/>
+                               Style="{StaticResource BodyTextBlockStyle}"
+                               Foreground="White"/>
                 </Grid>
             </Grid>
         </DataTemplate>
