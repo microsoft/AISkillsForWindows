@@ -1,29 +1,28 @@
-﻿// Copyright (C) Microsoft Corporation. All rights reserved.
+// Copyright (C) Microsoft Corporation. All rights reserved.
 
+using FrameSourceHelper_UWP;
 using Microsoft.AI.Skills.SkillInterfacePreview;
 using Microsoft.AI.Skills.Vision.ObjectDetectorPreview;
+using ObjectDetectorSkillSample;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.Media;
 using Windows.Graphics.Imaging;
+using Windows.Media;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
-using Windows.Devices.Enumeration;
-using Microsoft.Toolkit.Uwp.UI.Controls;
-using FrameSourceHelper_UWP;
 
-namespace ObjectDetectorSkillSample
+
+namespace GalleryApp
 {
     /// <summary>
-    /// Application's main page
+    /// Object Detector Skill Page
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class ObjectDetectorPage : SkillPageBase, ISkillViewPage
     {
         private IFrameSource m_frameSource = null;
 
@@ -32,7 +31,6 @@ namespace ObjectDetectorSkillSample
         private ObjectDetectorBinding m_binding = null;
         private ObjectDetectorSkill m_skill = null;
         private IReadOnlyList<ISkillExecutionDevice> m_availableExecutionDevices = null;
-        private ISkillFeatureImageDescriptor m_inputImageFeatureDescriptor = null;
 
         // Misc
         private BoundingBoxRenderer m_bboxRenderer = null;
@@ -46,14 +44,26 @@ namespace ObjectDetectorSkillSample
         private Stopwatch m_evalStopwatch = new Stopwatch();
         private float m_bindTime = 0;
         private float m_evalTime = 0;
-        private Stopwatch m_renderStopwatch = new Stopwatch();
 
         // Locks
         private SemaphoreSlim m_lock = new SemaphoreSlim(1);
 
-        public MainPage()
+        // Object kind filters related
+        private int m_allObjectKindFiltersCount = 0;
+        private bool m_IsTriStateCheckBoxClick = false;
+
+        public ObjectDetectorPage()
         {
             this.InitializeComponent();
+        }
+
+        /// <summary>
+        /// Create a skill descriptor object to display skill information on UI thumbnail
+        /// </summary>
+        /// <returns></returns>
+        ISkillDescriptor ISkillViewPage.GetSkillDescriptor()
+        {
+            return new ObjectDetectorDescriptor();
         }
 
         /// <summary>
@@ -73,6 +83,7 @@ namespace ObjectDetectorSkillSample
             m_lock.Wait();
             {
                 NotifyUser("Initializing skill...");
+                await UpdateIndicator(IndicatorKind.initialization, ExecutionState.start);
                 m_descriptor = new ObjectDetectorDescriptor();
                 m_availableExecutionDevices = await m_descriptor.GetSupportedExecutionDevicesAsync();
 
@@ -84,6 +95,7 @@ namespace ObjectDetectorSkillSample
             // Ready to begin, enable buttons
             NotifyUser("Skill initialized. Select a media source from the top to begin.");
             await UpdateMediaSourceButtonsAsync(true);
+            await UpdateIndicator(IndicatorKind.initialization, ExecutionState.end);
         }
 
         /// <summary>
@@ -127,7 +139,7 @@ namespace ObjectDetectorSkillSample
                 {
                     // Display available execution devices
                     UISkillExecutionDevices.ItemsSource = m_availableExecutionDevices.Select((device) => $"{device.ExecutionDeviceKind} | {device.Name}");
-                    
+
                     // Set SelectedIndex to index of currently selected device
                     for (int i = 0; i < m_availableExecutionDevices.Count; i++)
                     {
@@ -143,6 +155,8 @@ namespace ObjectDetectorSkillSample
                 // Populate ObjectKind filters list with all possible classes supported by the detector
                 // Exclude Undefined label (not used by the detector) from selector list
                 UIObjectKindFilters.ItemsSource = Enum.GetValues(typeof(ObjectKind)).Cast<ObjectKind>().Where(kind => kind != ObjectKind.Undefined);
+                m_allObjectKindFiltersCount = UIObjectKindFilters.Items.Count;
+                UIObjectKindFilters.SelectAll();
             }
             else
             {
@@ -177,19 +191,26 @@ namespace ObjectDetectorSkillSample
         /// <returns></returns>
         private async Task DetectObjectsAsync(VideoFrame frame)
         {
+            await UpdateIndicator(IndicatorKind.binding, ExecutionState.start);
             m_evalStopwatch.Restart();
 
             // Bind
+            NotifyUser("Binding input image...");
             await m_binding.SetInputImageAsync(frame);
 
             m_bindTime = (float)m_evalStopwatch.ElapsedTicks / Stopwatch.Frequency * 1000f;
+            await UpdateIndicator(IndicatorKind.binding, ExecutionState.end);
+
             m_evalStopwatch.Restart();
 
             // Evaluate
+            NotifyUser("Running skill over your binding object...");
+            await UpdateIndicator(IndicatorKind.evaluating, ExecutionState.start);
             await m_skill.EvaluateAsync(m_binding);
 
             m_evalTime = (float)m_evalStopwatch.ElapsedTicks / Stopwatch.Frequency * 1000f;
             m_evalStopwatch.Stop();
+            await UpdateIndicator(IndicatorKind.evaluating, ExecutionState.end);
         }
 
         /// <summary>
@@ -207,9 +228,9 @@ namespace ObjectDetectorSkillSample
                     SoftwareBitmap targetSoftwareBitmap = frame.SoftwareBitmap;
 
                     // If we receive a Direct3DSurface-backed VideoFrame, convert to a SoftwareBitmap in a format that can be rendered via the UI element
-                    if(targetSoftwareBitmap == null)
+                    if (targetSoftwareBitmap == null)
                     {
-                        if(m_renderTargetFrame == null)
+                        if (m_renderTargetFrame == null)
                         {
                             m_renderTargetFrame = new VideoFrame(BitmapPixelFormat.Bgra8, frame.Direct3DSurface.Description.Width, frame.Direct3DSurface.Description.Height, BitmapAlphaMode.Ignore);
                         }
@@ -231,17 +252,14 @@ namespace ObjectDetectorSkillSample
                             // Leverage the VideoFrame.CopyToAsync() method that can convert the input SoftwareBitmap-backed VideoFrame to a different format
                             await frame.CopyToAsync(m_renderTargetFrame);
                             targetSoftwareBitmap = m_renderTargetFrame.SoftwareBitmap;
-                        }                        
+                        }
                     }
                     await m_processedBitmapSource.SetBitmapAsync(targetSoftwareBitmap);
 
-                    // Retrieve and filter results if requested
-                    IReadOnlyList<ObjectDetectorResult> objectDetections = m_binding.DetectedObjects;
-                    if (m_objectKinds?.Count > 0)
-                    {
-                        objectDetections = objectDetections.Where(det => m_objectKinds.Contains(det.Kind)).ToList();
-                    }
+                    // Retrieve and filter results
+                    IReadOnlyList<ObjectDetectorResult> objectDetections = m_binding.DetectedObjects.Where(det => m_objectKinds.Contains(det.Kind)).ToList();
 
+                    NotifyUser("Displaying result...");
                     // Update displayed results
                     m_bboxRenderer.Render(objectDetections);
 
@@ -256,6 +274,7 @@ namespace ObjectDetectorSkillSample
                 catch (Exception ex)
                 {
                     NotifyUser($"Exception while rendering results: {ex.Message}");
+                    await UpdateIndicator(IndicatorKind.done, ExecutionState.error);
                 }
             });
         }
@@ -266,7 +285,7 @@ namespace ObjectDetectorSkillSample
         /// <param name="source"></param>
         /// <param name="inputImageDescriptor"></param>
         /// <returns></returns>
-        private async Task ConfigureFrameSourceAsync(object source, ISkillFeatureImageDescriptor inputImageDescriptor = null)
+        protected override async Task ConfigureFrameSourceAsync(object source, ISkillFeatureImageDescriptor inputImageDescriptor = null)
         {
             await m_lock.WaitAsync();
             {
@@ -290,8 +309,8 @@ namespace ObjectDetectorSkillSample
 
                 // Create new frame source and register a callback if the source fails along the way
                 m_frameSource = await FrameSourceFactory.CreateFrameSourceAsync(
-                    source, 
-                    (sender, message) => 
+                    source,
+                    (sender, message) =>
                     {
                         NotifyUser(message);
                     },
@@ -311,40 +330,6 @@ namespace ObjectDetectorSkillSample
         }
 
         /// <summary>
-        /// Print a message to the UI
-        /// </summary>
-        /// <param name="message"></param>
-        private void NotifyUser(String message)
-        {
-            if (Dispatcher.HasThreadAccess)
-            {
-                UIMessageTextBlock.Text = message;
-            }
-            else
-            {
-                Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => UIMessageTextBlock.Text = message).AsTask().Wait();
-            }
-        }
-
-        /// <summary>
-        /// Update media source buttons (top row)
-        /// </summary>
-        /// <param name="enableButtons"></param>
-        /// <returns></returns>
-        private async Task UpdateMediaSourceButtonsAsync(bool enableButtons)
-        {
-            if (Dispatcher.HasThreadAccess)
-            {
-                UICameraButton.IsEnabled = enableButtons;
-                UIFilePickerButton.IsEnabled = enableButtons;
-            }
-            else
-            {
-                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () => await UpdateMediaSourceButtonsAsync(enableButtons));
-            }
-        }
-
-        /// <summary>
         /// FrameAvailable event handler
         /// </summary>
         /// <param name="sender"></param>
@@ -356,7 +341,7 @@ namespace ObjectDetectorSkillSample
             {
 #pragma warning disable CS4014
                 // Purposely don't await this: want handler to exit ASAP
-                // so that realtime capture doesn't wait for completion.
+                // so that real time capture doesn't wait for completion.
                 // Instead, we unlock only when processing finishes ensuring that
                 // only one execution is active at a time, dropping frames or
                 // aborting skill runs as necessary
@@ -364,12 +349,18 @@ namespace ObjectDetectorSkillSample
                 {
                     try
                     {
+                        await UpdateIndicator(IndicatorKind.binding, ExecutionState.reset);
+                        await UpdateIndicator(IndicatorKind.evaluating, ExecutionState.reset);
+                        await UpdateIndicator(IndicatorKind.done, ExecutionState.reset);
+
                         await DetectObjectsAsync(frame);
                         await DisplayFrameAndResultAsync(frame);
+                        UpdateIndicator(IndicatorKind.done, ExecutionState.end);
                     }
                     catch (Exception ex)
                     {
                         NotifyUser(ex.Message);
+                        UpdateIndicator(IndicatorKind.done, ExecutionState.error);
                     }
                     finally
                     {
@@ -378,74 +369,6 @@ namespace ObjectDetectorSkillSample
                 });
 #pragma warning restore CS4014
             }
-        }
-
-        /// <summary>
-        /// Click handler for video file button. Spawns file picker UI
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private async void UIFilePickerButton_Click(object sender, RoutedEventArgs e)
-        {
-            // Disable the top menu while handling the click
-            await UpdateMediaSourceButtonsAsync(false);
-
-            var picker = new Windows.Storage.Pickers.FileOpenPicker();
-            picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
-            picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.PicturesLibrary;
-            // Add common video file extensions
-            picker.FileTypeFilter.Add(".mp4");
-            picker.FileTypeFilter.Add(".avi");
-            // Add common image file extensions
-            picker.FileTypeFilter.Add(".jpg");
-            picker.FileTypeFilter.Add(".png");
-            picker.FileTypeFilter.Add(".bmp");
-
-            Windows.Storage.StorageFile file = await picker.PickSingleFileAsync();
-            if (file != null)
-            {
-                await ConfigureFrameSourceAsync(file);
-                NotifyUser("Loading file: " + file.Path);
-            }
-
-            // Re-enable the top menu once done handling the click
-            await UpdateMediaSourceButtonsAsync(true);
-        }
-
-        /// <summary>
-        /// Click handler for camera button. Spawns device picker UI
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private async void UICameraButton_Click(object sender, RoutedEventArgs e)
-        {
-            // Disable the top menu while handling the click
-            await UpdateMediaSourceButtonsAsync(false);
-
-            var devicePicker = new DevicePicker();
-            devicePicker.Filter.SupportedDeviceClasses.Add(DeviceClass.VideoCapture);
-
-            // Calculate the position to show the picker (right below the buttons)
-            GeneralTransform ge = UICameraButton.TransformToVisual(null);
-            Windows.Foundation.Point point = ge.TransformPoint(new Windows.Foundation.Point());
-            Windows.Foundation.Rect rect = new Windows.Foundation.Rect(point, new Windows.Foundation.Point(point.X + UICameraButton.ActualWidth, point.Y + UICameraButton.ActualHeight));
-
-            DeviceInformation di = await devicePicker.PickSingleDeviceAsync(rect);
-            if (di != null)
-            {
-                try
-                {
-                    NotifyUser("Attaching to camera " + di.Name);
-                    await ConfigureFrameSourceAsync(di, m_inputImageFeatureDescriptor);
-                }
-                catch (Exception ex)
-                {
-                    NotifyUser("Error occurred while initializating MediaCapture:\n" + ex.Message);
-                }
-            }
-
-            // Re-enable the top menu once done handling the click
-            await UpdateMediaSourceButtonsAsync(true);
         }
 
         /// <summary>
@@ -461,13 +384,11 @@ namespace ObjectDetectorSkillSample
                 await InitializeObjectDetectorAsync(selectedDevice);
             }
             m_lock.Release();
-            if (m_frameSource != null)
-            {
-                await m_frameSource.StartAsync();
-            }
+            FrameSourceStartAsync();
         }
 
         /// <summary>
+        /// Triggers when the object kind filter list is changed
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -478,10 +399,31 @@ namespace ObjectDetectorSkillSample
                 m_objectKinds = UIObjectKindFilters.SelectedItems.Cast<ObjectKind>().ToHashSet();
             }
             m_lock.Release();
+
+            // Update the tri-state checkbox if the filter update are not trigger by the tri-state checkbox
+            if (!m_IsTriStateCheckBoxClick)
+            {
+                if (m_objectKinds.Count == m_allObjectKindFiltersCount)
+                {
+                    UITriStateCheckBox.IsChecked = true;
+                }
+                else if (m_objectKinds.Count > 0)
+                {
+                    UITriStateCheckBox.IsChecked = null;
+                }
+                else
+                {
+                    UITriStateCheckBox.IsChecked = false;
+                }
+            }
+
+            m_IsTriStateCheckBoxClick = false;
+
+            FrameSourceStartAsync();
         }
 
         /// <summary>
-        /// Triggered when the image control is resized, making sure the canvas size stays in sync with the frame display control.
+        /// Triggers when the image control is resized, making sure the canvas size stays in sync with the frame display control.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -497,21 +439,34 @@ namespace ObjectDetectorSkillSample
         }
 
         /// <summary>
-        /// Triggered when the expander is expanded and collapsed
+        /// Triggers when Tri
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void UIExpander_Expanded(object sender, EventArgs e)
+        private void TriStateCheckBox_Click(object sender, RoutedEventArgs e)
         {
-            var expander = (sender as Expander);
-            if(expander.IsExpanded)
+            m_IsTriStateCheckBoxClick = true;
+
+            if (UITriStateCheckBox.IsChecked == true)
             {
-                UIVideoFeed.Visibility = Visibility.Collapsed;
+                UIObjectKindFilters.SelectAll();
             }
-            else
+            else if (UITriStateCheckBox.IsChecked == false)
             {
-                UIVideoFeed.Visibility = Visibility.Visible;
+                UIObjectKindFilters.SelectedIndex = -1;
             }
         }
+
+        /// <summary>
+        /// If valid frame source is obtained, run skill
+        /// </summary>
+        private async void FrameSourceStartAsync()
+        {
+            if (m_frameSource != null)
+            {
+                await m_frameSource.StartAsync();
+            }
+        }
+
     }
 }

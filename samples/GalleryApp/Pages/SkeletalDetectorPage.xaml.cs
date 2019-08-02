@@ -1,31 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Windows.Foundation;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
+﻿// Copyright (C) Microsoft Corporation. All rights reserved.
+
+using FrameSourceHelper_UWP;
 using Microsoft.AI.Skills.SkillInterfacePreview;
 using Microsoft.AI.Skills.Vision.SkeletalDetectorPreview;
+using SkeletalDetectorSample;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 using Windows.Media;
-using Windows.Storage;
-using Windows.Storage.Pickers;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
-using FrameSourceHelper_UWP;
-using Windows.Devices.Enumeration;
-using SkeletalDetectorSample;
 
 namespace GalleryApp
 {
     /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// Skeletal Detector Skill Page
     /// </summary>
-    public sealed partial class SkeletalDetectorPage : Page
+
+    public sealed partial class SkeletalDetectorPage : SkillPageBase, ISkillViewPage
     {
         private IFrameSource m_frameSource = null;
 
@@ -39,6 +36,7 @@ namespace GalleryApp
         private IReadOnlyList<ISkillExecutionDevice> m_availableExecutionDevices;
 
         // Frames
+        private VideoFrame m_renderTargetFrame = null;
         private SoftwareBitmapSource m_processedBitmapSource;
 
         // Synchronization
@@ -49,20 +47,18 @@ namespace GalleryApp
         private float m_bindTime = 0;
         private float m_evalTime = 0;
 
-
         public SkeletalDetectorPage()
         {
             this.InitializeComponent();
         }
 
         /// <summary>
-        /// Backward navigation to MainPage
+        /// Create a skill descriptor object to display skill information on UI thumbnail
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Back_Click(object sender, RoutedEventArgs e)
+        /// <returns></returns>
+        ISkillDescriptor ISkillViewPage.GetSkillDescriptor()
         {
-            this.Frame.Navigate(typeof(MainPage));
+            return new SkeletalDetectorDescriptor();
         }
 
         /// <summary>
@@ -73,6 +69,9 @@ namespace GalleryApp
         /// <param name="e"></param>
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            // Disable buttons while we initialize
+            await UpdateMediaSourceButtonsAsync(false);
+
             // Initialize helper class used to render the skill results on screen
             m_bodyRenderer = new BodyRenderer(UICanvasOverlay);
 
@@ -80,6 +79,7 @@ namespace GalleryApp
             m_lock.Wait();
             {
                 NotifyUser("Initializing skill...");
+                await UpdateIndicator(IndicatorKind.initialization, ExecutionState.start);
                 m_descriptor = new SkeletalDetectorDescriptor();
                 m_availableExecutionDevices = await m_descriptor.GetSupportedExecutionDevicesAsync();
 
@@ -90,6 +90,8 @@ namespace GalleryApp
 
             // Ready to begin, enable buttons
             NotifyUser("Skill initialized. Select a media source from the top to begin.");
+            await UpdateMediaSourceButtonsAsync(true);
+            await UpdateIndicator(IndicatorKind.initialization, ExecutionState.end);
         }
 
         /// <summary>
@@ -108,6 +110,8 @@ namespace GalleryApp
                 m_skill = await m_descriptor.CreateSkillAsync() as SkeletalDetectorSkill;
             }
             m_binding = await m_skill.CreateSkillBindingAsync() as SkeletalDetectorBinding;
+
+            m_inputImageFeatureDescriptor = m_binding["InputImage"].Descriptor as SkillFeatureImageDescriptor;
         }
 
         /// <summary>
@@ -117,19 +121,26 @@ namespace GalleryApp
         /// <returns></returns>
         private async Task RunSkillAsync(VideoFrame frame)
         {
+            await UpdateIndicator(IndicatorKind.binding, ExecutionState.start);
             m_evalPerfStopwatch.Restart();
 
             // Update bound input image
+            NotifyUser("Binding input image...");
             await m_binding.SetInputImageAsync(frame);
 
             m_bindTime = (float)m_evalPerfStopwatch.ElapsedTicks / Stopwatch.Frequency * 1000f;
+            await UpdateIndicator(IndicatorKind.binding, ExecutionState.end);
+
             m_evalPerfStopwatch.Restart();
 
             // Run the skill against the binding
+            NotifyUser("Running skill over your binding object...");
+            await UpdateIndicator(IndicatorKind.evaluating, ExecutionState.start);
             await m_skill.EvaluateAsync(m_binding);
 
             m_evalTime = (float)m_evalPerfStopwatch.ElapsedTicks / Stopwatch.Frequency * 1000f;
             m_evalPerfStopwatch.Stop();
+            await UpdateIndicator(IndicatorKind.evaluating, ExecutionState.end);
         }
 
         /// <summary>
@@ -143,23 +154,27 @@ namespace GalleryApp
                 // Show skill description members in UI
                 UISkillName.Text = m_descriptor.Name;
 
-                UISkillDescription.Text = $"{m_descriptor.Description}" +
-                $"\n\tauthored by: {m_descriptor.Version.Author}" +
-                $"\n\tpublished by: {m_descriptor.Version.Author}" +
-                $"\n\tversion: {m_descriptor.Version.Major}.{m_descriptor.Version.Minor}" +
-                $"\n\tunique ID: {m_descriptor.Id}";
+                UISkillDescription.Text = SkillHelper.SkillHelperMethods.GetSkillDescriptorString(m_descriptor);
 
-                var inputDesc = m_descriptor.InputFeatureDescriptors[0] as SkillFeatureImageDescriptor;
-                UISkillInputDescription.Text = $"\tName: {inputDesc.Name}" +
-                $"\n\tDescription: {inputDesc.Description}" +
-                $"\n\tType: {inputDesc.FeatureKind}" +
-                $"\n\tWidth: {inputDesc.Width}" +
-                $"\n\tHeight: {inputDesc.Height}" +
-                $"\n\tSupportedBitmapPixelFormat: {inputDesc.SupportedBitmapPixelFormat}" +
-                $"\n\tSupportedBitmapAlphaMode: {inputDesc.SupportedBitmapAlphaMode}";
+                int featureIndex = 0;
+                foreach (var featureDesc in m_descriptor.InputFeatureDescriptors)
+                {
+                    UISkillInputDescription.Text += SkillHelper.SkillHelperMethods.GetSkillFeatureDescriptorString(featureDesc);
+                    if (featureIndex++ > 0 && featureIndex < m_descriptor.InputFeatureDescriptors.Count - 1)
+                    {
+                        UISkillInputDescription.Text += "\n----\n";
+                    }
+                }
 
-                var outputDesc1 = m_descriptor.OutputFeatureDescriptors[0] as SkeletalDetectorResultListDescriptor;
-                UISkillOutputDescription1.Text = $"\tName: {outputDesc1.Name}, Description: {outputDesc1.Description} \n\tType: Custom";
+                featureIndex = 0;
+                foreach (var featureDesc in m_descriptor.OutputFeatureDescriptors)
+                {
+                    UISkillOutputDescription.Text += SkillHelper.SkillHelperMethods.GetSkillFeatureDescriptorString(featureDesc);
+                    if (featureIndex++ > 0 && featureIndex < m_descriptor.OutputFeatureDescriptors.Count - 1)
+                    {
+                        UISkillOutputDescription.Text += "\n----\n";
+                    }
+                }
 
                 if (m_availableExecutionDevices.Count == 0)
                 {
@@ -189,16 +204,17 @@ namespace GalleryApp
         }
 
         /// <summary>
-        /// Configure an IFrameSource from a StorageFile or MediaCapture instance
+        /// Configure an IFrameSource from a StorageFile or MediaCapture instance to produce optionally a specified format of frame
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        private async Task ConfigureFrameSourceAsync(object source)
+        protected override async Task ConfigureFrameSourceAsync(object source, ISkillFeatureImageDescriptor inputImageDescriptor = null)
         {
             await m_lock.WaitAsync();
             {
                 // Reset bitmap rendering component
                 UIImageViewer.Source = null;
+                m_renderTargetFrame = null;
                 m_processedBitmapSource = new SoftwareBitmapSource();
                 UIImageViewer.Source = m_processedBitmapSource;
                 m_bodyRenderer.IsVisible = false;
@@ -216,25 +232,17 @@ namespace GalleryApp
                 }
 
                 // Create new frame source and register a callback if the source fails along the way
-                m_frameSource = await FrameSourceFactory.CreateFrameSourceAsync(source, (sender, message) =>
-                {
-                    NotifyUser(message);
-                });
-
+                m_frameSource = await FrameSourceFactory.CreateFrameSourceAsync(
+                    source,
+                    (sender, message) =>
+                    {
+                        NotifyUser(message);
+                    },
+                    inputImageDescriptor);
             }
             m_lock.Release();
 
-            RunSkill_Execution();
-        }
-
-
-        /// <summary>
-        /// If a valid frame source is obtained, run skill on it
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private async void RunSkill_Execution()
-        {
+            // If we obtained a valid frame source, start it
             if (m_frameSource != null)
             {
                 m_frameSource.FrameArrived += FrameSource_FrameAvailable;
@@ -262,12 +270,18 @@ namespace GalleryApp
                 {
                     try
                     {
+                        await UpdateIndicator(IndicatorKind.binding, ExecutionState.reset);
+                        await UpdateIndicator(IndicatorKind.evaluating, ExecutionState.reset);
+                        await UpdateIndicator(IndicatorKind.done, ExecutionState.reset);
+
                         await RunSkillAsync(frame);
                         await DisplayFrameAndResultAsync(frame);
+                        UpdateIndicator(IndicatorKind.done, ExecutionState.end);
                     }
                     catch (Exception ex)
                     {
                         NotifyUser(ex.Message);
+                        UpdateIndicator(IndicatorKind.done, ExecutionState.error);
                     }
                     finally
                     {
@@ -293,15 +307,36 @@ namespace GalleryApp
                     m_bodyRenderer.IsVisible = true;
 
                     // Display the input frame
-                    if (frame.SoftwareBitmap != null)
+                    SoftwareBitmap targetSoftwareBitmap = frame.SoftwareBitmap;
+
+                    // If we receive a Direct3DSurface-backed VideoFrame, convert to a SoftwareBitmap in a format that can be rendered via the UI element
+                    if (targetSoftwareBitmap == null)
                     {
-                        await m_processedBitmapSource.SetBitmapAsync(frame.SoftwareBitmap);
+                        if (m_renderTargetFrame == null)
+                        {
+                            m_renderTargetFrame = new VideoFrame(BitmapPixelFormat.Bgra8, frame.Direct3DSurface.Description.Width, frame.Direct3DSurface.Description.Height, BitmapAlphaMode.Ignore);
+                        }
+
+                        // Leverage the VideoFrame.CopyToAsync() method that can convert the input Direct3DSurface-backed VideoFrame to a SoftwareBitmap-backed VideoFrame
+                        await frame.CopyToAsync(m_renderTargetFrame);
+                        targetSoftwareBitmap = m_renderTargetFrame.SoftwareBitmap;
                     }
+                    // Else, if we receive a SoftwareBitmap-backed VideoFrame, if its format cannot already be rendered via the UI element, convert it accordingly
                     else
                     {
-                        var bitmap = await SoftwareBitmap.CreateCopyFromSurfaceAsync(frame.Direct3DSurface, BitmapAlphaMode.Ignore);
-                        await m_processedBitmapSource.SetBitmapAsync(bitmap);
+                        if (targetSoftwareBitmap.BitmapPixelFormat != BitmapPixelFormat.Bgra8 || targetSoftwareBitmap.BitmapAlphaMode != BitmapAlphaMode.Ignore)
+                        {
+                            if (m_renderTargetFrame == null)
+                            {
+                                m_renderTargetFrame = new VideoFrame(BitmapPixelFormat.Bgra8, targetSoftwareBitmap.PixelWidth, targetSoftwareBitmap.PixelHeight, BitmapAlphaMode.Ignore);
+                            }
+
+                            // Leverage the VideoFrame.CopyToAsync() method that can convert the input SoftwareBitmap-backed VideoFrame to a different format
+                            await frame.CopyToAsync(m_renderTargetFrame);
+                            targetSoftwareBitmap = m_renderTargetFrame.SoftwareBitmap;
+                        }
                     }
+                    await m_processedBitmapSource.SetBitmapAsync(targetSoftwareBitmap);
 
                     // If our canvas overlay is properly resized, update displayed results
                     if (UICanvasOverlay.ActualWidth != 0)
@@ -310,6 +345,7 @@ namespace GalleryApp
                     }
 
                     // Output result and perf text
+                    NotifyUser("Displaying result...");
                     UISkillOutputDetails.Text = $"Found {m_binding.Bodies.Count} bodies (bind: {m_bindTime.ToString("F2")}ms, eval: {m_evalTime.ToString("F2")}ms";
                 }
                 catch (TaskCanceledException)
@@ -320,26 +356,10 @@ namespace GalleryApp
                 catch (Exception ex)
                 {
                     NotifyUser($"Exception while rendering results: {ex.Message}");
+                    await UpdateIndicator(IndicatorKind.done, ExecutionState.error);
                 }
             });
         }
-
-        /// <summary>
-        /// Print a message to the UI
-        /// </summary>
-        /// <param name="message"></param>
-        private void NotifyUser(String message)
-        {
-            if (Dispatcher.HasThreadAccess)
-            {
-                UIMessageTextBlock.Text = message;
-            }
-            else
-            {
-                Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => UIMessageTextBlock.Text = message).AsTask().Wait();
-            }
-        }
-
 
         /// <summary>
         /// Triggered when the execution device selected changes. We simply retrigger the image source toggle to reinitialize the skill accordingly. 
@@ -377,3 +397,4 @@ namespace GalleryApp
         }
     }
 }
+

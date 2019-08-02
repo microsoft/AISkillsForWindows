@@ -1,5 +1,6 @@
 ﻿// Copyright (C) Microsoft Corporation. All rights reserved.
 
+using Microsoft.AI.Skills.SkillInterfacePreview;
 using System;
 using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
@@ -17,17 +18,23 @@ namespace FrameSourceHelper_UWP
         public FrameSourceType FrameSourceType => FrameSourceType.Photo;
 
         public event EventHandler<VideoFrame> FrameArrived;
-        VideoFrame m_videoFrame;
+        private VideoFrame m_videoFrame;
+        private ISkillFeatureImageDescriptor m_desiredImageDescriptor = null;
 
         /// <summary>
         /// Static factory
         /// </summary>
         /// <param name="storageFile"></param>
+        /// <param name="imageDescriptor"></param>
         /// <returns></returns>
         public static async Task<ImageFileFrameSource> CreateFromStorageFileAsyncTask(
-            StorageFile storageFile)
+            StorageFile storageFile,
+            ISkillFeatureImageDescriptor imageDescriptor)
         {
-            var result = new ImageFileFrameSource();
+            var result = new ImageFileFrameSource()
+            {
+                m_desiredImageDescriptor = imageDescriptor
+            };
             await result.GetFrameFromFileAsync(storageFile);
             return result;
         }
@@ -67,8 +74,11 @@ namespace FrameSourceHelper_UWP
                 // Get the SoftwareBitmap representation of the file in BGRA8 format
                 softwareBitmap = await decoder.GetSoftwareBitmapAsync();
 
-                // Convert to friendly format for UI display purpose and encapsulate the image in a VideoFrame instance
-                m_videoFrame = VideoFrame.CreateWithSoftwareBitmap(SoftwareBitmap.Convert(softwareBitmap, BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied));
+                // Convert to preferred format if specified and encapsulate the image in a VideoFrame instance
+                var convertedSoftwareBitmap = m_desiredImageDescriptor == null ? SoftwareBitmap.Convert(softwareBitmap, BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore) 
+                    : SoftwareBitmap.Convert(softwareBitmap, m_desiredImageDescriptor.SupportedBitmapPixelFormat, m_desiredImageDescriptor.SupportedBitmapAlphaMode);
+                
+                m_videoFrame = VideoFrame.CreateWithSoftwareBitmap(convertedSoftwareBitmap);
             }
 
             // Extract frame dimensions

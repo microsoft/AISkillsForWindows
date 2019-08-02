@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "Vision",
+    "SkillViews": [
+      {
+        "PageTypeStr": "SkeletalDetectorPage",
+        "ThumbnailPhotoPath": "./Assets/SkeletalDetectorThumbnailPhoto.JPG"
+      },
+      {
+        "PageTypeStr": "ObjectDetectorPage",
+        "ThumbnailPhotoPath": "./Assets/ObjectDetectorThumbnailPhoto.JPG"
+      }
+    ]
+  }
+]
