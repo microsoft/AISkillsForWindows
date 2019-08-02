@@ -13,10 +13,11 @@
         <DataTemplate x:Key="ImageGridView_DefaultItemTemplate"
                       x:DataType="local:SkillView">
             <Grid Background="LightGray" Height="400" Width="400">
+                <Image Stretch="Uniform" Source="{x:Bind ThumbnailPhotoPath}" Opacity="0.8"/>
                 <Grid Height="200" Width="400" VerticalAlignment="Bottom" 
                       HorizontalAlignment="Center">
                     <Rectangle Height="200" Width="400" VerticalAlignment="Bottom" 
-                               Fill="Gray" Opacity="0.25"/>
+                               Fill="Gray" Opacity="0.8"/>
                     <TextBlock Text="{x:Bind Name}" Padding="10, 0, 10, 0"
                                Style="{StaticResource SubheaderTextBlockStyle}"/>
                     <TextBlock Text="{x:Bind Description}" Padding="10, 60, 10, 0"

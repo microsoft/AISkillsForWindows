@@ -161,6 +161,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\GitHub-Mark-32px.png" />
+    <Content Include="Assets\ObjectDetectorThumbnailPhoto.JPG" />
+    <Content Include="Assets\SkeletalDetectorThumbnailPhoto.JPG" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -211,7 +213,6 @@
       <Version>2.0.1</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Content Include="Pages\SkillViewGlossary.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

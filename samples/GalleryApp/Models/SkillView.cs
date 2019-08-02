@@ -25,6 +25,7 @@ namespace GalleryApp
 
         public string Name { get; private set; }
         public string Description { get; private set; }
+        public string ThumbnailPhotoPath { get; set; }
 
         /// <value> Get the PageType for frame navigation </value>
         public Type PageType { get; private set; }

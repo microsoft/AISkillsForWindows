@@ -3,10 +3,12 @@
     "Name": "Vision",
     "SkillViews": [
       {
-        "PageTypeStr": "SkeletalDetectorPage"
+        "PageTypeStr": "SkeletalDetectorPage",
+        "ThumbnailPhotoPath": "./Assets/SkeletalDetectorThumbnailPhoto.JPG"
       },
       {
-        "PageTypeStr": "ObjectDetectorPage"
+        "PageTypeStr": "ObjectDetectorPage",
+        "ThumbnailPhotoPath": "./Assets/ObjectDetectorThumbnailPhoto.JPG"
       }
     ]
   }
