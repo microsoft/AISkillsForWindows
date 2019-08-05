@@ -92,10 +92,14 @@ The [SkillName]Page.xaml page will be used by the app to navigate from the MainP
 3. Add NuGet package
    To install or update the needed NuGet package for to run your skill, refer the to the link [Install and manage packages in Visual Studio](https://docs.microsoft.com/en-us/nuget/consume-packages/install-use-packages-visual-studio)
 
-4. Add skill information in SkillViewGlossary.json
+4. Add a thumbnail photo [SkillName]ThumbnailPhoto.JPG under ./Assets folder.
+
+5. Add skill information in SkillViewGlossary.json
    1. Update /Pages/SkillViewGlossary.json file. Select the category where you want your page to be listed. If none of the category fits, you can add a new category for your skill.
    
       The type of the xaml page is used when loading the page. Copy the class name _[SkillName]Page_ from [SkillName]Page.xaml.cs to the json file.
+      
+      The thumbnail photo path (see step 4) is used when populating the thumbnail on the MainPage.
       
       For example, skills that processes image files are placed under the “Vision” category. Skills that processes audio files can be placed under “Audio” category.
       ```json
@@ -104,7 +108,8 @@ The [SkillName]Page.xaml page will be used by the app to navigate from the MainP
           "Name": "Vision",
           "SkillViews": [
             {
-              "PageTypeStr": "ObjectDetectorPage"
+              "PageTypeStr": "ObjectDetectorPage",
+              "ThumbnailPhotoPath": "./Assets/ObjectDetectorThumbnailPhoto.JPG"
             }
           ]
         }
