@@ -43,7 +43,7 @@ The [SkillName]Page.xaml page will be used by the app to navigate from the MainP
 1. Add [SkillName]Page.xaml
    1. First you need to create a XAML page in the folder /Pages. \
       For example, ObjectDetectorPage.xaml is located in Pages folder. Isolate any skill specific helper class in separate .cs file   (example: BoundingBoxRender.cs for ObjectDetector).
-   2. Change the header namespace in [SkillName]Page.xaml to \
+   2. Change the header namespace in [SkillName]Page.xaml to
       ```xaml
       <local:SkillPageBase
       xmlns:local="using:GalleryApp"
