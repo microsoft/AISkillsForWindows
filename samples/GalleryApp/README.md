@@ -40,6 +40,9 @@ Right click */Pages/SkillViewGlossary.json* and select properties. Verify the se
 
 ## How to add new skill
 The [SkillName]Page.xaml page will be used by the app to navigate from the MainPage.xaml thumbnail to your skill page that contains code to run your skill.
+
+![SkillPages need to be inherited from _SkillPageBase_ and _ISkillViewPage_](https://github.com/microsoft/WindowsVisionSkillsPreview/blob/user/t-kazhua/galleryapp-sratch/samples/GalleryApp/GitHubResources/SkillPageBaseClass.JPG )
+
 1. Add [SkillName]Page.xaml
    1. First you need to create a XAML page in the folder /Pages. \
       For example, ObjectDetectorPage.xaml is located in Pages folder. Isolate any skill specific helper class in separate .cs file   (example: BoundingBoxRender.cs for ObjectDetector).
