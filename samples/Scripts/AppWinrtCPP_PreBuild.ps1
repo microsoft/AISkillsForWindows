@@ -13,14 +13,30 @@ Generates headers (.h) files from a set of referenced .winmd files.
 param($OutDir,$ProjectDir,$PackageDir,$WindowsSDK_UnionMetadataPath)
 
 [xml]$packages = Get-Content "$ProjectDir\packages.config"
-#echo $packages.packages
 $winmdFiles = @()
+$cppWinRTExecPath = $null;
 
 foreach ($package in $packages.packages.package)
 {
+	echo ($package.id + "." + $package.version)
     $searchpath = $PackageDir + "\packages\" + $package.id + "." + $package.version
     $winmdFiles += Get-ChildItem -Path "$searchpath" -Recurse -Filter *.winmd | %{$_.FullName}
+    if($package.id.Contains('CppWinRT'))
+    {
+        $cppWinRTExecPath += Get-ChildItem -Path "$searchpath" -Recurse -Filter "cppwinrt.exe" | %{$_.FullName}
+    }
 }
+
+if($cppWinRTExecPath)
+{
+    echo ("Found cppwinrt executable: " + $cppWinRTExecPath)
+}
+else
+{
+    throw 'Could not find cppwinrt.exe'
+}
+
+
 $OutDir = "$ProjectDir" + "inc"
 if(!(Test-Path "$OutDir"))
 {
@@ -34,8 +50,9 @@ foreach($file in $winmdFiles)
 $winmdFiles = Get-ChildItem -Path "$OutDir" -Filter *.winmd | %{$_.FullName}
 foreach($file in $winmdFiles)
 {
-	echo "Generating headers for $file"
-    $winrtHeaderScript =  "cppwinrt -in " + "'$file'" + " -ref " + "'$OutDir'" +  " -ref " + "'$WindowsSDK_UnionMetadataPath'" + " -out "+ "'$OutDir'" 
+    echo "Generating headers for $file"
+    $winrtHeaderScript =  "$cppWinRTExecPath -in " + "'$file'" + " -ref " + "'$OutDir'" +  " -ref " + "'$WindowsSDK_UnionMetadataPath'" + " -out "+ "'$OutDir'" 
+    echo $winrtHeaderScript
     Invoke-Expression "$winrtHeaderScript"
 }
 foreach($file in $winmdFiles)

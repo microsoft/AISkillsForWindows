@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.props" Condition="Exists('..\..\..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.props')" />
+  <Import Project="..\..\..\packages\Microsoft.Windows.CppWinRT.2.0.190730.2\build\native\Microsoft.Windows.CppWinRT.props" Condition="Exists('..\..\..\packages\Microsoft.Windows.CppWinRT.2.0.190730.2\build\native\Microsoft.Windows.CppWinRT.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
       <Configuration>Debug</Configuration>
@@ -80,6 +80,14 @@
       <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">Mincore.lib;runtimeobject.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Mincore.lib;runtimeobject.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Message>Generates headers (.h) files from a set of referenced .winmd files.</Message>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\..\Scripts\AppWinrtCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -PackageDir:'$(ProjectDir)..\..\..' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Message>Copies all required binaries to the specified target directory</Message>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget) -Debug</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
     <ClCompile>
@@ -120,7 +128,7 @@
     </PreBuildEvent>
     <PostBuildEvent>
       <Message>Copies all required binaries to the specified target directory</Message>
-      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget) -Debug</Command>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -140,18 +148,18 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\..\..\packages\Microsoft.VCRTForwarders.140.1.0.0-rc\build\native\Microsoft.VCRTForwarders.140.targets" Condition="Exists('..\..\..\packages\Microsoft.VCRTForwarders.140.1.0.0-rc\build\native\Microsoft.VCRTForwarders.140.targets')" />
-    <Import Project="..\..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.15\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets" Condition="Exists('..\..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.15\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets')" />
-    <Import Project="..\..\..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.targets" Condition="Exists('..\..\..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.targets')" />
-    <Import Project="..\..\..\packages\Microsoft.AI.Skills.Vision.SkeletalDetectorPreview.0.1.0.1\build\native\Microsoft.AI.Skills.Vision.SkeletalDetectorPreview.targets" Condition="Exists('..\..\..\packages\Microsoft.AI.Skills.Vision.SkeletalDetectorPreview.0.1.0.1\build\native\Microsoft.AI.Skills.Vision.SkeletalDetectorPreview.targets')" />
+    <Import Project="..\..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.6.0\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets" Condition="Exists('..\..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.6.0\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets')" />
+    <Import Project="..\..\..\packages\Microsoft.AI.Skills.Vision.SkeletalDetectorPreview.0.1.0.3\build\native\Microsoft.AI.Skills.Vision.SkeletalDetectorPreview.targets" Condition="Exists('..\..\..\packages\Microsoft.AI.Skills.Vision.SkeletalDetectorPreview.0.1.0.3\build\native\Microsoft.AI.Skills.Vision.SkeletalDetectorPreview.targets')" />
+    <Import Project="..\..\..\packages\Microsoft.Windows.CppWinRT.2.0.190730.2\build\native\Microsoft.Windows.CppWinRT.targets" Condition="Exists('..\..\..\packages\Microsoft.Windows.CppWinRT.2.0.190730.2\build\native\Microsoft.Windows.CppWinRT.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\..\..\packages\Microsoft.VCRTForwarders.140.1.0.0-rc\build\native\Microsoft.VCRTForwarders.140.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.VCRTForwarders.140.1.0.0-rc\build\native\Microsoft.VCRTForwarders.140.targets'))" />
-    <Error Condition="!Exists('..\..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.15\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.15\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets'))" />
-    <Error Condition="!Exists('..\..\..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.props'))" />
-    <Error Condition="!Exists('..\..\..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.targets'))" />
-    <Error Condition="!Exists('..\..\..\packages\Microsoft.AI.Skills.Vision.SkeletalDetectorPreview.0.1.0.1\build\native\Microsoft.AI.Skills.Vision.SkeletalDetectorPreview.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.AI.Skills.Vision.SkeletalDetectorPreview.0.1.0.1\build\native\Microsoft.AI.Skills.Vision.SkeletalDetectorPreview.targets'))" />
+    <Error Condition="!Exists('..\..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.6.0\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.6.0\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets'))" />
+    <Error Condition="!Exists('..\..\..\packages\Microsoft.AI.Skills.Vision.SkeletalDetectorPreview.0.1.0.3\build\native\Microsoft.AI.Skills.Vision.SkeletalDetectorPreview.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.AI.Skills.Vision.SkeletalDetectorPreview.0.1.0.3\build\native\Microsoft.AI.Skills.Vision.SkeletalDetectorPreview.targets'))" />
+    <Error Condition="!Exists('..\..\..\packages\Microsoft.Windows.CppWinRT.2.0.190730.2\build\native\Microsoft.Windows.CppWinRT.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.Windows.CppWinRT.2.0.190730.2\build\native\Microsoft.Windows.CppWinRT.props'))" />
+    <Error Condition="!Exists('..\..\..\packages\Microsoft.Windows.CppWinRT.2.0.190730.2\build\native\Microsoft.Windows.CppWinRT.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.Windows.CppWinRT.2.0.190730.2\build\native\Microsoft.Windows.CppWinRT.targets'))" />
   </Target>
 </Project>

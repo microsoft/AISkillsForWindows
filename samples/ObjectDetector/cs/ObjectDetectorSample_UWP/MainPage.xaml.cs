@@ -95,7 +95,7 @@ namespace ObjectDetectorSkillSample
             if (Dispatcher.HasThreadAccess)
             {
                 // Show skill description members in UI
-                UISkillName.Text = m_descriptor.Name;
+                UISkillName.Text = m_descriptor.Information.Name;
 
                 UISkillDescription.Text = SkillHelper.SkillHelperMethods.GetSkillDescriptorString(m_descriptor);
 
