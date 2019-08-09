@@ -4,11 +4,13 @@
     "SkillViews": [
       {
         "PageTypeStr": "SkeletalDetectorPage",
-        "ThumbnailPhotoPath": "./Assets/SkeletalDetectorThumbnailPhoto.JPG"
+        "ThumbnailPhotoPath": "./Assets/SkeletalDetectorThumbnailPhoto.JPG",
+        "GitHubUrl": "https://github.com/microsoft/WindowsVisionSkillsPreview/tree/master/samples/SkeletalDetector"
       },
       {
         "PageTypeStr": "ObjectDetectorPage",
-        "ThumbnailPhotoPath": "./Assets/ObjectDetectorThumbnailPhoto.JPG"
+        "ThumbnailPhotoPath": "./Assets/ObjectDetectorThumbnailPhoto.JPG",
+        "GitHubUrl": "https://github.com/microsoft/WindowsVisionSkillsPreview/tree/master/samples/ObjectDetector"
       }
     ]
   }

@@ -153,6 +153,9 @@
       <DependentUpon>SkeletalDetectorPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="SkillPageBase.cs" />
+    <Compile Include="SkillViewController.xaml.cs">
+      <DependentUpon>SkillViewController.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -186,6 +189,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\SkeletalDetectorPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SkillViewController.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

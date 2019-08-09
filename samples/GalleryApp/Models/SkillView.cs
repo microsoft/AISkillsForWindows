@@ -26,9 +26,12 @@ namespace GalleryApp
         public string Name { get; private set; }
         public string Description { get; private set; }
         public string ThumbnailPhotoPath { get; set; }
+        public string GitHubUrl { get; set; }
 
         /// <value> Get the PageType for frame navigation </value>
         public Type PageType { get; private set; }
+
+        //public bool HasName => !string.IsNullOrEmpty(Name);
 
         /// <summary>
         /// Get skill information from the corresponding skill descriptor object and assign to the related fields

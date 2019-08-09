@@ -65,7 +65,7 @@ namespace GalleryApp
         /// <param name="skill"> Skill passed from the thumbnail item </param>
         public void NavigateToSkillPage(SkillView skill)
         {
-            this.Frame.Navigate(skill.PageType);
+            this.Frame.Navigate(typeof(SkillViewController), skill);
         }
 
         /// <summary>
