@@ -1,6 +1,6 @@
 # Concept Tagger Windows Vision Skill samples
 
-These samples will show how to use theConcept Tagger Vision Skill NuGet package to create apps that can detect and identify individuals in a video or image, and the poses of their bodies. 
+These samples will show how to use the Concept Tagger Vision Skill NuGet package to create apps that can identify and classify concepts in an image for scenario such as picture indexation. 
 
 ![Screenshot of concept tagger skill in action in the UWP sample](./doc/sample_app.jpg)
 
