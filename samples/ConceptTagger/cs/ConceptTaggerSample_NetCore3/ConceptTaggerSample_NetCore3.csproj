@@ -8,12 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\..\Common\cs\CameraHelper_netcore3.cs" Link="CameraHelper_netcore3.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AI.Skills.SkillInterfacePreview" Version="0.6.0" />
-    <PackageReference Include="Microsoft.AI.Skills.Vision.SkeletalDetectorPreview" Version="0.1.0.3" />
+    <PackageReference Include="Microsoft.AI.Skills.SkillInterfacePreview" Version="0.6.0.0" />
+    <PackageReference Include="Microsoft.AI.Skills.Vision.ConceptTaggerPreview" Version="0.1.0.1" />
 	<PackageReference Include="Microsoft.VCRTForwarders.140" Version="1.0.0-rc" />
   </ItemGroup>
   

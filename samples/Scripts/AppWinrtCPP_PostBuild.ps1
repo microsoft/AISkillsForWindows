@@ -14,13 +14,16 @@ param($TargetDir,$VCRedistPath,$VCToolsRedistVersion,$PlatformTarget,[switch] $D
 echo "Gathering known dependencies..."
 
 $redistfiles =@("vcruntime140" , "msvcp140")
-$redistPath = $VCRedistPath + "Redist\MSVC\" + $VCToolsRedistVersion + "\" + $PlatformTarget + "\Microsoft.VC141.CRT\"
+$redistPathToSearch = $VCRedistPath + "Redist\MSVC\" + $VCToolsRedistVersion + "\" + $PlatformTarget
+$redistPath = (gci -path $redistPathToSearch -filter "*CRT" | Select-Object -Expand FullName)
+
 if($Debug)
 {
-    $redistPathDebug = $VCRedistPath + "Redist\MSVC\" + $VCToolsRedistVersion + "\debug_nonredist\" + $PlatformTarget + "\Microsoft.VC141.DebugCRT\"
+    $redistPathDebugToSearch = $VCRedistPath + "Redist\MSVC\" + $VCToolsRedistVersion + "\debug_nonredist\" + $PlatformTarget
+	$redistPathDebug = (gci -path $redistPathDebugToSearch -filter "*DebugCRT" | Select-Object -Expand FullName)
     foreach($file in $redistfiles)
     {
-        $fullpath = $redistPathDebug + $file +"d.dll"
+        $fullpath = $redistPathDebug + "\" + $file +"d.dll"
         copy -Force $fullpath $TargetDir
     }
 }
@@ -30,7 +33,8 @@ foreach($file in $redistfiles)
 {
     $fullname = $file + ".dll"
     $linkFile = $file + "_app.dll"
-    $fullpath = $redistPath+$fullname
+    $fullpath = $redistPath + "\" + $fullname
+	
     copy -Force $fullpath $TargetDir
     
     # the vc runtime forwarders may not exist for all architectures (i.e. ARM and ARM64), we create the links for the ones that we require
