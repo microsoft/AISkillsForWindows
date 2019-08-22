@@ -107,7 +107,7 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
             modelFile = folder.GetFileAsync(WINML_MODEL_FILENAME).get();
         }
         // Deobfuscate model file and retrieve LearningModel instance
-        LearningModel learningModel = winrt::DeobfuscationHelper::Deobfuscator::DeobfuscateModelAsync(modelFile, descriptor.Id()).get();
+        LearningModel learningModel = winrt::DeobfuscationHelper::Deobfuscator::DeobfuscateModelAsync(modelFile, descriptor.Information().Id()).get();
 
         // Create WinML session
         auto winmlSession = LearningModelSession(learningModel, GetWinMLDevice(device));

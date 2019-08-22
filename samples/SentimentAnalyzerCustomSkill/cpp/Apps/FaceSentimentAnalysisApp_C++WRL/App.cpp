@@ -143,7 +143,7 @@ HRESULT App::InitCameraAndFrameSource()
             CHECKHR_GOTO(spDeviceInformation->get_Name(&deviceName), cleanup);
             CHECKHR_GOTO(deviceName2.Set(deviceName), cleanup);
 
-            std::cout << std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t>().to_bytes(deviceName2.GetRawBuffer(nullptr)) << " | FrameSourceType:" << streamType << std::endl;
+            std::wcout << deviceName2.GetRawBuffer(nullptr) << " | FrameSourceType:" << streamType << std::endl;
 
             CHECKHR_GOTO(spIterator->MoveNext(&bHasCurrent), cleanup);
 

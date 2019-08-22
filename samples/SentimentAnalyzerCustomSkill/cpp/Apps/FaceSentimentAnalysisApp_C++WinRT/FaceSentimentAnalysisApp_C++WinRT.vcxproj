@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\Microsoft.Windows.CppWinRT.2.0.190730.2\build\native\Microsoft.Windows.CppWinRT.props" Condition="Exists('..\..\packages\Microsoft.Windows.CppWinRT.2.0.190730.2\build\native\Microsoft.Windows.CppWinRT.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
       <Configuration>Debug</Configuration>
@@ -151,11 +152,11 @@
       <AdditionalManifestFiles>app.manifest</AdditionalManifestFiles>
     </Manifest>
     <PreBuildEvent>
-      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\scripts\AppWinrtCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -PackageDir:'$(ProjectDir)..\..' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\..\..\Scripts\AppWinrtCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -PackageDir:'$(ProjectDir)..\..' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)' -GeneratedFilesDir:'$(GeneratedFilesDir)'</Command>
       <Message>Generates headers (.h) files from a set of referenced .winmd files.</Message>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget)</Command>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget)</Command>
       <Message>Copies all required binaries to the specified target directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -179,11 +180,11 @@
       <AdditionalDependencies>Mincore.lib;runtimeobject.lib;kernel32.lib;user32.lib;ole32.lib;oleaut32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\scripts\AppWinrtCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -PackageDir:'$(ProjectDir)..\..' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\..\..\Scripts\AppWinrtCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -PackageDir:'$(ProjectDir)..\..' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
       <Message>Generates headers (.h) files from a set of referenced .winmd files.</Message>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget) -Debug</Command>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)\..\..\..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget) -Debug</Command>
       <Message>Copies all required binaries to the specified target directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -207,11 +208,11 @@
       <AdditionalDependencies>Mincore.lib;runtimeobject.lib;kernel32.lib;user32.lib;ole32.lib;oleaut32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\scripts\AppWinrtCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -PackageDir:'$(ProjectDir)..\..' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\..\..\Scripts\AppWinrtCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -PackageDir:'$(ProjectDir)..\..' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
       <Message>Generates headers (.h) files from a set of referenced .winmd files.</Message>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget) -Debug</Command>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)\..\..\..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget) -Debug</Command>
       <Message>Copies all required binaries to the specified target directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -235,11 +236,11 @@
       <AdditionalDependencies>Mincore.lib;runtimeobject.lib;kernel32.lib;user32.lib;ole32.lib;oleaut32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\scripts\AppWinrtCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -PackageDir:'$(ProjectDir)..\..' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\..\..\Scripts\AppWinrtCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -PackageDir:'$(ProjectDir)..\..' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
       <Message>Generates headers (.h) files from a set of referenced .winmd files.</Message>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget) -Debug</Command>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)\..\..\..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget) -Debug</Command>
       <Message>Copies all required binaries to the specified target directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -270,11 +271,11 @@
       <AdditionalManifestFiles>app.manifest</AdditionalManifestFiles>
     </Manifest>
     <PreBuildEvent>
-      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\scripts\AppWinrtCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -PackageDir:'$(ProjectDir)..\..' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\..\..\Scripts\AppWinrtCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -PackageDir:'$(ProjectDir)..\..' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
       <Message>Generates headers (.h) files from a set of referenced .winmd files.</Message>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget)</Command>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget)</Command>
       <Message>Copies all required binaries to the specified target directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -305,11 +306,11 @@
       <AdditionalManifestFiles>app.manifest</AdditionalManifestFiles>
     </Manifest>
     <PreBuildEvent>
-      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\scripts\AppWinrtCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -PackageDir:'$(ProjectDir)..\..' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\..\..\Scripts\AppWinrtCPP_PreBuild.ps1' -ProjectDir:'$(ProjectDir)' -PackageDir:'$(ProjectDir)..\..' -WindowsSDK_UnionMetadataPath:'$(WindowsSDK_UnionMetadataPath)'</Command>
       <Message>Generates headers (.h) files from a set of referenced .winmd files.</Message>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget)</Command>
+      <Command>powershell -ExecutionPolicy Unrestricted -NoLogo -NonInteractive -Command .'$(ProjectDir)..\..\..\..\Scripts\AppWinrtCPP_PostBuild.ps1' -TargetDir:'$(TargetDir)' -VCRedistPath:'$(VCInstallDir)' -VCToolsRedistVersion:$(VCToolsRedistVersion) -PlatformTarget:$(PlatformTarget)</Command>
       <Message>Copies all required binaries to the specified target directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -329,15 +330,18 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\..\packages\Microsoft.VCRTForwarders.140.1.0.0-rc\build\native\Microsoft.VCRTForwarders.140.targets" Condition="Exists('..\..\packages\Microsoft.VCRTForwarders.140.1.0.0-rc\build\native\Microsoft.VCRTForwarders.140.targets')" />
-    <Import Project="..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.15\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets" Condition="Exists('..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.15\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets')" />
-    <Import Project="..\..\packages\Contoso.FaceSentimentAnalyzer_CPP.0.0.0.7\build\native\Contoso.FaceSentimentAnalyzer_CPP.targets" Condition="Exists('..\..\packages\Contoso.FaceSentimentAnalyzer_CPP.0.0.0.7\build\native\Contoso.FaceSentimentAnalyzer_CPP.targets')" />
+    <Import Project="..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.6.0\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets" Condition="Exists('..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.6.0\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets')" />
+    <Import Project="..\..\packages\Microsoft.Windows.CppWinRT.2.0.190730.2\build\native\Microsoft.Windows.CppWinRT.targets" Condition="Exists('..\..\packages\Microsoft.Windows.CppWinRT.2.0.190730.2\build\native\Microsoft.Windows.CppWinRT.targets')" />
+    <Import Project="..\..\packages\Contoso.FaceSentimentAnalyzer_CPP.0.0.0.8\build\native\Contoso.FaceSentimentAnalyzer_CPP.targets" Condition="Exists('..\..\packages\Contoso.FaceSentimentAnalyzer_CPP.0.0.0.8\build\native\Contoso.FaceSentimentAnalyzer_CPP.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\Microsoft.VCRTForwarders.140.1.0.0-rc\build\native\Microsoft.VCRTForwarders.140.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.VCRTForwarders.140.1.0.0-rc\build\native\Microsoft.VCRTForwarders.140.targets'))" />
-    <Error Condition="!Exists('..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.15\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.5.2.15\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets'))" />
-    <Error Condition="!Exists('..\..\packages\Contoso.FaceSentimentAnalyzer_CPP.0.0.0.7\build\native\Contoso.FaceSentimentAnalyzer_CPP.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Contoso.FaceSentimentAnalyzer_CPP.0.0.0.7\build\native\Contoso.FaceSentimentAnalyzer_CPP.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.6.0\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.AI.Skills.SkillInterfacePreview.0.6.0\build\native\Microsoft.AI.Skills.SkillInterfacePreview.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.Windows.CppWinRT.2.0.190730.2\build\native\Microsoft.Windows.CppWinRT.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Windows.CppWinRT.2.0.190730.2\build\native\Microsoft.Windows.CppWinRT.props'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.Windows.CppWinRT.2.0.190730.2\build\native\Microsoft.Windows.CppWinRT.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Windows.CppWinRT.2.0.190730.2\build\native\Microsoft.Windows.CppWinRT.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Contoso.FaceSentimentAnalyzer_CPP.0.0.0.8\build\native\Contoso.FaceSentimentAnalyzer_CPP.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Contoso.FaceSentimentAnalyzer_CPP.0.0.0.8\build\native\Contoso.FaceSentimentAnalyzer_CPP.targets'))" />
   </Target>
 </Project>

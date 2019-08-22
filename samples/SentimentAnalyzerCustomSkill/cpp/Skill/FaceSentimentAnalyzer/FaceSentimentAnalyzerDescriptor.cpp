@@ -17,11 +17,13 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
     //
     FaceSentimentAnalyzerDescriptor::FaceSentimentAnalyzerDescriptor()
     {
-        m_version = SkillVersion::Create(
-            0,  // major version
-            1,  // minor version
-            L"Contoso Developer", // Author name 
-            L"Contoso Publishing" // Publisher name
+        m_information = SkillInformation::Create(
+            L"FaceSentimentAnalyzer", // Name
+            L"Finds a face in the image and infers its predominant sentiment from a set of 8 possible labels", // Description
+            FaceSentimentAnalyzerId, // Id
+            { 0, 0, 0, 8 }, // Version
+            L"Contoso Developer", // Author
+            L"Contoso Publishing" // Publisher
         );
 
         auto inputSkillDesc = single_threaded_vector<ISkillFeatureDescriptor>();
@@ -120,24 +122,9 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
         return skill;
     }
 
-    winrt::guid FaceSentimentAnalyzerDescriptor::Id()
+    SkillInformation FaceSentimentAnalyzerDescriptor::Information()
     {
-        return FaceSentimentAnalyzerId;
-    }
-
-    hstring FaceSentimentAnalyzerDescriptor::Name()
-    {
-        return L"FaceSentimentAnalyzer";
-    }
-    
-    hstring FaceSentimentAnalyzerDescriptor::Description()
-    {
-        return L"Finds a face in the image and infers its predominant sentiment from a set of 8 possible labels";
-    }
-
-    SkillVersion FaceSentimentAnalyzerDescriptor::Version()
-    {
-        return m_version;
+        return m_information;
     }
 
     Windows::Foundation::Collections::IVectorView<ISkillFeatureDescriptor> FaceSentimentAnalyzerDescriptor::InputFeatureDescriptors()
