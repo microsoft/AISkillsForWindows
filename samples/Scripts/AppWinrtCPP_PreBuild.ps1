@@ -10,7 +10,7 @@ Generates headers (.h) files from a set of referenced .winmd files.
 -WindowsSDK_UnionMetadataPath: folder path of the SDK union metadata that contains Windows.winmd (i.e.: C:\Program Files (x86)\Windows Kits\10\UnionMetadata\10.0.18362.0)
 #>
 
-param($ProjectDir,$PackageDir,$WindowsSDK_UnionMetadataPath,$GeneratedFilesDir)
+param($ProjectDir,$PackageDir,$WindowsSDK_UnionMetadataPath,$GeneratedFilesDir="")
 
 [xml]$packages = Get-Content "$ProjectDir\packages.config"
 $winmdFiles = @()
@@ -36,17 +36,21 @@ else
     throw 'Could not find cppwinrt.exe'
 }
 
-echo "Generated Files dir: $GeneratedFilesDir"
 $OutDir = "$ProjectDir" + "inc"
-$GeneratedFilesDirFullPath = "$ProjectDir" + "$GeneratedFilesDir"
-echo "GeneratedFilesDirFullPath: $GeneratedFilesDirFullPath"
-if(!(Test-Path "$GeneratedFilesDirFullPath"))
+
+if($GeneratedFilesDir -ne "")
 {
-    mkdir $GeneratedFilesDirFullPath 
-}
-else
-{
-    Get-ChildItem -Path $GeneratedFilesDirFullPath -Recurse | Remove-Item -force -recurse
+    echo "Generated Files dir: $GeneratedFilesDir"
+    $GeneratedFilesDirFullPath = "$ProjectDir" + "$GeneratedFilesDir"
+    echo "GeneratedFilesDirFullPath: $GeneratedFilesDirFullPath"
+    if(!(Test-Path "$GeneratedFilesDirFullPath"))
+    {
+        mkdir $GeneratedFilesDirFullPath 
+    }
+    else
+    {
+        Get-ChildItem -Path $GeneratedFilesDirFullPath -Recurse | Remove-Item -force -recurse
+    }
 }
 if(!(Test-Path "$OutDir"))
 {
@@ -67,8 +71,11 @@ foreach($file in $winmdFiles)
     Invoke-Expression "$winrtHeaderScript"
 }
 
-echo "copy $OutDir\winrt\* $GeneratedFilesDirFullPath\winrt"
-copy $OutDir\winrt\* $GeneratedFilesDirFullPath\winrt
+if($GeneratedFilesDir -ne "")
+{
+    echo "copy $OutDir\winrt\* $GeneratedFilesDirFullPath\winrt"
+    copy $OutDir\winrt\* $GeneratedFilesDirFullPath\winrt
+}
 
 foreach($file in $winmdFiles)
 {

@@ -10,7 +10,7 @@ Generates temporary .idl files from .winmd referenced via NuGet, then generates 
 -WindowsSDK_UnionMetadataPath: folder path of the SDK union metadata that contains Windows.winmd (i.e.: C:\Program Files (x86)\Windows Kits\10\UnionMetadata\10.0.18362.0)
 #>
 
-param($ProjectDir,$PackageDir,$WindowsSDK_UnionMetadataPath,$GeneratedFilesDir)
+param($ProjectDir,$PackageDir,$WindowsSDK_UnionMetadataPath,$GeneratedFilesDir="")
 
 [xml]$packages = Get-Content "$ProjectDir\packages.config"
 #echo $packages.packages
@@ -29,17 +29,34 @@ if(!(Test-Path "$OutDir"))
     mkdir $OutDir 
 }
 
-echo "Generated Files dir: $GeneratedFilesDir"
 $OutDir = "$ProjectDir" + "inc"
-$GeneratedFilesDirFullPath = "$ProjectDir" + "$GeneratedFilesDir"
-echo "GeneratedFilesDirFullPath: $GeneratedFilesDirFullPath"
-if(!(Test-Path "$GeneratedFilesDirFullPath"))
+
+$DestinationPath = ""
+if($GeneratedFilesDir -ne "")
 {
-    mkdir $GeneratedFilesDirFullPath 
-}
-else
-{
-    Get-ChildItem -Path $GeneratedFilesDirFullPath -Recurse | Remove-Item -force -recurse
+    echo "Generated Files dir: $GeneratedFilesDir"
+    $GeneratedFilesDirFullPath = "$ProjectDir" + "$GeneratedFilesDir"
+    echo "GeneratedFilesDirFullPath: $GeneratedFilesDirFullPath"
+    if(!(Test-Path "$GeneratedFilesDirFullPath"))
+    {
+        echo "making dir $GeneratedFilesDirFullPath"
+        mkdir $GeneratedFilesDirFullPath
+	    
+    }
+    else
+    {
+		echo "removing content from $GeneratedFilesDirFullPath"
+        Get-ChildItem -Path '$GeneratedFilesDirFullPath' -Recurse | Remove-Item -force -recurse
+    }
+	
+	$DestinationPath = $GeneratedFilesDirFullPath + "winrt\"
+	
+	if(!(Test-Path "$DestinationPath"))
+    {
+        echo "making dir $DestinationPath"
+        mkdir $DestinationPath
+	    
+    }
 }
 
 foreach($file in $winmdFiles)
@@ -67,8 +84,15 @@ foreach ($file in $idlfilelist)
     Invoke-Expression "$headergencmd"
 }
 
-echo "copy .\* $GeneratedFilesDirFullPath"
-copy $OutDir\* $GeneratedFilesDirFullPath\winrt
+if($GeneratedFilesDir -ne "")
+{
+    $filesToCopy = Get-ChildItem -Path "." -Filter *.h -File | %{$_.FullName}
+    foreach($file in $filesToCopy)
+    {
+        echo "copying $file to $DestinationPath"
+	    Copy-Item $file -Destination $DestinationPath
+    }
+}
 
 del *.winmd
 del *.idl
