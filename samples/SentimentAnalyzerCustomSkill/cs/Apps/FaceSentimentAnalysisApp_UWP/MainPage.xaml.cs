@@ -73,7 +73,7 @@ namespace FaceSentimentAnalysisTestApp
                 m_availableExecutionDevices = await m_skillDescriptor.GetSupportedExecutionDevicesAsync();
 
                 // Show skill description members in UI
-                UISkillName.Text = m_skillDescriptor.Name;
+                UISkillName.Text = m_skillDescriptor.Information.Name;
 
                 UISkillDescription.Text = SkillHelper.SkillHelperMethods.GetSkillDescriptorString(m_skillDescriptor);
 

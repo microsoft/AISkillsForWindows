@@ -81,14 +81,9 @@
             <param name="executionDevice"></param>
             <returns></returns>
         </member>
-        <member name="P:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerDescriptor.Description">
+        <member name="P:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerDescriptor.Information">
             <summary>
-            Returns a description of the skill.
-            </summary>
-        </member>
-        <member name="P:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerDescriptor.Id">
-            <summary>
-            Returns a unique skill identifier.
+            Returns the information concerning this skill such as Name, Description, etc.
             </summary>
         </member>
         <member name="P:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerDescriptor.InputFeatureDescriptors">
@@ -102,19 +97,9 @@
             i.e. internal state, sub-process execution frequency, etc.
             </summary>
         </member>
-        <member name="P:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerDescriptor.Name">
-            <summary>
-            Returns the skill name.
-            </summary>
-        </member>
         <member name="P:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerDescriptor.OutputFeatureDescriptors">
             <summary>
             Returns a list of descriptors that correlate with each output SkillFeature.
-            </summary>
-        </member>
-        <member name="P:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerDescriptor.Version">
-            <summary>
-            Returns the Version information of the skill.
             </summary>
         </member>
         <member name="T:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerSkill">

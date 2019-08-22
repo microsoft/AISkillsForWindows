@@ -27,19 +27,14 @@ namespace Contoso.FaceSentimentAnalyzer
         /// </summary>
         public FaceSentimentAnalyzerDescriptor()
         {
-            Name = "FaceSentimentAnalyzer";
-
-            Description = "Finds a face in the image and infers its predominant sentiment from a set of 8 possible labels";
-
-            // {F8D275CE-C244-4E71-8A39-57335D291388}
-            Id = new Guid(0xf8d275ce, 0xc244, 0x4e71, 0x8a, 0x39, 0x57, 0x33, 0x5d, 0x29, 0x13, 0x88);
-
-            Version = SkillVersion.Create(
-                0,  // major version
-                1,  // minor version
-                "Contoso Developer", // Author name 
-                "Contoso Publishing" // Publisher name
-                );
+            Information = SkillInformation.Create(
+                "FaceSentimentAnalyzer", // Name
+                "Finds a face in the image and infers its predominant sentiment from a set of 8 possible labels", // Description
+                new Guid(0xf8d275ce, 0xc244, 0x4e71, 0x8a, 0x39, 0x57, 0x33, 0x5d, 0x29, 0x13, 0x88), // Id
+                new Windows.ApplicationModel.PackageVersion() { Major = 0, Minor = 0, Build = 0, Revision = 8 }, // Version
+                "Contoso Developer", // Author
+                "Contoso Publishing" // Publisher
+            ); 
 
             // Describe input feature
             m_inputSkillDesc = new List<ISkillFeatureDescriptor>();
@@ -149,14 +144,9 @@ namespace Contoso.FaceSentimentAnalyzer
         }
 
         /// <summary>
-        /// Returns a description of the skill.
+        /// Returns the information concerning this skill such as Name, Description, etc.
         /// </summary>
-        public string Description { get; private set; }
-
-        /// <summary>
-        /// Returns a unique skill identifier.
-        /// </summary>
-        public Guid Id { get; }
+        public SkillInformation Information { get; private set; }
 
         /// <summary>
         /// Returns a list of descriptors that correlate with each input SkillFeature.
@@ -170,18 +160,8 @@ namespace Contoso.FaceSentimentAnalyzer
         public IReadOnlyDictionary<string, string> Metadata => null;
 
         /// <summary>
-        /// Returns the skill name.
-        /// </summary>
-        public string Name { get; private set; }
-
-        /// <summary>
         /// Returns a list of descriptors that correlate with each output SkillFeature.
         /// </summary>
         public IReadOnlyList<ISkillFeatureDescriptor> OutputFeatureDescriptors => m_outputSkillDesc;
-
-        /// <summary>
-        /// Returns the Version information of the skill.
-        /// </summary>
-        public SkillVersion Version { get; }
     }
 }
