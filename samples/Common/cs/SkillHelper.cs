@@ -3,9 +3,71 @@
 using Microsoft.AI.Skills.SkillInterfacePreview;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SkillHelper
 {
+    /// <summary>
+    /// Helper class to encapsulate an ISkillDescriptor, ISkill and ISkillBinding
+    /// </summary>
+    public class SkillWrapper
+    {
+        public ISkill Skill { get; private set; }
+        public ISkillDescriptor Descriptor { get; private set; }
+        public ISkillBinding Binding { get; private set; }
+        public IReadOnlyList<ISkillExecutionDevice> ExecutionDevices { get; private set; }
+
+        /// <summary>
+        /// SkillRuntimeEntry constructor
+        /// </summary>
+        /// <param name="descriptor"></param>
+        public SkillWrapper(ISkillDescriptor descriptor)
+        {
+            Descriptor = descriptor;
+            ExecutionDevices = descriptor.GetSupportedExecutionDevicesAsync().GetResults();
+            Binding = null;
+        }
+
+        /// <summary>
+        /// Initialize the ISkill member instance if does not exists or conform to the specified device as well as the ISkillBinding member instance
+        /// </summary>
+        /// <param name="device"></param>
+        /// <returns></returns>
+        public async Task InitializeSkillAsync(ISkillExecutionDevice device = null)
+        {
+            if (Skill == null || device != null && Skill.Device != device)
+            {
+                Skill = await Descriptor.CreateSkillAsync(device);
+                Binding = await Skill.CreateSkillBindingAsync();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Simple wrapper class to help in binding ISkillFeatureDescriptor to UI in XAML
+    /// </summary>
+    public class SkillFeatureDescriptorWrappper
+    {
+        public SkillFeatureDescriptorWrappper(ISkillFeatureDescriptor descriptor)
+        {
+            Descriptor = descriptor;
+        }
+        public ISkillFeatureDescriptor Descriptor { get; private set; }
+    }
+
+    /// <summary>
+    /// Simple wrapper class to help in binding ISkillExecutionDevice to UI in XAML
+    /// </summary>
+    public class SkillExecutionDeviceWrappper
+    {
+        public SkillExecutionDeviceWrappper(ISkillExecutionDevice device)
+        {
+            Device = device;
+        }
+        public ISkillExecutionDevice Device { get; private set; }
+    }
+
     /// <summary>
     /// Class that exposes several facilities to handle skill information
     /// </summary>
@@ -90,21 +152,67 @@ namespace SkillHelper
         /// </summary>
         /// <param name="desc"></param>
         /// <returns></returns>
-        public static List<KeyValuePair<string, string>> GetSkillInformationStrings(ISkillDescriptor desc)
+        public static List<KeyValuePair<string, string>> GetSkillInformationStrings(SkillInformation info)
         {
-            if (desc == null)
+            if (info == null)
             {
                 return new List<KeyValuePair<string, string>>();
             }
 
             return new List<KeyValuePair<string, string>>()
             {
-                new KeyValuePair<string, string>("Description", $"{desc.Information.Description}"),
-                new KeyValuePair<string, string>("Author", $"{desc.Information.Author}"),
-                new KeyValuePair<string, string>("Publisher", $"{desc.Information.Publisher}"),
-                new KeyValuePair<string, string>("Version", $"{desc.Information.Version.Major}.{desc.Information.Version.Minor}.{desc.Information.Version.Build}.{desc.Information.Version.Revision}"),
-                new KeyValuePair<string, string>("Unique ID", $"{ desc.Information.Id}")
+                new KeyValuePair<string, string>("Description", $"{info.Description}"),
+                new KeyValuePair<string, string>("Author", $"{info.Author}"),
+                new KeyValuePair<string, string>("Publisher", $"{info.Publisher}"),
+                new KeyValuePair<string, string>("Version", $"{info.Version.Major}.{info.Version.Minor}.{info.Version.Build}.{info.Version.Revision}"),
+                new KeyValuePair<string, string>("Unique ID", $"{ info.Id}")
             };
+        }
+
+        /// <summary>
+        /// Get a list of strings extracted from the ISkillExecutionDevice describing it
+        /// </summary>
+        /// <param name="desc"></param>
+        /// <returns></returns>
+        public static List<KeyValuePair<string, string>> GetSkillExecutionDeviceStrings(ISkillExecutionDevice device)
+        {
+            if (device == null)
+            {
+                return new List<KeyValuePair<string, string>>();
+            }
+            List<KeyValuePair<string, string>> result = new List<KeyValuePair<string, string>>()
+            {
+                new KeyValuePair<string, string>("Name", $"{device.Name}"),
+                new KeyValuePair<string, string>("Kind", $"{device.ExecutionDeviceKind}"),
+            };
+
+            if (device is SkillExecutionDeviceCPU)
+            {
+                SkillExecutionDeviceCPU cpuDevice = device as SkillExecutionDeviceCPU;
+                result.Add(new KeyValuePair<string, string>("CoreCount", $"{cpuDevice.CoreCount}"));
+            }
+            else if (device is SkillExecutionDeviceDirectX)
+            {
+                SkillExecutionDeviceDirectX directXDevice = device as SkillExecutionDeviceDirectX;
+                result.Add(new KeyValuePair<string, string>("DedicatedVideoMemory", $"{directXDevice.DedicatedVideoMemory}"));
+                result.Add(new KeyValuePair<string, string>("MaxSupportedFeatureLevel", $"{directXDevice.MaxSupportedFeatureLevel}"));
+                result.Add(new KeyValuePair<string, string>("IsDefault", $"{directXDevice.IsDefault}"));
+                result.Add(new KeyValuePair<string, string>("HighPerformanceIndex", $"{directXDevice.HighPerformanceIndex}"));
+                result.Add(new KeyValuePair<string, string>("PowerSavingIndex", $"{directXDevice.PowerSavingIndex}"));
+                result.Add(new KeyValuePair<string, string>("AdapterId", $"{directXDevice.AdapterId}"));
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Retrieve wrappers around SkillFeatureDescriptor
+        /// </summary>
+        /// <param name="featureDescriptors"></param>
+        /// <returns></returns>
+        public static IEnumerable<SkillFeatureDescriptorWrappper> GetFeatureDescriptorWrappers(IReadOnlyList<ISkillFeatureDescriptor> featureDescriptors)
+        {
+            return featureDescriptors.Select((x) => new SkillFeatureDescriptorWrappper(x));
         }
 
         /// <summary>
@@ -129,8 +237,8 @@ namespace SkillHelper
             if (desc is ISkillFeatureImageDescriptor)
             {
                 ISkillFeatureImageDescriptor imageDesc = desc as ISkillFeatureImageDescriptor;
-                result.Add(new KeyValuePair<string, string>("Width", $"{imageDesc.Width}"));
-                result.Add(new KeyValuePair<string, string>("Height", $"{imageDesc.Height}"));
+                result.Add(new KeyValuePair<string, string>("Width", $"{(imageDesc.Width == -1 ? "Free Dimension" : imageDesc.Width.ToString())}"));
+                result.Add(new KeyValuePair<string, string>("Height", $"{(imageDesc.Height == -1 ? "Free Dimension" : imageDesc.Height.ToString())}"));
                 result.Add(new KeyValuePair<string, string>("SupportedBitmapPixelFormat", $"{imageDesc.SupportedBitmapPixelFormat}"));
                 result.Add(new KeyValuePair<string, string>("SupportedBitmapAlphaMode", $"{imageDesc.SupportedBitmapAlphaMode}"));
             }
@@ -141,7 +249,7 @@ namespace SkillHelper
                 string shape = "[";
                 for (int i = 0; i < tensorDesc.Shape.Count; i++)
                 {
-                    shape += $"{tensorDesc.Shape[i]}";
+                    shape += $"{ (tensorDesc.Shape[i] == -1 ? "Free Dimension" : tensorDesc.Shape[i].ToString())}";
                     if (i < tensorDesc.Shape.Count - 1)
                     {
                         shape += ", ";
