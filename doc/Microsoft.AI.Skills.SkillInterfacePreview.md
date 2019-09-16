@@ -741,6 +741,47 @@ Windows.ApplicationModel.PackageVersion Version{ get; }
 ```
 -----
 
+#### Methods
+-----
+##### Create(String, String, Guid, Windows.ApplicationModel.PackageVersion, String, String)
+
+Instantiates a [SkillInformation](#SkillInformation).
+
+```csharp
+SkillInformation Create(string name, string description, Guid id, Windows.ApplicationModel.PackageVersion version, string author, string publisher);
+```
+###### Parameters
+**`name`** : String
+
+User readable name for the skill.
+
+**`description`** : String
+
+User readable description for the skill.
+
+**`id`** : Guid
+
+Skill [Guid](https://docs.microsoft.com/en-us/dotnet/api/system.guid?view=netcore-2.2) unique identifier.
+
+**`version`** : Windows.ApplicationModel.PackageVersion
+
+[PackageVersion](#PackageVersion) used to differentiate between versions of the same skill contract.
+
+**`author`** : String
+
+User readable name of the author of the skill.
+
+**`publisher`** : String
+
+User readable name of the publisher of the skill.
+
+###### Returns
+[IAsyncOperation][IAsyncOperation]<[SkillInformation](#SkillInformation)>
+
+Descriptive information about a skill and its origins.
+
+-----
+
 
 ### SkillExecutionDeviceCPU <a name="SkillExecutionDeviceCPU"></a>
 ``implements`` [ISkillExecutionDevice](#ISkillExecutionDevice)
