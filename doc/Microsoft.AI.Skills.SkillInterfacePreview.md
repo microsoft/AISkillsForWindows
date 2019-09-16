@@ -63,7 +63,6 @@ in a different format than the one required).
   + [SkillFeatureTensorDoubleValue](#SkillFeatureTensorDoubleValue)
   + [SkillFeatureImageValue](#SkillFeatureImageValue)
   + [SkillFeatureMapValue](#SkillFeatureMapValue)
-  + [SkillVersion](#SkillVersion)
   + [SkillFeatureTensorDescriptor](#SkillFeatureTensorDescriptor)
   + [SkillFeatureImageDescriptor](#SkillFeatureImageDescriptor)
   + [SkillFeatureMapDescriptor](#SkillFeatureMapDescriptor)
@@ -688,9 +687,27 @@ Contains all descriptive information about the skill and its origins.
 #### Properties
 -----
 
+##### Author
+
+User readable name of the author of the skill.
+
+```csharp
+string Author{ get; }
+```
+-----
+
+##### Description
+
+User readable description for the skill.
+
+```csharp
+string Description{ get; }
+```
+-----
+
 ##### Id
 
-Skill [Guid](https://docs.microsoft.com/en-us/dotnet/api/system.guid?view=netcore-2.2) identifier.
+Skill [Guid](https://docs.microsoft.com/en-us/dotnet/api/system.guid?view=netcore-2.2) unique identifier.
 
 ```csharp
 Guid Id{ get; }
@@ -706,12 +723,12 @@ string Name{ get; }
 ```
 -----
 
-##### Description
+##### Publisher
 
-User readable description for the skill.
+User readable name of the publisher of the skill.
 
 ```csharp
-string Description{ get; }
+string Publisher{ get; }
 ```
 -----
 
@@ -1380,84 +1397,6 @@ Retrieve the [IReadOnlyDictionary][IReadOnlyDictionary]< K, V > used at creation
 Object MapView{ get; }
 ```
 -----
-
-
-### SkillVersion <a name="SkillVersion"></a>
-
-Describes the version of the [ISkill](#ISkill). Also acts as a static factory for itself. 
-
-#### Properties
------
-##### Major
-
-The major version.
-
-```csharp
-ushort Major{ get; }
-```
------
-
-##### Minor
-
-The minor version.
-
-```csharp
-ushort Minor{ get; }
-```
------
-
-##### Author
-
-The author's name.
-
-```csharp
-string Author{ get; }
-```
------
-
-##### Publisher
-
-The publisher's name.
-
-```csharp
-string Publisher{ get; }
-```
------
-
-#### Methods
------
-##### Create(ushort, ushort, string, string)
-
-Instantiates a SkillVersion.
-
-```csharp
-static SkillVersion Create(ushort major, ushort minor, string author, string publisher);
-```
-
-###### Parameters
-**`major`** : ushort
-
-The major version (normative).
-
-**`minor`** : ushort
-
-The minor version (normative).
-
-**`author`** : string
-
-The author's name (informative).
-
-**`publisher`** : string
-
-The publisher's name (informative).
-
-###### Returns
-[SkillVersion](#SkillVersion)
-
-The SkillVersion instantiated.
-
------
-
 
 ### VisionSkillBindingHelper <a name="VisionSkillBindingHelper"></a>
 ``implements`` [ISkillBinding](#ISkillBinding)
