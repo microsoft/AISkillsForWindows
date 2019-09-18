@@ -1,6 +1,6 @@
-# Image Scanning Windows Vision Skill samples
+# Image Scanning Windows Vision Skills samples
 
-These samples will show how to use the set of skills contained in the Image Scanning Windows Vision Skill NuGet package to create apps that can help achieve productivity scenarios related to scanning content. 
+These samples will show you how to use the set of skills contained in the Image Scanning Windows Vision Skill NuGet package to create apps that can achieve productivity scenarios related to scanning content. 
 - [C# UWP sample app](./cs/ImageScanningSample_UWP)
 - [Win32 C++/Winrt Desktop console app](./cpp/ImageScanningSample_Desktop)
 - [.Net Core 3.0 C# console app](./cs/ImageScanningSample_NetCore3)
