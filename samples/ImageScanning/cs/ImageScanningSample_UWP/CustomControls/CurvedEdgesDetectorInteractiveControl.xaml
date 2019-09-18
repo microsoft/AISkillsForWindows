@@ -14,6 +14,7 @@
         <controls:Expander Header="Input values" IsExpanded="True">
 
             <StackPanel>
+                <TextBlock Text="Input Quad:" />
                 <StackPanel Orientation="Horizontal" >
                     <TextBlock Text="X: " />
                     <TextBox Name="UITopLeftBaseQuadCornerX" IsReadOnly="True" IsEnabled="False"/>

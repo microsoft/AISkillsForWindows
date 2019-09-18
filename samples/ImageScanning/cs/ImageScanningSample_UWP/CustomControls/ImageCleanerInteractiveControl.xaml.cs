@@ -23,6 +23,9 @@ namespace ImageScanningSample
         public ImageCleaningKind InputImageType;
     }
 
+    /// <summary>
+    /// Helper class to display interactive controls for the ImageCleanerBinding features
+    /// </summary>
     public sealed partial class ImageCleanerInteractiveControl : UserControl
     {
         private SoftwareBitmapSource m_resultImageSource = new SoftwareBitmapSource();
@@ -30,19 +33,19 @@ namespace ImageScanningSample
         public delegate void ImageCleaningKindChangedHandler(ImageCleaningKind type);
         public event ImageCleaningKindChangedHandler ImageCleaningKindChanged;
 
+        /// <summary>
+        /// ImageCleanerInteractiveControl constructor
+        /// </summary>
         public ImageCleanerInteractiveControl()
         {
             this.InitializeComponent();
         }
 
-        // -- Event handlers -- //
-#region EventHandlers
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            UIInputImageType.ItemsSource = Enum.GetNames(typeof(ImageCleaningKind));
-            UIResultImage.Source = m_resultImageSource;
-        }
-
+        /// <summary>
+        /// Update the output image displayed
+        /// </summary>
+        /// <param name="videoFrame"></param>
+        /// <returns></returns>
         public async Task UpdateResultImageAsync(VideoFrame videoFrame)
         {
             m_cachedRectifiedImage = videoFrame;
@@ -50,14 +53,31 @@ namespace ImageScanningSample
             UISaveImageButton.IsEnabled = true;
         }
 
+        /// <summary>
+        /// Update the output ImageCleaningKind displayed
+        /// </summary>
+        /// <param name="imageCleaningKind"></param>
         public void UpdateResultImageType(ImageCleaningKind imageCleaningKind)
         {
             UIDetectedImageType.Content = imageCleaningKind.ToString();
         }
 
+        /// <summary>
+        /// Update the input ImageCleaningKind displayed
+        /// </summary>
+        /// <param name="imageCleaningKind"></param>
         public void UpdateSelectedImageCleaningKind(ImageCleaningKind imageCleaningKind)
         {
             UIInputImageType.SelectedIndex = (int)imageCleaningKind;
+        }
+
+        // -- Event handlers -- //
+        #region EventHandlers
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            UIInputImageType.ItemsSource = Enum.GetNames(typeof(ImageCleaningKind));
+            UIResultImage.Source = m_resultImageSource;
         }
 
         private void UIInputImageType_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -90,7 +110,8 @@ namespace ImageScanningSample
                 }
             }
         }
-#endregion EventHandlers
+
+        #endregion EventHandlers
     }
 
     /// <summary>

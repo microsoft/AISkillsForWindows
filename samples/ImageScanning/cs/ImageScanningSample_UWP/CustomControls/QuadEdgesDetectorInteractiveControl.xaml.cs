@@ -15,11 +15,17 @@ using Windows.UI.Xaml.Controls.Primitives;
 
 namespace ImageScanningSample
 {
+    /// <summary>
+    /// Encapsulates input values
+    /// </summary>
     public class QuadEdgesDetectorBindingInputFeatureValues
     {
         public int MaxQuadEdges;
     }
 
+    /// <summary>
+    /// Helper class to display interactive controls for the QuadEdgesDetectorBinding features
+    /// </summary>
     public sealed partial class QuadEdgesDetectorSkillInteractiveControl : UserControl
     {
         public event RangeBaseValueChangedEventHandler MaxQuadEdgesValueChanged;
@@ -41,11 +47,19 @@ namespace ImageScanningSample
             UIMaxQuadEdges.Value = initialValues.MaxQuadEdges;
         }
 
+        /// <summary>
+        /// Update displayed output values
+        /// </summary>
+        /// <param name="detectedVerticalEdgesCount"></param>
+        /// <param name="detectedHorizontalEdgesCount"></param>
         public void UpdateDisplayedOutputValues(int detectedVerticalEdgesCount, int detectedHorizontalEdgesCount)
         {
             UIDetectedVerticalEdgeCount.Content = detectedVerticalEdgesCount;
             UIDetectedHorizontalEdgeCount.Content = detectedHorizontalEdgesCount;
         }
+
+        // -- Event handlers -- //
+        #region EventHandlers
 
         private void UIMaxDetectedEdges_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
@@ -55,6 +69,8 @@ namespace ImageScanningSample
                 MaxQuadEdgesValueChanged.Invoke(sender, e);
             }
         }
+
+        #endregion EventHandlers
     }
 
     /// <summary>

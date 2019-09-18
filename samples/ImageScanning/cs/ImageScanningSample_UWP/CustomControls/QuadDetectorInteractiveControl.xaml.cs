@@ -18,6 +18,9 @@ using Microsoft.AI.Skills.Vision.ImageScanningPreview;
 
 namespace ImageScanningSample
 {
+    /// <summary>
+    /// Encapsulates input values
+    /// </summary>
     public class QuadDetectorBindingInputFeatureValues
     {
         public int SubMarginPercentage;
@@ -29,6 +32,9 @@ namespace ImageScanningSample
         public List<Point> BaseQuad = new List<Point>() { new Point(), new Point(), new Point(), new Point() };
     }
 
+    /// <summary>
+    /// Helper class to display interactive controls for the QuadDetectorBinding features
+    /// </summary>
     public sealed partial class QuadDetectorSkillInteractiveControl : UserControl
     {
         public event RoutedEventHandler CenterPointCheckedUnchecked;
@@ -38,14 +44,20 @@ namespace ImageScanningSample
         public event RangeBaseValueChangedEventHandler NumberOfPixelsPerEdgeValueChanged;
 
         public int LookupRegionCenterCropPercentage { get; set; } = 0;
-
         public List<Point> PreviousQuad { get; set; }
 
+        /// <summary>
+        /// QuadDetectorSkillInteractiveControl constructor
+        /// </summary>
         public QuadDetectorSkillInteractiveControl()
         {
             this.InitializeComponent();
         }
 
+        /// <summary>
+        /// Update displayed input values
+        /// </summary>
+        /// <param name="initialValues"></param>
         public void UpdateDisplayedInputValues(QuadDetectorBindingInputFeatureValues initialValues)
         {
             UIUseCenterPoint.IsChecked = initialValues.UseCenterPoint;
@@ -61,17 +73,30 @@ namespace ImageScanningSample
             UpdateBaseQuadCorners(initialValues.BaseQuad);
         }
 
+        /// <summary>
+        /// Update displayed output values
+        /// </summary>
+        /// <param name="detectedQuadCount"></param>
         public void UpdateDisplayedOutputValues(int detectedQuadCount)
         {
             UIDetectedQuadCount.Content = detectedQuadCount.ToString();
         }
 
+        /// <summary>
+        /// Update displayed center point
+        /// </summary>
+        /// <param name="X"></param>
+        /// <param name="Y"></param>
         public void UpdateCenterPointDisplay(double X, double Y)
         {
             UIBoundCenterPointX.Text = X.ToString("0.00");
             UIBoundCenterPointY.Text = Y.ToString("0.00");
         }
 
+        /// <summary>
+        /// Update displayed base quad corners
+        /// </summary>
+        /// <param name="corners"></param>
         public void UpdateBaseQuadCorners(IList<Point> corners)
         {
             UITopLeftBaseQuadCornerX.Text = corners[0].X.ToString("0.00");
@@ -86,6 +111,9 @@ namespace ImageScanningSample
             UIBottomRightBaseQuadCornerX.Text = corners[3].X.ToString("0.00");
             UIBottomRightBaseQuadCornerY.Text = corners[3].Y.ToString("0.00");
         }
+
+        // -- Event handlers -- //
+        #region EventHandlers
 
         private void UIUseCenterPoint_Checked(object sender, RoutedEventArgs e)
         {
@@ -162,6 +190,8 @@ namespace ImageScanningSample
                 NumberOfPixelsPerEdgeValueChanged.Invoke(sender, e);
             }
         }
+
+        #endregion EventHandlers
     }
 
     /// <summary>

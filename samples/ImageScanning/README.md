@@ -1,123 +1,244 @@
-# Concept Tagger Windows Vision Skill samples
+# Image Scanning Windows Vision Skill samples
 
-These samples will show how to use theConcept Tagger Vision Skill NuGet package to create apps that can detect and identify individuals in a video or image, and the poses of their bodies. 
+These samples will show how to use the set of skills contained in the Image Scanning Windows Vision Skill NuGet package to create apps that can help achieve productivity scenarios related to scanning content. 
+- [C# UWP sample app](./cs/ImageScanningSample_UWP)
+- [Win32 C++/Winrt Desktop console app](./cpp/ImageScanningSample_Desktop)
+- [.Net Core 3.0 C# console app](./cs/ImageScanningSample_NetCore3)
 
-![Screenshot of concept tagger skill in action in the UWP sample](./doc/sample_app.jpg)
+The skills bundled in this package are:
 
-Follow these sample links:
-- [C# UWP sample app](./cs/ConceptTaggerSample_UWP)
-- [Win32 C++/Winrt Desktop console app](./cpp/ConceptTaggerSample_Desktop)
-- [.Net Core 3.0 C# console app](./cs/ConceptTaggerSample_NetCore3)
++ **CurvedEdgesDetector**: Seeks within an image the pixels that constitute the curved edges composing the contour of a given quad and returns their coordinates.
+  | Input image and base quad specified | Ouput detected curved edge |
+  | ----------------------------------- | -------------------------- |
+  | ![Screenshot of CurvedEdgesDetector inputs](./doc/CurvedEdgesDetector2.jpg) | ![Screenshot of CurvedEdgesDetector outputs](./doc/CurvedEdgesDetector3.jpg) |
+
++ **ImageCleaner**: Cleans and enhances an image given a specified preset.
+  | Input image and image cleaning kind specified (whiteboard) | Ouput processed image |
+  | ---------------------------------------------------------- | --------------------- |
+  | ![Screenshot of ImageCleaner inputs](./doc/ImageRectifier3.jpg) | ![Screenshot of ImageCleaner outputs](./doc/ImageCleaner2.jpg) |
+
++ **ImageRectifier**: Rectifies and crops an image to a rectangle plane given four UV coordinates.
+  | Input image and cropping shape specified | Ouput rectified image |
+  | -----------------------------------------| --------------------- |
+  | ![Screenshot of ImageRectifier inputs](./doc/ImageRectifier2.jpg) | ![Screenshot of ImageRectifier outputs](./doc/ImageRectifier3.jpg) |
+
++ **QuadDetector** and **LiveQuadDetector**: Searches an image for quadrilateral shapes and returns the coordinates of their corners if found. 
+The **LiveQuadDetector** is a stateful version of the **QuadDetector** that attempts to detect only 1 quadrangle and keeps track of the previous quad detected to be used as guide which optimizes tracking performance as new frames are bound over time. This is well suited for most scenarios operating over a stream of frames over time.
+**QuadDetector** can be set to detect more than 1 quadrangle and will search the whole frame everytime unless a previous quadrangle is provided.
+  | Input image | Ouput detected quadrangle |
+  | -----------------------------------------| --------------------- |
+  | ![Screenshot of QuadDetector inputs](./doc/QuadDetector1.jpg) | ![Screenshot of QuadDetector outputs](./doc/QuadDetector2.jpg) |
+
++ **QuadEdgesDetector**: Searches an image for the horizontal and vertical lines defining a quadrilateral shape's contour and returns their coordinates.
+  | Input image | Ouput detected vertical and horizontal quadrangle edges |
+  | -----------------------------------------| --------------------- |
+  | ![Screenshot of QuadDetector inputs](./doc/QuadDetector1.jpg) | ![Screenshot of QuadDetector outputs](./doc/QuadEdgesDetector2.jpg) |
+
+While the [UWP sample](./cs/ImageScanningSample_UWP) showcases each skill individually in an interative fashion with corresponding useful UI control helpers, the [.NetCore 3.0](./cs/ImageScanningSample_NetCore3) and [Win32](./cpp/ImageScanningSample_Desktop) console samples combine 3 of skills executed in succession to achieve a common productivity task consisting of scanning a piece of content (document, whiteboard, picture, etc.) within a photo. Namely:
+0. Input image 
+1. Running **QuadDetector** using a specified input image
+2. Using the quad detected in previous step as input to the **ImageRectifier** to rectify the input image
+3. Using the output rectifyed image from previous step as input to the **ImageCleaner** to produce a cleaner image
+
+| Input image | Ouput scanned image |
+  | ----------------------------------- | -------------------------- |
+  | ![Screenshot of input image](./doc/QuadDetector1.jpg) | ![Screenshot of the output of the combined skills exeuction](./doc/ImageCleaner2.jpg) |
+
 
 ## Build samples
-- refer to the [sample guidelines](../README.md)
-- make sure the Microsoft.AI.Skills.Vision.ConceptTaggerPreview and Microsoft.AI.Skills.SkillInterfacePreview NuGet packages are installed on your app projects
+- Refer to the [sample guidelines](../README.md)
+- Make sure the Microsoft.AI.Skills.Vision.ImageScanningPreview and Microsoft.AI.Skills.SkillInterfacePreview NuGet packages are installed on your app projects
 
 ## Related topics
 
 - [Microsoft.AI.Skills.SkillInterfacePreview API document](../../doc/Microsoft.AI.Skills.SkillInterfacePreview.md)
-- [Microsoft.AI.Skills.Vision.ConceptTaggerPreview API document](../../doc/Microsoft.AI.Skills.Vision.ConceptTaggerPreview.md)
+- [Microsoft.AI.Skills.Vision.ImageScanningPreview API document](../../doc/Microsoft.AI.Skills.Vision.ImageScanningPreview.md)
 - [Creating a custom Windows Vision Skill](../SentimentAnalyzerCustomSkill)
 
 ## Run the UWP sample
 
-The app allows you to select multiple image files and process them with the skill. Use the buttons at the top of the window to select one or more .jpg or .png image files. Click the "Details and options" expander to view more details about the ConceptTagger skill as well as configure options such as the `ISkillExecutionDevice` to run the skill on.
+The app's top panel allows you to navigate through each skill. Right under it, you can consult each skill's information, input and output feature descriptions as well as the available execution devices. Start experimenting by selecting a .jpg or .png image file which will then show inputs controls as well as the 'Run' button which trigger the skill execution and produces output(s).
 
-Additionally, the app shows you how you can instantiate multiple `ISkill`and `ISkillBinding` and use them in parallel to distribute the computation across the available computing cores of a CPU. The app reads the amount of CPU cores available from the [SkillExecutionDeviceCPU](../../doc/Microsoft.AI.Skills.Vision.ConceptTaggerPreview.md#SkillExecutionDeviceCPU) returned from [ISkillDescriptor.GetSupportedExecutionDevicesAsync()](../../doc/Microsoft.AI.Skills.Vision.ConceptTaggerPreview.md#ISkillDescriptor.GetSupportedExecutionDevicesAsync)
+### Using the skills (C#)
 
-### Using the ConceptTagger skill
-
-As with all Vision Skills, the Concept Tagger skill is composed of an `ISkillDescriptor` (which holds general skill information), the `ISkill` instance (which is bound to a specific `ISkillExecutionDevice`), and the skill's `ISkillBinding` (which holds skill inputs, outputs, and any state information). You can instantiate your Concept Tagger skill as follows.
-
+As with all Vision Skills, the skills contained in this package are each composed of an `ISkillDescriptor` (which holds general skill information), the `ISkill` instance (which is bound to a specific `ISkillExecutionDevice`), and the skill's `ISkillBinding` (which holds skill inputs, outputs, and any state information). As with any `ISkillBinding` derivatives, you may interact with the binding instances like it is a Dictionary to set and retrieve your `SkillFeatures` and their linked `ISkillFeatureValue`. 
+Additionally, the `ISkillBinding` derivatives defined in this package declare convenience field(s) and they are used in the below C# code snippets.
+i.e.:
 ```csharp
-ConceptTaggerDescriptor descriptor = new ConceptTaggerDescriptor();
-ConceptTaggerkill skill = await descriptor.CreateSkillAsync() as ConceptTaggerSkill; // If you don't specify an ISkillExecutionDevice, a default will be automatically selected
-ConceptTaggerBinding binding = await skill.CreateSkillBindingAsync() as ConceptTaggerBinding;
+// Pretend we have instantiated a CurvedEdgesDetectorSkill instance named skill like the below example shows
+// We create a binding instance
+ISkillBinding binding = await skill.CreateSkillBindingAsync();
+
+// We retrieve an input image we want to bind
+VideoFrame inputImage = RetrieveYourVideoFrame();
+
+// The following 2 examples do the same thing: binding the input image
+
+// 1. Bind an input image Dictionary-style using the generic ISkillBinding API
+await binding["InputImage"].SetFeatureValueAsync(inputImage)
+
+// 2. Bind an input image using the convenience method exposed by this ISkillBinding derivatives
+CurvedEdgesDetectorBinding concreteBinding = binding as CurvedEdgesDetectorBinding;
+await concreteBinding.SetInputImageAsync(inputImage);
 ```
 
-The Concept Tagger skill does not define any additional inputs, so using the skill is as simple as:
+Here are examples for using each skill:
 
+#### **CurvedEdgesDetector**
 ```csharp
-await binding.SetInputImageAsync(frame);  // frame is a Windows.Media.VideoFrame
+using Microsoft.AI.Skills.Vision.ImageScanningPreview;
+using Windows.Media; // Defining "VideoFrame"
+using Windows.Foundation; // Defining "Point"
+...
+CurvedEdgesDetectorDescriptor descriptor = new CurvedEdgesDetectorDescriptor();
+CurvedEdgesDetectorkill skill = await descriptor.CreateSkillAsync() as CurvedEdgesDetectorSkill; // If you don't specify an ISkillExecutionDevice, a default will be automatically selected
+CurvedEdgesDetectorBinding binding = await skill.CreateSkillBindingAsync() as CurvedEdgesDetectorBinding;
+...
+// Specify an input image retrieved in code (RetrieveYourVideoFrame() is left to user to implement)
+VideoFrame inputImage = RetrieveYourVideoFrame();
+await binding.SetInputImageAsync(inputImage);
+
+// Specify the corners of the guiding quadrangle shape (arbitrary in this case)
+List<Point> inputQuadCorners = new List<Point>
+        {
+            new Point(0.2, 0.2),
+            new Point(0.7, 0.1),
+            new Point(0.8, 0.9),
+            new Point(0.3, 0.9)
+        };
+await binding.SetInputQuadAsync(inputQuadCorners);
+
+// Execute the skill
 await skill.EvaluateAsync(binding);
-// Results are saved to binding instance
+
+// Retrieve the output detected polyline points
+IReadOnlyList<Point> detectedCurvedEdges = binding.DetectedCurvedEdges;
 ```
 
-You may manually interrogate the binding to find your output, but it's easiest to use the convenience field(s) defined. In this case, `ConceptTaggerBinding` has a `GetTopXTagsAboveThreshold` method, which return a `IReadOnlyList<ConceptTagScore>` of at most the specifid amount of concepts that scored above the specified confidence threshold. `ConceptTagScore` is a struct containing two string members: a concept name and a concept score.
-
+#### **ImageCleaner**
 ```csharp
-IReadOnlyList<ConceptTagScore> tags = binding.GetTopXTagsAboveThreshold(5, 0.7f);
-foreach (ConceptTagScore tag in tags)
-{
-    string resultMessage = $"{tag.Name} : {tag.Score}";
-}
+using Microsoft.AI.Skills.Vision.ImageScanningPreview;
+using Windows.Media; // Defining "VideoFrame"
+
+...
+ImageCleanerDescriptor descriptor = new ImageCleanerDescriptor();
+ImageCleanerkill skill = await descriptor.CreateSkillAsync() as ImageCleanerSkill; // If you don't specify an ISkillExecutionDevice, a default will be automatically selected
+ImageCleanerBinding binding = await skill.CreateSkillBindingAsync() as ImageCleanerBinding;
+...
+// Specify an input image retrieved in code (RetrieveYourVideoFrame() is left to user to implement)
+VideoFrame inputImage = RetrieveYourVideoFrame();
+await binding.SetInputImageAsync(inputImage);
+
+// Specify the ImageCleaningKind to use (in this case Whiteboard)
+await binding.SetImageCleaningKindAsync(ImageCleaningKind.Whiteboard);
+
+// Execute the skill
+await skill.EvaluateAsync(binding);
+
+// Retrieve the output processed image
+VideoFrame outputImage = binding.OutputImage;
 ```
 
-The concept tagger can score 256 types of tags defined in the valid keys of the output feature descriptor:
+#### **ImageRectifier**
 ```csharp
-ConceptTaggerDescriptor descriptor = new ConceptTaggerDescriptor();
-ISkillFeatureMapDescriptor mapDesc = descriptor.OutputFeatureDescriptors.First() as ISkillFeatureMapDescriptor;
+using Microsoft.AI.Skills.Vision.ImageScanningPreview;
+using Windows.Media; // Defining "VideoFrame"
+using Windows.Foundation; // Defining "Point"
 
-// Create a string containing all tags that this skil can score
-string validKeys = "";
-foreach (var validKey in mapDesc.ValidKeys)
-{
-    validKeys += $"{validKey}\n";
-}
+...
+ImageRectifierDescriptor descriptor = new ImageRectifierDescriptor();
+ImageRectifierkill skill = await descriptor.CreateSkillAsync() as ImageRectifierSkill; // If you don't specify an ISkillExecutionDevice, a default will be automatically selected
+ImageRectifierBinding binding = await skill.CreateSkillBindingAsync() as ImageRectifierBinding;
+...
+// Specify an input image retrieved in code (RetrieveYourVideoFrame() is left to user to implement)
+VideoFrame inputImage = RetrieveYourVideoFrame();
+await binding.SetInputImageAsync(inputImage);
+
+// Specify the corners of the quadrangle cropping shape (arbitrary in this case)
+List<Point> inputQuadCorners = new List<Point>
+        {
+            new Point(0.2, 0.2),
+            new Point(0.7, 0.1),
+            new Point(0.8, 0.9),
+            new Point(0.3, 0.9)
+        };
+await binding.SetInputQuadAsync(inputQuadCorners);
+
+// Specify the ImageRectifierInterpolationKind to use (in this case Bicubic)
+await binding.SetInterpolationKind(ImageRectifierInterpolationKind.Bicubic);
+
+// Execute the skill
+await skill.EvaluateAsync(binding);
+
+// Retrieve the output rectified image
+VideoFrame outputImage = binding.OutputImage;
 ```
 
-### Sample app code walkthrough
-
-The core skill initialization logic is in the `UISkillExecutionDevices_SelectionChanged` method:
-
+#### **LiveQuadDetector**
 ```csharp
-ISkillExecutionDevice device = m_availableDevices[selectedIndex];
+using Microsoft.AI.Skills.Vision.ImageScanningPreview;
+using Windows.Media; // Defining "VideoFrame"
+using Windows.Foundation; // Defining "Point"
 
-// initialize skill instances
-for (int i = 0; i < m_concurrentSkillCount; i++)
-{
-    skill = await m_skillDescriptor.CreateSkillAsync(device) as ConceptTaggerSkill;
-    m_skillQueue.Enqueue(skill);
-}
-// initialize binding instances
-for (int i = 0; i < m_concurrentBindingCount; i++)
-{
-    m_bindingQueue.Enqueue(await skill.CreateSkillBindingAsync() as ConceptTaggerBinding);
-}
+...
+LiveQuadDetectorDescriptor descriptor = new LiveQuadDetectorDescriptor();
+LiveQuadDetectorkill skill = await descriptor.CreateSkillAsync() as LiveQuadDetectorSkill; // If you don't specify an ISkillExecutionDevice, a default will be automatically selected
+LiveQuadDetectorBinding binding = await skill.CreateSkillBindingAsync() as LiveQuadDetectorBinding;
+...
+// Specify an input image retrieved in code (RetrieveYourVideoFrame() is left to user to implement)
+VideoFrame inputImage = RetrieveYourVideoFrame();
+await binding.SetInputImageAsync(inputImage);
+
+// Execute the skill
+await skill.EvaluateAsync(binding);
+
+// Retrieve the output detected quadrangle corners as well as the cue if it is similar to the last time the skill was evaluated
+bool isSimilar = false;
+IReadOnlyList<Point> detectedQuad = binding.DetectedQuad(out isSimilar);
 ```
 
-The method uses both overloads of `ISkillDescriptor.CreateSkillAsync` to show how they can be used: either let the skill select a default device, or specify the device you would like it to use.
-
-The core skill evaluation logic can be found in `UIButtonFilePick_Click` and `EvaluateBinding`:
-
+#### **QuadDetector**
 ```csharp
-private async void UIButtonFilePick_Click(object sender, RoutedEventArgs e)
-{
-    ...
-    // Load the VideoFrame from the image file
-    var frame = await LoadVideoFrameFromFileAsync(file);
+using Microsoft.AI.Skills.Vision.ImageScanningPreview;
+using Windows.Media; // Defining "VideoFrame"
+using Windows.Foundation; // Defining "Point"
 
-    // Bind input image
-    await binding.SetInputImageAsync(frame);
-    ...
-}
+...
+QuadDetectorDescriptor descriptor = new QuadDetectorDescriptor();
+QuadDetectorkill skill = await descriptor.CreateSkillAsync() as QuadDetectorSkill; // If you don't specify an ISkillExecutionDevice, a default will be automatically selected
+QuadDetectorBinding binding = await skill.CreateSkillBindingAsync() as QuadDetectorBinding;
+...
+// Specify an input image retrieved in code (RetrieveYourVideoFrame() is left to user to implement)
+VideoFrame inputImage = RetrieveYourVideoFrame();
+await binding.SetInputImageAsync(inputImage);
 
-private async Task EvaluateBinding(ConceptTaggerBinding binding, ResultItemUserControl resultItem)
-{
-    ...
-    // Evaluate binding
-    await skill.EvaluateAsync(binding);
-    ...
-}
+// Execute the skill
+await skill.EvaluateAsync(binding);
+
+// Retrieve the output detected quadrangle(s) corners 
+IReadOnlyList<Point> detectedQuad = binding.DetectedQuad();
 ```
 
-Overall application initialization is performed in `Page_Loaded`, which triggers the previously mentioned `UISkillExecutionDevices_SelectionChanged` method as well as some other UI initialization. 
+#### **QuadEdgesDetector**
+```csharp
+using Microsoft.AI.Skills.Vision.ImageScanningPreview;
+using Windows.Media; // Defining "VideoFrame"
+using Windows.Foundation; // Defining "Point"
 
-Most of the work is performed by the `UIButtonFilePick_Click` event handler. The handler uses locking to ensure that only the pre-determined amount of simultaneous threads are launched to bind the input frames and schedule skill execution. These tasks are launched as "fire and forget" (not awaited), relying on the locking behavior for synchronization.
+...
+QuadEdgesDetectorDescriptor descriptor = new QuadEdgesDetectorDescriptor();
+QuadEdgesDetectorkill skill = await descriptor.CreateSkillAsync() as QuadEdgesDetectorSkill; // If you don't specify an ISkillExecutionDevice, a default will be automatically selected
+QuadEdgesDetectorBinding binding = await skill.CreateSkillBindingAsync() as QuadEdgesDetectorBinding;
+...
+// Specify an input image retrieved in code (RetrieveYourVideoFrame() is left to user to implement)
+VideoFrame inputImage = RetrieveYourVideoFrame();
+await binding.SetInputImageAsync(inputImage);
 
-The sample app also uses several helper classes. These may be safely treated as black boxes, but a quick overview is:
+// Execute the skill
+await skill.EvaluateAsync(binding);
 
-- **SkillHelperMethods** - Class that exposes several facilities to handle skill information
-- **ResultItemUserControl** - Helper class to render image and results correctly in the UI
-
+// Retrieve the output detected edge(s) points 
+IReadOnlyList<Point> detectedHorizontalEdges = binding.DetectedHorizontalEdges();
+IReadOnlyList<Point> detectedVerticalEdges = binding.DetectedVerticalEdges();
+```
 

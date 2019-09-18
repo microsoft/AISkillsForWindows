@@ -23,6 +23,10 @@ namespace ImageScanningSample
             this.InitializeComponent();
         }
 
+        /// <summary>
+        /// Update displayed quadrangle corners
+        /// </summary>
+        /// <param name="corners"></param>
         public void UpdateBaseQuadCorners(IList<Point> corners)
         {
             UITopLeftBaseQuadCornerX.Text = corners[0].X.ToString("0.00");
@@ -58,7 +62,7 @@ namespace ImageScanningSample
        };
 
         /// <summary>
-        ///  QuadDetectorControl constructor
+        ///  CurvedEdgesDetectorControl constructor
         /// </summary>
         /// <param name="binding"></param>
         public CurvedEdgesDetectorControl(ISkillBinding binding) : base(binding)
@@ -70,8 +74,7 @@ namespace ImageScanningSample
             m_image.SetValue(Canvas.ZIndexProperty, -1);
             m_image.SizeChanged += Image_SizeChanged;
 
-            // Add Quad results control
-            //m_linesResultRenderer = new PolylineRenderer(ref m_canvas);
+            // Add line result control
             m_linesResultRenderer = new PolylineRenderer(ref m_canvas);
             
             m_linesResultRenderer.IsVisible = false;            

@@ -12,11 +12,17 @@ using Windows.UI.Xaml.Controls;
 
 namespace ImageScanningSample
 {
+    /// <summary>
+    /// Encapsulates input values
+    /// </summary>
     public class LiveQuadDetectorBindingInputFeatureValues
     {
         public bool Reset;
     }
 
+    /// <summary>
+    /// Helper class to display interactive controls for the LiveQuadDetectorBinding features
+    /// </summary>
     public sealed partial class LiveQuadDetectorSkillInteractiveControl : UserControl
     {
         public event RoutedEventHandler ResetCheckedUnchecked;
@@ -30,7 +36,7 @@ namespace ImageScanningSample
         }
 
         /// <summary>
-        /// Update displayed values
+        /// Update displayed input values
         /// </summary>
         /// <param name="initialValues"></param>
         public void UpdateDisplayedInputValues(LiveQuadDetectorBindingInputFeatureValues initialValues)
@@ -38,13 +44,20 @@ namespace ImageScanningSample
             UIReset.IsChecked = initialValues.Reset;
         }
 
+        /// <summary>
+        /// Update displayed output values
+        /// </summary>
+        /// <param name="isSimilar"></param>
         public void UpdateDisplayedOutputValues(bool isSimilar)
         {
             UIIsSimilar.IsChecked = isSimilar;
         }
 
+        // -- Event handlers -- //
+        #region EventHandlers
+
         /// <summary>
-        /// Handler of UIReset Checked and Uncheked events
+        /// Handler of UIReset Checked and Unchecked events
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -55,6 +68,8 @@ namespace ImageScanningSample
                 ResetCheckedUnchecked.Invoke(sender, e);
             }
         }
+
+        #endregion EventHandlers
     }
 
     /// <summary>

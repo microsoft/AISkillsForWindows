@@ -20,6 +20,9 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace ImageScanningSample
 {
+    /// <summary>
+    /// Encapsulates input values
+    /// </summary>
     public class ImageRectifierBindingInputFeatureValues
     {
         public ImageRectifierInterpolationKind InterpolationType;
@@ -32,6 +35,9 @@ namespace ImageScanningSample
         };
     }
 
+    /// <summary>
+    /// Helper class to display interactive controls for the ImageRectifierBinding features
+    /// </summary>
     public sealed partial class ImageRectifierInteractiveControl : UserControl
     {
         private SoftwareBitmapSource m_resultImageSource = new SoftwareBitmapSource();
@@ -39,22 +45,27 @@ namespace ImageScanningSample
         public delegate void InterpolationTypeChangedHandler(ImageRectifierInterpolationKind type);
         public event InterpolationTypeChangedHandler InterpolationTypeChanged;
 
+        /// <summary>
+        /// ImageRectifierInteractiveControl constructor
+        /// </summary>
         public ImageRectifierInteractiveControl()
         {
             this.InitializeComponent();
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            UIInterpolationType.ItemsSource = Enum.GetNames(typeof(ImageRectifierInterpolationKind));
-            UIResultImage.Source = m_resultImageSource;
-        }
-
+        /// <summary>
+        /// Update displayed input values
+        /// </summary>
+        /// <param name="initialValues"></param>
         public void UpdateDisplayedInputValues(ImageRectifierBindingInputFeatureValues initialValues)
         {
             UpdateInputQuadCorners(initialValues.InputQuad);
         }
 
+        /// <summary>
+        /// Update displayed input quad corner values
+        /// </summary>
+        /// <param name="corners"></param>
         public void UpdateInputQuadCorners(IList<Point> corners)
         {
             Debug.Assert(corners.Count % 4 == 0);
@@ -71,6 +82,11 @@ namespace ImageScanningSample
             UIBottomRightInputQuadCornerY.Text = corners[3].Y.ToString("0.00");
         }
 
+        /// <summary>
+        /// Update the output image displayed
+        /// </summary>
+        /// <param name="videoFrame"></param>
+        /// <returns></returns>
         public async Task UpdateResultImageAsync(VideoFrame videoFrame)
         {
             m_cachedRectifiedImage = videoFrame;
@@ -78,9 +94,22 @@ namespace ImageScanningSample
             UISaveImageButton.IsEnabled = true;
         }
 
+        /// <summary>
+        /// Update displayed input ImageRectifierInterpolationKind values
+        /// </summary>
+        /// <param name="interpolationType"></param>
         public void UpdateInterpolationType(ImageRectifierInterpolationKind interpolationType)
         {
             UIInterpolationType.SelectedIndex = (int)interpolationType;
+        }
+
+        // -- Event handlers -- //
+        #region EventHandlers
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            UIInterpolationType.ItemsSource = Enum.GetNames(typeof(ImageRectifierInterpolationKind));
+            UIResultImage.Source = m_resultImageSource;
         }
 
         private void UIInterpolationType_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -113,6 +142,7 @@ namespace ImageScanningSample
                 }
             }
         }
+ #endregion EventHandlers
     }
 
     /// <summary>
@@ -125,7 +155,7 @@ namespace ImageScanningSample
         private InteractiveQuadRenderer m_inputQuadRenderer = null;
         private ImageRectifierInteractiveControl m_interactiveControl = null;
 
-        private Point[] m_inputQuadCorners = new Point[4]
+        private List<Point> m_inputQuadCorners = new List<Point>
         {
             new Point(0.2, 0.2),
             new Point(0.8, 0.2),
@@ -134,7 +164,7 @@ namespace ImageScanningSample
         };
 
         /// <summary>
-        ///  QuadDetectorControl constructor
+        /// ImageRectifierControl constructor
         /// </summary>
         /// <param name="binding"></param>
         public ImageRectifierControl(ISkillBinding binding) : base(binding)
@@ -198,15 +228,7 @@ namespace ImageScanningSample
             // Set interpolation type
             binding.SetInterpolationKind(m_ImageRectifierBindingFeatureValues.InterpolationType);
 
-            // TODO: expose option to use quad or edge
-            if (true)
-            {
-                await binding.SetInputQuadAsync(m_ImageRectifierBindingFeatureValues.InputQuad);
-            }
-            else
-            {
-                await binding.SetInputQuadAsync(null);
-            }
+            await binding.SetInputQuadAsync(m_ImageRectifierBindingFeatureValues.InputQuad);
 
             // Invoke event handlers
             base.RunButton_Click(sender, e);
@@ -215,9 +237,10 @@ namespace ImageScanningSample
         /// <summary>
         /// CornersChangeCompleted event handler
         /// </summary>
-        private void InteractiveQuadRenderer_CornersChangeCompleted(IList<Point> corners)
+        private void InteractiveQuadRenderer_CornersChangeCompleted(List<Point> corners)
         {
-            m_ImageRectifierBindingFeatureValues.InputQuad = corners.ToList();
+            m_inputQuadCorners = corners;
+            m_ImageRectifierBindingFeatureValues.InputQuad = m_inputQuadCorners;
 
             m_runButton.IsEnabled = true;
         }
@@ -226,7 +249,7 @@ namespace ImageScanningSample
         /// CornersChanged event handler
         /// </summary>
         /// <param name="corners"></param>
-        private void InteractiveQuadRenderer_CornersChanged(IList<Point> corners)
+        private void InteractiveQuadRenderer_CornersChanged(List<Point> corners)
         {
             m_interactiveControl.UpdateInputQuadCorners(corners);
         }

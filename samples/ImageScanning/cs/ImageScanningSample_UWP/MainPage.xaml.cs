@@ -31,18 +31,17 @@ namespace ImageScanningSample
         // Skill wrappers
         private List<SkillWrapper> m_skillWrappers = new List<SkillWrapper>()
         {
+            new SkillWrapper(new CurvedEdgesDetectorDescriptor()),
+            new SkillWrapper(new ImageCleanerDescriptor()),
+            new SkillWrapper(new ImageRectifierDescriptor()),
             new SkillWrapper(new LiveQuadDetectorDescriptor()),
             new SkillWrapper(new QuadDetectorDescriptor()),
-            new SkillWrapper(new ImageRectifierDescriptor()),
-            new SkillWrapper(new ImageCleanerDescriptor()),
-            new SkillWrapper(new QuadEdgesDetectorDescriptor()),
-            new SkillWrapper(new CurvedEdgesDetectorDescriptor())
+            new SkillWrapper(new QuadEdgesDetectorDescriptor())
         };
         private SkillWrapper m_currentSkillWrapper = null;
         private SkillControl m_currentSkillControl = null;
 
         // Threading and UI specific
-        private static float m_e2eRunTime = 0.0f;
         private SemaphoreSlim m_bindingLock = new SemaphoreSlim(1);
         private SemaphoreSlim m_evaluationLock = new SemaphoreSlim(1);
         private IReadOnlyList<ISkillExecutionDevice> m_availableDevices = null;
@@ -136,6 +135,59 @@ namespace ImageScanningSample
         }
 
         /// <summary>
+        /// Display a message to the user.
+        /// This method may be called from any thread.
+        /// </summary>
+        /// <param name="strMessage"></param>
+        /// <param name="type"></param>
+        public void NotifyUser(string strMessage, NotifyType type)
+        {
+            // If called from the UI thread, then update immediately.
+            // Otherwise, schedule a task on the UI thread to perform the update.
+            if (Dispatcher.HasThreadAccess)
+            {
+                UpdateStatus(strMessage, type);
+            }
+            else
+            {
+                var task = Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => UpdateStatus(strMessage, type));
+            }
+        }
+
+        /// <summary>
+        /// Update the status message displayed on the UI
+        /// </summary>
+        /// <param name="strMessage"></param>
+        /// <param name="type"></param>
+        private void UpdateStatus(string strMessage, NotifyType type)
+        {
+            switch (type)
+            {
+                case NotifyType.ClearMessage:
+                    UIStatusBorder.Background = new SolidColorBrush(Windows.UI.Colors.Transparent);
+                    break;
+                case NotifyType.StatusMessage:
+                    UIStatusBorder.Background = new SolidColorBrush(Windows.UI.Colors.Green);
+                    break;
+                case NotifyType.ErrorMessage:
+                    UIStatusBorder.Background = new SolidColorBrush(Windows.UI.Colors.Red);
+                    break;
+            }
+
+            UIStatusBlock.Text = strMessage;
+        }
+
+        public enum NotifyType
+        {
+            ClearMessage,
+            StatusMessage,
+            ErrorMessage
+        };
+
+        // -- Event handlers -- //
+        #region EventHandlers
+
+        /// <summary>
         /// Triggered when the file picker button is clicked
         /// </summary>
         /// <param name="sender"></param>
@@ -157,13 +209,11 @@ namespace ImageScanningSample
 
             // Start our stopwatch to measure the time it takes to process all of this
             m_perfWatch.Restart();
-            m_e2eRunTime = (float)m_perfWatch.ElapsedTicks / Stopwatch.Frequency * 1000f;
 
             // Take a lock for using the binding
             await m_bindingLock.WaitAsync();
 
             // Display a staging content in our UI
-            
             m_currentSkillControl = SkillControl.CreateControl(m_currentSkillWrapper.Binding);
             UIResultPanel.Items.Add(m_currentSkillControl);
             m_currentSkillControl.RunButtonClicked += SkillControl_RunButtonClicked;
@@ -318,54 +368,6 @@ namespace ImageScanningSample
             }
         }
 
-        /// <summary>
-        /// Display a message to the user.
-        /// This method may be called from any thread.
-        /// </summary>
-        /// <param name="strMessage"></param>
-        /// <param name="type"></param>
-        public void NotifyUser(string strMessage, NotifyType type)
-        {
-            // If called from the UI thread, then update immediately.
-            // Otherwise, schedule a task on the UI thread to perform the update.
-            if (Dispatcher.HasThreadAccess)
-            {
-                UpdateStatus(strMessage, type);
-            }
-            else
-            {
-                var task = Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => UpdateStatus(strMessage, type));
-            }
-        }
-
-        /// <summary>
-        /// Update the status message displayed on the UI
-        /// </summary>
-        /// <param name="strMessage"></param>
-        /// <param name="type"></param>
-        private void UpdateStatus(string strMessage, NotifyType type)
-        {
-            switch (type)
-            {
-                case NotifyType.ClearMessage:
-                    UIStatusBorder.Background = new SolidColorBrush(Windows.UI.Colors.Transparent);
-                    break;
-                case NotifyType.StatusMessage:
-                    UIStatusBorder.Background = new SolidColorBrush(Windows.UI.Colors.Green);
-                    break;
-                case NotifyType.ErrorMessage:
-                    UIStatusBorder.Background = new SolidColorBrush(Windows.UI.Colors.Red);
-                    break;
-            }
-
-            UIStatusBlock.Text = strMessage;
-        }
-
-        public enum NotifyType
-        {
-            ClearMessage,
-            StatusMessage,
-            ErrorMessage
-        };
+        #endregion EventHandlers
     }
 }
