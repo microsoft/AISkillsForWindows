@@ -12,17 +12,33 @@ For how to use the framework to author a Skill to be consumed, and creating an a
 
 ## Other Samples
 
-- **[ObjectDetector](samples/ObjectDetector)**: detecting and classifying objects in images
-- **[SkeletalDetector](samples/SkeletalDetector)**: estimating poses of people in images
-- **[ConceptTagger](samples/ConceptTagger)**: obtaining classification scores of concepts in images
-- **[ImageScanning](samples/ImageScanning)**: a set of skills to achieve content scanning scenarios such as the ones featured in *OfficeLens*
-  - **CurvedEdgesDetector**: Seeks within an image the pixels that constitute the curved edges composing the contour of a given quad and returns their coordinates.
-  - **ImageCleaner**:  Cleans and enhances an image given a specified preset.
-  - **ImageRectifier**: Rectifies and crops an image to a rectangle plane given four UV coordinates.
-  - **LiveQuadDetector** and **QuadDetector**: 
-   Searches an image for quadrilateral shapes and returns the coordinates of their corners if found. The *LiveQuadDetector* is a stateful version of the *QuadDetector* that attempts to detect only 1 quadrangle and keeps track of the previous quad detected to be used as guide which optimizes tracking performance as new frames are bound over time. This is well suited for most scenarios operating over a stream of frames over time.
-**QuadDetector** can be set to detect more than 1 quadrangle and will search the whole frame everytime unless a previous quadrangle is provided. 
-  - **QuadEdgesDetector**: Searches an image for the horizontal and vertical lines defining a quadrilateral shape's contour and returns their coordinates.
+### **[ObjectDetector](samples/ObjectDetector)**
+
+| ![ObjectDetector logo](./doc/ObjecDetectorLogo.png) | detecting and classifying objects in images |
+| -- | -- |
+| | |
+
+### **[SkeletalDetector](samples/SkeletalDetector)**
+
+| ![SkeletalDetector logo](./doc/SkeletalDetectorLogo.png) | estimating poses of people in images |
+| -- | -- |
+| | |
+
+### **[ConceptTagger](samples/ConceptTagger)**
+
+| ![ConceptTagger logo](./doc/ConceptTaggerLogo.png) | obtaining classification scores of concepts in images |
+| -- | -- |
+| | |
+
+### **[ImageScanning](samples/ImageScanning)**
+
+| ![ImageScanning logo](./doc/ImageScanningLogo.png) | a set of skills to achieve content scanning scenarios such as the ones featured in *OfficeLens* |
+| -- | -- |
+| **[CurvedEdgesDetector](./samples/ImageScanning/README.md#CurvedEdgesDetectorExample)** | Seeks within an image the pixels that constitute the curved edges composing the contour of a given quad and returns their coordinates. |
+| **[ImageCleaner](./samples/ImageScanning/README.md#ImageCleanerExample)** | Cleans and enhances an image given a specified preset. |
+| **[ImageRectifier](./samples/ImageScanning/README.md#ImageRectifierExample)** | Rectifies and crops an image to a rectangle plane given four UV coordinates. |
+| **[LiveQuadDetector](./samples/ImageScanning/README.md#QuadDetectorExample)** and **[QuadDetector](./samples/ImageScanning/README.md#QuadDetectorExample)** | Searches an image for quadrilateral shapes and returns the coordinates of their corners if found. The *LiveQuadDetector* is a stateful version of the *QuadDetector* that attempts to detect only 1 quadrangle and keeps track of the previous quad detected to be used as guide which optimizes tracking performance as new frames are bound over time. This is well suited for most scenarios operating over a stream of frames over time. **QuadDetector** can be set to detect more than 1 quadrangle and will search the whole frame everytime unless a previous quadrangle is provided. |
+| **[QuadEdgesDetector](./samples/ImageScanning/README.md#QuadEdgesDetectorExample)** | Searches an image for the horizontal and vertical lines defining a quadrilateral shape's contour and returns their coordinates. |
 
 -----
 
