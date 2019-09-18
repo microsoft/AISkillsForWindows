@@ -1,4 +1,4 @@
-# WindowsVisionSkillsPreview
+# ![ImageScanning logo](./doc/Logo.png) Windows Vision Skills Preview
 
 ## Summary
 
