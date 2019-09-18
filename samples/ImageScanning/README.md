@@ -8,31 +8,36 @@ These samples will show how to use the set of skills contained in the Image Scan
 The skills bundled in this package are:
 
 + **CurvedEdgesDetector**: Seeks within an image the pixels that constitute the curved edges composing the contour of a given quad and returns their coordinates.
-  | Input image and base quad specified | Ouput detected curved edge |
-  | ----------------------------------- | -------------------------- |
-  | ![Screenshot of CurvedEdgesDetector inputs](./doc/CurvedEdgesDetector2.jpg) | ![Screenshot of CurvedEdgesDetector outputs](./doc/CurvedEdgesDetector3.jpg) |
+
+| Input image and base quad specified | Ouput detected curved edge |
+| ----------------------------------- | -------------------------- |
+| ![Screenshot of CurvedEdgesDetector inputs](./doc/CurvedEdgesDetector2.jpg) | ![Screenshot of CurvedEdgesDetector outputs](./doc/CurvedEdgesDetector3.jpg) |
 
 + **ImageCleaner**: Cleans and enhances an image given a specified preset.
-  | Input image and image cleaning kind specified (whiteboard) | Ouput processed image |
-  | ---------------------------------------------------------- | --------------------- |
-  | ![Screenshot of ImageCleaner inputs](./doc/ImageRectifier3.jpg) | ![Screenshot of ImageCleaner outputs](./doc/ImageCleaner2.jpg) |
+
+| Input image and image cleaning kind specified (whiteboard) | Ouput processed image |
+| ---------------------------------------------------------- | --------------------- |
+| ![Screenshot of ImageCleaner inputs](./doc/ImageRectifier3.jpg) | ![Screenshot of ImageCleaner outputs](./doc/ImageCleaner2.jpg) |
 
 + **ImageRectifier**: Rectifies and crops an image to a rectangle plane given four UV coordinates.
-  | Input image and cropping shape specified | Ouput rectified image |
-  | -----------------------------------------| --------------------- |
-  | ![Screenshot of ImageRectifier inputs](./doc/ImageRectifier2.jpg) | ![Screenshot of ImageRectifier outputs](./doc/ImageRectifier3.jpg) |
+
+| Input image and cropping shape specified | Ouput rectified image |
+| -----------------------------------------| --------------------- |
+| ![Screenshot of ImageRectifier inputs](./doc/ImageRectifier2.jpg) | ![Screenshot of ImageRectifier outputs](./doc/ImageRectifier3.jpg) |
 
 + **QuadDetector** and **LiveQuadDetector**: Searches an image for quadrilateral shapes and returns the coordinates of their corners if found. 
 The **LiveQuadDetector** is a stateful version of the **QuadDetector** that attempts to detect only 1 quadrangle and keeps track of the previous quad detected to be used as guide which optimizes tracking performance as new frames are bound over time. This is well suited for most scenarios operating over a stream of frames over time.
 **QuadDetector** can be set to detect more than 1 quadrangle and will search the whole frame everytime unless a previous quadrangle is provided.
-  | Input image | Ouput detected quadrangle |
-  | -----------------------------------------| --------------------- |
-  | ![Screenshot of QuadDetector inputs](./doc/QuadDetector1.jpg) | ![Screenshot of QuadDetector outputs](./doc/QuadDetector2.jpg) |
+
+| Input image | Ouput detected quadrangle |
+| -----------------------------------------| --------------------- |
+| ![Screenshot of QuadDetector inputs](./doc/QuadDetector1.jpg) | ![Screenshot of QuadDetector outputs](./doc/QuadDetector2.jpg) |
 
 + **QuadEdgesDetector**: Searches an image for the horizontal and vertical lines defining a quadrilateral shape's contour and returns their coordinates.
-  | Input image | Ouput detected vertical and horizontal quadrangle edges |
-  | -----------------------------------------| --------------------- |
-  | ![Screenshot of QuadDetector inputs](./doc/QuadDetector1.jpg) | ![Screenshot of QuadDetector outputs](./doc/QuadEdgesDetector2.jpg) |
+
+| Input image | Ouput detected vertical and horizontal quadrangle edges |
+| -----------------------------------------| --------------------- |
+| ![Screenshot of QuadDetector inputs](./doc/QuadDetector1.jpg) | ![Screenshot of QuadDetector outputs](./doc/QuadEdgesDetector2.jpg) |
 
 While the [UWP sample](./cs/ImageScanningSample_UWP) showcases each skill individually in an interative fashion with corresponding useful UI control helpers, the [.NetCore 3.0](./cs/ImageScanningSample_NetCore3) and [Win32](./cpp/ImageScanningSample_Desktop) console samples combine 3 of skills executed in succession to achieve a common productivity task consisting of scanning a piece of content (document, whiteboard, picture, etc.) within a photo. Namely:
 0. Input image 
