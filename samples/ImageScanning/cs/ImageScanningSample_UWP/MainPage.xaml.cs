@@ -264,7 +264,7 @@ namespace ImageScanningSample
                         UISkillTabs.IsEnabled = true;
                         UIButtonFilePick.IsEnabled = true;
                     });
-                
+
             });
         }
 

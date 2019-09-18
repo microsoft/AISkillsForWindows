@@ -116,7 +116,7 @@ namespace ImageScanningSample
         {
             if (UIInterpolationType.SelectedIndex > 0)
             {
-                if(InterpolationTypeChanged != null)
+                if (InterpolationTypeChanged != null)
                 {
                     InterpolationTypeChanged.Invoke((ImageRectifierInterpolationKind)UIInterpolationType.SelectedIndex);
                 }
@@ -142,7 +142,7 @@ namespace ImageScanningSample
                 }
             }
         }
- #endregion EventHandlers
+        #endregion EventHandlers
     }
 
     /// <summary>

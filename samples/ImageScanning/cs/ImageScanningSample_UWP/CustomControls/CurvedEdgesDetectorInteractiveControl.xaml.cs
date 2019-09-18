@@ -76,8 +76,8 @@ namespace ImageScanningSample
 
             // Add line result control
             m_linesResultRenderer = new PolylineRenderer(ref m_canvas);
-            
-            m_linesResultRenderer.IsVisible = false;            
+
+            m_linesResultRenderer.IsVisible = false;
 
             Children.Add(m_interactiveControl);
             m_interactiveControl.UpdateBaseQuadCorners(m_inputQuadCorners);

@@ -119,7 +119,7 @@ namespace ImageScanningSample
         {
             UIBoundCenterPointX.IsEnabled = (bool)UIUseCenterPoint.IsChecked;
             UIBoundCenterPointY.IsEnabled = (bool)UIUseCenterPoint.IsChecked;
-            if(UIUseCenterPoint.IsChecked == false)
+            if (UIUseCenterPoint.IsChecked == false)
             {
                 UIBoundCenterPointX.Text = "";
                 UIBoundCenterPointY.Text = "";
@@ -176,7 +176,7 @@ namespace ImageScanningSample
         private void UIMaxQuad_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
             UIMaxQuadText.Text = UIMaxQuad.Value.ToString();
-            if(MaxQuadValueChanged != null)
+            if (MaxQuadValueChanged != null)
             {
                 MaxQuadValueChanged.Invoke(sender, e);
             }
@@ -324,10 +324,10 @@ namespace ImageScanningSample
         {
             // Update ISKillBinding
             QuadDetectorBinding binding = m_skillBinding as QuadDetectorBinding;
-            
+
             binding.SetLookupRegionCenterCropPercentage(m_quadDetectorBindingFeatureValues.SubMarginPercentage);
             binding.SetMaxQuadCount(m_quadDetectorBindingFeatureValues.MaxDetectedQuads);
-            if(m_quadDetectorBindingFeatureValues.UseCenterPoint)
+            if (m_quadDetectorBindingFeatureValues.UseCenterPoint)
             {
                 binding.SetCenterPoint(m_quadDetectorBindingFeatureValues.CenterPointCoordinates);
             }
@@ -335,8 +335,8 @@ namespace ImageScanningSample
             {
                 binding.SetCenterPoint(null);
             }
-            
-            if(m_quadDetectorBindingFeatureValues.UseBaseQuad)
+
+            if (m_quadDetectorBindingFeatureValues.UseBaseQuad)
             {
                 binding.SetPreviousQuad(m_quadDetectorBindingFeatureValues.BaseQuad);
             }
@@ -374,7 +374,7 @@ namespace ImageScanningSample
 
         private void QuadDetectorSkillInteractiveControl_SpecifyBaseQuadCheckedUnchecked(object sender, RoutedEventArgs e)
         {
-            if(m_baseQuadRenderer.IsVisible)
+            if (m_baseQuadRenderer.IsVisible)
             {
                 m_baseQuadRenderer.IsVisible = false;
             }
@@ -422,7 +422,7 @@ namespace ImageScanningSample
 
         private void QuadDetectorSkillInteractiveControl_CenterPointCheckedUnchecked(object sender, RoutedEventArgs e)
         {
-            if(m_centerPointControl.Visibility == Visibility.Collapsed)
+            if (m_centerPointControl.Visibility == Visibility.Collapsed)
             {
                 Canvas.SetLeft(m_centerPointControl, m_canvas.ActualWidth / 2);
                 Canvas.SetTop(m_centerPointControl, m_canvas.ActualHeight / 2);
@@ -463,7 +463,7 @@ namespace ImageScanningSample
         {
             var cornerControl = sender as ImageCropperThumb;
             m_quadDetectorBindingFeatureValues.CenterPointCoordinates = new Point(
-                Canvas.GetLeft(cornerControl) / m_canvas.ActualWidth, 
+                Canvas.GetLeft(cornerControl) / m_canvas.ActualWidth,
                 Canvas.GetTop(cornerControl) / m_canvas.ActualHeight);
         }
 

@@ -140,7 +140,7 @@ namespace ImageScanningSample
         {
             QuadEdgesDetectorBindingInputFeatureValues result = new QuadEdgesDetectorBindingInputFeatureValues();
             result.MaxQuadEdges = (binding["MaxDetectedEdges"].FeatureValue as SkillFeatureTensorIntValue).GetAsVectorView()[0];
-            
+
             return result;
         }
 

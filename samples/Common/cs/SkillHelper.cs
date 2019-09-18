@@ -107,7 +107,6 @@ namespace SkillHelper
                     $"\nDescription: {desc.Description}" +
                     $"\nIsRequired: {desc.IsRequired}" +
                     $"\nType: {desc.FeatureKind}";
-                    
 
             if (desc is ISkillFeatureImageDescriptor)
             {
@@ -233,7 +232,7 @@ namespace SkillHelper
                 new KeyValuePair<string, string>("IsRequired", $"{desc.IsRequired}"),
                 new KeyValuePair<string, string>("Type", $"{desc.FeatureKind}"),
             };
-           
+
             if (desc is ISkillFeatureImageDescriptor)
             {
                 ISkillFeatureImageDescriptor imageDesc = desc as ISkillFeatureImageDescriptor;

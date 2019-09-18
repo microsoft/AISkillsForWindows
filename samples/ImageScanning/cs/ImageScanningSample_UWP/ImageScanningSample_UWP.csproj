@@ -151,7 +151,7 @@
     <Compile Include="CustomControls\LiveQuadDetectorInteractiveControl.xaml.cs">
       <DependentUpon>LiveQuadDetectorInteractiveControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\ResultItemUserControl.cs" />
+    <Compile Include="CustomControls\SkillControls.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

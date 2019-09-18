@@ -63,7 +63,7 @@ namespace ImageScanningSample
         /// <param name="e"></param>
         private void UIReset_Checked(object sender, RoutedEventArgs e)
         {
-            if(ResetCheckedUnchecked != null)
+            if (ResetCheckedUnchecked != null)
             {
                 ResetCheckedUnchecked.Invoke(sender, e);
             }
@@ -100,7 +100,7 @@ namespace ImageScanningSample
 
             // Add Quad results control
             m_quadsResultRenderer = new QuadSetRenderer(ref m_canvas, 1);
-            m_quadsResultRenderer.IsVisible = false;            
+            m_quadsResultRenderer.IsVisible = false;
 
             Children.Add(m_interactiveControl);
             m_interactiveControl.UpdateDisplayedInputValues(m_liveQuadDetectorBindingFeatureValues);
@@ -132,7 +132,7 @@ namespace ImageScanningSample
         {
             LiveQuadDetectorBindingInputFeatureValues result = new LiveQuadDetectorBindingInputFeatureValues();
             result.Reset = (binding["Reset"].FeatureValue as SkillFeatureTensorBooleanValue).GetAsVectorView()[0];
-            
+
             return result;
         }
 

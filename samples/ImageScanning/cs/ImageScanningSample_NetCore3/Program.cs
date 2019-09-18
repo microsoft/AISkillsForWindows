@@ -18,7 +18,7 @@ namespace ImageScanningSample_NetCore3
         static async Task<VideoFrame> LoadVideoFrameFromImageFileAsync(string imageFilePath)
         {
             VideoFrame resultFrame = null;
-            
+
             try
             {
                 StorageFile file = await StorageFile.GetFileFromPathAsync(imageFilePath);
@@ -97,9 +97,9 @@ namespace ImageScanningSample_NetCore3
                 ImageCleaningKind imageCleaningPreset = ImageCleaningKind.WhiteboardOrDocument; // default value if none specified as argument
                 bool skipQuadDetectionImageRectification = false;
 
-                Console.WriteLine("Image Scanning .NetCore 3.0 Console App - This app executes a common productivity scenario using an input image and saving the result image to file:\n" + 
+                Console.WriteLine("Image Scanning .NetCore 3.0 Console App - This app executes a common productivity scenario using an input image and saving the result image to file:\n" +
                     "1. finds the predominant quadrangle\n" +
-                    "2. uses this quadrangle to rectify and crop the image\n" + 
+                    "2. uses this quadrangle to rectify and crop the image\n" +
                     "3. cleans the rectified image\n\n");
 
                 try
@@ -247,6 +247,6 @@ namespace ImageScanningSample_NetCore3
                     Environment.Exit(e.HResult);
                 }
             }).Wait();
-        }       
+        }
     }
 }

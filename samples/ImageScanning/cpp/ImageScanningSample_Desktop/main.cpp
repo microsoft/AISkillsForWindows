@@ -104,13 +104,13 @@ hstring SaveModifiedVideoFrameToFile(hstring imageFilePath, VideoFrame frame)
         std::wstring fileNameTemp = file.Name().c_str();
         auto insertPosition = fileNameTemp.find(file.FileType());
         fileNameTemp.insert(insertPosition, L"_mod");
-        
+
         StorageFile modifiedFile = folder.CreateFileAsync(fileNameTemp, CreationCollisionOption::GenerateUniqueName).get();
         fileName = modifiedFile.Path();
 
         // Create the encoder from the stream
         IRandomAccessStream stream = modifiedFile.OpenAsync(FileAccessMode::ReadWrite).get();
-        
+
         BitmapEncoder encoder = BitmapEncoder::CreateAsync(BitmapEncoder::JpegEncoderId(), stream).get();
         SoftwareBitmap softwareBitmap = frame.SoftwareBitmap();
         encoder.SetSoftwareBitmap(softwareBitmap);
@@ -128,15 +128,15 @@ hstring SaveModifiedVideoFrameToFile(hstring imageFilePath, VideoFrame frame)
 // App main loop
 //
 int main()
-{  
+{
     hstring fileName;
     ImageRectifierInterpolationKind imageRectifierInterpolationKind = ImageRectifierInterpolationKind::Bilinear; // default value if none specified as argument
     ImageCleaningKind imageCleaningPreset = ImageCleaningKind::WhiteboardOrDocument; // default value if none specified as argument
 
     std::cout << "Image Scanning C++/WinRT Non-packaged(win32) Console App - "
         << "This app executes a common productivity scenario that consists of scanning an "
-        << "input image for a quadrangle, rectifying and cropping using its corner coordinates, " 
-        << "cleaning its content and saving the result image to file:\n" 
+        << "input image for a quadrangle, rectifying and cropping using its corner coordinates, "
+        << "cleaning its content and saving the result image to file:\n"
         << "1. finds the predominant quadrangle\n"
         << "2. uses this quadrangle to rectify and crop the image\n"
         << "3. cleans the rectified image\n\n" << std::endl;
@@ -154,7 +154,7 @@ int main()
         if (__argc < 2)
         {
             std::string errorMessage = "Allowed command arguments: <file path to .jpg or .png>";
-            errorMessage = errorMessage 
+            errorMessage = errorMessage
                 + " <optional image rectifier interpolation to apply to the rectified image:\n"
                 + "\t1. " + ImageRectifierInterpolationKindLookup.at(ImageRectifierInterpolationKind::Bilinear) + "\n"
                 + "\t2. " + ImageRectifierInterpolationKindLookup.at(ImageRectifierInterpolationKind::Bicubic) + "\n"
@@ -193,7 +193,7 @@ int main()
             }
         }
         imageRectifierInterpolationKind = (ImageRectifierInterpolationKind)(selection - 1);
-       
+
         // Parse optional image cleaning preset argument
         selection = 0;
         if (__argc < 4)
@@ -218,7 +218,7 @@ int main()
             }
         }
         imageCleaningPreset = (ImageCleaningKind)(selection - 1);
-        
+
         // Set and run skill
         try
         {
@@ -271,7 +271,7 @@ int main()
 
             auto outputFilePath = SaveModifiedVideoFrameToFile(fileName, results);
             std::wcout << L"Written output image to " << outputFilePath.c_str();
-            
+
         }
         catch (hresult_error const& ex)
         {

@@ -211,13 +211,13 @@ namespace ImageScanningSample.Helper
             {
                 throw new Exception("you can only pass a List of pairs of points to this method");
             }
-            
+
             var lineCount = points.Count / 2;
             // If we need to render more lines than what we have instantiated so far, fill up the inventory of lines
-            if(m_lines.Count < lineCount)
+            if (m_lines.Count < lineCount)
             {
                 int originalCount = m_lines.Count;
-                for (int i=0; i < (lineCount - originalCount); i++)
+                for (int i = 0; i < (lineCount - originalCount); i++)
                 {
                     m_lines.Add(new Line() { Stroke = m_lineBrush, StrokeThickness = LINE_THICKNESS });
                     m_canvas.Children.Add(m_lines.Last());
@@ -231,7 +231,7 @@ namespace ImageScanningSample.Helper
             int lineIndex = 0;
 
             // Show and update previously instantiated lines needed
-            for(int i=0;i<points.Count-1;i+=2)
+            for (int i = 0; i < points.Count - 1; i += 2)
             {
                 var line = m_lines[lineIndex];
                 line.X1 = 0.0f;
@@ -249,9 +249,9 @@ namespace ImageScanningSample.Helper
 
                 lineIndex++;
             }
-             
+
             // Hide previously instantiated lines not needed this time
-            for(; lineIndex < m_lines.Count; lineIndex++)
+            for (; lineIndex < m_lines.Count; lineIndex++)
             {
                 var line = m_lines[lineIndex];
                 line.X2 = 0.0f;
@@ -318,7 +318,7 @@ namespace ImageScanningSample.Helper
 
             var lineCount = points.Count;
             var polyPoints = new PointCollection();
-            foreach(var point in points)
+            foreach (var point in points)
             {
                 polyPoints.Add(new Point(point.X * m_canvas.ActualWidth, point.Y * m_canvas.ActualHeight));
             }
