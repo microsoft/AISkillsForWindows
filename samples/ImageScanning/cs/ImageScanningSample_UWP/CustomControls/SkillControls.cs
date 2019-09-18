@@ -80,7 +80,7 @@ namespace ImageScanningSample.Helper
         }
 
         /// <summary>
-        /// ResultItem class constructor
+        /// SkillControl class constructor
         /// </summary>
         public SkillControl(ISkillBinding binding)
         {
@@ -152,7 +152,7 @@ namespace ImageScanningSample.Helper
     #region ShapeRenderingHelpers
 
     /// <summary>
-    /// Convenience class for rendering a polyline on screen
+    /// Convenience class for rendering a set of lines on screen
     /// </summary>
     internal class LineSetRenderer
     {
@@ -165,7 +165,7 @@ namespace ImageScanningSample.Helper
         private Visibility m_currentVisibility = Visibility.Visible;
 
         /// <summary>
-        /// QuadRender constructor
+        /// LineSetRenderer constructor
         /// </summary>
         /// <param name="canvas"></param>
         public LineSetRenderer(ref Canvas canvas, Color lineColor)
@@ -175,7 +175,7 @@ namespace ImageScanningSample.Helper
         }
 
         /// <summary>
-        /// Set visibility of quad rendering canvas control
+        /// Set visibility of line rendering canvas control
         /// </summary>
         public bool IsVisible
         {
@@ -221,7 +221,7 @@ namespace ImageScanningSample.Helper
                 {
                     m_lines.Add(new Line() { Stroke = m_lineBrush, StrokeThickness = LINE_THICKNESS });
                     m_canvas.Children.Add(m_lines.Last());
-                    m_ellipses.Add(new Ellipse() { Stroke = m_lineBrush, StrokeThickness = LINE_THICKNESS, Height = ELLIPSE_RADIUS*2, Width = ELLIPSE_RADIUS*2 });
+                    m_ellipses.Add(new Ellipse() { Stroke = m_lineBrush, StrokeThickness = LINE_THICKNESS, Height = ELLIPSE_RADIUS * 2, Width = ELLIPSE_RADIUS * 2 });
                     m_canvas.Children.Add(m_ellipses.Last());
                     m_ellipses.Add(new Ellipse() { Stroke = m_lineBrush, StrokeThickness = LINE_THICKNESS, Height = ELLIPSE_RADIUS * 2, Width = ELLIPSE_RADIUS * 2 });
                     m_canvas.Children.Add(m_ellipses.Last());
@@ -269,7 +269,7 @@ namespace ImageScanningSample.Helper
     }
 
     /// <summary>
-    /// Convenience class for rendering quadrilateral's contour on screen
+    /// Convenience class for rendering a polyline on screen
     /// </summary>
     internal class PolylineRenderer
     {
@@ -290,7 +290,7 @@ namespace ImageScanningSample.Helper
         }
 
         /// <summary>
-        /// Set visibility of quad rendering canvas control
+        /// Set visibility of line rendering canvas control
         /// </summary>
         public bool IsVisible
         {
