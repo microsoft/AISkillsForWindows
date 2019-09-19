@@ -278,7 +278,7 @@ namespace ImageScanningSample.Helper
         private Visibility m_currentVisibility = Visibility.Visible;
 
         /// <summary>
-        /// QuadRender constructor
+        /// PolylineRenderer constructor
         /// </summary>
         /// <param name="canvas"></param>
         public PolylineRenderer(ref Canvas canvas)
@@ -338,7 +338,7 @@ namespace ImageScanningSample.Helper
         private Visibility m_currentVisibility = Visibility.Visible;
 
         /// <summary>
-        /// QuadRender constructor
+        /// QuadSetRenderer constructor
         /// </summary>
         /// <param name="canvas"></param>
         public QuadSetRenderer(ref Canvas canvas, int quadCount)
@@ -447,7 +447,7 @@ namespace ImageScanningSample.Helper
         private ImageCropperThumb[] m_cornerControls = new ImageCropperThumb[4];
 
         /// <summary>
-        /// SingleQuadRenderer constructor, takes a ref to an existing Canvas to attach itselfs to it
+        /// InteractiveQuadRenderer constructor, takes a ref to an existing Canvas to attach itselfs to it
         /// </summary>
         /// <param name="canvas"></param>
         public InteractiveQuadRenderer(ref Canvas canvas)
