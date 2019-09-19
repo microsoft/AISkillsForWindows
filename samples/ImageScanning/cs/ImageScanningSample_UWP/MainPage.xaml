@@ -119,7 +119,7 @@ Copyright (C) Microsoft Corporation. All rights reserved.
                 </controls:Expander>
 
             </StackPanel>
-            
+
         </DataTemplate>
 
         <!--Setting a data template for displaying skill information-->
@@ -158,7 +158,7 @@ Copyright (C) Microsoft Corporation. All rights reserved.
     <ScrollViewer>
         <StackPanel>
             <!--Per skill panel-->
-                    <controls:TabView x:Name="UISkillTabs" Grid.Column="1" 
+            <controls:TabView x:Name="UISkillTabs" Grid.Column="1" 
                               TabWidthBehavior="Actual" CanCloseTabs="False"
                               IsCloseButtonOverlay="False" CanDragItems="False"
                               CanReorderItems="False" AllowDrop="False"
@@ -166,13 +166,13 @@ Copyright (C) Microsoft Corporation. All rights reserved.
                               ItemTemplate="{StaticResource SkillInformationDisplayTemplate}"
                               SelectionChanged="UISkillTabs_SelectionChanged">
 
-                        <controls:TabView.ItemHeaderTemplate>
-                            <DataTemplate x:DataType="SkillHelper:SkillWrapper">
-                                <TextBlock Text="{x:Bind Path=Descriptor.Information.Name}"/>
-                            </DataTemplate>
-                        </controls:TabView.ItemHeaderTemplate>
+                <controls:TabView.ItemHeaderTemplate>
+                    <DataTemplate x:DataType="SkillHelper:SkillWrapper">
+                        <TextBlock Text="{x:Bind Path=Descriptor.Information.Name}"/>
+                    </DataTemplate>
+                </controls:TabView.ItemHeaderTemplate>
 
-                    </controls:TabView>
+            </controls:TabView>
 
             <controls:Expander VerticalAlignment="Top"
                                        Header="Available execution device selected"
@@ -183,11 +183,11 @@ Copyright (C) Microsoft Corporation. All rights reserved.
                                        ExpandDirection="Down"
                                        IsExpanded="False" 
                                        Style="{StaticResource ResourceKey=UISubExpanderStyle}">
-                
+
                 <ListBox Name="UISkillExecutionDevices" 
                          ItemTemplate="{StaticResource SkillExecutionDeviceDisplayTemplate}" 
                          SelectionChanged="UISkillExecutionDevices_SelectionChanged"/>
-                
+
             </controls:Expander>
 
             <!--Alert user if an error occurs-->
