@@ -9,7 +9,7 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
     <StackPanel Orientation="Horizontal">
-        <controls:Expander Header="Input values" IsExpanded="True">
+        <controls:Expander Header="Input values" IsExpanded="True" Background="#FF7F7F7F">
 
             <StackPanel>
                 <TextBlock Text="MaxDetectedEdges" />
@@ -20,7 +20,7 @@
                 </StackPanel>
             </StackPanel>
         </controls:Expander>
-        <controls:Expander Header="Output values" IsExpanded="True">
+        <controls:Expander Header="Output values" IsExpanded="True" Background="#FF7F7F7F">
             <StackPanel>
                 <controls:HeaderedContentControl Name="UIDetectedHorizontalEdgeCount" Header="DetectedHorizontalEdgeCount" VerticalAlignment="Top" Orientation="Vertical"/>
                 <controls:HeaderedContentControl Name="UIDetectedVerticalEdgeCount" Header="DetectedVerticalEdgeCount" VerticalAlignment="Top" Orientation="Vertical"/>

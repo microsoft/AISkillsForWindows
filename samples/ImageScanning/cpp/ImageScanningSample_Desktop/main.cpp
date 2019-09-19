@@ -226,7 +226,6 @@ int main()
             ImageRectifierDescriptor imageRectifierSkillDescriptor;
             ImageCleanerDescriptor imageCleanerSkillDescriptor;
 
-            // Create instance of the skill
             // Create instance of the skills
             auto quadDetectorSkill = quadDetectorSkillDescriptor.CreateSkillAsync().get().as<QuadDetectorSkill>();
             auto imageRectifierSkill = imageRectifierSkillDescriptor.CreateSkillAsync().get().as<ImageRectifierSkill>();

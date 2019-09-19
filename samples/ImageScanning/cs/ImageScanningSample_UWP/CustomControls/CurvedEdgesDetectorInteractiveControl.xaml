@@ -11,7 +11,7 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
     <StackPanel Orientation="Horizontal">
-        <controls:Expander Header="Input values" IsExpanded="True">
+        <controls:Expander Header="Input values" IsExpanded="True" Background="#FF7F7F7F">
 
             <StackPanel>
                 <TextBlock Text="Input Quad:" />

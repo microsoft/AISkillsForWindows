@@ -27,7 +27,6 @@ namespace ImageScanningSample.Helper
     {
         protected ISkillBinding m_skillBinding;
         protected Grid m_imageGrid = new Grid() { MaxWidth = 400, MaxHeight = 400 };
-        protected Expander m_expander = new Expander() { Header = "Scores", IsExpanded = false, ExpandDirection = ExpandDirection.Down };
         protected Image m_image = new Image() { Stretch = Stretch.Uniform };
         protected SoftwareBitmapSource m_softwareBitmapSource = new SoftwareBitmapSource();
         protected int m_frameWidth;

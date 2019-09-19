@@ -12,13 +12,13 @@
     Loaded="UserControl_Loaded">
 
     <StackPanel Orientation="Horizontal">
-        <controls:Expander Header="Input values" IsExpanded="True">
+        <controls:Expander Header="Input values" IsExpanded="True" Background="#FF7F7F7F">
             <StackPanel>
                 <TextBlock Text="Input Image Type" />
                 <ComboBox Name="UIInputImageType" SelectionChanged="UIInputImageType_SelectionChanged"/>
             </StackPanel>
         </controls:Expander>
-        <controls:Expander Header="Output values" IsExpanded="True">
+        <controls:Expander Header="Output values" IsExpanded="True" Background="#FF7F7F7F">
             <StackPanel>
                 <Grid>
                     <Image Name="UIResultImage" MaxWidth="400" MaxHeight="400" Stretch="Uniform"/>

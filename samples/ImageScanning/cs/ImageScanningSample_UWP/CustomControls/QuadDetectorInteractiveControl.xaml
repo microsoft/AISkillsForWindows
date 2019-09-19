@@ -21,7 +21,7 @@ Copyright (C) Microsoft Corporation. All rights reserved.
     d:DesignWidth="400">
 
     <StackPanel Orientation="Horizontal">
-        <controls:Expander Header="Input values" IsExpanded="True">
+        <controls:Expander Header="Input values" IsExpanded="True" Background="#FF7F7F7F">
             <StackPanel>
                 <TextBlock Text="Maximum Quad" />
                 <StackPanel Orientation="Horizontal">
@@ -87,7 +87,7 @@ Copyright (C) Microsoft Corporation. All rights reserved.
 
             </StackPanel>
         </controls:Expander>
-        <controls:Expander Header="Output values" IsExpanded="True">
+        <controls:Expander Header="Output values" IsExpanded="True" Background="#FF7F7F7F">
             <controls:HeaderedContentControl Name="UIDetectedQuadCount" Header="DetectedQuadCount" VerticalAlignment="Top" Orientation="Vertical"/>
         </controls:Expander>
     </StackPanel>

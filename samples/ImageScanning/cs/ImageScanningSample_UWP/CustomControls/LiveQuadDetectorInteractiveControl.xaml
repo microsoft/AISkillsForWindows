@@ -11,14 +11,14 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
     <StackPanel Orientation="Horizontal">
-        <controls:Expander Header="Input values" IsExpanded="True">
+        <controls:Expander Header="Input values" IsExpanded="True" Background="#FF7F7F7F">
 
             <CheckBox Name="UIReset" Content="Reset" IsChecked="False" 
                           Checked="UIReset_Checked"
                           Unchecked="UIReset_Checked" VerticalAlignment="Top"/>
 
         </controls:Expander>
-        <controls:Expander Header="Output values" IsExpanded="True">
+        <controls:Expander Header="Output values" IsExpanded="True" Background="#FF7F7F7F">
             <CheckBox Name="UIIsSimilar"  Content="IsSimilar" IsChecked="False" IsEnabled="False" VerticalAlignment="Top"/>
         </controls:Expander>
     </StackPanel>
