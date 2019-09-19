@@ -5,27 +5,31 @@ These samples will show you how to use the set of skills contained in the Image 
 - [Win32 C++/Winrt Desktop console app](./cpp/ImageScanningSample_Desktop)
 - [.Net Core 3.0 C# console app](./cs/ImageScanningSample_NetCore3)
 
-The skills bundled in this package are:
+## Included Skills
 
-+ **CurvedEdgesDetector** <a name="CurvedEdgesDetectorExample"></a>: Seeks within an image the pixels that constitute the curved edges composing the contour of a given quad and returns their coordinates.
+### **CurvedEdgesDetector** <a name="CurvedEdgesDetectorExample"></a> 
+Seeks within an image the pixels that constitute the curved edges composing the contour of a given quad and returns their coordinates.
 
 | Input image and base quad specified | Ouput detected curved edge |
 | ----------------------------------- | -------------------------- |
 | ![Screenshot of CurvedEdgesDetector inputs](./doc/CurvedEdgesDetector2.jpg) | ![Screenshot of CurvedEdgesDetector outputs](./doc/CurvedEdgesDetector3.jpg) |
 
-+ **ImageCleaner** <a name="ImageCleanerExample"></a>: Cleans and enhances an image given a specified preset.
+### **ImageCleaner** <a name="ImageCleanerExample"></a>
+Cleans and enhances an image given a specified preset.
 
 | Input image and image cleaning kind specified (whiteboard) | Ouput processed image |
 | ---------------------------------------------------------- | --------------------- |
 | ![Screenshot of ImageCleaner inputs](./doc/ImageRectifier3.jpg) | ![Screenshot of ImageCleaner outputs](./doc/ImageCleaner2.jpg) |
 
-+ **ImageRectifier** <a name="ImageRectifierExample"></a>: Rectifies and crops an image to a rectangle plane given four UV coordinates.
+### **ImageRectifier** <a name="ImageRectifierExample"></a>
+Rectifies and crops an image to a rectangle plane given four UV coordinates.
 
 | Input image and cropping shape specified | Ouput rectified image |
 | -----------------------------------------| --------------------- |
 | ![Screenshot of ImageRectifier inputs](./doc/ImageRectifier2.jpg) | ![Screenshot of ImageRectifier outputs](./doc/ImageRectifier3.jpg) |
 
-+ **QuadDetector** and **LiveQuadDetector** <a name="QuadDetectorExample"></a>: Searches an image for quadrilateral shapes and returns the coordinates of their corners if found. 
+### **QuadDetector** and **LiveQuadDetector** <a name="QuadDetectorExample"></a>
+ Searches an image for quadrilateral shapes and returns the coordinates of their corners if found. 
 The **LiveQuadDetector** is a stateful version of the **QuadDetector** that attempts to detect only 1 quadrangle and keeps track of the previous quad detected to be used as guide which optimizes tracking performance as new frames are bound over time. This is well suited for most scenarios operating over a stream of frames over time.
 **QuadDetector** can be set to detect more than 1 quadrangle and will search the whole frame everytime unless a previous quadrangle is provided.
 
@@ -33,7 +37,8 @@ The **LiveQuadDetector** is a stateful version of the **QuadDetector** that atte
 | -----------------------------------------| --------------------- |
 | ![Screenshot of QuadDetector inputs](./doc/QuadDetector1.jpg) | ![Screenshot of QuadDetector outputs](./doc/QuadDetector2.jpg) |
 
-+ **QuadEdgesDetector** <a name="QuadEdgesDetectorExample"></a>: Searches an image for the horizontal and vertical lines defining a quadrilateral shape's contour and returns their coordinates.
+### **QuadEdgesDetector** <a name="QuadEdgesDetectorExample"></a>
+Searches an image for the horizontal and vertical lines defining a quadrilateral shape's contour and returns their coordinates.
 
 | Input image | Ouput detected vertical and horizontal quadrangle edges |
 | -----------------------------------------| --------------------- |
@@ -59,6 +64,8 @@ While the [UWP sample](./cs/ImageScanningSample_UWP) showcases each skill indivi
 - [Microsoft.AI.Skills.SkillInterfacePreview API document](../../doc/Microsoft.AI.Skills.SkillInterfacePreview.md)
 - [Microsoft.AI.Skills.Vision.ImageScanningPreview API document](../../doc/Microsoft.AI.Skills.Vision.ImageScanningPreview.md)
 - [Creating a custom Windows Vision Skill](../SentimentAnalyzerCustomSkill)
+- [Win32 Desktop sample applications for using Windows Media Capture APIs](https://github.com/microsoft/Windows-Camera/tree/master/Samples/WMCConsole_winrtcpp)
+- [Using MediaFrameReader](https://docs.microsoft.com/windows/uwp/audio-video-camera/process-media-frames-with-mediaframereader)
 
 ## Run the UWP sample
 
@@ -74,7 +81,7 @@ i.e.:
 // We create a binding instance
 ISkillBinding binding = await skill.CreateSkillBindingAsync();
 
-// We retrieve an input image we want to bind
+// We retrieve an input image we want to bind (see Related topics)
 VideoFrame inputImage = RetrieveYourVideoFrame();
 
 // The following 2 examples do the same thing: binding the input image
@@ -99,7 +106,7 @@ CurvedEdgesDetectorDescriptor descriptor = new CurvedEdgesDetectorDescriptor();
 CurvedEdgesDetectorkill skill = await descriptor.CreateSkillAsync() as CurvedEdgesDetectorSkill; // If you don't specify an ISkillExecutionDevice, a default will be automatically selected
 CurvedEdgesDetectorBinding binding = await skill.CreateSkillBindingAsync() as CurvedEdgesDetectorBinding;
 ...
-// Specify an input image retrieved in code (RetrieveYourVideoFrame() is left to user to implement)
+// Specify an input image retrieved in code (RetrieveYourVideoFrame() is left to user to implement, see Related topics)
 VideoFrame inputImage = RetrieveYourVideoFrame();
 await binding.SetInputImageAsync(inputImage);
 
@@ -130,7 +137,7 @@ ImageCleanerDescriptor descriptor = new ImageCleanerDescriptor();
 ImageCleanerkill skill = await descriptor.CreateSkillAsync() as ImageCleanerSkill; // If you don't specify an ISkillExecutionDevice, a default will be automatically selected
 ImageCleanerBinding binding = await skill.CreateSkillBindingAsync() as ImageCleanerBinding;
 ...
-// Specify an input image retrieved in code (RetrieveYourVideoFrame() is left to user to implement)
+// Specify an input image retrieved in code (RetrieveYourVideoFrame() is left to user to implement, see Related topics)
 VideoFrame inputImage = RetrieveYourVideoFrame();
 await binding.SetInputImageAsync(inputImage);
 
@@ -155,7 +162,7 @@ ImageRectifierDescriptor descriptor = new ImageRectifierDescriptor();
 ImageRectifierkill skill = await descriptor.CreateSkillAsync() as ImageRectifierSkill; // If you don't specify an ISkillExecutionDevice, a default will be automatically selected
 ImageRectifierBinding binding = await skill.CreateSkillBindingAsync() as ImageRectifierBinding;
 ...
-// Specify an input image retrieved in code (RetrieveYourVideoFrame() is left to user to implement)
+// Specify an input image retrieved in code (RetrieveYourVideoFrame() is left to user to implement, see Related topics)
 VideoFrame inputImage = RetrieveYourVideoFrame();
 await binding.SetInputImageAsync(inputImage);
 
@@ -190,7 +197,7 @@ LiveQuadDetectorDescriptor descriptor = new LiveQuadDetectorDescriptor();
 LiveQuadDetectorkill skill = await descriptor.CreateSkillAsync() as LiveQuadDetectorSkill; // If you don't specify an ISkillExecutionDevice, a default will be automatically selected
 LiveQuadDetectorBinding binding = await skill.CreateSkillBindingAsync() as LiveQuadDetectorBinding;
 ...
-// Specify an input image retrieved in code (RetrieveYourVideoFrame() is left to user to implement)
+// Specify an input image retrieved in code (RetrieveYourVideoFrame() is left to user to implement, see Related topics)
 VideoFrame inputImage = RetrieveYourVideoFrame();
 await binding.SetInputImageAsync(inputImage);
 
@@ -213,7 +220,7 @@ QuadDetectorDescriptor descriptor = new QuadDetectorDescriptor();
 QuadDetectorkill skill = await descriptor.CreateSkillAsync() as QuadDetectorSkill; // If you don't specify an ISkillExecutionDevice, a default will be automatically selected
 QuadDetectorBinding binding = await skill.CreateSkillBindingAsync() as QuadDetectorBinding;
 ...
-// Specify an input image retrieved in code (RetrieveYourVideoFrame() is left to user to implement)
+// Specify an input image retrieved in code (RetrieveYourVideoFrame() is left to user to implement, see Related topics)
 VideoFrame inputImage = RetrieveYourVideoFrame();
 await binding.SetInputImageAsync(inputImage);
 
@@ -235,7 +242,7 @@ QuadEdgesDetectorDescriptor descriptor = new QuadEdgesDetectorDescriptor();
 QuadEdgesDetectorkill skill = await descriptor.CreateSkillAsync() as QuadEdgesDetectorSkill; // If you don't specify an ISkillExecutionDevice, a default will be automatically selected
 QuadEdgesDetectorBinding binding = await skill.CreateSkillBindingAsync() as QuadEdgesDetectorBinding;
 ...
-// Specify an input image retrieved in code (RetrieveYourVideoFrame() is left to user to implement)
+// Specify an input image retrieved in code (RetrieveYourVideoFrame() is left to user to implement, see Related topics)
 VideoFrame inputImage = RetrieveYourVideoFrame();
 await binding.SetInputImageAsync(inputImage);
 

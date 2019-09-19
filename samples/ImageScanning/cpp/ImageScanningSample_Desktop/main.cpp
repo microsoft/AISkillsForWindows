@@ -96,7 +96,6 @@ VideoFrame LoadVideoFrameFromImageFile(hstring imageFilePath)
 //
 hstring SaveModifiedVideoFrameToFile(hstring imageFilePath, VideoFrame frame)
 {
-    hstring fileName = imageFilePath;
     try
     {
         StorageFile file = StorageFile::GetFileFromPathAsync(imageFilePath).get();
@@ -106,7 +105,7 @@ hstring SaveModifiedVideoFrameToFile(hstring imageFilePath, VideoFrame frame)
         fileNameTemp.insert(insertPosition, L"_mod");
 
         StorageFile modifiedFile = folder.CreateFileAsync(fileNameTemp, CreationCollisionOption::GenerateUniqueName).get();
-        fileName = modifiedFile.Path();
+        imageFilePath = modifiedFile.Path();
 
         // Create the encoder from the stream
         IRandomAccessStream stream = modifiedFile.OpenAsync(FileAccessMode::ReadWrite).get();
@@ -118,10 +117,10 @@ hstring SaveModifiedVideoFrameToFile(hstring imageFilePath, VideoFrame frame)
     }
     catch (hresult_error const& ex)
     {
-        std::wcerr << L"Could not save modified VideoFrame from file: " << fileName.c_str();
+        std::wcerr << L"Could not save modified VideoFrame from file: " << imageFilePath.c_str();
         throw ex;
     }
-    return fileName;
+    return imageFilePath;
 }
 
 //

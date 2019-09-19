@@ -16,19 +16,16 @@ For how to use the framework to author a Skill to be consumed, and creating an a
 
 | ![ObjectDetector logo](./doc/ObjecDetectorLogo.png) | detecting and classifying objects in images |
 | -- | -- |
-| | |
 
 ### **[SkeletalDetector](samples/SkeletalDetector)**
 
 | ![SkeletalDetector logo](./doc/SkeletalDetectorLogo.png) | estimating poses of people in images |
 | -- | -- |
-| | |
 
 ### **[ConceptTagger](samples/ConceptTagger)**
 
 | ![ConceptTagger logo](./doc/ConceptTaggerLogo.png) | obtaining classification scores of concepts in images |
 | -- | -- |
-| | |
 
 ### **[ImageScanning](samples/ImageScanning)**
 

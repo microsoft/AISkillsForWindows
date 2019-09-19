@@ -58,14 +58,13 @@ namespace ImageScanningSample_NetCore3
         //
         static async Task<string> SaveModifiedVideoFrameToFileAsync(string imageFilePath, VideoFrame frame)
         {
-            string fileName = imageFilePath;
             try
             {
                 StorageFile file = await StorageFile.GetFileFromPathAsync(imageFilePath);
                 StorageFolder folder = await file.GetParentAsync();
-                fileName = file.Name.Replace(file.FileType, "_mod.jpg");
-                StorageFile modifiedFile = await folder.CreateFileAsync(fileName, CreationCollisionOption.GenerateUniqueName);
-                fileName = modifiedFile.Path;
+                imageFilePath = file.Name.Replace(file.FileType, "_mod.jpg");
+                StorageFile modifiedFile = await folder.CreateFileAsync(imageFilePath, CreationCollisionOption.GenerateUniqueName);
+                imageFilePath = modifiedFile.Path;
                 // Create the encoder from the stream
                 using (IRandomAccessStream stream = await modifiedFile.OpenAsync(FileAccessMode.ReadWrite))
                 {
@@ -77,10 +76,10 @@ namespace ImageScanningSample_NetCore3
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Could not save modified VideoFrame from file: {fileName}");
+                Console.WriteLine($"Could not save modified VideoFrame from file: {imageFilePath}");
                 throw ex;
             }
-            return fileName;
+            return imageFilePath;
         }
 
         /// <summary>

@@ -546,7 +546,7 @@ The crop percentage given the input image dimension.
 
 Set the normalized coordinates [0,1] of the corners of a quad to guide search for the next evaluation.
 
-This is optional and if not specified, each skill execution searches the whole iamge for a new set of quadrangles.
+This is optional and if not specified, each skill execution searches the whole image for a new set of quadrangles.
 
 ```csharp
 void SetPreviousQuad(Windows.Foundation.Collections.IReadOnlyList<Windows.Foundation.Point> previousQuad)
