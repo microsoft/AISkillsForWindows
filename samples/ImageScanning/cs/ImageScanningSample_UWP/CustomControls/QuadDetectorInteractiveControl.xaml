@@ -1,0 +1,94 @@
+﻿<!--
+*@@@+++@@@@******************************************************************
+
+Microsoft Windows Media Foundation
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+*@@@+++@@@@******************************************************************
+-->
+
+<UserControl
+    x:Class="ImageScanningSample.QuadDetectorSkillInteractiveControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ImageScanningSample"
+    xmlns:localHelper="using:ImageScanningSample.Helper"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <StackPanel Orientation="Horizontal">
+        <controls:Expander Header="Input values" IsExpanded="True" Background="#FF7F7F7F">
+            <StackPanel>
+                <TextBlock Text="Maximum Quad" />
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Name="UIMaxQuadText" Margin="0,0,10,0"/>
+                    <Slider Name="UIMaxQuad" Minimum="1" Maximum="10" StepFrequency="1" Width="200"
+                            ValueChanged="UIMaxQuad_ValueChanged"/>
+                </StackPanel>
+                <TextBlock Text="Lookup Region Percentage" />
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Name="UILookupRegionCenterCropPercentageText"/>
+                    <TextBlock Text="%" Margin="0,0,10,0"/>
+                    <Slider Name="UILookupRegionCenterCropPercentage" Minimum="-100" Maximum="100" StepFrequency="1" Width="200"
+                            ValueChanged="UILookupRegionCenterCropPercentage_ValueChanged"/>
+                </StackPanel>
+                <CheckBox Name="UIUseCenterPoint" Content="Use Center Point" IsChecked="False" 
+                          Checked="UIUseCenterPoint_Checked"
+                          Unchecked="UIUseCenterPoint_Checked"/>
+                <TextBlock Text="Center Point" />
+
+                <StackPanel Orientation="Horizontal" >
+                    <TextBlock Text="X: " />
+                    <TextBox Name="UIBoundCenterPointX" IsReadOnly="True" IsEnabled="False"/>
+                    <TextBlock Text="Y: " />
+                    <TextBox Name="UIBoundCenterPointY" IsReadOnly="True" IsEnabled="False"/>
+                </StackPanel>
+
+                <CheckBox Name="UISpecifyBaseQuad" Content="Specify Base Quad" IsChecked="False" 
+                          Checked="UISpecifyBaseQuad_Checked"
+                          Unchecked="UISpecifyBaseQuad_Checked"/>
+
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" >
+                        <TextBlock Text="X: " />
+                        <TextBox Name="UITopLeftBaseQuadCornerX" IsReadOnly="True" IsEnabled="False"/>
+                        <TextBlock Text="Y: " />
+                        <TextBox Name="UITopLeftBaseQuadCornerY" IsReadOnly="True" IsEnabled="False"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" >
+                        <TextBlock Text="X: " />
+                        <TextBox Name="UITopRightBaseQuadCornerX" IsReadOnly="True" IsEnabled="False"/>
+                        <TextBlock Text="Y: " />
+                        <TextBox Name="UITopRightBaseQuadCornerY" IsReadOnly="True" IsEnabled="False"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" >
+                        <TextBlock Text="X: " />
+                        <TextBox Name="UIBottomLeftBaseQuadCornerX" IsReadOnly="True" IsEnabled="False"/>
+                        <TextBlock Text="Y: " />
+                        <TextBox Name="UIBottomLeftBaseQuadCornerY" IsReadOnly="True" IsEnabled="False"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" >
+                        <TextBlock Text="X: " />
+                        <TextBox Name="UIBottomRightBaseQuadCornerX" IsReadOnly="True" IsEnabled="False"/>
+                        <TextBlock Text="Y: " />
+                        <TextBox Name="UIBottomRightBaseQuadCornerY" IsReadOnly="True" IsEnabled="False"/>
+                    </StackPanel>
+                </StackPanel>
+                <TextBlock Text="NumberOfPixelsPerEdge" />
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Name="UINumberOfPixelsPerEdgeText" Margin="0,0,10,0"/>
+                    <Slider Name="UINumberOfPixelsPerEdge" Minimum="1" Maximum="100" StepFrequency="1" Width="200"
+                            ValueChanged="UINumberOfPixelsPerEdge_ValueChanged"/>
+                </StackPanel>
+
+            </StackPanel>
+        </controls:Expander>
+        <controls:Expander Header="Output values" IsExpanded="True" Background="#FF7F7F7F">
+            <controls:HeaderedContentControl Name="UIDetectedQuadCount" Header="DetectedQuadCount" VerticalAlignment="Top" Orientation="Vertical"/>
+        </controls:Expander>
+    </StackPanel>
+</UserControl>
