@@ -115,7 +115,7 @@ namespace ImageScanningSample
     }
 
     /// <summary>
-    /// Custom control to render and manipulate image rectifier inputs & outputs
+    /// Custom control to render and manipulate image cleaner inputs & outputs
     /// </summary>
     public class ImageCleanerControl : SkillControl
     {
@@ -123,7 +123,7 @@ namespace ImageScanningSample
         private ImageCleanerInteractiveControl m_interactiveControl = null;
 
         /// <summary>
-        ///  QuadDetectorControl constructor
+        ///  ImageCleanerControl constructor
         /// </summary>
         /// <param name="binding"></param>
         public ImageCleanerControl(ISkillBinding binding) : base(binding)

@@ -87,7 +87,7 @@ namespace ImageScanningSample
         private QuadEdgesDetectorSkillInteractiveControl m_interactiveControl = null;
 
         /// <summary>
-        ///  QuadDetectorControl constructor
+        ///  QuadEdgesDetectorControl constructor
         /// </summary>
         /// <param name="binding"></param>
         public QuadEdgesDetectorControl(ISkillBinding binding) : base(binding)

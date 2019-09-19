@@ -84,7 +84,7 @@ namespace ImageScanningSample
         private LiveQuadDetectorSkillInteractiveControl m_interactiveControl = null;
 
         /// <summary>
-        ///  QuadDetectorControl constructor
+        ///  LiveQuadDetectorControl constructor
         /// </summary>
         /// <param name="binding"></param>
         public LiveQuadDetectorControl(ISkillBinding binding) : base(binding)
