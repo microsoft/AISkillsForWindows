@@ -38,17 +38,16 @@ The **LiveQuadDetector** is a stateful version of the **QuadDetector** that atte
 | ![Screenshot of QuadDetector inputs](./doc/QuadDetector1.jpg) | ![Screenshot of QuadDetector outputs](./doc/QuadDetector2.jpg) |
 
 ### **QuadEdgesDetector** <a name="QuadEdgesDetectorExample"></a>
-Searches an image for the horizontal and vertical lines defining a quadrilateral shape's contour and returns their coordinates.
+Searches an image for the horizontal and vertical lines defining potential quadrilateral edges and returns their coordinates.
 
 | Input image | Ouput detected vertical and horizontal quadrangle edges |
 | -----------------------------------------| --------------------- |
 | ![Screenshot of QuadDetector inputs](./doc/QuadDetector1.jpg) | ![Screenshot of QuadDetector outputs](./doc/QuadEdgesDetector2.jpg) |
 
-While the [UWP sample](./cs/ImageScanningSample_UWP) showcases each skill individually in an interative fashion with corresponding useful UI control helpers, the [.NetCore 3.0](./cs/ImageScanningSample_NetCore3) and [Win32](./cpp/ImageScanningSample_Desktop) console samples combine 3 of skills executed in succession to achieve a common productivity task consisting of scanning a piece of content (document, whiteboard, picture, etc.) within a photo. Namely:
-0. Input image 
+While the [UWP sample](./cs/ImageScanningSample_UWP) showcases each skill individually in an interative fashion with corresponding useful UI control helpers, the [.NetCore 3.0](./cs/ImageScanningSample_NetCore3) and [Win32](./cpp/ImageScanningSample_Desktop) console samples combine 3 skills executed in succession to achieve a common productivity task consisting of scanning a piece of content (document, whiteboard, picture, etc.) within a photo. Namely:
 1. Running **QuadDetector** using a specified input image
-2. Using the quad detected in previous step as input to the **ImageRectifier** to rectify the input image
-3. Using the output rectifyed image from previous step as input to the **ImageCleaner** to produce a cleaner image
+2. Using the quad detected in previous step as input to the **ImageRectifier** to rectify the same input image
+3. Using the output rectified image from previous step as input to the **ImageCleaner** to produce a cleaner image
 
 | Input image | Ouput scanned image |
   | ----------------------------------- | -------------------------- |
