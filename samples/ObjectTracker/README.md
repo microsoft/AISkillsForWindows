@@ -31,7 +31,18 @@ ObjectTrackerSkill skill = await descriptor.CreateSkillAsync() as ObjectTrackerS
 ObjectTrackerBinding binding = await skill.CreateSkillBindingAsync() as ObjectTrackerBinding;
 ```
 
-The Object Tracker skill does not define any additional required inputs, so using the skill is as simple as:
+The tracker must be initialized with the object to track before it can be used. This is done using the `ObjectTrackerSkill.InitializeTrackerAsync` method, whose results are stored in the provided `ObjectTrackerBinding`
+
+```csharp
+// frame is a Windows.Media.VideoFrame
+// initialRect is a Windows.Foundation.Rect
+await skill.InitializeTrackerAsync(binding, frame, initialRect);
+```
+
+> **IMPORTANT!**  
+> The `ObjectTrackerBinding` **must** be initialized using `ObjectTrackerSkill.InitializeTrackerAsync` before attempting evaluation! Evaluating an uninitialized tracker binding is undefined and will most likely fail with an exception.
+
+Once the tracker (binding) has been initialized, the tracker can be updated against each new frame as follows:
 
 ```csharp
 await binding.SetInputImageAsync(frame);  // frame is a Windows.Media.VideoFrame
@@ -39,13 +50,13 @@ await skill.EvaluateAsync(binding);
 // Results are saved to binding object
 ```
 
-There is an optional input which enables/disables expanding search area in the event of tracking failure. The input is on a per-binding basis and can be set as:
+Note that there is an optional input which enables/disables expanding search area in the event of tracking failure (see [ObjectTrackerPreview's API documentation](../../doc/Microsoft.AI.Skills.Vision.ObjectTrackerPreview.md#SetEnableExpandingSearchAreaAsync) for more details). The input is on a per-binding basis and can be set as:
 
 ```csharp
 await binding.SetEnableExpandingSearchAreaAsync(enableExpandingSearchArea); // enableExpandingSearchArea is a bool
 ```
 
-You may manually interrogate the binding to find your output, but it's easiest to use the convenience field(s) defined. In this case, `ObjectTrackerBinding` has a `BoundingRect` field which contains the tracker's latest bounding `Rect` and a `Succeeded` field which is a boolean marking latest evaluation status.
+To get the tracker results, you may manually interrogate the binding to find your output, but it's easiest to use the convenience field(s) defined. In this case, `ObjectTrackerBinding` has a `BoundingRect` field which contains the tracker's latest bounding `Rect` and a `Succeeded` field which is a boolean marking latest evaluation status.
 
 ```csharp
 Windows.Foundation.Rect boundingRect = binding.BoundingRect;
