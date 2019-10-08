@@ -1,0 +1,128 @@
+# Object Tracker Windows Vision Skill samples
+
+These samples will show how to use the Object Tracker Vision Skill NuGet package to create apps that can detect and classify objects in a video feed
+
+![Screenshot of object tracker skill in action in the UWP sample](./doc/sample_app.jpg)
+
+Follow these sample links:
+- [C# UWP sample app](./cs/ObjectTrackerSample_UWP)
+
+## Build samples
+- refer to the [sample guidelines](../README.md)
+- make sure the Microsoft.AI.Skills.Vision.ObjectTrackerPreview and Microsoft.AI.Skills.SkillInterfacePreview NuGet packages are installed on your app projects
+
+## Related topics
+
+- [Microsoft.AI.Skills.SkillInterfacePreview API document](../../doc/Microsoft.AI.Skills.SkillInterfacePreview.md)
+- [Microsoft.AI.Skills.Vision.ObjectTrackerPreview API document](../../doc/Microsoft.AI.Skills.Vision.ObjectTrackerPreview.md)
+- [Creating a custom Windows Vision Skill](../SentimentAnalyzerCustomSkill)
+
+## Run the UWP sample
+
+The app supports two types of media inputs: webcam and video file. Use the buttons at the top of the window to select the media source you would like to use. Click the "Details and options" expander to view more details about the ObjectTracker skill as well as configure options.
+
+### Using the ObjectTracker skill
+
+As with all Vision Skills, the Object Tracker skill is composed of an `ISkillDescriptor` (which holds general skill information), the `ISkill` instance (which is bound to a specific `ISkillExecutionDevice`), and the skill's `ISkillBinding` (which holds skill inputs, outputs, and any state information). You can instantiate your Object Tracker skill as follows.
+
+```csharp
+ObjectTrackerDescriptor descriptor = new ObjectTrackerDescriptor();
+ObjectTrackerSkill skill = await descriptor.CreateSkillAsync() as ObjectTrackerSkill; // If you don't specify an ISkillExecutionDevice, a default will be automatically selected
+ObjectTrackerBinding binding = await skill.CreateSkillBindingAsync() as ObjectTrackerBinding;
+```
+
+The Object Tracker skill does not define any additional required inputs, so using the skill is as simple as:
+
+```csharp
+await binding.SetInputImageAsync(frame);  // frame is a Windows.Media.VideoFrame
+await skill.EvaluateAsync(binding);
+// Results are saved to binding object
+```
+
+There is an optional input which enables/disables expanding search area in the event of tracking failure. The input is on a per-binding basis and can be set as:
+
+```csharp
+await binding.SetEnableExpandingSearchAreaAsync(enableExpandingSearchArea); // enableExpandingSearchArea is a bool
+```
+
+You may manually interrogate the binding to find your output, but it's easiest to use the convenience field(s) defined. In this case, `ObjectTrackerBinding` has a `BoundingRect` field which contains the tracker's latest bounding `Rect` and a `Succeeded` field which is a boolean marking latest evaluation status.
+
+```csharp
+Windows.Foundation.Rect boundingRect = binding.BoundingRect;
+bool trackerSucceeded = binding.Succeeded;
+```
+
+### Sample app code walkthrough
+
+The core skill initialization logic is in the main page's `OnNavigatedTo` method:
+
+```csharp
+protected override async void OnNavigatedTo(NavigationEventArgs e)
+{
+    /* ...snip... */
+    // Initialize skill
+    m_descriptor = new ObjectTrackerDescriptor();
+    m_availableExecutionDevices = await m_descriptor.GetSupportedExecutionDevicesAsync();
+    if (m_availableExecutionDevices.Count == 0)
+    {
+        NotifyUser("No execution devices available, this skill cannot run on this device", NotifyType.ErrorMessage);
+        return; // Abort
+    }
+    m_skill = await m_descriptor.CreateSkillAsync() as ObjectTrackerSkill;
+    m_bindings = new List<ObjectTrackerBinding>();
+    m_trackerHistory = new List<List<TrackerResult>>();
+    /* ...snip... */
+}
+```
+
+Note that we have a `List<ObjectTrackerBinding>` instead of a single binding. This is to show that one `ObjectTrackerSkill` instance can be used to track multiple objects, with each `ObjectTrackerBinding` corresponding to a single tracked object.
+
+Most of the work is performed by the `FrameSource_FrameAvailable` event handler. The handler uses locking to ensure only one skill evaluation happens at a time, dropping incoming frames as necessary. The handler launches a `Task` which performs the actual skill evaluation and result displaying and exits without `await`ing the task, relying on the locking behavior for synchronization.
+The core skill evaluation logic, including initialization logic for new trackers, is also included in `FrameSource_FrameArrived`:
+
+```csharp
+private async void FrameSource_FrameArrived(object sender, VideoFrame frame)
+{
+    /* ...snip... */
+    for (int i = 0; i < m_bindings.Count; i++)
+    {
+        await m_bindings[i].SetInputImageAsync(frame);
+        await m_skill.EvaluateAsync(m_bindings[i]);
+
+        // Add result to history
+        m_trackerHistory[i].Add(
+            new TrackerResult()
+            {
+                boundingRect = m_bindings[i].BoundingRect,
+                succeeded = m_bindings[i].Succeeded
+            }
+        );
+    }
+    /* ...snip... */
+    for (int i = 0; i < m_drawnRects.Count; i++)
+    {
+        ObjectTrackerBinding binding = await m_skill.CreateSkillBindingAsync() as ObjectTrackerBinding;
+        await m_skill.InitializeTrackerAsync(binding, frame, m_drawnRects[i]);
+        m_bindings.Add(binding);
+
+        // Add corresponding tracker history
+        m_trackerHistory.Add(
+            new List<TrackerResult> {
+                new TrackerResult()
+                {
+                    boundingRect = binding.BoundingRect,
+                    succeeded = true
+                }
+            }
+        );
+    }
+    /* ...snip... */
+}
+```
+
+The sample app also uses several helper classes. These may be safely treated as black boxes, but a quick overview is:
+
+- **ObjectTrackRenderer** - Used for rendering object tracker results to the `Canvas` as bounding boxes and history paths
+- **IFrameSource** - Provides a common interface to wrap various media source types with
+- **FrameReaderFrameSource** - Wrapper for [MediaFrameReader](https://docs.microsoft.com/en-us/uwp/api/Windows.Media.Capture.Frames.MediaFrameReader) for camera streaming
+- **MediaPlayerFrameSource** - Wrapper for [MediaPlayer](https://docs.microsoft.com/en-us/uwp/api/Windows.Media.Playback.MediaPlayer) for video file playback
