@@ -52,6 +52,7 @@ namespace ObjectTrackerSample
         // Frame source
         private IFrameSource m_frameSource = null;
         private SoftwareBitmapSource m_bitmapSource = new SoftwareBitmapSource();
+        private bool m_frameSourceIsStreaming = false;
 
         // UI-related variables
         private ObjectTrackRenderer m_objectTrackRenderer = null;
@@ -120,8 +121,7 @@ namespace ObjectTrackerSample
                 DeviceInformation defaultCamera = availableCameras.First();
                 await ConfigureFrameSourceAsync(defaultCamera);
                 // Auto-press the play button for the user
-                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => UIPlayButton_Click(this, null));
-                await m_frameSource.StartAsync();
+                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => TogglePlaybackState(true));
             }
             else
             {
@@ -438,6 +438,9 @@ namespace ObjectTrackerSample
             }
             m_lock.Release();
 
+            // Update playback button state. Warning that this method acquires m_lock, so must be called from outside the lock
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => TogglePlaybackState(false));
+
             NotifyUser("Frame source configured, ready to begin");
         }
 
@@ -504,6 +507,8 @@ namespace ObjectTrackerSample
             Windows.Storage.StorageFile file = await picker.PickSingleFileAsync();
             if (file != null)
             {
+                NotifyUser("Loading video file: " + file.Path);
+
                 // Reset application state
                 await m_lock.WaitAsync();
                 {
@@ -512,7 +517,6 @@ namespace ObjectTrackerSample
                 m_lock.Release();
 
                 await ConfigureFrameSourceAsync(file);
-                NotifyUser("Loading video file: " + file.Path);
             }
 
             // Re-enable the top menu once done handling the click
@@ -647,18 +651,39 @@ namespace ObjectTrackerSample
         }
 
         /// <summary>
-        /// Start the media source
+        /// Toggle the playback state of the media source
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void UIPlayButton_Click(object sender, RoutedEventArgs e)
+        private async void TogglePlaybackState(bool? overridenState = null)
         {
-            UIPlayButton.IsEnabled = false;
-            await m_lock.WaitAsync();
+            if (Dispatcher.HasThreadAccess)
             {
-                await m_frameSource?.StartAsync();
+                await m_lock.WaitAsync();
+                {
+                    m_frameSourceIsStreaming = overridenState ?? !m_frameSourceIsStreaming;
+
+                    if (m_frameSourceIsStreaming)
+                    {
+                        // Start frame source, update button to pause button
+                        await m_frameSource?.StartAsync();
+                        UIPlayButton.Icon = new SymbolIcon(Symbol.Pause);
+                        UIPlayButton.Label = "Pause";
+                    }
+                    else
+                    {
+                        // Stop frame source, update button to play button
+                        await m_frameSource?.StopAsync();
+                        UIPlayButton.Icon = new SymbolIcon(Symbol.Play);
+                        UIPlayButton.Label = "Play";
+                    }
+                }
+                m_lock.Release();
             }
-            m_lock.Release();
+            else
+            {
+                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => TogglePlaybackState(overridenState));
+            }
         }
 
         /// <summary>
@@ -669,6 +694,16 @@ namespace ObjectTrackerSample
         private async void UIHelpButton_Click(object sender, RoutedEventArgs e)
         {
             await UIHelpDialog.ShowAsync();
+        }
+
+        /// <summary>
+        /// Toggle playback state in response to UI button press
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UIPlayButton_Click(object sender, RoutedEventArgs e)
+        {
+            TogglePlaybackState();
         }
 
         /// <summary>

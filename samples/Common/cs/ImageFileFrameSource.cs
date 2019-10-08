@@ -51,6 +51,16 @@ namespace FrameSourceHelper_UWP
         }
 
         /// <summary>
+        /// No-op
+        /// </summary>
+        /// <returns></returns>
+        public Task StopAsync()
+        {
+            // no-op, return success
+            return Task.FromResult(true);
+        }
+
+        /// <summary>
         /// Private constructor called by static factory
         /// </summary>
         private ImageFileFrameSource()

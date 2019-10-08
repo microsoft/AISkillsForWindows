@@ -27,7 +27,7 @@
             <Canvas Name="UICanvasOverlay" HorizontalAlignment="Center" VerticalAlignment="Center" Canvas.ZIndex="0" />
             <InkCanvas Name="UIInkCanvasOverlay" HorizontalAlignment="Center" VerticalAlignment="Center" Canvas.ZIndex="1" />
             <StackPanel Name="UIInkControlButtons" Background="White" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Canvas.ZIndex="2" >
-                <AppBarButton x:Name="UIPlayButton" Icon="Play" Label="Play" ToolTipService.ToolTip="Start the frame source" Click="UIPlayButton_Click" IsEnabled="False" />
+                <AppBarButton x:Name="UIPlayButton" Icon="Play" Label="Play" ToolTipService.ToolTip="Toggle the playback state of the media source" Click="UIPlayButton_Click" IsEnabled="False" />
                 <AppBarButton Icon="Accept"  Label="Commit Ink" ToolTipService.ToolTip="Begin tracking any valid (ink selected) targets" Click="UIUpdateButton_Click" />
                 <AppBarButton Icon="Clear"   Label="Clear Ink"  ToolTipService.ToolTip="Clear any un-committed ink strokes" Click="UIClearInkButton_Click" />
                 <AppBarButton Icon="Refresh" Label="Reset All"  ToolTipService.ToolTip="Clear all active trackers and all ink strokes" Click="UIResetButton_Click" />
