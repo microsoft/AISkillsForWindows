@@ -14,7 +14,7 @@ For how to use the framework to author a Skill to be consumed, and creating an a
 
 ### **[ObjectDetector](samples/ObjectDetector)**
 
-| ![ObjectDetector logo](./doc/ObjecDetectorLogo.png) | detecting and classifying objects in images |
+| ![ObjectDetector logo](./doc/ObjectDetectorLogo.png) | detecting and classifying objects in images |
 | -- | -- |
 
 ### **[ObjectTracker](samples/ObjectTracker)**
