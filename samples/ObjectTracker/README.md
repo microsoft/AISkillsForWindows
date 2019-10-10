@@ -65,13 +65,11 @@ bool trackerSucceeded = binding.Succeeded;
 
 ### Sample app code walkthrough
 
-The core skill initialization logic is in the main page's `OnNavigatedTo` method:
+The core skill initialization logic is in `InitializeSkillAsync`:
 
 ```csharp
-protected override async void OnNavigatedTo(NavigationEventArgs e)
+private async Task InitializeSkillAsync(ISkillExecutionDevice executionDevice = null)
 {
-    /* ...snip... */
-    // Initialize skill
     m_descriptor = new ObjectTrackerDescriptor();
     m_availableExecutionDevices = await m_descriptor.GetSupportedExecutionDevicesAsync();
     if (m_availableExecutionDevices.Count == 0)
@@ -79,26 +77,37 @@ protected override async void OnNavigatedTo(NavigationEventArgs e)
         NotifyUser("No execution devices available, this skill cannot run on this device", NotifyType.ErrorMessage);
         return; // Abort
     }
-    m_skill = await m_descriptor.CreateSkillAsync() as ObjectTrackerSkill;
+
+    // Either create skill using provided execution device or let skill create with default device if none provided
+    if (executionDevice != null)
+    {
+        m_skill = await m_descriptor.CreateSkillAsync(executionDevice) as ObjectTrackerSkill;
+    }
+    else
+    {
+        m_skill = await m_descriptor.CreateSkillAsync() as ObjectTrackerSkill;
+    }
+
     m_bindings = new List<ObjectTrackerBinding>();
     m_trackerHistory = new List<List<TrackerResult>>();
-    /* ...snip... */
 }
 ```
 
-Note that we have a `List<ObjectTrackerBinding>` instead of a single binding. This is to show that one `ObjectTrackerSkill` instance can be used to track multiple objects, with each `ObjectTrackerBinding` corresponding to a single tracked object.
+Note that we have a `List<ObjectTrackerBinding>` instead of a single binding. This is an example of how a single `ObjectTrackerSkill` instance can be used to track multiple objects, with each `ObjectTrackerBinding` corresponding to a single tracked object.
 
-Most of the work is performed by the `FrameSource_FrameAvailable` event handler. The handler uses locking to ensure only one skill evaluation happens at a time, dropping incoming frames as necessary. The handler launches a `Task` which performs the actual skill evaluation and result displaying and exits without `await`ing the task, relying on the locking behavior for synchronization.
-The core skill evaluation logic, including initialization logic for new trackers, is also included in `FrameSource_FrameArrived`:
+The core skill evaluation logic, including initialization logic for new trackers, is in `RunSkillAsync`:
 
 ```csharp
-private async void FrameSource_FrameArrived(object sender, VideoFrame frame)
+private async Task RunSkillAsync(VideoFrame frame)
 {
-    /* ...snip... */
+    /* snip */
     for (int i = 0; i < m_bindings.Count; i++)
     {
         await m_bindings[i].SetInputImageAsync(frame);
+        m_skillEvalStopWatch.Restart();
         await m_skill.EvaluateAsync(m_bindings[i]);
+        m_skillEvalStopWatch.Stop();
+        evalTicks += m_skillEvalStopWatch.ElapsedTicks;
 
         // Add result to history
         m_trackerHistory[i].Add(
@@ -109,7 +118,7 @@ private async void FrameSource_FrameArrived(object sender, VideoFrame frame)
             }
         );
     }
-    /* ...snip... */
+    /* snip */
     for (int i = 0; i < m_drawnRects.Count; i++)
     {
         ObjectTrackerBinding binding = await m_skill.CreateSkillBindingAsync() as ObjectTrackerBinding;
@@ -119,17 +128,22 @@ private async void FrameSource_FrameArrived(object sender, VideoFrame frame)
         // Add corresponding tracker history
         m_trackerHistory.Add(
             new List<TrackerResult> {
-                new TrackerResult()
-                {
-                    boundingRect = binding.BoundingRect,
-                    succeeded = true
-                }
+                        new TrackerResult()
+                        {
+                            boundingRect = binding.BoundingRect,
+                            succeeded = true
+                        }
             }
         );
     }
-    /* ...snip... */
+    m_drawnRects.Clear();
+    /* snip */
 }
 ```
+
+Overall application initialization is performed in the `MainPage` constructor and in `MainPage.OnNavigatedTo`, which calls the previously mentioned `InitializeSkillAsync` method among others.
+
+Most of the work is performed by the `FrameSource_FrameAvailable` event handler. The handler uses locking to ensure only one skill evaluation happens at a time, dropping incoming frames as necessary. `RunSkillAsync` is called from within this event handler.
 
 The sample app also uses several helper classes. These may be safely treated as black boxes, but a quick overview is:
 

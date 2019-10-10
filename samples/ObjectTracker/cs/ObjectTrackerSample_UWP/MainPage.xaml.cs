@@ -102,16 +102,7 @@ namespace ObjectTrackerSample
             UICameraPreview.Source = m_bitmapSource;
 
             // Initialize skill
-            m_descriptor = new ObjectTrackerDescriptor();
-            m_availableExecutionDevices = await m_descriptor.GetSupportedExecutionDevicesAsync();
-            if (m_availableExecutionDevices.Count == 0)
-            {
-                NotifyUser("No execution devices available, this skill cannot run on this device", NotifyType.ErrorMessage);
-                return; // Abort
-            }
-            m_skill = await m_descriptor.CreateSkillAsync() as ObjectTrackerSkill;
-            m_bindings = new List<ObjectTrackerBinding>();
-            m_trackerHistory = new List<List<TrackerResult>>();
+            await InitializeSkillAsync();
             await UpdateSkillUIAsync();
 
             // Pick a default camera device
@@ -186,6 +177,128 @@ namespace ObjectTrackerSample
             else
             {
                 await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () => await UpdateSkillUIAsync());
+            }
+        }
+
+        /// <summary>
+        /// Initialize the skill related members
+        /// </summary>
+        /// <param name="executionDevice"></param>
+        /// <returns></returns>
+        private async Task InitializeSkillAsync(ISkillExecutionDevice executionDevice = null)
+        {
+            m_descriptor = new ObjectTrackerDescriptor();
+            m_availableExecutionDevices = await m_descriptor.GetSupportedExecutionDevicesAsync();
+            if (m_availableExecutionDevices.Count == 0)
+            {
+                NotifyUser("No execution devices available, this skill cannot run on this device", NotifyType.ErrorMessage);
+                return; // Abort
+            }
+
+            // Either create skill using provided execution device or let skill create with default device if none provided
+            if (executionDevice != null)
+            {
+                m_skill = await m_descriptor.CreateSkillAsync(executionDevice) as ObjectTrackerSkill;
+            }
+            else
+            {
+                m_skill = await m_descriptor.CreateSkillAsync() as ObjectTrackerSkill;
+            }
+
+            m_bindings = new List<ObjectTrackerBinding>();
+            m_trackerHistory = new List<List<TrackerResult>>();
+        }
+
+        /// <summary>
+        /// Update existing trackers with the latest frame and initialize any new trackers based on user input
+        /// This should always be called from inside the lock (m_lock)
+        /// </summary>
+        /// <param name="frame"></param>
+        /// <returns></returns>
+        private async Task RunSkillAsync(VideoFrame frame)
+        {
+            // Update existing trackers
+            if (m_bindings.Count > 0)
+            {
+                long evalTicks = 0L;
+                for (int i = 0; i < m_bindings.Count; i++)
+                {
+                    await m_bindings[i].SetInputImageAsync(frame);
+                    m_skillEvalStopWatch.Restart();
+                    await m_skill.EvaluateAsync(m_bindings[i]);
+                    m_skillEvalStopWatch.Stop();
+                    evalTicks += m_skillEvalStopWatch.ElapsedTicks;
+
+                    // Add result to history
+                    m_trackerHistory[i].Add(
+                        new TrackerResult()
+                        {
+                            boundingRect = m_bindings[i].BoundingRect,
+                            succeeded = m_bindings[i].Succeeded
+                        }
+                    );
+                }
+
+                // Render results
+                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                {
+                    m_renderStopWatch.Restart();
+                    m_objectTrackRenderer.ClearCanvas();
+                    m_objectTrackRenderer.RenderTrackerResults(m_trackerHistory, true);
+                    m_renderStopWatch.Stop();
+
+                    // Print performance measurements
+                    PerformanceBlock.Text = String.Format(
+                        "Skill Eval: {0:0.000}ms, Render: {1:0.000}ms",
+                        evalTicks / (Stopwatch.Frequency / 1000F),
+                        m_renderStopWatch.ElapsedTicks / (Stopwatch.Frequency / 1000F));
+                });
+            }
+
+            // Optionally re-initialize any existing trackers if app feature enabled
+            if (m_periodicallyReinitializeTrackers && m_reinitializeTrackersPeriod > 0)
+            {
+                for (int i = 0; i < m_trackerHistory.Count; i++)
+                {
+                    if (m_trackerHistory[i].Count % m_reinitializeTrackersPeriod == 0)
+                    {
+                        // Re-initialize tracker if we were successful
+                        // TODO: We can also try saving last good rect, but that can get messy quickly
+                        if (m_bindings[i].Succeeded)
+                        {
+                            var recentBoundingRect = m_bindings[i].BoundingRect;
+                            await m_skill.InitializeTrackerAsync(m_bindings[i], frame, recentBoundingRect);
+                        }
+                    }
+                }
+            }
+
+            // Initialize any new trackers
+            if (m_drawnRects.Count > 0)
+            {
+                // Initialize new trackers if desired
+                m_bboxLock.Wait();
+
+                for (int i = 0; i < m_drawnRects.Count; i++)
+                {
+                    ObjectTrackerBinding binding = await m_skill.CreateSkillBindingAsync() as ObjectTrackerBinding;
+                    await m_skill.InitializeTrackerAsync(binding, frame, m_drawnRects[i]);
+                    m_bindings.Add(binding);
+
+                    // Add corresponding tracker history
+                    m_trackerHistory.Add(
+                        new List<TrackerResult> {
+                                    new TrackerResult()
+                                    {
+                                        boundingRect = binding.BoundingRect,
+                                        succeeded = true
+                                    }
+                        }
+                    );
+                }
+
+                m_drawnRects.Clear();
+                m_bboxLock.Release();
             }
         }
 
@@ -291,72 +404,8 @@ namespace ObjectTrackerSample
                         m_isCameraFrameDimensionInitialized = true;
                     }
 
-                    // Update existing trackers
-                    if (m_bindings.Count > 0)
-                    {
-                        long evalTicks = 0L;
-                        for (int i = 0; i < m_bindings.Count; i++)
-                        {
-                            await m_bindings[i].SetInputImageAsync(frame);
-                            m_skillEvalStopWatch.Restart();
-                            await m_skill.EvaluateAsync(m_bindings[i]);
-                            m_skillEvalStopWatch.Stop();
-                            evalTicks += m_skillEvalStopWatch.ElapsedTicks;
-                            
-                            // Add result to history
-                            m_trackerHistory[i].Add(
-                                new TrackerResult()
-                                {
-                                    boundingRect = m_bindings[i].BoundingRect,
-                                    succeeded = m_bindings[i].Succeeded
-                                }
-                            );
-                        }
-
-                        // Render results
-                        await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-                        {
-                            m_renderStopWatch.Restart();
-                            m_objectTrackRenderer.ClearCanvas();
-                            m_objectTrackRenderer.RenderTrackerResults(m_trackerHistory, true);
-                            m_renderStopWatch.Stop();
-
-                            // Print performance measurements
-                            PerformanceBlock.Text = String.Format(
-                                "Skill Eval: {0:0.000}ms, Render: {1:0.000}ms",
-                                evalTicks / (Stopwatch.Frequency / 1000F),
-                                m_renderStopWatch.ElapsedTicks / (Stopwatch.Frequency / 1000F));
-                        });
-                    }
-
-                    // Initialize any new trackers
-                    if (m_drawnRects.Count > 0)
-                    {
-                        // Initialize new trackers if desired
-                        m_bboxLock.Wait();
-
-                        for (int i = 0; i < m_drawnRects.Count; i++)
-                        {
-                            ObjectTrackerBinding binding = await m_skill.CreateSkillBindingAsync() as ObjectTrackerBinding;
-                            await m_skill.InitializeTrackerAsync(binding, frame, m_drawnRects[i]);
-                            m_bindings.Add(binding);
-
-                            // Add corresponding tracker history
-                            m_trackerHistory.Add(
-                                new List<TrackerResult> {
-                                    new TrackerResult()
-                                    {
-                                        boundingRect = binding.BoundingRect,
-                                        succeeded = true
-                                    }
-                                }
-                            );
-                        }
-
-                        m_drawnRects.Clear();
-
-                        m_bboxLock.Release();
-                    }
+                    // Run the skill
+                    await RunSkillAsync(frame);
 
                     m_lock.Release();
                 }

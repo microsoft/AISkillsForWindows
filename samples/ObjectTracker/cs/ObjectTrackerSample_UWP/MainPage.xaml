@@ -60,7 +60,7 @@
                                BorderBrush="Black"
                                IsExpanded="False"
                                ExpandDirection="Down">
-                    <StackPanel>
+                    <StackPanel Padding="10">
                         <TextBlock Name="UISkillName" Text="Skill name" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold"/>
                         <TextBlock Text="Skill Description:" FontWeight="Bold"/>
                         <TextBox Name="UISkillDescription" Text="Loading skill description..." IsReadOnly="True" AcceptsReturn="True"/>
