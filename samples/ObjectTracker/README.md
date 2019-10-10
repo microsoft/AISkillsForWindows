@@ -1,6 +1,6 @@
 # Object Tracker Windows Vision Skill samples
 
-These samples will show how to use the Object Tracker Vision Skill NuGet package to create apps that can detect and classify objects in a video feed
+These samples will show how to use the Object Tracker Vision Skill NuGet package to create apps that can track objects in a video feed
 
 ![Screenshot of object tracker skill in action in the UWP sample](./doc/sample_app.jpg)
 
@@ -100,7 +100,8 @@ The core skill evaluation logic, including initialization logic for new trackers
 ```csharp
 private async Task RunSkillAsync(VideoFrame frame)
 {
-    /* snip */
+    /* ...snip... */
+    // Update existing trackers
     for (int i = 0; i < m_bindings.Count; i++)
     {
         await m_bindings[i].SetInputImageAsync(frame);
@@ -118,7 +119,8 @@ private async Task RunSkillAsync(VideoFrame frame)
             }
         );
     }
-    /* snip */
+    /* ...snip... */
+    // Initialize any new trackers
     for (int i = 0; i < m_drawnRects.Count; i++)
     {
         ObjectTrackerBinding binding = await m_skill.CreateSkillBindingAsync() as ObjectTrackerBinding;
@@ -137,7 +139,7 @@ private async Task RunSkillAsync(VideoFrame frame)
         );
     }
     m_drawnRects.Clear();
-    /* snip */
+    /* ...snip... */
 }
 ```
 

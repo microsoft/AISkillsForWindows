@@ -34,7 +34,7 @@ namespace ObjectTrackerSample
     }
 
     /// <summary>
-    /// Page for demonstrating the ObjectTrackerSkill on a webcam snapshot.
+    /// Page for demonstrating the ObjectTrackerSkill on a webcam feed or a video file.
     /// </summary>
     public sealed partial class MainPage : Page
     {
@@ -47,7 +47,8 @@ namespace ObjectTrackerSample
         private ObjectTrackerSkill m_skill = null;
         private List<ObjectTrackerBinding> m_bindings = null;
         private IReadOnlyList<ISkillExecutionDevice> m_availableExecutionDevices = null;
-        private List<List<TrackerResult>> m_trackerHistory = null;
+        private List<Queue<TrackerResult>> m_trackerHistory = null;
+        private UInt32 m_maxTrackerHistoryLength = 20;
 
         // Frame source
         private IFrameSource m_frameSource = null;
@@ -206,7 +207,7 @@ namespace ObjectTrackerSample
             }
 
             m_bindings = new List<ObjectTrackerBinding>();
-            m_trackerHistory = new List<List<TrackerResult>>();
+            m_trackerHistory = new List<Queue<TrackerResult>>();
         }
 
         /// <summary>
@@ -230,13 +231,17 @@ namespace ObjectTrackerSample
                     evalTicks += m_skillEvalStopWatch.ElapsedTicks;
 
                     // Add result to history
-                    m_trackerHistory[i].Add(
+                    m_trackerHistory[i].Enqueue(
                         new TrackerResult()
                         {
                             boundingRect = m_bindings[i].BoundingRect,
                             succeeded = m_bindings[i].Succeeded
                         }
                     );
+                    if (m_trackerHistory[i].Count > m_maxTrackerHistoryLength)
+                    {
+                        m_trackerHistory[i].Dequeue();
+                    }
                 }
 
                 // Render results
@@ -286,13 +291,12 @@ namespace ObjectTrackerSample
                     m_bindings.Add(binding);
 
                     // Add corresponding tracker history
-                    m_trackerHistory.Add(
-                        new List<TrackerResult> {
-                                    new TrackerResult()
-                                    {
-                                        boundingRect = binding.BoundingRect,
-                                        succeeded = true
-                                    }
+                    m_trackerHistory.Add(new Queue<TrackerResult>());
+                    m_trackerHistory.Last().Enqueue(
+                        new TrackerResult()
+                        {
+                            boundingRect = binding.BoundingRect,
+                            succeeded = true
                         }
                     );
                 }
@@ -832,7 +836,7 @@ namespace ObjectTrackerSample
         /// </summary>
         /// <param name="trackerResult"></param>
         /// <param name="showPaths"></param>
-        public void RenderTrackerResults(IReadOnlyList<IReadOnlyList<TrackerResult>> histories, bool showPaths = false, int pathLength = 20)
+        public void RenderTrackerResults(IReadOnlyList<IEnumerable<TrackerResult>> histories, bool showPaths = false)
         {
             double widthScaleFactor = m_canvas.ActualWidth;
             double heightScaleFactor = m_canvas.ActualHeight;
@@ -858,33 +862,31 @@ namespace ObjectTrackerSample
                     if (showPaths)
                     {
                         Polyline path = new Polyline();
-                        // Draw pathLength most recent points in history
-                        int i = Math.Max(history.Count - pathLength, 0);
-                        while (i < history.Count)
+                        bool prevResultSuccess = true;
+                        foreach (TrackerResult result in history)
                         {
-                            Rect historyRect = history[i].boundingRect;
+                            Rect historyRect = result.boundingRect;
                             // Adjust values for scale
                             double pointX = (historyRect.X + historyRect.Width / 2) * widthScaleFactor;
                             double pointY = (historyRect.Y + historyRect.Height / 2) * heightScaleFactor;
                             path.Points.Add(new Point(pointX, pointY));
 
                             // Break up lines based on success status as necessary
-                            if ((i + 1) < history.Count && history[i + 1].succeeded != history[i].succeeded)
+                            if (result.succeeded != prevResultSuccess)
                             {
                                 // Commit/terminate current line
-                                path.Stroke = history[i].succeeded ? this.successBrush : this.failBrush;
+                                path.Stroke = prevResultSuccess ? this.successBrush : this.failBrush;
                                 path.StrokeThickness = this.lineThickness;
                                 m_canvas.Children.Add(path);
 
                                 // Start new line
                                 path = new Polyline();
                                 path.Points.Add(new Point(pointX, pointY));
+                                prevResultSuccess = result.succeeded;
                             }
-
-                            i++;
                         }
                         // Commit/terminate last line
-                        path.Stroke = history.Last().succeeded ? this.successBrush : this.failBrush;
+                        path.Stroke = prevResultSuccess ? this.successBrush : this.failBrush;
                         path.StrokeThickness = this.lineThickness;
                         m_canvas.Children.Add(path);
                     }
