@@ -260,24 +260,6 @@ namespace ObjectTrackerSample
                 });
             }
 
-            // Optionally re-initialize any existing trackers if app feature enabled
-            if (m_periodicallyReinitializeTrackers && m_reinitializeTrackersPeriod > 0)
-            {
-                for (int i = 0; i < m_trackerHistory.Count; i++)
-                {
-                    if (m_trackerHistory[i].Count % m_reinitializeTrackersPeriod == 0)
-                    {
-                        // Re-initialize tracker if we were successful
-                        // TODO: We can also try saving last good rect, but that can get messy quickly
-                        if (m_bindings[i].Succeeded)
-                        {
-                            var recentBoundingRect = m_bindings[i].BoundingRect;
-                            await m_skill.InitializeTrackerAsync(m_bindings[i], frame, recentBoundingRect);
-                        }
-                    }
-                }
-            }
-
             // Initialize any new trackers
             if (m_drawnRects.Count > 0)
             {
