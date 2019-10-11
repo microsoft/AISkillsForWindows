@@ -19,6 +19,7 @@ namespace FrameSourceHelper_UWP
 
         event EventHandler<VideoFrame> FrameArrived;
         Task StartAsync();
+        Task StopAsync();
     }
 
     public enum FrameSourceType

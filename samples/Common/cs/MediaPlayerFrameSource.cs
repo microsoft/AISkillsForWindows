@@ -80,6 +80,14 @@ namespace FrameSourceHelper_UWP
             return Task.FromResult(true);
         }
 
+        public Task StopAsync()
+        {
+            m_mediaPlayer.Pause();
+
+            // Async not needed, return success
+            return Task.FromResult(true);
+        }
+
         public event EventHandler<VideoFrame> FrameArrived;
         public event EventHandler StreamEnded;
 

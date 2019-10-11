@@ -42,6 +42,15 @@ namespace FrameSourceHelper_UWP
         }
 
         /// <summary>
+        /// Stop frame playback
+        /// </summary>
+        /// <returns></returns>
+        public async Task StopAsync()
+        {
+            await m_frameReader.StopAsync();
+        }
+
+        /// <summary>
         /// Dispose method implementation
         /// </summary>
         public void Dispose()
