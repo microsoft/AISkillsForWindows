@@ -35,6 +35,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageScanningSample_Desktop
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectTrackerSample_UWP", "ObjectTracker\cs\ObjectTrackerSample_UWP\ObjectTrackerSample_UWP.csproj", "{DB37570D-2FC1-44B7-814D-4417FA089892}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChainedSkillsSample_UWP", "ChainedSkills\cs\ChainedSkillsSample_UWP\ChainedSkillsSample_UWP.csproj", "{BE9A317D-31B8-4ABC-A76C-0FCEFF8E20C2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -253,6 +255,18 @@ Global
 		{DB37570D-2FC1-44B7-814D-4417FA089892}.Release|x86.ActiveCfg = Release|x86
 		{DB37570D-2FC1-44B7-814D-4417FA089892}.Release|x86.Build.0 = Release|x86
 		{DB37570D-2FC1-44B7-814D-4417FA089892}.Release|x86.Deploy.0 = Release|x86
+		{BE9A317D-31B8-4ABC-A76C-0FCEFF8E20C2}.Debug|ARM.ActiveCfg = Debug|x64
+		{BE9A317D-31B8-4ABC-A76C-0FCEFF8E20C2}.Debug|ARM64.ActiveCfg = Debug|x64
+		{BE9A317D-31B8-4ABC-A76C-0FCEFF8E20C2}.Debug|x64.ActiveCfg = Debug|x64
+		{BE9A317D-31B8-4ABC-A76C-0FCEFF8E20C2}.Debug|x64.Build.0 = Debug|x64
+		{BE9A317D-31B8-4ABC-A76C-0FCEFF8E20C2}.Debug|x64.Deploy.0 = Debug|x64
+		{BE9A317D-31B8-4ABC-A76C-0FCEFF8E20C2}.Debug|x86.ActiveCfg = Debug|x64
+		{BE9A317D-31B8-4ABC-A76C-0FCEFF8E20C2}.Release|ARM.ActiveCfg = Release|x64
+		{BE9A317D-31B8-4ABC-A76C-0FCEFF8E20C2}.Release|ARM64.ActiveCfg = Release|x64
+		{BE9A317D-31B8-4ABC-A76C-0FCEFF8E20C2}.Release|x64.ActiveCfg = Release|x64
+		{BE9A317D-31B8-4ABC-A76C-0FCEFF8E20C2}.Release|x64.Build.0 = Release|x64
+		{BE9A317D-31B8-4ABC-A76C-0FCEFF8E20C2}.Release|x64.Deploy.0 = Release|x64
+		{BE9A317D-31B8-4ABC-A76C-0FCEFF8E20C2}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -271,6 +285,7 @@ Global
 		{25209D87-8347-4008-A61F-D68C68CFAA41} = {89DB34AA-2D4B-4946-8976-08CE5A3C1EAA}
 		{10DE54F4-3117-40E7-AEC4-15E68CB0893C} = {18BCB1EA-7759-42E0-8832-ADFD6006A67D}
 		{DB37570D-2FC1-44B7-814D-4417FA089892} = {C4E9033A-C82E-4D4F-A72E-8E6233EE08EE}
+		{BE9A317D-31B8-4ABC-A76C-0FCEFF8E20C2} = {C4E9033A-C82E-4D4F-A72E-8E6233EE08EE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C0550A48-607C-4E1F-96C1-8935AB6E425C}
