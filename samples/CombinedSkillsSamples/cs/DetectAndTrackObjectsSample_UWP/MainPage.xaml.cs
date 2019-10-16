@@ -367,6 +367,9 @@ namespace DetectAndTrackObjectsSample
                     m_renderer.ClearCanvas();
                     m_renderer.RenderTrackerResults(m_trackerHistories, true);
 
+                    // Update displayed frame counter text
+                    UIFrameCounter.Text = $"Frame Counter: {m_frameCounter}/{m_detectorEvalInterval}";
+
                     // Update the displayed performance text
                     UIPerfTextBlock.Text = $"bind: {bindTime.ToString("F2")}ms, eval: {evalTime.ToString("F2")}ms";
                 }
@@ -420,6 +423,7 @@ namespace DetectAndTrackObjectsSample
                     inputImageDescriptor);
 
                 // Clear existing trackers
+                m_frameCounter = 0;
                 m_trackerBindings.Clear();
                 m_trackerHistories.Clear();
             }
@@ -622,6 +626,12 @@ namespace DetectAndTrackObjectsSample
             float previewAspectRatio = (float)(UIProcessedPreview.ActualWidth / UIProcessedPreview.ActualHeight);
             UIOverlayCanvas.Width = cameraAspectRatio >= previewAspectRatio ? UIProcessedPreview.ActualWidth : UIProcessedPreview.ActualHeight * cameraAspectRatio;
             UIOverlayCanvas.Height = cameraAspectRatio >= previewAspectRatio ? UIProcessedPreview.ActualWidth / cameraAspectRatio : UIProcessedPreview.ActualHeight;
+
+            // Adjust right top aligned text based on canvas sizing
+            double verticalOffset = (UIVideoFeed.ActualHeight - UIOverlayCanvas.Height) / 2;
+            double horizontalOffset = (UIVideoFeed.ActualWidth - UIOverlayCanvas.Width) / 2 + 2;
+            Thickness offsetMargin = new Thickness(0, verticalOffset, horizontalOffset, 0);
+            UIFrameCounter.Margin = offsetMargin;
         }
 
         /// <summary>

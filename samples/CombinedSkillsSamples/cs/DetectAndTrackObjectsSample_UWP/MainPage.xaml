@@ -43,9 +43,7 @@
                                BorderThickness="1"
                                Margin="0,5"
                                IsExpanded="False"
-                               ExpandDirection="Down"
-                               Expanded="UIExpander_Expanded"
-                               Collapsed="UIExpander_Expanded">
+                               ExpandDirection="Down">
                             <ListView Name="UIObjectKindFilters" SelectionMode="Multiple" ScrollViewer.VerticalScrollBarVisibility="Visible" SelectionChanged="UIObjectKindFilters_SelectionChanged" />
                         </controls:Expander>
                         <StackPanel Orientation="Horizontal">
@@ -69,6 +67,7 @@
             </StackPanel>
             
             <!-- Video display -->
+            <TextBlock Name="UIFrameCounter" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="Bold" Foreground="Lime" />
             <Image x:Name="UIProcessedPreview" Canvas.ZIndex="-1"  VerticalAlignment="Center" Stretch="Uniform" SizeChanged="UIProcessedPreview_SizeChanged" />
             <Canvas Name="UIOverlayCanvas" Canvas.ZIndex="0" HorizontalAlignment="Center" VerticalAlignment="Center" />
 
