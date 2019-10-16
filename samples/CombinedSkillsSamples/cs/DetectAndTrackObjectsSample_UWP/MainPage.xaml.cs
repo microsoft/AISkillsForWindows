@@ -135,7 +135,7 @@ namespace DetectAndTrackObjectsSample
                         }
                     }
 
-                    // Display available detector execution devices
+                    // Display available tracker execution devices
                     UITrackerExecutionDevices.ItemsSource = m_trackerExecutionDevices.Select((device) => $"{device.ExecutionDeviceKind} | {device.Name}");
 
                     // Set SelectedIndex to default (0)
@@ -177,7 +177,7 @@ namespace DetectAndTrackObjectsSample
         }
 
         /// <summary>
-        /// Initialize the ObjectDetector skill
+        /// Initialize the ObjectTracker skill
         /// </summary>
         /// <param name="device"></param>
         /// <returns></returns>
