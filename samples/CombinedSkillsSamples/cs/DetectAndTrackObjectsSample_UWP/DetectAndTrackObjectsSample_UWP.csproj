@@ -7,8 +7,8 @@
     <ProjectGuid>{BE9A317D-31B8-4ABC-A76C-0FCEFF8E20C2}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ChainedSkillsSample</RootNamespace>
-    <AssemblyName>ChainedSkillsSample</AssemblyName>
+    <RootNamespace>DetectAndTrackObjectsSample</RootNamespace>
+    <AssemblyName>DetectAndTrackObjectsSample</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.17763.0</TargetPlatformVersion>
