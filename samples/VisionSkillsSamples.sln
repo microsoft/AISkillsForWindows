@@ -35,7 +35,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageScanningSample_Desktop
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectTrackerSample_UWP", "ObjectTracker\cs\ObjectTrackerSample_UWP\ObjectTrackerSample_UWP.csproj", "{DB37570D-2FC1-44B7-814D-4417FA089892}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DetectAndTrackObjectsSample_UWP", "ChainedSkills\cs\ChainedSkillsSample_UWP\DetectAndTrackObjectsSample_UWP.csproj", "{BE9A317D-31B8-4ABC-A76C-0FCEFF8E20C2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DetectAndTrackObjectsSample_UWP", "CombinedSkillsSamples\cs\DetectAndTrackObjectsSample_UWP\DetectAndTrackObjectsSample_UWP.csproj", "{BE9A317D-31B8-4ABC-A76C-0FCEFF8E20C2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
