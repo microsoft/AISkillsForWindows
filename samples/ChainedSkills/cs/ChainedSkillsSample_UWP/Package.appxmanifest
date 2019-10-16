@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="1eafd30a-b4c8-4cfa-b0f5-15790b839905" Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US" Version="1.0.0.0" />
-  <mp:PhoneIdentity PhoneProductId="1eafd30a-b4c8-4cfa-b0f5-15790b839905" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+  <Identity Name="c9f15a6e-d7f8-44ca-9dc0-b8b103464155" Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US" Version="1.0.0.0" />
+  <mp:PhoneIdentity PhoneProductId="c9f15a6e-d7f8-44ca-9dc0-b8b103464155" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
-    <DisplayName>ChainedSkillsSample</DisplayName>
+    <DisplayName>DetectAndTrackObjects</DisplayName>
     <PublisherDisplayName>Microsoft</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -14,9 +14,9 @@
     <Resource Language="x-generate" />
   </Resources>
   <Applications>
-    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="ChainedSkillsSample.App">
-      <uap:VisualElements DisplayName="ChainedSkillsSample" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="ChainedSkillsSample" BackgroundColor="transparent">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square310x310Logo="Assets\LargeTile.png">
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="DetectAndTrackObjectsSample.App">
+      <uap:VisualElements DisplayName="DetectAndTrackObjectsSample" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="DetectAndTrackObjectsSample" BackgroundColor="white">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square310x310Logo="Assets\LargeTile.png" Square71x71Logo="Assets\SmallTile.png">
         </uap:DefaultTile>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>

@@ -21,7 +21,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
-namespace ChainedSkillsSample
+namespace DetectAndTrackObjectsSample
 {
     /// <summary>
     /// Application's main page
@@ -34,16 +34,17 @@ namespace ChainedSkillsSample
         private ObjectDetectorDescriptor m_detectorDescriptor = null;
         private ObjectDetectorBinding m_detectorBinding = null;
         private ObjectDetectorSkill m_detectorSkill = null;
+        private IReadOnlyList<ISkillExecutionDevice> m_detectorExecutionDevices = null;
         private ObjectTrackerDescriptor m_trackerDescriptor = null;
         private ObjectTrackerSkill m_trackerSkill = null;
-        private List<ObjectTrackerBinding> m_trackerBindings = new List<ObjectTrackerBinding>();
-        private List<Queue<TrackerResult>> m_trackerHistories = new List<Queue<TrackerResult>>();
-        private UInt32 m_maxNumberTrackers = 5;
-        private UInt32 m_maxTrackerHistoryLength = 20;
-        private IReadOnlyList<ISkillExecutionDevice> m_availableExecutionDevices = null;
+        private List<ObjectTrackerBinding> m_trackerBindings = null;
+        private List<Queue<TrackerResult>> m_trackerHistories = null;
+        private IReadOnlyList<ISkillExecutionDevice> m_trackerExecutionDevices = null;
         private ISkillFeatureImageDescriptor m_inputImageFeatureDescriptor = null;
-        private UInt32 m_frameCounter = 0;
-        private UInt32 m_detectorEvalInterval = 300;
+        private uint m_frameCounter = 0;
+        private uint m_maxNumberTrackers = 5;
+        private uint m_maxTrackerHistoryLength = 20;
+        private uint m_detectorEvalInterval = 150;
 
         // Misc
         private ObjectTrackRenderer m_renderer = null;
@@ -82,16 +83,16 @@ namespace ChainedSkillsSample
 
             m_lock.Wait();
             {
-                NotifyUser("Initializing skill...");
+                NotifyUser("Initializing skills...");
                 m_detectorDescriptor = new ObjectDetectorDescriptor();
-                m_availableExecutionDevices = await m_detectorDescriptor.GetSupportedExecutionDevicesAsync();
-
+                m_detectorExecutionDevices = await m_detectorDescriptor.GetSupportedExecutionDevicesAsync();
                 await InitializeObjectDetectorAsync();
-                await UpdateSkillUIAsync();
 
-                // Initialize ObjectTracker. As the skill only supports CPU right now, let's not worry about execution devices etc
                 m_trackerDescriptor = new ObjectTrackerDescriptor();
-                m_trackerSkill = await m_trackerDescriptor.CreateSkillAsync() as ObjectTrackerSkill;
+                m_trackerExecutionDevices = await m_trackerDescriptor.GetSupportedExecutionDevicesAsync();
+                await InitializeObjectTrackerAsync();
+
+                await UpdateSkillUIAsync();
             }
             m_lock.Release();
 
@@ -109,54 +110,45 @@ namespace ChainedSkillsSample
             if (Dispatcher.HasThreadAccess)
             {
                 // Show skill description members in UI
-                UISkillName.Text = m_detectorDescriptor.Information.Name;
+                UISkillDescription.Text = m_detectorDescriptor.Information.Name;
+                UISkillDescription.Text += "\n" + SkillHelper.SkillHelperMethods.GetSkillDescriptorString(m_detectorDescriptor);
+                UISkillDescription.Text += "\n\n" + m_trackerDescriptor.Information.Name;
+                UISkillDescription.Text += "\n" + SkillHelper.SkillHelperMethods.GetSkillDescriptorString(m_trackerDescriptor);
 
-                UISkillDescription.Text = SkillHelper.SkillHelperMethods.GetSkillDescriptorString(m_detectorDescriptor);
-
-                int featureIndex = 0;
-                foreach (var featureDesc in m_detectorDescriptor.InputFeatureDescriptors)
+                if (m_detectorExecutionDevices.Count == 0 || m_trackerExecutionDevices.Count == 0)
                 {
-                    UISkillInputDescription.Text += SkillHelper.SkillHelperMethods.GetSkillFeatureDescriptorString(featureDesc);
-                    if (featureIndex++ > 0 && featureIndex < m_detectorDescriptor.InputFeatureDescriptors.Count - 1)
-                    {
-                        UISkillInputDescription.Text += "\n----\n";
-                    }
-                }
-
-                featureIndex = 0;
-                foreach (var featureDesc in m_detectorDescriptor.OutputFeatureDescriptors)
-                {
-                    UISkillOutputDescription.Text += SkillHelper.SkillHelperMethods.GetSkillFeatureDescriptorString(featureDesc);
-                    if (featureIndex++ > 0 && featureIndex < m_detectorDescriptor.OutputFeatureDescriptors.Count - 1)
-                    {
-                        UISkillOutputDescription.Text += "\n----\n";
-                    }
-                }
-
-                if (m_availableExecutionDevices.Count == 0)
-                {
-                    NotifyUser("No execution devices available, this skill cannot run on this device");
+                    NotifyUser("No execution devices available, one or more skills cannot run on this device");
                 }
                 else
                 {
-                    // Display available execution devices
-                    UISkillExecutionDevices.ItemsSource = m_availableExecutionDevices.Select((device) => $"{device.ExecutionDeviceKind} | {device.Name}");
+                    // Display available detector execution devices
+                    UIDetectorExecutionDevices.ItemsSource = m_detectorExecutionDevices.Select((device) => $"{device.ExecutionDeviceKind} | {device.Name}");
                     
                     // Set SelectedIndex to index of currently selected device
-                    for (int i = 0; i < m_availableExecutionDevices.Count; i++)
+                    for (int i = 0; i < m_detectorExecutionDevices.Count; i++)
                     {
-                        if (m_availableExecutionDevices[i].ExecutionDeviceKind == m_detectorBinding.Device.ExecutionDeviceKind
-                            && m_availableExecutionDevices[i].Name == m_detectorBinding.Device.Name)
+                        if (m_detectorExecutionDevices[i].ExecutionDeviceKind == m_detectorBinding.Device.ExecutionDeviceKind
+                            && m_detectorExecutionDevices[i].Name == m_detectorBinding.Device.Name)
                         {
-                            UISkillExecutionDevices.SelectedIndex = i;
+                            UIDetectorExecutionDevices.SelectedIndex = i;
                             break;
                         }
                     }
+
+                    // Display available detector execution devices
+                    UITrackerExecutionDevices.ItemsSource = m_trackerExecutionDevices.Select((device) => $"{device.ExecutionDeviceKind} | {device.Name}");
+
+                    // Set SelectedIndex to default (0)
+                    UITrackerExecutionDevices.SelectedIndex = 0;
                 }
 
                 // Populate ObjectKind filters list with all possible classes supported by the detector
                 // Exclude Undefined label (not used by the detector) from selector list
                 UIObjectKindFilters.ItemsSource = Enum.GetValues(typeof(ObjectKind)).Cast<ObjectKind>().Where(kind => kind != ObjectKind.Undefined);
+
+                UIMaxTrackersBox.Text = m_maxNumberTrackers.ToString();
+                UIMaxTrackerHistoryBox.Text = m_maxTrackerHistoryLength.ToString();
+                UIDetectorIntervalBox.Text = m_detectorEvalInterval.ToString();
             }
             else
             {
@@ -182,6 +174,25 @@ namespace ChainedSkillsSample
             m_detectorBinding = await m_detectorSkill.CreateSkillBindingAsync() as ObjectDetectorBinding;
 
             m_inputImageFeatureDescriptor = m_detectorBinding["InputImage"].Descriptor as SkillFeatureImageDescriptor;
+        }
+
+        /// <summary>
+        /// Initialize the ObjectDetector skill
+        /// </summary>
+        /// <param name="device"></param>
+        /// <returns></returns>
+        private async Task InitializeObjectTrackerAsync(ISkillExecutionDevice device = null)
+        {
+            if (device != null)
+            {
+                m_trackerSkill = await m_trackerDescriptor.CreateSkillAsync(device) as ObjectTrackerSkill;
+            }
+            else
+            {
+                m_trackerSkill = await m_trackerDescriptor.CreateSkillAsync() as ObjectTrackerSkill;
+            }
+            m_trackerBindings = new List<ObjectTrackerBinding>();
+            m_trackerHistories = new List<Queue<TrackerResult>>();
         }
 
         /// <summary>
@@ -222,6 +233,7 @@ namespace ChainedSkillsSample
                 m_trackerHistories[i].Enqueue(
                     new TrackerResult()
                     {
+                        label = m_trackerHistories[i].Peek().label,
                         boundingRect = m_trackerBindings[i].BoundingRect,
                         succeeded = m_trackerBindings[i].Succeeded
                     }
@@ -251,11 +263,12 @@ namespace ChainedSkillsSample
                 m_trackerBindings.Clear();
                 m_trackerHistories.Clear();
 
-                IEnumerable<Rect> filteredBoundingRects = m_detectorBinding.DetectedObjects.Where(det => ((m_objectKinds?.Count ?? 0) == 0) || m_objectKinds.Contains(det.Kind)).Select(det => det.Rect);
+                IEnumerable<ObjectDetectorResult> filteredDetections = m_detectorBinding.DetectedObjects.Where(det => ((m_objectKinds?.Count ?? 0) == 0) || m_objectKinds.Contains(det.Kind));
                 var initializeTasks = new List<Task>();
                 m_evalStopwatch.Restart();  // Since we're initializing trackers in parallel, it's easiest to count it all as evaluation
                                             // (including tracker binding)
-                foreach (Rect boundingRect in filteredBoundingRects)
+                Dictionary<string, int> objectKindCounter = new Dictionary<string, int>();
+                foreach (ObjectDetectorResult detection in filteredDetections)
                 {
                     // Cap at max trackers
                     if (m_trackerBindings.Count >= m_maxNumberTrackers)
@@ -263,17 +276,35 @@ namespace ChainedSkillsSample
                         break;
                     }
 
+                    // Do some sanity checks to make sure the detection is valid
+                    if (detection.Rect.Width <= 0 || detection.Rect.Height <= 0)
+                    {
+                        break;
+                    }
+
                     // Create and initialize new tracker
                     ObjectTrackerBinding binding = await m_trackerSkill.CreateSkillBindingAsync() as ObjectTrackerBinding;
-                    initializeTasks.Add(m_trackerSkill.InitializeTrackerAsync(binding, frame, boundingRect).AsTask());
+                    Rect clampedRect = new Rect(
+                        Math.Max(detection.Rect.X, 0.0),
+                        Math.Max(detection.Rect.Y, 0.0),
+                        detection.Rect.Width,
+                        detection.Rect.Height);
+                    initializeTasks.Add(m_trackerSkill.InitializeTrackerAsync(binding, frame, clampedRect).AsTask());
                     m_trackerBindings.Add(binding);
 
                     // Add corresponding tracker history
+                    string objectKindStr = detection.Kind.ToString();
+                    if (!objectKindCounter.ContainsKey(objectKindStr))
+                    {
+                        objectKindCounter.Add(objectKindStr, 0);
+                    }
+                    string label = $"{objectKindStr} {++objectKindCounter[objectKindStr]}";
                     m_trackerHistories.Add(new Queue<TrackerResult>());
                     m_trackerHistories.Last().Enqueue(
                         new TrackerResult()
                         {
-                            boundingRect = boundingRect,
+                            label = label,
+                            boundingRect = clampedRect,
                             succeeded = true
                         }
                     );
@@ -332,17 +363,6 @@ namespace ChainedSkillsSample
                     }
                     await m_processedBitmapSource.SetBitmapAsync(targetSoftwareBitmap);
 
-                    //// Retrieve and filter results if requested
-                    //IReadOnlyList<ObjectDetectorResult> objectDetections = m_detectorBinding.DetectedObjects;
-                    //if (m_objectKinds?.Count > 0)
-                    //{
-                    //    objectDetections = objectDetections.Where(det => m_objectKinds.Contains(det.Kind)).ToList();
-                    //}
-
-                    //// Update displayed results
-                    //// FIXME
-                    //m_renderer.Render(objectDetections);
-
                     // Render results
                     m_renderer.ClearCanvas();
                     m_renderer.RenderTrackerResults(m_trackerHistories, true);
@@ -399,8 +419,9 @@ namespace ChainedSkillsSample
                     },
                     inputImageDescriptor);
 
-                // TODO: Workaround for a bug in ObjectDetectorBinding when binding consecutively VideoFrames with Direct3DSurface and SoftwareBitmap
-                m_detectorBinding = await m_detectorSkill.CreateSkillBindingAsync() as ObjectDetectorBinding;
+                // Clear existing trackers
+                m_trackerBindings.Clear();
+                m_trackerHistories.Clear();
             }
             m_lock.Release();
 
@@ -494,14 +515,10 @@ namespace ChainedSkillsSample
 
             var picker = new Windows.Storage.Pickers.FileOpenPicker();
             picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
-            picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.PicturesLibrary;
+            picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.VideosLibrary;
             // Add common video file extensions
             picker.FileTypeFilter.Add(".mp4");
             picker.FileTypeFilter.Add(".avi");
-            // Add common image file extensions
-            picker.FileTypeFilter.Add(".jpg");
-            picker.FileTypeFilter.Add(".png");
-            picker.FileTypeFilter.Add(".bmp");
 
             Windows.Storage.StorageFile file = await picker.PickSingleFileAsync();
             if (file != null)
@@ -555,18 +572,29 @@ namespace ChainedSkillsSample
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void UISkillExecutionDevices_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void UIDetectorExecutionDevices_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var selectedDevice = m_availableExecutionDevices[UISkillExecutionDevices.SelectedIndex];
+            var selectedDevice = m_detectorExecutionDevices[UIDetectorExecutionDevices.SelectedIndex];
             await m_lock.WaitAsync();
             {
                 await InitializeObjectDetectorAsync(selectedDevice);
             }
             m_lock.Release();
-            if (m_frameSource != null)
+        }
+
+        /// <summary>
+        /// Triggers when a skill execution device is selected from the UI
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void UITrackerExecutionDevices_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var selectedDevice = m_trackerExecutionDevices[UITrackerExecutionDevices.SelectedIndex];
+            await m_lock.WaitAsync();
             {
-                await m_frameSource.StartAsync();
+                await InitializeObjectTrackerAsync(selectedDevice);
             }
+            m_lock.Release();
         }
 
         /// <summary>
@@ -612,6 +640,25 @@ namespace ChainedSkillsSample
             {
                 UIVideoFeed.Visibility = Visibility.Visible;
             }
+        }
+
+        private void ValidateNumericalTextBoxEntry(TextBox sender, TextBoxTextChangingEventArgs args)
+        {
+            var selectionStart = sender.SelectionStart;
+            var originalLength = sender.Text.Length;
+            sender.Text = new String(sender.Text.Where(c => char.IsDigit(c)).ToArray());
+            sender.SelectionStart = selectionStart - (originalLength - sender.Text.Length);
+        }
+
+        private async void UIApplySettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            await m_lock.WaitAsync();
+            {
+                m_maxNumberTrackers = uint.Parse(UIMaxTrackersBox.Text);
+                m_maxTrackerHistoryLength = uint.Parse(UIMaxTrackerHistoryBox.Text);
+                m_detectorEvalInterval = uint.Parse(UIDetectorIntervalBox.Text);
+            }
+            m_lock.Release();
         }
     }
 }
