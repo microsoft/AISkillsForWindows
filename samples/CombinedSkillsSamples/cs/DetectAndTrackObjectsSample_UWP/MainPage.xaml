@@ -1,0 +1,77 @@
+﻿<Page
+    x:Class="DetectAndTrackObjectsSample.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:DetectAndTrackObjectsSample"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    Loaded="Page_Loaded">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="10*" />
+        </Grid.RowDefinitions>
+        <ScrollViewer Grid.Row="0" Grid.RowSpan="2">
+            <StackPanel>
+                <controls:Expander VerticalAlignment="Top"
+                               Header="Details and options.."
+                               HorizontalContentAlignment="Stretch"
+                               Foreground="Black"
+                               Background="#FF7F7F7F"
+                               BorderBrush="Black"
+                               IsExpanded="False"
+                               ExpandDirection="Down"
+                               Expanded="UIExpander_Expanded"
+                               Collapsed="UIExpander_Expanded">
+                    <StackPanel Padding="5">
+                        <TextBlock Text="Skill Descriptions:" FontWeight="Bold"/>
+                        <TextBox Name="UISkillDescription" IsReadOnly="True" AcceptsReturn="True"/>
+                        <TextBlock Text="Available ObjectDetector execution devices:" FontWeight="Bold"/>
+                        <ListBox Name="UIDetectorExecutionDevices" SelectionChanged="UIDetectorExecutionDevices_SelectionChanged"/>
+                        <TextBlock Text="Available ObjectTracker execution devices:" FontWeight="Bold"/>
+                        <ListBox Name="UITrackerExecutionDevices" SelectionChanged="UITrackerExecutionDevices_SelectionChanged"/>
+                        <controls:Expander VerticalAlignment="Top"
+                               Header="Object Detector ObjectKind Filters"
+                               HorizontalContentAlignment="Stretch"
+                               Foreground="Black"
+                               Background="#FF7F7F7F"
+                               BorderBrush="Black"
+                               BorderThickness="1"
+                               Margin="0,5"
+                               IsExpanded="False"
+                               ExpandDirection="Down">
+                            <ListView Name="UIObjectKindFilters" SelectionMode="Multiple" ScrollViewer.VerticalScrollBarVisibility="Visible" SelectionChanged="UIObjectKindFilters_SelectionChanged" />
+                        </controls:Expander>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBox Width="200" Margin="0,0,5,0" Header="Detector Evaluation Interval" TextChanging="ValidateNumericalTextBoxEntry" Name="UIDetectorIntervalBox" />
+                            <TextBox Width="200" Margin="0,0,5,0" Header="Max Active Trackers" TextChanging="ValidateNumericalTextBoxEntry" Name="UIMaxTrackersBox" />
+                            <TextBox Width="200" Margin="0,0,5,0" Header="Max Tracker History Duration" TextChanging="ValidateNumericalTextBoxEntry" Name="UIMaxTrackerHistoryBox" />
+                            <Button VerticalAlignment="Bottom"  Content="Apply" Click="UIApplySettingsButton_Click" />
+                        </StackPanel>
+                    </StackPanel>
+                </controls:Expander>
+
+                <TextBlock Name="UIMessageTextBlock" Text="Select an image source to start" HorizontalAlignment="Center" />
+            </StackPanel>
+        </ScrollViewer>
+
+        <Grid Grid.Row="1" Name="UIVideoFeed">
+            <!-- Video frame source controls -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Background="White">
+                <AppBarButton x:Name="UICameraButton" Icon="AttachCamera" Label="Camera" Click="UICameraButton_Click" />
+                <AppBarButton x:Name="UIFilePickerButton" Icon="BrowsePhotos" Label="Open Video" ToolTipService.ToolTip="Load a video file from disk" Click="UIFilePickerButton_Click" />
+            </StackPanel>
+            
+            <!-- Video display -->
+            <TextBlock Name="UIFrameCounter" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="Bold" Foreground="Lime" />
+            <Image x:Name="UIProcessedPreview" Canvas.ZIndex="-1"  VerticalAlignment="Center" Stretch="Uniform" SizeChanged="UIProcessedPreview_SizeChanged" />
+            <Canvas Name="UIOverlayCanvas" Canvas.ZIndex="0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+            <TextBox Name="UIPerfTextBlock" HorizontalAlignment="Center" IsReadOnly="True" AcceptsReturn="True" VerticalAlignment="Bottom"/>
+        </Grid>
+    </Grid>
+</Page>
