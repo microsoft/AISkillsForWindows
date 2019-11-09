@@ -43,11 +43,15 @@ For how to use the framework to author a Skill to be consumed, and creating an a
 | **[QuadEdgesDetector](./samples/ImageScanning/README.md#QuadEdgesDetectorExample)** | Searches an image for the horizontal and vertical lines defining a quadrilateral shape's contour and returns their coordinates. |
 
 ## For samples using skills published by [Intel on nuget.org](https://www.nuget.org/profiles/IntelAISkills) see [this link](https://software.intel.com/en-us/ai/on-pc/skills) <a name="IntelSkills"></a>
-  - **Background Blur**: Segment out individuals while blurring the background image to highlight the individuals in the foreground.
-  - **Background Replacement**: Segment out individuals while replacing the background with a user-selected image.
-  - **Face Detection**:Create bounding boxes for detected faces and other attributes, such as eyes, mouths, or nose tips.
-  - **Person Detection**: Create bounding boxes for detected individuals.
-  - **Super Resolution**: Convert a low-resolution image or video frame (320 x 240 or 640 x 360) to a high-resolution image (1280 x 960 or 1280 x 720).
+| Skill | Description |
+| :-- | :-- |
+| **[Background Blur](Applications/BackgroundBlur)** | Segments out individuals while blurring the background image to highlight the individuals in the foreground. |
+| **[Background Replacement](Applications/BackgroundReplacement)** | Segments out individuals while replacing the background with a user-selected image. |
+| **[Face Detection](Applications/FaceDetection)** | Detects face(s) and returns face bounding box(es) and other attributes, such as eyes, mouths, or nose tips. |
+| **[Intruder Detection](Applications/IntruderDetection)** | Detects intruder by checking to see if an additional face or person is present in the video frame. |
+| **[Person Detection](Applications/PersonDetection)** | Detects person(s) and returns person bounding box(es). |
+| **[Super Resolution](Applications/SuperResolution)** | Converts a low-resolution image or video frame (320 x 240) to a high-resolution image (1280 x 960). |
+| **[Super Resolution (WinML)](Applications/SuperResolutionWinML)** | Converts a low-resolution image or video frame (640 x 360) to a high-resolution image (1280 x 720). |
 
 -----
 
