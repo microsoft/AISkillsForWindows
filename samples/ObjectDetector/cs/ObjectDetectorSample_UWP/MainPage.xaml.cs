@@ -17,6 +17,7 @@ using Windows.UI.Xaml.Media.Imaging;
 using Windows.Devices.Enumeration;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using FrameSourceHelper_UWP;
+using SkillHelper;
 
 namespace ObjectDetectorSkillSample
 {
@@ -28,6 +29,11 @@ namespace ObjectDetectorSkillSample
         private IFrameSource m_frameSource = null;
 
         // Vision Skills
+        // Skill wrappers
+        private List<SkillWrapper> m_skillWrappers = new List<SkillWrapper>()
+        {
+            new SkillWrapper(new ObjectDetectorDescriptor())
+        };
         private ObjectDetectorDescriptor m_descriptor = null;
         private ObjectDetectorBinding m_binding = null;
         private ObjectDetectorSkill m_skill = null;
@@ -36,7 +42,7 @@ namespace ObjectDetectorSkillSample
 
         // Misc
         private BoundingBoxRenderer m_bboxRenderer = null;
-        private HashSet<ObjectKind> m_objectKinds = null;
+        private List<bool> m_objectKindFilterList = null;
 
         // Frames
         private SoftwareBitmapSource m_processedBitmapSource;
@@ -94,31 +100,6 @@ namespace ObjectDetectorSkillSample
         {
             if (Dispatcher.HasThreadAccess)
             {
-                // Show skill description members in UI
-                UISkillName.Text = m_descriptor.Information.Name;
-
-                UISkillDescription.Text = SkillHelper.SkillHelperMethods.GetSkillDescriptorString(m_descriptor);
-
-                int featureIndex = 0;
-                foreach (var featureDesc in m_descriptor.InputFeatureDescriptors)
-                {
-                    UISkillInputDescription.Text += SkillHelper.SkillHelperMethods.GetSkillFeatureDescriptorString(featureDesc);
-                    if (featureIndex++ > 0 && featureIndex < m_descriptor.InputFeatureDescriptors.Count - 1)
-                    {
-                        UISkillInputDescription.Text += "\n----\n";
-                    }
-                }
-
-                featureIndex = 0;
-                foreach (var featureDesc in m_descriptor.OutputFeatureDescriptors)
-                {
-                    UISkillOutputDescription.Text += SkillHelper.SkillHelperMethods.GetSkillFeatureDescriptorString(featureDesc);
-                    if (featureIndex++ > 0 && featureIndex < m_descriptor.OutputFeatureDescriptors.Count - 1)
-                    {
-                        UISkillOutputDescription.Text += "\n----\n";
-                    }
-                }
-
                 if (m_availableExecutionDevices.Count == 0)
                 {
                     NotifyUser("No execution devices available, this skill cannot run on this device");
@@ -126,7 +107,7 @@ namespace ObjectDetectorSkillSample
                 else
                 {
                     // Display available execution devices
-                    UISkillExecutionDevices.ItemsSource = m_availableExecutionDevices.Select((device) => $"{device.ExecutionDeviceKind} | {device.Name}");
+                    UISkillExecutionDevices.ItemsSource = m_availableExecutionDevices.Select((device) => new SkillExecutionDeviceWrappper(device));
                     
                     // Set SelectedIndex to index of currently selected device
                     for (int i = 0; i < m_availableExecutionDevices.Count; i++)
@@ -140,9 +121,8 @@ namespace ObjectDetectorSkillSample
                     }
                 }
 
-                // Populate ObjectKind filters list with all possible classes supported by the detector
-                // Exclude Undefined label (not used by the detector) from selector list
-                UIObjectKindFilters.ItemsSource = Enum.GetValues(typeof(ObjectKind)).Cast<ObjectKind>().Where(kind => kind != ObjectKind.Undefined);
+                UISelectAllObjectKind.IsChecked = true;
+                UIConfidenceThresholdControl.Value = (m_binding["InputConfidenceThreshold"].FeatureValue as SkillFeatureTensorFloatValue).GetAsVectorView().First();
             }
             else
             {
@@ -237,10 +217,6 @@ namespace ObjectDetectorSkillSample
 
                     // Retrieve and filter results if requested
                     IReadOnlyList<ObjectDetectorResult> objectDetections = m_binding.DetectedObjects;
-                    if (m_objectKinds?.Count > 0)
-                    {
-                        objectDetections = objectDetections.Where(det => m_objectKinds.Contains(det.Kind)).ToList();
-                    }
 
                     // Update displayed results
                     m_bboxRenderer.Render(objectDetections);
@@ -299,6 +275,8 @@ namespace ObjectDetectorSkillSample
 
                 // TODO: Workaround for a bug in ObjectDetectorBinding when binding consecutively VideoFrames with Direct3DSurface and SoftwareBitmap
                 m_binding = await m_skill.CreateSkillBindingAsync() as ObjectDetectorBinding;
+                await m_binding["InputObjectKindFilterList"].SetFeatureValueAsync(m_objectKindFilterList);
+                await m_binding["InputConfidenceThreshold"].SetFeatureValueAsync((float)UIConfidenceThresholdControl.Value);
             }
             m_lock.Release();
 
@@ -471,13 +449,66 @@ namespace ObjectDetectorSkillSample
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void UIObjectKindFilters_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void UIDetectionThresholdControl_ValueChanged(object sender, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
+        {
+            UIConfidenceThresholdValue.Text = ((float)UIConfidenceThresholdControl.Value).ToString();
+            await m_lock.WaitAsync();
+            {
+                await m_binding["InputConfidenceThreshold"].SetFeatureValueAsync((float)UIConfidenceThresholdControl.Value);
+            }
+            m_lock.Release();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void UISelectAllObjectKind_Checked(object sender, RoutedEventArgs e)
         {
             await m_lock.WaitAsync();
             {
-                m_objectKinds = UIObjectKindFilters.SelectedItems.Cast<ObjectKind>().ToHashSet();
+                // Reset the object kind filter list
+                m_objectKindFilterList = null;
+                await m_binding["InputObjectKindFilterList"].SetFeatureValueAsync(m_objectKindFilterList);
+
+                if (UISelectAllObjectKind.IsChecked == true)
+                {
+                    UIObjectKindFilterExpander.IsEnabled = false;
+                    UIObjectKindFilterExpander.IsExpanded = false;
+                }
+                else
+                {
+                    // Populate ObjectKind filters list with all possible classes supported by the detector
+                    // Exclude Undefined label (not used by the detector) from selector list
+                    UIObjectKindFilters.ItemsSource = Enum.GetValues(typeof(ObjectKind)).Cast<ObjectKind>().Where(kind => kind != ObjectKind.Undefined);
+                    UIObjectKindFilterExpander.IsEnabled = true;
+                    UIObjectKindFilterExpander.IsExpanded = true;
+                }
             }
             m_lock.Release();
+            UIObjectKindFilters_SelectionChanged(null, null);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void UIObjectKindFilters_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (UIObjectKindFilterExpander.IsEnabled)
+            {
+                await m_lock.WaitAsync();
+                {
+                    m_objectKindFilterList = new List<bool>(new bool[Enum.GetNames(typeof(ObjectKind)).Length - 1]);
+                    foreach (var item in UIObjectKindFilters.SelectedItems)
+                    {
+                        m_objectKindFilterList[(int)item] = true;
+                    }
+                    // Set the object kind filter list
+                    await m_binding["InputObjectKindFilterList"].SetFeatureValueAsync(m_objectKindFilterList);
+                }
+                m_lock.Release();
+            }
         }
 
         /// <summary>
@@ -497,20 +528,15 @@ namespace ObjectDetectorSkillSample
         }
 
         /// <summary>
-        /// Triggered when the expander is expanded and collapsed
+        /// Triggered when a skill is selected from the skill tab at the top of the window
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void UIExpander_Expanded(object sender, EventArgs e)
+        private void UISkillTabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var expander = (sender as Expander);
-            if(expander.IsExpanded)
+            if (UISkillTabs.SelectedIndex < 0)
             {
-                UIVideoFeed.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                UIVideoFeed.Visibility = Visibility.Visible;
+                return;
             }
         }
     }

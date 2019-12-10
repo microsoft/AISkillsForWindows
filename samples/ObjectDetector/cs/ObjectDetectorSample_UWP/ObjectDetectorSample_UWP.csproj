@@ -45,6 +45,9 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\Common\cs\CommonResourceDictionary.xaml.cs">
+      <Link>CommonResourceDictionary.xaml.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\Common\cs\FrameReaderFrameSource.cs">
       <Link>FrameSource\FrameReaderFrameSource.cs</Link>
     </Compile>
@@ -106,6 +109,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="..\..\..\Common\cs\CommonResourceDictionary.xaml">
+      <Link>CommonResourceDictionary.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -113,7 +121,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AI.Skills.Vision.ObjectDetectorPreview">
-      <Version>0.1.0.4</Version>
+      <Version>0.1.0.5</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.8</Version>

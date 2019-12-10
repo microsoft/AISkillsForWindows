@@ -2,6 +2,7 @@
 
 using Microsoft.AI.Skills.Vision.ObjectDetectorPreview;
 using System.Collections.Generic;
+using System.Linq;
 using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Xaml;
@@ -24,6 +25,7 @@ namespace ObjectDetectorSkillSample
         // Pre-populate rectangles/textblocks to avoid clearing and re-creating on each frame
         private Rectangle[] m_rectangles;
         private TextBlock[] m_textBlocks;
+        private Border[] m_borders;
 
         /// <summary>
         /// </summary>
@@ -31,38 +33,43 @@ namespace ObjectDetectorSkillSample
         /// <param name="maxBoxes"></param>
         /// <param name="lineThickness"></param>
         /// <param name="colorBrush">Default Colors.SpringGreen color brush if not specified</param>
-        public BoundingBoxRenderer(Canvas canvas, int maxBoxes = 50, int lineThickness = 2, SolidColorBrush colorBrush = null)
+        public BoundingBoxRenderer(Canvas canvas, int maxBoxes = 50, int lineThickness = 2)
         {
             m_rawRects = new List<Rect>();
             m_rectangles = new Rectangle[maxBoxes];
+            m_borders = new Border[maxBoxes];
             m_textBlocks = new TextBlock[maxBoxes];
-            if (colorBrush == null)
-            {
-                colorBrush = new SolidColorBrush(Colors.SpringGreen);
-            }
+            var foregroundColorBrush = new SolidColorBrush(Colors.SpringGreen);
+            var backgroundColorBrush = new SolidColorBrush(Colors.Black);
 
             m_canvas = canvas;
             for (int i = 0; i < maxBoxes; i++)
             {
-                // Create rectangles
+                // Default configuration.
                 m_rectangles[i] = new Rectangle();
-                // Default configuration
-                m_rectangles[i].Stroke = colorBrush;
+                m_rectangles[i].Stroke = foregroundColorBrush;
                 m_rectangles[i].StrokeThickness = lineThickness;
                 // Hide
                 m_rectangles[i].Visibility = Visibility.Collapsed;
                 // Add to canvas
                 m_canvas.Children.Add(m_rectangles[i]);
 
-                // Create textblocks
+                // Create Bordered Textblocks
+
+                // Default configuration for textblock
                 m_textBlocks[i] = new TextBlock();
-                // Default configuration
-                m_textBlocks[i].Foreground = colorBrush;
+                m_textBlocks[i].Foreground = foregroundColorBrush;
                 m_textBlocks[i].FontSize = 18;
                 // Hide
                 m_textBlocks[i].Visibility = Visibility.Collapsed;
+
+                // Default configuration for border
+                m_borders[i] = new Border();
+                m_borders[i].Background = backgroundColorBrush;
+                m_borders[i].Child = m_textBlocks[i];
+
                 // Add to canvas
-                m_canvas.Children.Add(m_textBlocks[i]);
+                m_canvas.Children.Add(m_borders[i]);
             }
         }
 
@@ -88,9 +95,9 @@ namespace ObjectDetectorSkillSample
                 m_rectangles[i].Visibility = Visibility.Visible;
 
                 // Render text label
-                m_textBlocks[i].Text = detections[i].Kind.ToString();
-                Canvas.SetLeft(m_textBlocks[i], detections[i].Rect.X * m_canvas.ActualWidth + 2);
-                Canvas.SetTop(m_textBlocks[i], detections[i].Rect.Y * m_canvas.ActualHeight + 2);
+                m_textBlocks[i].Text = $"{detections[i].Kind} : {detections[i].Confidence.ToString("0.000")}";
+                Canvas.SetLeft(m_borders[i], detections[i].Rect.X * m_canvas.ActualWidth + 2);
+                Canvas.SetTop(m_borders[i], detections[i].Rect.Y * m_canvas.ActualHeight + 2);
                 m_textBlocks[i].Visibility = Visibility.Visible;
             }
             // Hide all remaining boxes
@@ -121,8 +128,8 @@ namespace ObjectDetectorSkillSample
                 Canvas.SetTop(m_rectangles[i], m_rawRects[i].Y * m_canvas.Height);
 
                 // Update text label
-                Canvas.SetLeft(m_textBlocks[i], m_rawRects[i].X * m_canvas.Width + 2);
-                Canvas.SetTop(m_textBlocks[i], m_rawRects[i].Y * m_canvas.Height + 2);
+                Canvas.SetLeft(m_borders[i], m_rawRects[i].X * m_canvas.Width + 2);
+                Canvas.SetTop(m_borders[i], m_rawRects[i].Y * m_canvas.Height + 2);
             }
         }
     }

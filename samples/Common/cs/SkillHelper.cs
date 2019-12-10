@@ -36,11 +36,15 @@ namespace SkillHelper
         /// <returns></returns>
         public async Task InitializeSkillAsync(ISkillExecutionDevice device = null)
         {
-            if (Skill == null || device != null && Skill.Device != device)
+            if(device == null)
+            {
+                Skill = await Descriptor.CreateSkillAsync();
+            }
+            else if (device != null && Skill.Device != device)
             {
                 Skill = await Descriptor.CreateSkillAsync(device);
-                Binding = await Skill.CreateSkillBindingAsync();
             }
+            Binding = await Skill.CreateSkillBindingAsync();
         }
     }
 

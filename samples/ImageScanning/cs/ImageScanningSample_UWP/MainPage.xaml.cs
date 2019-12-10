@@ -327,6 +327,11 @@ namespace ImageScanningSample
             }
         }
 
+        /// <summary>
+        /// Triggered when a skill is selected from the skill tab at the top of the window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void UISkillTabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (UISkillTabs.SelectedIndex < 0)
