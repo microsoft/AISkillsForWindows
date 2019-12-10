@@ -30,13 +30,10 @@ namespace ObjectDetectorSkillSample
 
         // Vision Skills
         // Skill wrappers
-        private List<SkillWrapper> m_skillWrappers = new List<SkillWrapper>()
-        {
-            new SkillWrapper(new ObjectDetectorDescriptor())
-        };
-        private ObjectDetectorDescriptor m_descriptor = null;
+        private List<SkillWrapper> m_skillWrappers = new List<SkillWrapper>() { new SkillWrapper(new ObjectDetectorDescriptor()) };
+        //private ObjectDetectorDescriptor m_descriptor = null;
         private ObjectDetectorBinding m_binding = null;
-        private ObjectDetectorSkill m_skill = null;
+        //private ObjectDetectorSkill m_skill = null;
         private IReadOnlyList<ISkillExecutionDevice> m_availableExecutionDevices = null;
         private ISkillFeatureImageDescriptor m_inputImageFeatureDescriptor = null;
 
@@ -79,8 +76,7 @@ namespace ObjectDetectorSkillSample
             m_lock.Wait();
             {
                 NotifyUser("Initializing skill...");
-                m_descriptor = new ObjectDetectorDescriptor();
-                m_availableExecutionDevices = await m_descriptor.GetSupportedExecutionDevicesAsync();
+                m_availableExecutionDevices = m_skillWrappers[0].ExecutionDevices;
 
                 await InitializeObjectDetectorAsync();
                 await UpdateSkillUIAsync();
@@ -112,8 +108,8 @@ namespace ObjectDetectorSkillSample
                     // Set SelectedIndex to index of currently selected device
                     for (int i = 0; i < m_availableExecutionDevices.Count; i++)
                     {
-                        if (m_availableExecutionDevices[i].ExecutionDeviceKind == m_binding.Device.ExecutionDeviceKind
-                            && m_availableExecutionDevices[i].Name == m_binding.Device.Name)
+                        if (m_availableExecutionDevices[i].ExecutionDeviceKind == m_skillWrappers[0].Binding.Device.ExecutionDeviceKind
+                            && m_availableExecutionDevices[i].Name == m_skillWrappers[0].Binding.Device.Name)
                         {
                             UISkillExecutionDevices.SelectedIndex = i;
                             break;
@@ -122,7 +118,7 @@ namespace ObjectDetectorSkillSample
                 }
 
                 UISelectAllObjectKind.IsChecked = true;
-                UIConfidenceThresholdControl.Value = (m_binding["InputConfidenceThreshold"].FeatureValue as SkillFeatureTensorFloatValue).GetAsVectorView().First();
+                UIConfidenceThresholdControl.Value = (m_skillWrappers[0].Binding["InputConfidenceThreshold"].FeatureValue as SkillFeatureTensorFloatValue).GetAsVectorView().First();
             }
             else
             {
@@ -137,17 +133,9 @@ namespace ObjectDetectorSkillSample
         /// <returns></returns>
         private async Task InitializeObjectDetectorAsync(ISkillExecutionDevice device = null)
         {
-            if (device != null)
-            {
-                m_skill = await m_descriptor.CreateSkillAsync(device) as ObjectDetectorSkill;
-            }
-            else
-            {
-                m_skill = await m_descriptor.CreateSkillAsync() as ObjectDetectorSkill;
-            }
-            m_binding = await m_skill.CreateSkillBindingAsync() as ObjectDetectorBinding;
-
-            m_inputImageFeatureDescriptor = m_binding["InputImage"].Descriptor as SkillFeatureImageDescriptor;
+            await m_skillWrappers[0].InitializeSkillAsync(device);
+            m_binding = m_skillWrappers[0].Binding as ObjectDetectorBinding;
+            m_inputImageFeatureDescriptor = m_skillWrappers[0].Binding["InputImage"].Descriptor as SkillFeatureImageDescriptor;
         }
 
         /// <summary>
@@ -166,7 +154,7 @@ namespace ObjectDetectorSkillSample
             m_evalStopwatch.Restart();
 
             // Evaluate
-            await m_skill.EvaluateAsync(m_binding);
+            await m_skillWrappers[0].Skill.EvaluateAsync(m_binding);
 
             m_evalTime = (float)m_evalStopwatch.ElapsedTicks / Stopwatch.Frequency * 1000f;
             m_evalStopwatch.Stop();
@@ -273,10 +261,9 @@ namespace ObjectDetectorSkillSample
                     },
                     inputImageDescriptor);
 
-                // TODO: Workaround for a bug in ObjectDetectorBinding when binding consecutively VideoFrames with Direct3DSurface and SoftwareBitmap
-                m_binding = await m_skill.CreateSkillBindingAsync() as ObjectDetectorBinding;
-                await m_binding["InputObjectKindFilterList"].SetFeatureValueAsync(m_objectKindFilterList);
-                await m_binding["InputConfidenceThreshold"].SetFeatureValueAsync((float)UIConfidenceThresholdControl.Value);
+                // Set additional input features as exposed in the UI
+                await m_skillWrappers[0].Binding["InputObjectKindFilterList"].SetFeatureValueAsync(m_objectKindFilterList);
+                await m_skillWrappers[0].Binding["InputConfidenceThreshold"].SetFeatureValueAsync((float)UIConfidenceThresholdControl.Value);
             }
             m_lock.Release();
 
@@ -454,7 +441,7 @@ namespace ObjectDetectorSkillSample
             UIConfidenceThresholdValue.Text = ((float)UIConfidenceThresholdControl.Value).ToString();
             await m_lock.WaitAsync();
             {
-                await m_binding["InputConfidenceThreshold"].SetFeatureValueAsync((float)UIConfidenceThresholdControl.Value);
+                await m_skillWrappers[0].Binding["InputConfidenceThreshold"].SetFeatureValueAsync((float)UIConfidenceThresholdControl.Value);
             }
             m_lock.Release();
         }
@@ -469,7 +456,7 @@ namespace ObjectDetectorSkillSample
             {
                 // Reset the object kind filter list
                 m_objectKindFilterList = null;
-                await m_binding["InputObjectKindFilterList"].SetFeatureValueAsync(m_objectKindFilterList);
+                await m_skillWrappers[0].Binding["InputObjectKindFilterList"].SetFeatureValueAsync(m_objectKindFilterList);
 
                 if (UISelectAllObjectKind.IsChecked == true)
                 {
@@ -505,7 +492,7 @@ namespace ObjectDetectorSkillSample
                         m_objectKindFilterList[(int)item] = true;
                     }
                     // Set the object kind filter list
-                    await m_binding["InputObjectKindFilterList"].SetFeatureValueAsync(m_objectKindFilterList);
+                    await m_skillWrappers[0].Binding["InputObjectKindFilterList"].SetFeatureValueAsync(m_objectKindFilterList);
                 }
                 m_lock.Release();
             }
