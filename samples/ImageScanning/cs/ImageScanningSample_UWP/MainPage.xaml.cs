@@ -252,9 +252,8 @@ namespace ImageScanningSample
                 catch (Exception ex)
                 {
                     NotifyUser(ex.Message, NotifyType.ErrorMessage);
-
-                    m_bindingLock.Release();
                 }
+                m_bindingLock.Release();
 
                 // Enable UI
                 await Dispatcher.RunAsync(
@@ -308,7 +307,6 @@ namespace ImageScanningSample
                 m_bindingLock.Wait();
                 m_evaluationLock.Wait();
 
-
                 var device = m_skillWrappers.First().ExecutionDevices.First();
 
                 try
@@ -324,8 +322,8 @@ namespace ImageScanningSample
                     NotifyUser(ex.Message, NotifyType.ErrorMessage);
                 }
 
-                m_bindingLock.Release();
                 m_evaluationLock.Release();
+                m_bindingLock.Release();
             }
         }
 
