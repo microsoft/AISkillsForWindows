@@ -90,10 +90,10 @@ namespace ConceptTaggerSample
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
             // Refresh UI with skill information (name, description, etc.) feature descriptions, available execution devices
-            foreach (var information in SkillHelper.SkillHelperMethods.GetSkillInformationStrings(m_skillDescriptor.Information))
-            {
-                UISkillInformation.Children.Add(new HeaderedContentControl() { Header = information.Key, Content = information.Value });
-            }
+            //foreach (var information in SkillHelper.SkillHelperMethods.GetSkillInformationStrings(m_skillDescriptor.Information))
+            //{
+            //    UISkillInformation.Children.Add(new HeaderedContentControl() { Header = information.Key, Content = information.Value });
+            //}
 
             // Refresh UI with skill input feature descriptions
             foreach (var featureDesc in m_skillDescriptor.InputFeatureDescriptors)

@@ -114,6 +114,9 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\Common\cs\CommonResourceDictionary.xaml.cs">
+      <Link>CommonResourceDictionary.xaml.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\Common\cs\SkillHelper.cs">
       <Link>SkillHelper.cs</Link>
     </Compile>
@@ -184,6 +187,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="..\..\..\Common\cs\CommonResourceDictionary.xaml">
+      <Link>CommonResourceDictionary.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="CustomControls\ImageCleanerInteractiveControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

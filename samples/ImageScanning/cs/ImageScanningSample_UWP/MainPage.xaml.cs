@@ -252,9 +252,8 @@ namespace ImageScanningSample
                 catch (Exception ex)
                 {
                     NotifyUser(ex.Message, NotifyType.ErrorMessage);
-
-                    m_bindingLock.Release();
                 }
+                m_bindingLock.Release();
 
                 // Enable UI
                 await Dispatcher.RunAsync(
@@ -308,7 +307,6 @@ namespace ImageScanningSample
                 m_bindingLock.Wait();
                 m_evaluationLock.Wait();
 
-
                 var device = m_skillWrappers.First().ExecutionDevices.First();
 
                 try
@@ -324,11 +322,16 @@ namespace ImageScanningSample
                     NotifyUser(ex.Message, NotifyType.ErrorMessage);
                 }
 
-                m_bindingLock.Release();
                 m_evaluationLock.Release();
+                m_bindingLock.Release();
             }
         }
 
+        /// <summary>
+        /// Triggered when a skill is selected from the skill tab at the top of the window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void UISkillTabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (UISkillTabs.SelectedIndex < 0)
