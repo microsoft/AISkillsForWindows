@@ -1,0 +1,142 @@
+﻿<ResourceDictionary
+    x:Class="UIHelper.CommonResourceDictionary"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:SkillHelper="using:SkillHelper"
+    xmlns:collectionsGeneric="using:System.Collections.Generic"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls">
+
+    <DataTemplate x:Key="SkillFieldVerticalDisplayTemplate"
+                      x:DataType="collectionsGeneric:KeyValuePair">
+        <controls:HeaderedContentControl Header="{Binding Path=Key}" Content="{Binding Path=Value}" ToolTipService.ToolTip="{Binding Path=Value}" MaxWidth="300"/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="SkillFieldHorizontalDisplayTemplate"
+                      x:DataType="collectionsGeneric:KeyValuePair">
+        <controls:HeaderedContentControl Header="{Binding Path=Key}" Content="{Binding Path=Value}" ToolTipService.ToolTip="{Binding Path=Value}" Orientation="Horizontal"/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="SkillFeatureDescriptorDisplayTemplate"
+                      x:DataType="SkillHelper:SkillFeatureDescriptorWrappper">
+        <StackPanel>
+            <Border Background="Black" Margin="5,0,5,0">
+                <TextBlock Text="{x:Bind Descriptor.Name}" 
+                               FontSize="14" 
+                               FontWeight="Bold" 
+                               Foreground="White" 
+                               TextAlignment="Center"
+                               Margin="5,0,5,0"/>
+            </Border>
+            <ListView SelectionMode="None" 
+                          ItemTemplate="{StaticResource SkillFieldVerticalDisplayTemplate}" 
+                          ItemsSource="{x:Bind SkillHelper:SkillHelperMethods.GetSkillFeatureDescriptorStrings(Descriptor)}"/>
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="SkillExecutionDeviceDisplayTemplate"
+                      x:DataType="SkillHelper:SkillExecutionDeviceWrappper">
+        <ListView SelectionMode="None"
+                      ItemTemplate="{StaticResource SkillFieldHorizontalDisplayTemplate}" 
+                      ItemsSource="{x:Bind SkillHelper:SkillHelperMethods.GetSkillExecutionDeviceStrings(Device)}">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Background="Transparent" Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+        </ListView>
+    </DataTemplate>
+
+    <DataTemplate x:Key="SkillInformationDisplayTemplate"
+                      x:DataType="SkillHelper:SkillWrapper">
+
+        <!--Display skill information-->
+        <StackPanel>
+            <controls:Expander VerticalAlignment="Top"
+                                       Header="Skill Information"
+                                       HorizontalContentAlignment="Stretch"
+                                       Foreground="Black"
+                                       Background="#FF7F7F7F"
+                                       BorderBrush="Black"
+                                       ExpandDirection="Down"
+                                       IsExpanded="False"
+                                       Style="{StaticResource ResourceKey=UISubExpanderStyle}">
+
+                <ListView SelectionMode="None"
+                        ItemTemplate="{StaticResource SkillFieldVerticalDisplayTemplate}" 
+                        ItemsSource="{x:Bind SkillHelper:SkillHelperMethods.GetSkillInformationStrings(Descriptor.Information)}"/>
+
+            </controls:Expander>
+            <controls:Expander VerticalAlignment="Top"
+                                       Header="Skill input feature descriptions"
+                                       HorizontalContentAlignment="Stretch"
+                                       Foreground="Black"
+                                       Background="#FF7F7F7F"
+                                       BorderBrush="Black"
+                                       ExpandDirection="Down"
+                                       IsExpanded="False" 
+                                       Style="{StaticResource ResourceKey=UISubExpanderStyle}">
+
+                <GridView SelectionMode="None"
+                        ItemTemplate="{StaticResource SkillFeatureDescriptorDisplayTemplate}" 
+                        ItemsSource="{x:Bind SkillHelper:SkillHelperMethods.GetFeatureDescriptorWrappers(Descriptor.InputFeatureDescriptors)}">
+                    <GridView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <controls:WrapPanel/>
+                        </ItemsPanelTemplate>
+                    </GridView.ItemsPanel>
+                </GridView>
+
+            </controls:Expander>
+            <controls:Expander VerticalAlignment="Top"
+                                       Header="Skill output feature descriptions"
+                                       HorizontalContentAlignment="Stretch"
+                                       Foreground="Black"
+                                       Background="#FF7F7F7F"
+                                       BorderBrush="Black"
+                                       ExpandDirection="Down"
+                                       IsExpanded="False" 
+                                       Style="{StaticResource ResourceKey=UISubExpanderStyle}">
+
+                <controls:AdaptiveGridView SelectionMode="None"
+                        ItemTemplate="{StaticResource SkillFeatureDescriptorDisplayTemplate}" 
+                        ItemsSource="{x:Bind SkillHelper:SkillHelperMethods.GetFeatureDescriptorWrappers(Descriptor.OutputFeatureDescriptors)}"/>
+
+            </controls:Expander>
+
+        </StackPanel>
+
+    </DataTemplate>
+
+    <!--Setting a data template for displaying skill information-->
+    <Style TargetType="controls:HeaderedContentControl">
+        <Setter Property="HeaderTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Border Background="#7C000000" >
+                        <TextBlock Text="{Binding}" FontWeight="Bold" FontSize="12" Foreground="White"/>
+                    </Border>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Border Background="Transparent" >
+                        <TextBlock Text="{Binding}" FontSize="12" Foreground="Black"/>
+                    </Border>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Orientation" Value="Vertical"/>
+    </Style>
+    <Style TargetType="controls:Expander" x:Key="UISubExpanderStyle">
+        <Setter Property="HeaderTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}" FontSize="12"/>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

@@ -31,9 +31,6 @@ namespace ObjectDetectorSkillSample
         // Vision Skills
         // Skill wrappers
         private List<SkillWrapper> m_skillWrappers = new List<SkillWrapper>() { new SkillWrapper(new ObjectDetectorDescriptor()) };
-        //private ObjectDetectorDescriptor m_descriptor = null;
-        private ObjectDetectorBinding m_binding = null;
-        //private ObjectDetectorSkill m_skill = null;
         private IReadOnlyList<ISkillExecutionDevice> m_availableExecutionDevices = null;
         private ISkillFeatureImageDescriptor m_inputImageFeatureDescriptor = null;
 
@@ -134,7 +131,6 @@ namespace ObjectDetectorSkillSample
         private async Task InitializeObjectDetectorAsync(ISkillExecutionDevice device = null)
         {
             await m_skillWrappers[0].InitializeSkillAsync(device);
-            m_binding = m_skillWrappers[0].Binding as ObjectDetectorBinding;
             m_inputImageFeatureDescriptor = m_skillWrappers[0].Binding["InputImage"].Descriptor as SkillFeatureImageDescriptor;
         }
 
@@ -143,21 +139,25 @@ namespace ObjectDetectorSkillSample
         /// </summary>
         /// <param name="frame"></param>
         /// <returns></returns>
-        private async Task DetectObjectsAsync(VideoFrame frame)
+        private async Task<IReadOnlyList<ObjectDetectorResult>> DetectObjectsAsync(VideoFrame frame)
         {
             m_evalStopwatch.Restart();
 
+            var objDetectionBinding = m_skillWrappers[0].Binding as ObjectDetectorBinding;
+
             // Bind
-            await m_binding.SetInputImageAsync(frame);
+            await objDetectionBinding.SetInputImageAsync(frame);
 
             m_bindTime = (float)m_evalStopwatch.ElapsedTicks / Stopwatch.Frequency * 1000f;
             m_evalStopwatch.Restart();
 
             // Evaluate
-            await m_skillWrappers[0].Skill.EvaluateAsync(m_binding);
+            await m_skillWrappers[0].Skill.EvaluateAsync(objDetectionBinding);
 
             m_evalTime = (float)m_evalStopwatch.ElapsedTicks / Stopwatch.Frequency * 1000f;
             m_evalStopwatch.Stop();
+
+            return objDetectionBinding.DetectedObjects;
         }
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace ObjectDetectorSkillSample
         /// <param name="frame"></param>
         /// <param name="objectDetections"></param>
         /// <returns></returns>
-        private async Task DisplayFrameAndResultAsync(VideoFrame frame)
+        private async Task DisplayFrameAndResultAsync(VideoFrame frame, IReadOnlyList<ObjectDetectorResult> detectedObjects)
         {
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
             {
@@ -203,11 +203,8 @@ namespace ObjectDetectorSkillSample
                     }
                     await m_processedBitmapSource.SetBitmapAsync(targetSoftwareBitmap);
 
-                    // Retrieve and filter results if requested
-                    IReadOnlyList<ObjectDetectorResult> objectDetections = m_binding.DetectedObjects;
-
                     // Update displayed results
-                    m_bboxRenderer.Render(objectDetections);
+                    m_bboxRenderer.Render(detectedObjects);
 
                     // Update the displayed performance text
                     UIPerfTextBlock.Text = $"bind: {m_bindTime.ToString("F2")}ms, eval: {m_evalTime.ToString("F2")}ms";
@@ -260,6 +257,9 @@ namespace ObjectDetectorSkillSample
                         NotifyUser(message);
                     },
                     inputImageDescriptor);
+
+                // TODO: Workaround for a bug in ObjectDetectorBinding when binding consecutively VideoFrames with Direct3DSurface and SoftwareBitmap
+                await m_skillWrappers[0].InitializeSkillAsync(m_skillWrappers[0].Skill.Device);
 
                 // Set additional input features as exposed in the UI
                 await m_skillWrappers[0].Binding["InputObjectKindFilterList"].SetFeatureValueAsync(m_objectKindFilterList);
@@ -329,8 +329,9 @@ namespace ObjectDetectorSkillSample
                 {
                     try
                     {
-                        await DetectObjectsAsync(frame);
-                        await DisplayFrameAndResultAsync(frame);
+                        // Retrieve and filter results if requested
+                        IReadOnlyList<ObjectDetectorResult> detectedObjects = await DetectObjectsAsync(frame);
+                        await DisplayFrameAndResultAsync(frame, detectedObjects);
                     }
                     catch (Exception ex)
                     {
@@ -441,7 +442,8 @@ namespace ObjectDetectorSkillSample
             UIConfidenceThresholdValue.Text = ((float)UIConfidenceThresholdControl.Value).ToString();
             await m_lock.WaitAsync();
             {
-                await m_skillWrappers[0].Binding["InputConfidenceThreshold"].SetFeatureValueAsync((float)UIConfidenceThresholdControl.Value);
+                float valueToSet = (float)UIConfidenceThresholdControl.Value;
+                await m_skillWrappers[0].Binding["InputConfidenceThreshold"].SetFeatureValueAsync(valueToSet);
             }
             m_lock.Release();
         }
@@ -462,6 +464,7 @@ namespace ObjectDetectorSkillSample
                 {
                     UIObjectKindFilterExpander.IsEnabled = false;
                     UIObjectKindFilterExpander.IsExpanded = false;
+                    UIObjectKindFilterExpander.Visibility = Visibility.Collapsed;
                 }
                 else
                 {
@@ -470,6 +473,7 @@ namespace ObjectDetectorSkillSample
                     UIObjectKindFilters.ItemsSource = Enum.GetValues(typeof(ObjectKind)).Cast<ObjectKind>().Where(kind => kind != ObjectKind.Undefined);
                     UIObjectKindFilterExpander.IsEnabled = true;
                     UIObjectKindFilterExpander.IsExpanded = true;
+                    UIObjectKindFilterExpander.Visibility = Visibility.Visible;
                 }
             }
             m_lock.Release();

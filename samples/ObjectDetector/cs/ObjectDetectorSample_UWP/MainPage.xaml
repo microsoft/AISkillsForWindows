@@ -74,6 +74,7 @@
                                    ExpandDirection="Down"
                                    IsExpanded="False"
                                    IsEnabled="False"
+                                   Visibility="Collapsed"
                                    Style="{StaticResource ResourceKey=UISubExpanderStyle}">
 
                     <ListView Name="UIObjectKindFilters" 
