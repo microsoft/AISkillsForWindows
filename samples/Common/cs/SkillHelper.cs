@@ -40,7 +40,7 @@ namespace SkillHelper
             {
                 Skill = await Descriptor.CreateSkillAsync();
             }
-            else if (device != null && Skill.Device != device)
+            else if (device != null && (Skill == null || Skill.Device != device))
             {
                 Skill = await Descriptor.CreateSkillAsync(device);
             }
