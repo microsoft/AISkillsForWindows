@@ -45,12 +45,12 @@ For how to use the framework to author a Skill to be consumed, and creating an a
 ## For samples using skills published by [Intel on nuget.org](https://www.nuget.org/profiles/IntelAISkills) see the [Intel-AI GitHub](https://github.com/intel/Intel-AI-Skills) and [this link](https://software.intel.com/en-us/ai/on-pc/skills) for further details <a name="IntelSkills"></a>
 | Skill | Description |
 | :-- | :-- |
-| **[Background Blur](Applications/BackgroundBlur)** | Segments out individuals while blurring the background image to highlight the individuals in the foreground. |
-| **[Background Replacement](Applications/BackgroundReplacement)** | Segments out individuals while replacing the background with a user-selected image. |
-| **[Face Detection](Applications/FaceDetection)** | Detects face(s) and returns face bounding box(es) and other attributes, such as eyes, mouths, or nose tips. |
-| **[Intruder Detection](Applications/IntruderDetection)** | Detects intruder by checking to see if an additional face or person is present in the video frame. |
-| **[Person Detection](Applications/PersonDetection)** | Detects person(s) and returns person bounding box(es). |
-| **[Super Resolution](Applications/SuperResolution)** | Converts a low-resolution image or video frame (320 x 240) to a high-resolution image (1280 x 960). |
+| **[Background Blur](https://github.com/intel/Intel-AI-Skills/tree/master/Applications/BackgroundBlur)** | Segments out individuals while blurring the background image to highlight the individuals in the foreground. |
+| **[Background Replacement](https://github.com/intel/Intel-AI-Skills/tree/master/Applications/BackgroundReplacement)** | Segments out individuals while replacing the background with a user-selected image. |
+| **[Face Detection](https://github.com/intel/Intel-AI-Skills/tree/master/Applications/FaceDetection)** | Detects face(s) and returns face bounding box(es) and other attributes, such as eyes, mouths, or nose tips. |
+| **[Intruder Detection](https://github.com/intel/Intel-AI-Skills/tree/master/Applications/IntruderDetection)** | Detects intruder by checking to see if an additional face or person is present in the video frame. |
+| **[Person Detection](https://github.com/intel/Intel-AI-Skills/tree/master/Applications/PersonDetection)** | Detects person(s) and returns person bounding box(es). |
+| **[Super Resolution](https://github.com/intel/Intel-AI-Skills/tree/master/Applications/SuperResolution)** | Converts a low-resolution image or video frame (320 x 240) to a high-resolution image (1280 x 960). |
 | **[Super Resolution (WinML)](Applications/SuperResolutionWinML)** | Converts a low-resolution image or video frame (640 x 360) to a high-resolution image (1280 x 720). |
 
 -----
