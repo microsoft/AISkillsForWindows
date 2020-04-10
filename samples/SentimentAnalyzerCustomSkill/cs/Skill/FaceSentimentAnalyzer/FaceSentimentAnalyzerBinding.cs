@@ -2,7 +2,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using Microsoft.AI.Skills.SkillInterfacePreview;
+using Microsoft.AI.Skills.SkillInterface;
 using Windows.AI.MachineLearning;
 using System.Linq;
 using Windows.Foundation;

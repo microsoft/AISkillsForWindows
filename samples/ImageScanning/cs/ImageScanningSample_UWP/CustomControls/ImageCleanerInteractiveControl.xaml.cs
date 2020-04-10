@@ -82,7 +82,7 @@ namespace ImageScanningSample
 
         private void UIInputImageType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (UIInputImageType.SelectedIndex > 0)
+            if (UIInputImageType.SelectedIndex >= 0)
             {
                 if (ImageCleaningKindChanged != null)
                 {

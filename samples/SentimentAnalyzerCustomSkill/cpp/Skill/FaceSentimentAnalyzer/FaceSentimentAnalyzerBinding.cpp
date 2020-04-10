@@ -4,7 +4,7 @@
 #include "FaceSentimentAnalyzerBinding.h"
 #include "FaceSentimentAnalyzerConst.h"
 
-using namespace winrt::Microsoft::AI::Skills::SkillInterfacePreview;
+using namespace winrt::Microsoft::AI::Skills::SkillInterface;
 using namespace winrt::Windows::AI::MachineLearning;
 
 namespace winrt::Contoso::FaceSentimentAnalyzer::implementation

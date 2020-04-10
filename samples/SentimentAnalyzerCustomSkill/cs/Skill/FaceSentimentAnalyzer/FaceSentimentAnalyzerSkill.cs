@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Microsoft.AI.Skills.SkillInterfacePreview;
+using Microsoft.AI.Skills.SkillInterface;
 using Windows.AI.MachineLearning;
 using Windows.Foundation;
 using Windows.Foundation.Collections;

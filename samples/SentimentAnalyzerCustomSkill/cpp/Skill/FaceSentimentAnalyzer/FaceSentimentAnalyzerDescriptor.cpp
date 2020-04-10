@@ -5,7 +5,7 @@
 #include "FaceSentimentAnalyzerDescriptor.h"
 #include "FaceSentimentAnalyzerSkill.h"
 
-using namespace winrt::Microsoft::AI::Skills::SkillInterfacePreview;
+using namespace winrt::Microsoft::AI::Skills::SkillInterface;
 
 namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
 {
@@ -37,7 +37,6 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
                 true, // isRequired (since this is an input, it is required to be bound before the evaluation occurs)
                 -1, // width
                 -1, // height
-                -1, // maxDimension
                 Windows::Graphics::Imaging::BitmapPixelFormat::Nv12,
                 Windows::Graphics::Imaging::BitmapAlphaMode::Ignore)
         );
@@ -48,7 +47,7 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
                 SKILL_OUTPUTNAME_FACERECTANGLE,
                 L"a face bounding box in relative coordinates (left, top, right, bottom)",
                 false, // isRequired (since this is an output, it automatically get populated after the evaluation occurs)
-                single_threaded_vector<int64_t>({ 4 }).GetView(), // tensor shape
+                single_threaded_vector<int>({ 4 }).GetView(), // tensor shape
                 SkillElementKind::Float)
         );
 
@@ -58,7 +57,7 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
                 SKILL_OUTPUTNAME_FACESENTIMENTSCORES,
                 L"the prediction score for each class",
                 false, // isRequired (since this is an output, it automatically get populated after the evaluation occurs)
-                single_threaded_vector<int64_t>({ 1, 8 }).GetView(), // tensor shape
+                single_threaded_vector<int>({ 1, 8 }).GetView(), // tensor shape
                 SkillElementKind::Float)
         );
 
@@ -73,15 +72,30 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
     {
         m_devices = single_threaded_vector<ISkillExecutionDevice>();
         m_devices.Append(SkillExecutionDeviceCPU::Create());
-        auto devices = SkillExecutionDeviceDirectX::GetAvailableDirectXExecutionDevices();
-        for (auto iter : devices)
+        
+        auto dxDevices = SkillExecutionDeviceDXHelper::GetAvailableDXExecutionDevices();
+        for (auto iter : dxDevices)
         {
-            // Expose only D3D12 devices since WinML supports only those
-            if (iter.as<SkillExecutionDeviceDirectX>().MaxSupportedFeatureLevel() >= D3DFeatureLevelKind::D3D_FEATURE_LEVEL_12_0)
+            auto dxgiDevice = iter.try_as<SkillExecutionDeviceDirectX>();
+
+            // Expose only D3D12 devices with support for D3D11 feature level or above to leverage WinML
+            if (dxgiDevice
+                && (dxgiDevice.MaxSupportedFeatureLevel() >= D3DFeatureLevelKind::D3D_FEATURE_LEVEL_11_0)
+                && dxgiDevice.IsD3D12Supported())
             {
                 m_devices.Append(iter);
             }
+            else if (!dxgiDevice)
+            {
+                auto dxCoreDevice = iter.try_as<SkillExecutionDeviceDXCore>();
+                if (dxCoreDevice
+                    && (dxCoreDevice.MaxSupportedFeatureLevel() >= D3DFeatureLevelKind::D3D_FEATURE_LEVEL_1_0_CORE))
+                {
+                    m_devices.Append(iter);
+                }
+            }
         }
+
         co_await resume_background();
         return m_devices.GetView();
     }
@@ -91,24 +105,33 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
     //
     Windows::Foundation::IAsyncOperation<ISkill> FaceSentimentAnalyzerDescriptor::CreateSkillAsync()
     {
-        auto supportedDevices = GetSupportedExecutionDevicesAsync().get();
+        co_await resume_background();
+        auto supportedDevices = co_await GetSupportedExecutionDevicesAsync();
         ISkillExecutionDevice deviceToUse = supportedDevices.First().Current();
 
         // Either use the first device returned (CPU) or the highest performing GPU
-        int powerIndex = INT32_MAX;
+        int perfIndex = INT32_MAX;
         for (auto device : supportedDevices)
         {
             if (device.ExecutionDeviceKind() == SkillExecutionDeviceKind::Gpu)
             {
-                auto directXDevice = device.as<SkillExecutionDeviceDirectX>();
-                if (directXDevice.HighPerformanceIndex() < powerIndex)
+                auto dxgiDevice = device.try_as<SkillExecutionDeviceDirectX>();
+                if (dxgiDevice && (dxgiDevice.HighPerformanceIndex() < perfIndex))
                 {
                     deviceToUse = device;
-                    powerIndex = directXDevice.HighPerformanceIndex();
+                    perfIndex = dxgiDevice.HighPerformanceIndex();
+                }
+                else if (!dxgiDevice)
+                {
+                    auto dxcoreDevice = device.try_as<SkillExecutionDeviceDXCore>();
+                    deviceToUse = device;
+                    break; // for dxcore we do not have powerindex, so just select first GPU.
                 }
             }
         }
-        return CreateSkillAsync(deviceToUse);
+
+        auto result = CreateSkillAsync(deviceToUse).get();
+        return result;
     }
 
     //

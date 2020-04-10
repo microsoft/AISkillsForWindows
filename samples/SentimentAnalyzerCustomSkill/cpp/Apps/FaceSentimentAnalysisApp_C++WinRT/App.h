@@ -13,7 +13,7 @@
 #include <winrt/windows.media.capture.frames.h>
 #include <winrt/Windows.System.Threading.h>
 #include "winrt/Contoso.FaceSentimentAnalyzer.h"
-#include "winrt/Microsoft.AI.Skills.SkillInterfacePreview.h"
+#include "winrt/Microsoft.AI.Skills.SkillInterface.h"
 
 using namespace winrt;
 using namespace winrt::Windows::Foundation;
@@ -22,7 +22,7 @@ using namespace winrt::Windows::System::Threading;
 using namespace winrt::Windows::Media;
 using namespace winrt::Windows::Media::Capture;
 using namespace winrt::Windows::Media::Capture::Frames;
-using namespace Microsoft::AI::Skills::SkillInterfacePreview;
+using namespace Microsoft::AI::Skills::SkillInterface;
 using namespace Contoso::FaceSentimentAnalyzer;
 
 class App

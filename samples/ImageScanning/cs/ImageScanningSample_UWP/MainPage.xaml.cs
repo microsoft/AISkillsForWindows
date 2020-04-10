@@ -238,6 +238,9 @@ namespace ImageScanningSample
                     // Bind input image
                     await m_currentSkillWrapper.Binding["InputImage"].SetFeatureValueAsync(frame);
 
+                    // Record bind time for display
+                    m_currentSkillControl.BindTime = (float)m_perfWatch.ElapsedTicks / Stopwatch.Frequency * 1000f - baseTime;
+
                     // Display image
                     await UIResultPanel.Dispatcher.RunAsync(
                         CoreDispatcherPriority.Normal,
@@ -245,9 +248,6 @@ namespace ImageScanningSample
                         {
                             await m_currentSkillControl.UpdateSkillControlInputImageAsync(frame.SoftwareBitmap);
                         });
-
-                    // Record bind time for display
-                    m_currentSkillControl.BindTime = (float)m_perfWatch.ElapsedTicks / Stopwatch.Frequency * 1000f - baseTime;
                 }
                 catch (Exception ex)
                 {
@@ -315,6 +315,7 @@ namespace ImageScanningSample
                     await m_currentSkillWrapper.InitializeSkillAsync(device);
 
                     // Alow user to interact with the app
+                    UISkillTabs.IsEnabled = true;
                     UIButtonFilePick.IsEnabled = true;
                 }
                 catch (Exception ex)
@@ -344,6 +345,7 @@ namespace ImageScanningSample
 
             // Prevent premature user interaction
             UIButtonFilePick.IsEnabled = false;
+            UISkillTabs.IsEnabled = false;
             m_currentSkillWrapper = m_skillWrappers[UISkillTabs.SelectedIndex];
 
             // Refresh UI with available execution devices on the system supported by the skill

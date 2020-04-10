@@ -19,7 +19,7 @@ using Contoso.FaceSentimentAnalyzer;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI;
 using Windows.UI.Xaml.Shapes;
-using Microsoft.AI.Skills.SkillInterfacePreview;
+using Microsoft.AI.Skills.SkillInterface;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System.Threading;

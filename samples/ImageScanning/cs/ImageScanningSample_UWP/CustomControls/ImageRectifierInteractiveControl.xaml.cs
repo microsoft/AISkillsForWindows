@@ -114,7 +114,7 @@ namespace ImageScanningSample
 
         private void UIInterpolationType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (UIInterpolationType.SelectedIndex > 0)
+            if (UIInterpolationType.SelectedIndex >= 0)
             {
                 if (InterpolationTypeChanged != null)
                 {

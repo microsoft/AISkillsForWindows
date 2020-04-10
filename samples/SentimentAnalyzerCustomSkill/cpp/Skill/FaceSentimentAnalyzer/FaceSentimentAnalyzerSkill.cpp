@@ -8,7 +8,7 @@
 #include <ppltasks.h>
 #include <math.h>
 
-using namespace winrt::Microsoft::AI::Skills::SkillInterfacePreview;
+using namespace winrt::Microsoft::AI::Skills::SkillInterface;
 using namespace winrt::Windows::Media::FaceAnalysis;
 using namespace winrt::Windows::AI::MachineLearning;
 using namespace winrt::Windows::Graphics::Imaging;
@@ -118,7 +118,7 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
     //
     // Factory method for instantiating FaceSentimentAnalyzerBinding
     //
-    Windows::Foundation::IAsyncOperation<Microsoft::AI::Skills::SkillInterfacePreview::ISkillBinding> FaceSentimentAnalyzerSkill::CreateSkillBindingAsync()
+    Windows::Foundation::IAsyncOperation<Microsoft::AI::Skills::SkillInterface::ISkillBinding> FaceSentimentAnalyzerSkill::CreateSkillBindingAsync()
     {
         co_await resume_background();
         auto binding = make<FaceSentimentAnalyzerBinding>(m_skillDescriptor, m_device, m_winmlSession);
@@ -132,7 +132,7 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
     // 2) If a face was detected, proceeds with sentiment analysis of that portion fo the image using Windows ML then updating the score 
     // of each possible sentiment returned as result
     //
-    Windows::Foundation::IAsyncAction FaceSentimentAnalyzerSkill::EvaluateAsync(Microsoft::AI::Skills::SkillInterfacePreview::ISkillBinding const binding)
+    Windows::Foundation::IAsyncAction FaceSentimentAnalyzerSkill::EvaluateAsync(Microsoft::AI::Skills::SkillInterface::ISkillBinding const binding)
     {
         auto bindingObj = binding.try_as<FaceSentimentAnalyzerBinding>();
         if (bindingObj == nullptr)

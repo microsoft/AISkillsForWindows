@@ -9,19 +9,19 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
     struct FaceSentimentAnalyzerDescriptor : FaceSentimentAnalyzerDescriptorT<FaceSentimentAnalyzerDescriptor>
     {
         FaceSentimentAnalyzerDescriptor();
-        Microsoft::AI::Skills::SkillInterfacePreview::SkillInformation Information();
-        Windows::Foundation::Collections::IVectorView<Microsoft::AI::Skills::SkillInterfacePreview::ISkillFeatureDescriptor> InputFeatureDescriptors();
-        Windows::Foundation::Collections::IVectorView<Microsoft::AI::Skills::SkillInterfacePreview::ISkillFeatureDescriptor> OutputFeatureDescriptors();
-        Windows::Foundation::IAsyncOperation<Windows::Foundation::Collections::IVectorView<Microsoft::AI::Skills::SkillInterfacePreview::ISkillExecutionDevice>> GetSupportedExecutionDevicesAsync();
+        Microsoft::AI::Skills::SkillInterface::SkillInformation Information();
+        Windows::Foundation::Collections::IVectorView<Microsoft::AI::Skills::SkillInterface::ISkillFeatureDescriptor> InputFeatureDescriptors();
+        Windows::Foundation::Collections::IVectorView<Microsoft::AI::Skills::SkillInterface::ISkillFeatureDescriptor> OutputFeatureDescriptors();
+        Windows::Foundation::IAsyncOperation<Windows::Foundation::Collections::IVectorView<Microsoft::AI::Skills::SkillInterface::ISkillExecutionDevice>> GetSupportedExecutionDevicesAsync();
         Windows::Foundation::Collections::IMapView<hstring, hstring> Metadata();
-        Windows::Foundation::IAsyncOperation<Microsoft::AI::Skills::SkillInterfacePreview::ISkill> CreateSkillAsync();
-        Windows::Foundation::IAsyncOperation<Microsoft::AI::Skills::SkillInterfacePreview::ISkill> CreateSkillAsync(Microsoft::AI::Skills::SkillInterfacePreview::ISkillExecutionDevice const executionDevice);
+        Windows::Foundation::IAsyncOperation<Microsoft::AI::Skills::SkillInterface::ISkill> CreateSkillAsync();
+        Windows::Foundation::IAsyncOperation<Microsoft::AI::Skills::SkillInterface::ISkill> CreateSkillAsync(Microsoft::AI::Skills::SkillInterface::ISkillExecutionDevice const executionDevice);
 
     private:
-        Windows::Foundation::Collections::IVectorView<Microsoft::AI::Skills::SkillInterfacePreview::ISkillFeatureDescriptor> m_inputSkillDesc;
-        Windows::Foundation::Collections::IVectorView<Microsoft::AI::Skills::SkillInterfacePreview::ISkillFeatureDescriptor> m_outputSkillDesc;
-        Windows::Foundation::Collections::IVector<Microsoft::AI::Skills::SkillInterfacePreview::ISkillExecutionDevice> m_devices;
-        Microsoft::AI::Skills::SkillInterfacePreview::SkillInformation m_information = nullptr;
+        Windows::Foundation::Collections::IVectorView<Microsoft::AI::Skills::SkillInterface::ISkillFeatureDescriptor> m_inputSkillDesc;
+        Windows::Foundation::Collections::IVectorView<Microsoft::AI::Skills::SkillInterface::ISkillFeatureDescriptor> m_outputSkillDesc;
+        Windows::Foundation::Collections::IVector<Microsoft::AI::Skills::SkillInterface::ISkillExecutionDevice> m_devices;
+        Microsoft::AI::Skills::SkillInterface::SkillInformation m_information = nullptr;
     };
 }
 

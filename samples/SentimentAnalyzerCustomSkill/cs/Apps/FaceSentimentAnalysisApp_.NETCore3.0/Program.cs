@@ -1,11 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-using Microsoft.AI.Skills.SkillInterfacePreview;
 using System;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.Foundation;
 using Windows.Graphics.Imaging;
 using Windows.Media;
 using Windows.Media.Capture;

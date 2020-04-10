@@ -26,7 +26,7 @@ namespace Contoso.FaceSentimentAnalyzer
     /// </summary>
     [contract(Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerSkillAPI, 1)]
     [interface_name("Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerBinding", AE19D8FF-4E16-4FBD-8228-147A567D681D)]
-    runtimeclass FaceSentimentAnalyzerBinding : Microsoft.AI.Skills.SkillInterfacePreview.ISkillBinding
+    runtimeclass FaceSentimentAnalyzerBinding : Microsoft.AI.Skills.SkillInterface.ISkillBinding
     {
         /// <summary>
         /// Set the input image to be processed by the skill
