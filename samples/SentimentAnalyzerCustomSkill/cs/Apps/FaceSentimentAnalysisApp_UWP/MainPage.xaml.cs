@@ -23,6 +23,7 @@ using Microsoft.AI.Skills.SkillInterface;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System.Threading;
+using System.Diagnostics;
 
 namespace FaceSentimentAnalysisTestApp
 {
@@ -45,6 +46,8 @@ namespace FaceSentimentAnalysisTestApp
         private enum FrameSourceToggledType { None, ImageFile, Camera};
         private FrameSourceToggledType m_currentFrameSourceToggled = FrameSourceToggledType.None;
 
+        private Stopwatch m_perfStowatch = new Stopwatch();
+
         // Synchronization
         private SemaphoreSlim m_lock = new SemaphoreSlim(1);
 
@@ -64,7 +67,7 @@ namespace FaceSentimentAnalysisTestApp
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
             // Initialize helper class used to render the skill results on screen
-            m_faceSentimentRenderer = new FaceSentimentRenderer(UICanvasOverlay, UISentiment);
+            m_faceSentimentRenderer = new FaceSentimentRenderer(UICanvasOverlay);
 
             try
             {
@@ -325,9 +328,14 @@ namespace FaceSentimentAnalysisTestApp
         /// <returns></returns>
         private async Task RunSkillAsync(VideoFrame frame)
         {
+            m_perfStowatch.Restart();
             // Update input image and run the skill against it
             await m_binding.SetInputImageAsync(frame);
+            var bindTime = (float)m_perfStowatch.ElapsedTicks / Stopwatch.Frequency * 1000F;
+
             await m_skill.EvaluateAsync(m_binding);
+            var evalTime = (float)m_perfStowatch.ElapsedTicks / Stopwatch.Frequency * 1000F - bindTime;
+            m_perfStowatch.Stop();
 
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
@@ -340,14 +348,10 @@ namespace FaceSentimentAnalysisTestApp
                 }
                 else // Display the face rectangle and sentiment in the UI
                 {
-                    m_faceSentimentRenderer.Update(m_binding.FaceRectangle, m_binding.PredominantSentiment);
+                    var rawScores = (m_binding["FaceSentimentsScores"].FeatureValue as SkillFeatureTensorFloatValue).GetAsVectorView();
+                    m_faceSentimentRenderer.Update(m_binding.FaceBoundingBoxes, m_binding.PredominantSentiments, rawScores);
                     m_faceSentimentRenderer.IsVisible = true;
-                    var scores = (m_binding["FaceSentimentScores"].FeatureValue as SkillFeatureTensorFloatValue).GetAsVectorView();
-                    UISkillOutputDetails.Text = "";
-                    for (int i = 0; i < (int)SentimentType.contempt; i++)
-                    {
-                        UISkillOutputDetails.Text += $"{(SentimentType)i} : {scores[i]} {(i == (int)m_binding.PredominantSentiment ? " <<------" : "")} \n";
-                    }
+                    UISkillOutputDetails.Text = $"Bind: {bindTime.ToString("F2")}ms | Eval: {evalTime.ToString("F2")}";
                 }
             });
         }
@@ -399,8 +403,9 @@ namespace FaceSentimentAnalysisTestApp
     internal class FaceSentimentRenderer
     {
         private Canvas m_canvas;
-        private TextBlock m_sentimentControl;
-        private Rectangle m_rectangle = new Rectangle();
+        private List<TextBlock> m_sentimentControls = new List<TextBlock>();
+        private List<Rectangle> m_rectangles = new List<Rectangle>();
+        private List<ToolTip> m_controlToolTips = new List<ToolTip>();
         private Dictionary<SentimentType, string> m_emojis = new Dictionary<SentimentType, string>
         {
             { SentimentType.neutral, "😒" },
@@ -412,17 +417,15 @@ namespace FaceSentimentAnalysisTestApp
             { SentimentType.fear, "😱" },
             { SentimentType.contempt, "😤" }
         };
+        private IReadOnlyList<string> m_sentimentTypesStrings = Enum.GetNames(typeof(SentimentType));
 
         /// <summary>
         /// FaceSentimentRenderer constructor
         /// </summary>
         /// <param name="canvas"></param>
-        public FaceSentimentRenderer(Canvas canvas, TextBlock sentimentControl)
+        public FaceSentimentRenderer(Canvas canvas)
         {
             m_canvas = canvas;
-            m_sentimentControl = sentimentControl;
-            m_rectangle = new Rectangle() { Stroke = new SolidColorBrush(Colors.Red), StrokeThickness = 2 };
-            m_canvas.Children.Add(m_rectangle);
             IsVisible = false;
         }
 
@@ -438,30 +441,93 @@ namespace FaceSentimentAnalysisTestApp
             set
             {
                 m_canvas.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
-                m_sentimentControl.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
             }
         }
 
         /// <summary>
-        /// Update coordinates of face rectangle and predominant sentiment passsed as parameter
+        /// Update coordinates of face bounding boxes and predominant sentiments passsed as parameter
         /// </summary>
         /// <param name="coordinates"></param>
-        public void Update(IReadOnlyList<float> coordinates, SentimentType sentiment)
+        public void Update(IReadOnlyList<float> bounds, IReadOnlyList<SentimentType> sentiments, IReadOnlyList<float> sentimentScores)
         {
-            if (coordinates == null)
+            if (bounds == null || bounds.Count == 0)
             {
                 return;
             }
-            if (coordinates.Count != 4)
+            int sentimentTypeOffest = m_emojis.Count;
+            if (bounds.Count / 4 != sentiments.Count 
+                || sentimentScores.Count / sentimentTypeOffest != sentiments.Count)
             {
-                throw new Exception("you can only pass a set of 4 float coordinates (left, top, right, bottom) to this method");
+                throw new Exception("Must supply a matching count of bounds, sentiments and set of sentiment scores");
             }
-            m_rectangle.Width = (coordinates[2] - coordinates[0]) * m_canvas.Width;
-            m_rectangle.Height = (coordinates[3] - coordinates[1]) * m_canvas.Height;
-            Canvas.SetLeft(m_rectangle, coordinates[0] * m_canvas.Width);
-            Canvas.SetTop(m_rectangle, coordinates[1] * m_canvas.Height);
 
-            m_sentimentControl.Text = $"{m_emojis[sentiment]}";
+            // Make sure we have enough UI controls available to draw around each face
+            int missingCanvasRectangleCount = bounds.Count / 4 - m_rectangles.Count;
+            if (missingCanvasRectangleCount > 0)
+            {
+                AddNewFaceControls(missingCanvasRectangleCount);
+            }
+
+            // Update and make visible the controls for the set of face bounds and sentiments passed in
+            int i = 0;
+            for(; i < bounds.Count; i+=4)
+            {
+                int index = i / 4;
+                var sentiment = sentiments[i/4];
+
+                // Update face bounds
+                m_rectangles[index].Width = (bounds[i+2] - bounds[i]) * m_canvas.Width;
+                m_rectangles[index].Height = (bounds[i+3] - bounds[i+1]) * m_canvas.Height;
+                m_rectangles[index].Visibility = Visibility.Visible;
+                Canvas.SetLeft(m_rectangles[index], bounds[i] * m_canvas.Width);
+                Canvas.SetTop(m_rectangles[index], bounds[i+1] * m_canvas.Height);
+
+                // Update face sentiment emoji
+                m_sentimentControls[index].Text = $"{m_emojis[sentiment]}";
+                m_sentimentControls[index].Visibility = Visibility.Visible;
+                Canvas.SetLeft(m_sentimentControls[index], bounds[i] * m_canvas.Width);
+                Canvas.SetTop(m_sentimentControls[index], bounds[i+1] * m_canvas.Height);
+
+                // Update face sentiment scores tooltip
+                string rawScores = "";
+                for(int j = 0; j < sentimentTypeOffest; j++)
+                {
+                    if(j == (int)sentiment)
+                    {
+                        rawScores += "-->";
+                    }
+                    rawScores += $"{m_sentimentTypesStrings[j]} : {sentimentScores[sentimentTypeOffest * index + j]}\n";
+                }
+                m_controlToolTips[index].Content = rawScores;
+                ToolTipService.SetToolTip(m_sentimentControls[index], m_controlToolTips[index]);
+            }
+            i /= 4;
+            // hide remaining unused controls
+            for (; i < m_rectangles.Count; i++)
+            {
+                m_rectangles[i].Visibility = Visibility.Collapsed;
+                m_sentimentControls[i].Visibility = Visibility.Collapsed;
+            }
+        }
+
+        /// <summary>
+        /// Add new UI element to draw face bounds and sentiment to the canvas
+        /// </summary>
+        /// <param name="count"></param>
+        private void AddNewFaceControls(int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                var rectangle = new Rectangle() { Stroke = new SolidColorBrush(Colors.Red), StrokeThickness = 2 };
+                m_rectangles.Add(rectangle);
+                m_canvas.Children.Add(rectangle);
+
+                var sentimentControl = new TextBlock() { FontSize = 20 };
+                m_sentimentControls.Add(sentimentControl);
+                m_canvas.Children.Add(sentimentControl);
+
+                m_controlToolTips.Add(new ToolTip());
+            }
         }
     }
 }

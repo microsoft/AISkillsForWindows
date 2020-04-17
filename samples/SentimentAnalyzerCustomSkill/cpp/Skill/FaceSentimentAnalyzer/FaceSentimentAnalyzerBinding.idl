@@ -41,15 +41,15 @@ namespace Contoso.FaceSentimentAnalyzer
         Boolean IsFaceFound{ get; };
 
         /// <summary>
-        /// Return the sentiment with the highest score
+        /// Return the sentiment with the highest score for each face detected
         /// </summary>
         /// <returns></returns>
-        SentimentType PredominantSentiment{ get; };
+        IVectorView<SentimentType> PredominantSentiments{ get; };
 
         /// <summary>
         /// Return the face rectangle
         /// </summary>
         /// <returns></returns>
-        IVectorView<Single> FaceRectangle{ get; };
+        IVectorView<float> FaceBoundingBoxes{ get; };
     }
 }

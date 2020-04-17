@@ -43,8 +43,8 @@ namespace Contoso.FaceSentimentAnalyzer
                     FaceSentimentAnalyzerConst.SKILL_INPUTNAME_IMAGE,
                     "the input image onto which the sentiment analysis runs",
                     true, // isRequired (since this is an input, it is required to be bound before the evaluation occurs)
-                    -1, // width
-                    -1, // height
+                    -2, // width divisible by 2
+                    -2, // height divisible by 2
                     BitmapPixelFormat.Nv12,
                     BitmapAlphaMode.Ignore)
             );
@@ -53,20 +53,20 @@ namespace Contoso.FaceSentimentAnalyzer
             m_outputSkillDesc = new List<ISkillFeatureDescriptor>();
             m_outputSkillDesc.Add(
                 new SkillFeatureTensorDescriptor(
-                    FaceSentimentAnalyzerConst.SKILL_OUTPUTNAME_FACERECTANGLE,
-                    "a face bounding box in relative coordinates (left, top, right, bottom)",
+                    FaceSentimentAnalyzerConst.SKILL_OUTPUTNAME_FACEBOUNDINGBOXES,
+                    "a set of face bounding boxes in relative coordinates (left, top, right, bottom)",
                     false, // isRequired (since this is an output, it automatically get populated after the evaluation occurs)
-                    new List<int>() { 4 }, // tensor shape
+                    new List<int>() { -1, 4 }, // tensor shape
                     SkillElementKind.Float)
                 );
 
             // Describe second output feature
             m_outputSkillDesc.Add(
                 new SkillFeatureTensorDescriptor(
-                    FaceSentimentAnalyzerConst.SKILL_OUTPUTNAME_FACESENTIMENTSCORES,
-                    "the prediction score for each class",
+                    FaceSentimentAnalyzerConst.SKILL_OUTPUTNAME_FACESENTIMENTSSCORES,
+                    "a set of prediction scores for the supported sentiments of each face detected",
                     false, // isRequired (since this is an output, it automatically get populated after the evaluation occurs)
-                    new List<int>() { 1, 8 }, // tensor shape
+                    new List<int>() { -1, 8 }, // tensor shape
                     SkillElementKind.Float)
                 );
         }

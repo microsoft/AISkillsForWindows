@@ -19,9 +19,9 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
     {
         m_information = SkillInformation::Create(
             L"FaceSentimentAnalyzer", // Name
-            L"Finds a face in the image and infers its predominant sentiment from a set of 8 possible labels", // Description
+            L"Finds the faces in the image and infers their predominant sentiments from a set of 8 possible labels", // Description
             FaceSentimentAnalyzerId, // Id
-            { 0, 0, 0, 8 }, // Version
+            { 0, 0, 0, 9 }, // Version
             L"Contoso Developer", // Author
             L"Contoso Publishing" // Publisher
         );
@@ -35,8 +35,8 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
                 SKILL_INPUTNAME_IMAGE,
                 L"the input image onto which the sentiment analysis runs",
                 true, // isRequired (since this is an input, it is required to be bound before the evaluation occurs)
-                -1, // width
-                -1, // height
+                -2, // width divisible by 2
+                -2, // height divisble by 2
                 Windows::Graphics::Imaging::BitmapPixelFormat::Nv12,
                 Windows::Graphics::Imaging::BitmapAlphaMode::Ignore)
         );
@@ -44,20 +44,20 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
         // Describe first output feature
         outputSkillDesc.Append(
             SkillFeatureTensorDescriptor(
-                SKILL_OUTPUTNAME_FACERECTANGLE,
-                L"a face bounding box in relative coordinates (left, top, right, bottom)",
+                SKILL_OUTPUTNAME_FACEBOUNDINGBOXES,
+                L"a set of face bounding boxes in relative coordinates (left, top, right, bottom)",
                 false, // isRequired (since this is an output, it automatically get populated after the evaluation occurs)
-                single_threaded_vector<int>({ 4 }).GetView(), // tensor shape
+                single_threaded_vector<int>({ -1, 4 }).GetView(), // tensor shape divisible by 4
                 SkillElementKind::Float)
         );
 
         // Describe second output feature
         outputSkillDesc.Append(
             SkillFeatureTensorDescriptor(
-                SKILL_OUTPUTNAME_FACESENTIMENTSCORES,
-                L"the prediction score for each class",
+                SKILL_OUTPUTNAME_FACESENTIMENTSSCORES,
+                L"a set of prediction scores for the supported sentiments of each face detected",
                 false, // isRequired (since this is an output, it automatically get populated after the evaluation occurs)
-                single_threaded_vector<int>({ 1, 8 }).GetView(), // tensor shape
+                single_threaded_vector<int>({ -1, 8 }).GetView(), // tensor shape divisible by 8
                 SkillElementKind::Float)
         );
 

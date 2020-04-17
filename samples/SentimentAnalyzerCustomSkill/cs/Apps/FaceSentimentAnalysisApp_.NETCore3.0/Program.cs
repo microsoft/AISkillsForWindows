@@ -74,12 +74,12 @@ namespace FaceSentimentAnalysisConsole
                     // if no face found, hide the rectangle in the UI
                      outText = "No face found";
                 }
-                else // Display the  sentiment on the console
+                else // Display the sentiment on the console
                 {
-                    outText = "Your sentiment looks like: " + m_binding.PredominantSentiment.ToString();
+                    outText = "Your sentiment looks like: " + m_binding.PredominantSentiments[0].ToString();
 
                     var folder = await StorageFolder.GetFolderFromPathAsync(System.AppContext.BaseDirectory);
-                    var file = await folder.CreateFileAsync(m_binding.PredominantSentiment.ToString() + "Face.jpg", CreationCollisionOption.ReplaceExisting);
+                    var file = await folder.CreateFileAsync(m_binding.PredominantSentiments.ToString() + "Face.jpg", CreationCollisionOption.ReplaceExisting);
                     using (IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.ReadWrite))
                     {
                         BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);

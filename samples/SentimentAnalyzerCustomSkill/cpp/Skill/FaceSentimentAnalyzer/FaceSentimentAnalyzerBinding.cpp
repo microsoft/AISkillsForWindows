@@ -26,44 +26,44 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
     //
     bool FaceSentimentAnalyzerBinding::IsFaceFound()
     {
-        auto faceRect = m_bindingHelper.TryLookup(SKILL_OUTPUTNAME_FACERECTANGLE).FeatureValue().as<SkillFeatureTensorFloatValue>().GetAsVectorView();
-        if (faceRect != nullptr)
-        {
-            return !(faceRect.GetAt(0) == 0.0f &&
-                faceRect.GetAt(1) == 0.0f &&
-                faceRect.GetAt(2) == 0.0f &&
-                faceRect.GetAt(3) == 0.0f);
-        }
-        return false;
+        auto faceRect = m_bindingHelper.TryLookup(SKILL_OUTPUTNAME_FACEBOUNDINGBOXES).FeatureValue().as<SkillFeatureTensorFloatValue>().GetAsVectorView();
+        return faceRect.Size() > 0;
     }
 
     //
     // Returns the sentiment with the highest score
     //
-    FaceSentimentAnalyzer::SentimentType FaceSentimentAnalyzerBinding::PredominantSentiment()
+    Windows::Foundation::Collections::IVectorView<FaceSentimentAnalyzer::SentimentType> FaceSentimentAnalyzerBinding::PredominantSentiments()
     {
-        auto faceSentimentScores = m_bindingHelper.TryLookup(SKILL_OUTPUTNAME_FACESENTIMENTSCORES).FeatureValue().as<SkillFeatureTensorFloatValue>().GetAsVectorView();
-        SentimentType predominantSentiment = SentimentType::neutral;
-        if (faceSentimentScores != nullptr)
+        auto faceSentimentScores = m_bindingHelper.TryLookup(SKILL_OUTPUTNAME_FACESENTIMENTSSCORES).FeatureValue().as<SkillFeatureTensorFloatValue>().GetAsVectorView();
+        auto predominantSentiments = single_threaded_vector<SentimentType>();
+        for (uint32_t i = 0; i < faceSentimentScores.Size(); i += ((int)SentimentType::contempt + 1))
         {
             float maxScore = FLT_MIN;
-            for (uint32_t i = 0; i < faceSentimentScores.Size(); i++)
+            SentimentType predominantSentiment = SentimentType::neutral;
+            for (int j = 0; j < ((int)SentimentType::contempt + 1); j++)
             {
-                if (faceSentimentScores.GetAt(i) > maxScore)
+                float score = faceSentimentScores.GetAt(i + j);
+                if (score > maxScore)
                 {
-                    predominantSentiment = (SentimentType)i;
-                    maxScore = faceSentimentScores.GetAt(i);
+                    predominantSentiment = (SentimentType)j;
+                    if (score >= 0.5f) // since scores are softmax, there can't be 2 scores above 0.5, early break opportunity
+                    {
+                        break;
+                    }
+                    maxScore = score;
                 }
             }
+            predominantSentiments.Append(predominantSentiment);
         }
-        return predominantSentiment;
+        return predominantSentiments.GetView();
     }
 
     //
-    // Returns the face rectangle
+    // Returns the face boundingBoxes
     //
-    Windows::Foundation::Collections::IVectorView<float> FaceSentimentAnalyzerBinding::FaceRectangle()
+    Windows::Foundation::Collections::IVectorView<float> FaceSentimentAnalyzerBinding::FaceBoundingBoxes()
     {
-        return m_bindingHelper.TryLookup(SKILL_OUTPUTNAME_FACERECTANGLE).FeatureValue().as<SkillFeatureTensorFloatValue>().GetAsVectorView();
+        return m_bindingHelper.TryLookup(SKILL_OUTPUTNAME_FACEBOUNDINGBOXES).FeatureValue().as<SkillFeatureTensorFloatValue>().GetAsVectorView();
     }
 }

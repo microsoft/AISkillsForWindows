@@ -32,15 +32,15 @@
             Returns whether or not a face is found given the bound outputs
             </summary>
         </member>
-        <member name="P:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerBinding.PredominantSentiment">
+        <member name="P:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerBinding.PredominantSentiments">
             <summary>
-            Returns the sentiment with the highest score
+            Returns the sentiments with the highest score for each face detected
             </summary>
             <returns></returns>
         </member>
-        <member name="P:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerBinding.FaceRectangle">
+        <member name="P:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerBinding.FaceBoundingBoxes">
             <summary>
-            Returns the face rectangle
+            Returns the bounding box around each detected faces
             </summary>
             <returns></returns>
         </member>
@@ -152,11 +152,12 @@
             Return the execution device with which this skill was initialized
             </summary>
         </member>
-        <member name="M:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerSkill.SoftMax(System.Collections.Generic.IReadOnlyList{System.Single})">
+        <member name="M:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerSkill.AppendSoftMaxedInputs(System.Collections.Generic.IReadOnlyList{System.Single},System.Collections.Generic.List{System.Single}@)">
             <summary>
-            Calculates SoftMax normalization over a set of data
+            Calculates SoftMax normalization over a set of data and append them to the output
             </summary>
             <param name="inputs"></param>
+            <param name="outputs"></param>
             <returns></returns>
         </member>
         <member name="M:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerSkill.GetWinMLDevice(Microsoft.AI.Skills.SkillInterface.ISkillExecutionDevice)">

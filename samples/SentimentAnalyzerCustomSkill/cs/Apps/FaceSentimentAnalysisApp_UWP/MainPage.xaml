@@ -93,15 +93,9 @@ Copyright (C) Microsoft Corporation. All rights reserved.
                 
                 <Canvas Name="UICanvasOverlay" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.ZIndex="0"/>
 
-                <TextBlock Name="UISentiment"
-                           Text="---"
-                           VerticalAlignment="Top" 
-                           HorizontalAlignment="Center" 
-                           FontSize="36"
-                           TextAlignment="Center"/>
             </Grid>
 
-            <TextBox Name="UISkillOutputDetails" Text="Skill output var description" IsReadOnly="True" AcceptsReturn="True"/>
+            <TextBox Name="UISkillOutputDetails" Text="" IsReadOnly="True" AcceptsReturn="True"/>
         </StackPanel>
     </ScrollViewer>
 </Page>

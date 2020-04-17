@@ -4,6 +4,7 @@
 
 #include "FaceSentimentAnalyzerBinding.g.h"
 #include "FaceSentimentAnalyzerSkill.h"
+#include "winrt/Windows.Graphics.Imaging.h"
 
 namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
 {
@@ -20,8 +21,8 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
         }
 
         bool IsFaceFound();
-        Contoso::FaceSentimentAnalyzer::SentimentType PredominantSentiment();
-        Windows::Foundation::Collections::IVectorView<float> FaceRectangle();
+        Windows::Foundation::Collections::IVectorView<Contoso::FaceSentimentAnalyzer::SentimentType> PredominantSentiments();
+        Windows::Foundation::Collections::IVectorView<float> FaceBoundingBoxes();
 
         // interface implementation via the VisionSkillBindingHelper member instance
 #pragma region InterfaceImpl

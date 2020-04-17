@@ -38,24 +38,25 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
     }
 
     //
-    // Calculates SoftMax normalization over a set of data
+    // Calculates SoftMax normalization over a set of input data and append them to the output
     //
-    Windows::Foundation::Collections::IVector<float> SoftMax(Windows::Foundation::Collections::IVectorView<float> inputs)
+    void AppendSoftMaxedInputs(
+        Windows::Foundation::Collections::IVectorView<float> inputs,
+        Windows::Foundation::Collections::IVector<float>& outputs)
     {
-        Windows::Foundation::Collections::IVector<float> inputsExp = single_threaded_vector<float>();
         float inputsExpSum = 0;
+        int offset = outputs.Size();
         for (uint32_t i = 0; i < inputs.Size(); i++)
         {
             auto input = inputs.GetAt(i);
-            inputsExp.Append((float)exp(input));
-            inputsExpSum += inputsExp.GetAt(i);
+            outputs.Append((float)exp(input));
+            inputsExpSum += outputs.GetAt(offset + i);
         }
         inputsExpSum = inputsExpSum == 0 ? 1 : inputsExpSum;
         for (uint32_t i = 0; i < inputs.Size(); i++)
         {
-            inputsExp.SetAt(i, inputsExp.GetAt(i) / inputsExpSum);
+            outputs.SetAt(offset + i, outputs.GetAt(offset + i) / inputsExpSum);
         }
-        return inputsExp;
     }
 
     // helper function to determine if the skill is being called from a UWP app container or not.
@@ -157,59 +158,60 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
         }
 
         // Run face detection and retrieve face detection result
-        auto faceDetectionResult = m_faceDetector.DetectFacesAsync(softwareBitmapInput).get();
+        auto faceDetectionResults = m_faceDetector.DetectFacesAsync(softwareBitmapInput).get();
 
         // Retrieve face rectangle feature from the binding object
-        auto faceRectangleFeature = binding.Lookup(SKILL_OUTPUTNAME_FACERECTANGLE);
+        auto faceBoundingBoxesFeature = binding.Lookup(SKILL_OUTPUTNAME_FACEBOUNDINGBOXES);
+        auto faceBoundingBoxes = single_threaded_vector<float>();
 
         // Retrieve face sentiment scores feature from the binding object
-        auto faceSentimentScores = binding.Lookup(SKILL_OUTPUTNAME_FACESENTIMENTSCORES);
+        auto faceSentimentsScoresFeature = binding.Lookup(SKILL_OUTPUTNAME_FACESENTIMENTSSCORES);
+        auto faceSentimentsScores = single_threaded_vector<float>();
 
         // If a face is found, update face rectangle feature
-        if (faceDetectionResult.Size() > 0)
+        if (faceDetectionResults.Size() > 0)
         {
-            // Retrieve the face bound and enlarge it by a factor of 1.5x while also ensuring clamping to frame dimensions
-            BitmapBounds faceBound = faceDetectionResult.GetAt(0).FaceBox();
-            auto additionalOffset = faceBound.Width / 2;
-            faceBound.X = max(0, faceBound.X - additionalOffset);
-            faceBound.Y = max(0, faceBound.Y - additionalOffset);
-            faceBound.Width = (uint32_t)min(faceBound.Width + 2 * additionalOffset, softwareBitmapInput.PixelWidth() - faceBound.X);
-            faceBound.Height = (uint32_t)min(faceBound.Height + 2 * additionalOffset, softwareBitmapInput.PixelHeight() - faceBound.Y);
+            for (auto&& faceDetectionResult : faceDetectionResults)
+            {
+                BitmapBounds faceBounds = faceDetectionResult.FaceBox();
 
-            // Set the face rectangle SkillFeatureValue in the skill binding object
-            // note that values are in normalized coordinates between [0, 1] for ease of use
-            faceRectangleFeature.SetFeatureValueAsync(
-                single_threaded_vector<float>(
-                {
-                    (float)faceBound.X / softwareBitmapInput.PixelWidth(), // left
-                    (float)faceBound.Y / softwareBitmapInput.PixelHeight(), // top
-                    (float)(faceBound.X + faceBound.Width) / softwareBitmapInput.PixelWidth(), // right
-                    (float)(faceBound.Y + faceBound.Height) / softwareBitmapInput.PixelHeight() // bottom
-                }
-            )).get();
+                // Retrieve the face bound and enlarge it by a factor of 1.5x to be sure to cover the whole facial area, while also ensuring clamping to frame dimensions
+                auto additionalOffset = faceBounds.Width / 2;
+                faceBounds.X = max(0, faceBounds.X - additionalOffset);
+                faceBounds.Y = max(0, faceBounds.Y - additionalOffset);
+                faceBounds.Width = (uint32_t)min(faceBounds.Width + 2 * additionalOffset, softwareBitmapInput.PixelWidth() - faceBounds.X);
+                faceBounds.Height = (uint32_t)min(faceBounds.Height + 2 * additionalOffset, softwareBitmapInput.PixelHeight() - faceBounds.Y);
 
-            // Bind the WinML input frame with the adequate face bounds specified as metadata
-            auto propSet = Windows::Foundation::Collections::PropertySet();
-            propSet.Insert(L"BitmapBounds", 
-                Windows::Foundation::PropertyValue::CreateUInt32Array({ faceBound.X, faceBound.Y, faceBound.Width, faceBound.Height }));
-            bindingObj->m_winmlBinding.Bind(
-                WINML_MODEL_INPUTNAME, // WinML feature name
-                inputFrame, // VideoFrame
-                propSet);
+                // Add the face bounding box
+                // note that values are in normalized coordinates between [0, 1] for ease of use
+                faceBoundingBoxes.Append((float)faceBounds.X / softwareBitmapInput.PixelWidth()); // left
+                faceBoundingBoxes.Append((float)faceBounds.Y / softwareBitmapInput.PixelHeight()); // top
+                faceBoundingBoxes.Append((float)(faceBounds.X + faceBounds.Width) / softwareBitmapInput.PixelWidth());// right
+                faceBoundingBoxes.Append((float)(faceBounds.Y + faceBounds.Height) / softwareBitmapInput.PixelHeight()); // bottom
 
-            // Run WinML evaluation
-            auto winMLEvaluationResult = m_winmlSession.EvaluateAsync(bindingObj->m_winmlBinding, L"").get();
-            auto winMLModelResult = winMLEvaluationResult.Outputs().Lookup(WINML_MODEL_OUTPUTNAME).as<TensorFloat>().GetAsVectorView();
-            auto predictionScores = SoftMax(winMLModelResult);
+                // Bind the WinML input frame with the adequate face bounds specified as metadata
+                auto propSet = Windows::Foundation::Collections::PropertySet();
+                propSet.Insert(L"BitmapBounds",
+                    Windows::Foundation::PropertyValue::CreateUInt32Array({ faceBounds.X, faceBounds.Y, faceBounds.Width, faceBounds.Height }));
+                bindingObj->m_winmlBinding.Bind(
+                    WINML_MODEL_INPUTNAME, // WinML feature name
+                    inputFrame, // VideoFrame
+                    propSet);
 
-            // Set the SkillFeatureValue in the skill binding object related to the face sentiment scores for each possible SentimentType
-            // note that we SoftMax the output of WinML to give a score normalized between [0, 1] for ease of use
-            faceSentimentScores.SetFeatureValueAsync(predictionScores).get();
+                // Run WinML evaluation
+                auto winMLEvaluationResult = m_winmlSession.EvaluateAsync(bindingObj->m_winmlBinding, L"").get();
+                auto winMLModelResult = winMLEvaluationResult.Outputs().Lookup(WINML_MODEL_OUTPUTNAME).as<TensorFloat>().GetAsVectorView();
+
+                AppendSoftMaxedInputs(winMLModelResult, faceSentimentsScores);
+            }
         }
-        else // if no face found, reset output SkillFeatureValues with 0s
-        {
-            faceRectangleFeature.SetFeatureValueAsync(ZeroFaceRectangleCoordinates).get();
-            faceSentimentScores.SetFeatureValueAsync(ZeroFaceSentimentScores).get();
-        }
+
+        // Set the face bounding boxes SkillFeatureValue in the skill binding object
+        // note that values are in normalized coordinates between [0, 1] for ease of use
+        faceBoundingBoxesFeature.SetFeatureValueAsync(faceBoundingBoxes).get();
+
+        // Set the SkillFeatureValue in the skill binding object related to the face sentiment scores for each possible SentimentType
+        // note that we SoftMax the output of WinML to give a score normalized between [0, 1] for ease of use
+        faceSentimentsScoresFeature.SetFeatureValueAsync(faceSentimentsScores).get();
     }
 }
