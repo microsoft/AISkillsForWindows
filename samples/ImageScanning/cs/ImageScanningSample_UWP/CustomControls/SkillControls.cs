@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 
-using Microsoft.AI.Skills.SkillInterfacePreview;
-using Microsoft.AI.Skills.Vision.ImageScanningPreview;
+using Microsoft.AI.Skills.SkillInterface;
+using Microsoft.AI.Skills.Vision.ImageScanning;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System;

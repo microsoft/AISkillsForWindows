@@ -3,7 +3,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AI.Skills.Vision.ObjectDetectorPreview;
+using Microsoft.AI.Skills.Vision.ObjectDetector;
 using System.Diagnostics;
 using CameraHelper_NetCore3;
 

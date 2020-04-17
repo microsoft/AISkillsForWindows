@@ -1,7 +1,7 @@
 ﻿// Copyright (C) Microsoft Corporation. All rights reserved.
 
-using Microsoft.AI.Skills.SkillInterfacePreview;
-using Microsoft.AI.Skills.Vision.SkeletalDetectorPreview;
+using Microsoft.AI.Skills.SkillInterface;
+using Microsoft.AI.Skills.Vision.SkeletalDetector;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using System;
 using System.Collections.Generic;

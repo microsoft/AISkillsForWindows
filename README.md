@@ -2,39 +2,43 @@
 
 ## Summary
 
-Implementing and integrating efficient AI and Computer Vision (CV) solutions is a hard task for developers. The industry is moving at a fast pace and the amount of custom-tailored solutions coming out make it almost impossible for app developers to keep up easily. This proposed framework is meant to standardize the way AI and CV is put to use within a Windows application (i.e.: UWP, Desktop Win32, .Net Core 3.0) running on the edge. It aims to abstract away the complexity of AI and CV techniques by simply defining the concept of *skills* which are modular pieces of code that process input and produce output. The implementation that contains the complex details is encapsulated by an extensible WinRT API that inherits the base class present in this namespace, which leverages built-in Windows primitives which in-turn eases interop with built-in acceleration frameworks or external 3rd party ones.
+Implementing and integrating efficient AI and Computer Vision (CV) solutions is a hard task for developers. The industry is moving at a fast pace and the amount of custom-tailored solutions coming out makes it almost impossible for app developers to keep up easily. This proposed framework is meant to standardize the way AI and CV is put to use within a Windows application (i.e.: UWP, Desktop Win32, .Net Core 3.0+) running on the edge. It aims to abstract away the complexity of AI techniques by simply defining the concept of *skills* which are modular pieces of code that process input(s) and produce output(s). The implementation that contains the complex details is encapsulated by extended WinRT API that inherits the base class present in the Microsoft.AI.Skills.SkillInterface namespace, which leverages built-in Windows primitives which in-turn eases interop with built-in acceleration frameworks or external 3rd party ones.
 
 While this release focuses on vision-oriented scenarios and primitives, this API is meant to accommodate any kind of input and output variable and a wide range of scenarios (Vision, Audio, Text, etc.). Any developer can extend this API set and expose their own AI skills. [See skills released by Intel](#IntelSkills)
 
 ## Creating a skill of your own
 
-For how to use the framework to author a new Skill of your own exposing your AI solution to other app developers, and creating an actual app to consume this new skill, see the [SentimentAnalyzerCustomSkill](samples/SentimentAnalyzerCustomSkill) Sample. 
+For how to use the AI Skills interface to author a new AI Skill of your own exposing your AI solution to other Windows app developers, and creating an actual app to consume this crafted skill, see this sample:
+### **[Sentiment Analyzer Sample Skill](samples/SentimentAnalyzerSampleSkill)**
 
-## Samples for AI skills [published by Microsoft on nuget.org](https://www.nuget.org/profiles/VisionSkills)
-
-### **[ObjectDetector](samples/ObjectDetector)**
-
-| ![ObjectDetector logo](./doc/ObjectDetectorLogo.png) | detecting and classifying objects in images |
+| ![Logo](./doc/FaceSentimentAnalyzerLogo.png) | Walking through the steps to create, in C++ or in C#, a sample AI Skill that leverages WinML and MediaFoundation as well as how to consume it in a Win32 Dektop, .Net Core 3.0 o UWP app|
 | -- | -- |
 
-### **[ObjectTracker](samples/ObjectTracker)**
+## Code samples for using AI skills [published by Microsoft on nuget.org](https://www.nuget.org/profiles/VisionSkills)
 
-| ![ObjectTracker logo](./doc/ObjectTrackerLogo.png) | tracking objects in videos |
+### **[Object Detector](samples/ObjectDetector)**
+
+| ![ObjectDetector logo](./doc/ObjectDetectorLogo.png) | Detecting and classifying objects in images |
 | -- | -- |
 
-### **[SkeletalDetector](samples/SkeletalDetector)**
+### **[Object Tracker](samples/ObjectTracker)**
 
-| ![SkeletalDetector logo](./doc/SkeletalDetectorLogo.png) | estimating poses of people in images |
+| ![ObjectTracker logo](./doc/ObjectTrackerLogo.png) | Tracking objects in videos |
 | -- | -- |
 
-### **[ConceptTagger](samples/ConceptTagger)**
+### **[Skeletal Detector](samples/SkeletalDetector)**
 
-| ![ConceptTagger logo](./doc/ConceptTaggerLogo.png) | obtaining classification scores of concepts in images |
+| ![SkeletalDetector logo](./doc/SkeletalDetectorLogo.png) | Estimating poses of people in images |
+| -- | -- |
+
+### **[Concept Tagger](samples/ConceptTagger)**
+
+| ![ConceptTagger logo](./doc/ConceptTaggerLogo.png) | Obtaining classification scores of concepts in images |
 | -- | -- |
 
 ### **[ImageScanning](samples/ImageScanning)**
 
-| ![ImageScanning logo](./doc/ImageScanningLogo.png) | a set of AI skills to achieve content scanning scenarios such as the ones featured in *OfficeLens* |
+| ![ImageScanning logo](./doc/ImageScanningLogo.png) | A set of AI skills to achieve content scanning scenarios such as the ones featured in *OfficeLens* |
 | -- | -- |
 | **[CurvedEdgesDetector](./samples/ImageScanning/README.md#CurvedEdgesDetectorExample)** | Seeks within an image the pixels that constitute the curved edges composing the contour of a given quad and returns their coordinates. |
 | **[ImageCleaner](./samples/ImageScanning/README.md#ImageCleanerExample)** | Cleans and enhances an image given a specified preset. |

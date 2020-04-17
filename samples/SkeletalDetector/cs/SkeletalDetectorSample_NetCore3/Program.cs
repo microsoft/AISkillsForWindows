@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Windows.Media;
 using Windows.Media.Capture;
 using Windows.Media.Capture.Frames;
-using Microsoft.AI.Skills.Vision.SkeletalDetectorPreview;
+using Microsoft.AI.Skills.Vision.SkeletalDetector;
 using System.Diagnostics;
 using Windows.Media.MediaProperties;
 using CameraHelper_NetCore3;

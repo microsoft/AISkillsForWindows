@@ -12,8 +12,8 @@
 #include <winrt/Windows.Graphics.Imaging.h>
 
 #include "WindowsVersionHelper.h"
-#include "winrt/Microsoft.AI.Skills.SkillInterfacePreview.h"
-#include "winrt/Microsoft.AI.Skills.Vision.ImageScanningPreview.h"
+#include "winrt/Microsoft.AI.Skills.SkillInterface.h"
+#include "winrt/Microsoft.AI.Skills.Vision.ImageScanning.h"
 
 using namespace winrt;
 using namespace winrt::Windows::Foundation;
@@ -24,8 +24,8 @@ using namespace winrt::Windows::Storage;
 using namespace winrt::Windows::Storage::Streams;
 using namespace winrt::Windows::Graphics::Imaging;
 
-using namespace Microsoft::AI::Skills::SkillInterfacePreview;
-using namespace Microsoft::AI::Skills::Vision::ImageScanningPreview;
+using namespace Microsoft::AI::Skills::SkillInterface;
+using namespace Microsoft::AI::Skills::Vision::ImageScanning;
 
 // enum to string lookup table for SkillExecutionDeviceKind
 static const std::map<SkillExecutionDeviceKind, std::string> SkillExecutionDeviceKindLookup = {

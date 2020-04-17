@@ -10,8 +10,8 @@
 
 #include "CameraHelper_cppwinrt.h"
 #include "WindowsVersionHelper.h"
-#include "winrt/Microsoft.AI.Skills.SkillInterfacePreview.h"
-#include "winrt/Microsoft.AI.Skills.Vision.ObjectDetectorPreview.h"
+#include "winrt/Microsoft.AI.Skills.SkillInterface.h"
+#include "winrt/Microsoft.AI.Skills.Vision.ObjectDetector.h"
 
 using namespace winrt;
 using namespace winrt::Windows::Foundation;
@@ -19,8 +19,8 @@ using namespace winrt::Windows::Foundation::Collections;
 using namespace winrt::Windows::System::Threading;
 using namespace winrt::Windows::Media;
 
-using namespace Microsoft::AI::Skills::SkillInterfacePreview;
-using namespace Microsoft::AI::Skills::Vision::ObjectDetectorPreview;
+using namespace Microsoft::AI::Skills::SkillInterface;
+using namespace Microsoft::AI::Skills::Vision::ObjectDetector;
 
 // enum to string lookup table for ObjectKind
 static const std::map<ObjectKind, std::string> ObjectKindLookup = {

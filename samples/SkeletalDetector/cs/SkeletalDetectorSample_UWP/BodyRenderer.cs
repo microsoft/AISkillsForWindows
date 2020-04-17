@@ -1,6 +1,6 @@
 ﻿// Copyright (C) Microsoft Corporation. All rights reserved.
 
-using Microsoft.AI.Skills.Vision.SkeletalDetectorPreview;
+using Microsoft.AI.Skills.Vision.SkeletalDetector;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.UI;

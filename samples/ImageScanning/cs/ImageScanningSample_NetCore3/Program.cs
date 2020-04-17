@@ -3,7 +3,7 @@
 using System;
 using System.Threading.Tasks;
 using Windows.Media;
-using Microsoft.AI.Skills.Vision.ImageScanningPreview;
+using Microsoft.AI.Skills.Vision.ImageScanning;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
