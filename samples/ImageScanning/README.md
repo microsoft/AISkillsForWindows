@@ -1,6 +1,6 @@
-# Image Scanning Windows Vision Skills samples
+# Image Scanning AI Skills for Windows samples
 
-These samples will show you how to use the set of skills contained in the Image Scanning Windows Vision Skill NuGet package to create apps that can achieve productivity scenarios related to scanning content. 
+These samples will show you how to use the set of skills contained in the Image Scanning AI Skills for Windows NuGet package to create apps that can achieve productivity scenarios related to scanning content. 
 - [C# UWP sample app](./cs/ImageScanningSample_UWP)
 - [Win32 C++/Winrt Desktop console app](./cpp/ImageScanningSample_Desktop)
 - [.Net Core 3.0 C# console app](./cs/ImageScanningSample_NetCore3)
@@ -56,13 +56,13 @@ While the [UWP sample](./cs/ImageScanningSample_UWP) showcases each skill indivi
 
 ## Build samples
 - Refer to the [sample guidelines](../README.md)
-- Make sure the Microsoft.AI.Skills.Vision.ImageScanningPreview and Microsoft.AI.Skills.SkillInterfacePreview NuGet packages are installed on your app projects
+- Make sure the Microsoft.AI.Skills.Vision.ImageScanning and Microsoft.AI.Skills.SkillInterface NuGet packages are installed on your app projects
 
 ## Related topics
 
-- [Microsoft.AI.Skills.SkillInterfacePreview API document](../../doc/Microsoft.AI.Skills.SkillInterfacePreview.md)
-- [Microsoft.AI.Skills.Vision.ImageScanningPreview API document](../../doc/Microsoft.AI.Skills.Vision.ImageScanningPreview.md)
-- [Creating a custom Windows Vision Skill](../SentimentAnalyzerCustomSkill)
+- [Microsoft.AI.Skills.SkillInterface API document](../../doc/Microsoft.AI.Skills.SkillInterface.md)
+- [Microsoft.AI.Skills.Vision.ImageScanning API document](../../doc/Microsoft.AI.Skills.Vision.ImageScanning.md)
+- [Creating a custom Windows AI Skill for Windows](../SentimentAnalyzerCustomSkill)
 - [Win32 Desktop sample applications for using Windows Media Capture APIs](https://github.com/microsoft/Windows-Camera/tree/master/Samples/WMCConsole_winrtcpp)
 - [Using MediaFrameReader](https://docs.microsoft.com/windows/uwp/audio-video-camera/process-media-frames-with-mediaframereader)
 
@@ -72,7 +72,7 @@ The app's top panel allows you to navigate through each skill. Right under it, y
 
 ### Using the skills (C#)
 
-As with all Vision Skills, the skills contained in this package are each composed of an `ISkillDescriptor` (which holds general skill information), the `ISkill` instance (which is bound to a specific `ISkillExecutionDevice`), and the skill's `ISkillBinding` (which holds skill inputs, outputs, and any state information). As with any `ISkillBinding` derivatives, you may interact with the binding instances like it is a Dictionary to set and retrieve your `SkillFeatures` and their linked `ISkillFeatureValue`. 
+As with all AI Skills for Windows, the skills contained in this package are each composed of an `ISkillDescriptor` (which holds general skill information), the `ISkill` instance (which is bound to a specific `ISkillExecutionDevice`), and the skill's `ISkillBinding` (which holds skill inputs, outputs, and any state information). As with any `ISkillBinding` derivatives, you may interact with the binding instances like it is a Dictionary to set and retrieve your `SkillFeatures` and their linked `ISkillFeatureValue`. 
 Additionally, the `ISkillBinding` derivatives defined in this package declare convenience field(s) and they are used in the below C# code snippets.
 i.e.:
 ```csharp
@@ -97,7 +97,7 @@ Here are examples for using each skill:
 
 #### **CurvedEdgesDetector**
 ```csharp
-using Microsoft.AI.Skills.Vision.ImageScanningPreview;
+using Microsoft.AI.Skills.Vision.ImageScanning;
 using Windows.Media; // Defining "VideoFrame"
 using Windows.Foundation; // Defining "Point"
 ...
@@ -128,7 +128,7 @@ IReadOnlyList<Point> detectedCurvedEdges = binding.DetectedCurvedEdges;
 
 #### **ImageCleaner**
 ```csharp
-using Microsoft.AI.Skills.Vision.ImageScanningPreview;
+using Microsoft.AI.Skills.Vision.ImageScanning;
 using Windows.Media; // Defining "VideoFrame"
 
 ...
@@ -152,7 +152,7 @@ VideoFrame outputImage = binding.OutputImage;
 
 #### **ImageRectifier**
 ```csharp
-using Microsoft.AI.Skills.Vision.ImageScanningPreview;
+using Microsoft.AI.Skills.Vision.ImageScanning;
 using Windows.Media; // Defining "VideoFrame"
 using Windows.Foundation; // Defining "Point"
 
@@ -187,7 +187,7 @@ VideoFrame outputImage = binding.OutputImage;
 
 #### **LiveQuadDetector**
 ```csharp
-using Microsoft.AI.Skills.Vision.ImageScanningPreview;
+using Microsoft.AI.Skills.Vision.ImageScanning;
 using Windows.Media; // Defining "VideoFrame"
 using Windows.Foundation; // Defining "Point"
 
@@ -210,7 +210,7 @@ IReadOnlyList<Point> detectedQuad = binding.DetectedQuad(out isSimilar);
 
 #### **QuadDetector**
 ```csharp
-using Microsoft.AI.Skills.Vision.ImageScanningPreview;
+using Microsoft.AI.Skills.Vision.ImageScanning;
 using Windows.Media; // Defining "VideoFrame"
 using Windows.Foundation; // Defining "Point"
 
@@ -232,7 +232,7 @@ IReadOnlyList<Point> detectedQuad = binding.DetectedQuad();
 
 #### **QuadEdgesDetector**
 ```csharp
-using Microsoft.AI.Skills.Vision.ImageScanningPreview;
+using Microsoft.AI.Skills.Vision.ImageScanning;
 using Windows.Media; // Defining "VideoFrame"
 using Windows.Foundation; // Defining "Point"
 

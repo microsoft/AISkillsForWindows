@@ -2,16 +2,21 @@
 
 ## Summary
 
-Implementing and integrating efficient AI and Computer Vision (CV) solutions is a hard task for developers. The industry is moving at a fast pace and the amount of custom-tailored solutions coming out makes it almost impossible for app developers to keep up easily. This proposed framework is meant to standardize the way AI and CV is put to use within a Windows application (i.e.: UWP, Desktop Win32, .Net Core 3.0+) running on the edge. It aims to abstract away the complexity of AI techniques by simply defining the concept of *skills* which are modular pieces of code that process input(s) and produce output(s). The implementation that contains the complex details is encapsulated by extended WinRT API that inherits the base class present in the Microsoft.AI.Skills.SkillInterface namespace, which leverages built-in Windows primitives which in-turn eases interop with built-in acceleration frameworks or external 3rd party ones.
+Implementing and integrating efficient AI and Computer Vision (CV) solutions is a hard task for developers. The industry is moving at a fast pace and the amount of custom-tailored solutions coming out makes it almost impossible for app developers to keep up easily. 
+
+This proposed framework is meant to standardize the way AI and CV is put to use within a Windows application (i.e.: UWP, Desktop Win32, .Net Core 3.0+) running on the edge. It aims to abstract away the complexity of AI techniques by simply defining the concept of *skills* which are modular pieces of code that process input(s) and produce output(s). The implementation that contains the complex details is encapsulated by extended WinRT API that inherits the base class present in the Microsoft.AI.Skills.SkillInterface namespace, which leverages built-in Windows primitives which in-turn eases interop with built-in hardware acceleration leveraged by frameworks such as *[Windows ML](https://docs.microsoft.com/en-us/windows/ai/windows-ml/)*.
 
 While this release focuses on vision-oriented scenarios and primitives, this API is meant to accommodate any kind of input and output variable and a wide range of scenarios (Vision, Audio, Text, etc.). Any developer can extend this API set and expose their own AI skills. [See skills released by Intel](#IntelSkills)
+
+If you are looking for the preview release samples a doc, we archived them in a branch here: *[Preview branch](https://github.com/microsoft/AISkillsForWindows/tree/Preview)*
 
 ## Creating a skill of your own
 
 For how to use the AI Skills interface to author a new AI Skill of your own exposing your AI solution to other Windows app developers, and creating an actual app to consume this crafted skill, see this sample:
+
 ### **[Sentiment Analyzer Sample Skill](samples/SentimentAnalyzerSampleSkill)**
 
-| ![Logo](./doc/FaceSentimentAnalyzerLogo.png) | Walking through the steps to create, in C++ or in C#, a sample AI Skill that leverages WinML and MediaFoundation as well as how to consume it in a Win32 Dektop, .Net Core 3.0 o UWP app|
+| ![FaceSentimentAnalyzer sample skill logo](./doc/FaceSentimentAnalyzerLogo.png) | Walking through the steps to create, in C++ or in C#, a sample AI Skill that leverages WinML and MediaFoundation as well as how to consume it in a Win32 Dektop, .Net Core 3.0+ or UWP app|
 | -- | -- |
 
 ## Code samples for using AI skills [published by Microsoft on nuget.org](https://www.nuget.org/profiles/VisionSkills)

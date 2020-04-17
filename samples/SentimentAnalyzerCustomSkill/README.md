@@ -57,7 +57,7 @@ Specifically, this sample shows how to:
 To run the test app and visualize the sample code for the skill:
 - **For the C# sample** that contains a C# UWP app, open the solution file located at *cs\FaceSentimentAnalysis_CS.sln*
 - **For the C++/WinRT sample**, open the solution file located at *cpp\FaceSentimentAnalysis_Cpp.sln*
-    >**Important to note:** the C++/WinRT and C++ WRL console applications, there are pre-build and post-build steps that leverage a set of powershell scripts included in *<root>/cpp/Scripts*. These scripts can be reused in your projects when you write this kind of application that leverages Windows Vision Skills.
+    >**Important to note:** For the C++/WinRT and C++ WRL console applications, there are pre-build and post-build steps that leverage a set of powershell scripts included in *<root>/cpp/Scripts*. These scripts can be reused in your projects when you write this kind of application that leverages AI Skills for Windows.
          - The pre-build script generate header files from the skill's Windows Runtime Component metadata included in the NuGet package (.winmd).
          - The post-build script copies dependency binaries to the application's executable location.
 

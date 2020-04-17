@@ -1,4 +1,4 @@
-# Microsoft.AI.Skills.Vision.ConceptTaggerPreview API documentation
+# Microsoft.AI.Skills.Vision.ConceptTagger API documentation
 
 + [Classes](#Classes)
   + [ConceptTagScore](#ConceptTagScore)
@@ -38,7 +38,7 @@ Single Score{ get; }
 
 ### ConceptTaggerBinding <a name="ConceptTaggerBinding"></a>
 
-``implements`` [ISkillBinding](./Microsoft.AI.Skills.SkillInterfacePreview.md#ISkillBinding)
+``implements`` [ISkillBinding](./Microsoft.AI.Skills.SkillInterface.md#ISkillBinding)
 
 -----
 
@@ -97,7 +97,7 @@ At most the specified amount of concepts scored above threshold extracted from t
 
 ### ConceptTaggerDescriptor <a name="ConceptTaggerDescriptor"></a>
 
-``implements`` [ISkillDescriptor](./Microsoft.AI.Skills.SkillInterfacePreview.md#ISkillDescriptor)
+``implements`` [ISkillDescriptor](./Microsoft.AI.Skills.SkillInterface.md#ISkillDescriptor)
 
 -----
 
@@ -117,7 +117,7 @@ ConceptTaggerDescriptor()
 
 ### ConceptTaggerSkill <a name="ConceptTaggerSkill"></a>
 
-``implements`` [ISkill](./Microsoft.AI.Skills.SkillInterfacePreview.md#ISkill)
+``implements`` [ISkill](./Microsoft.AI.Skills.SkillInterface.md#ISkill)
 
 -----
 

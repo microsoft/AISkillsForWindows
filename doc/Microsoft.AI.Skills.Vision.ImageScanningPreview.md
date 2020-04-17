@@ -1,4 +1,4 @@
-# Microsoft.AI.Skills.Vision.ConceptTaggerPreview API documentation
+# Microsoft.AI.Skills.Vision.ConceptTagger API documentation
 
 + [Enums](#Enum)
   + [ImageCleaningKind](#ImageCleaningKind)
@@ -60,7 +60,7 @@ Kinds of image interpolation that can be used when rectifying an image using the
 
 ### CurvedEdgesDetectorBinding <a name="CurvedEdgesDetectorBinding"></a>
 
-``implements`` [ISkillBinding](./Microsoft.AI.Skills.SkillInterfacePreview.md#ISkillBinding)
+``implements`` [ISkillBinding](./Microsoft.AI.Skills.SkillInterface.md#ISkillBinding)
 
 -----
 
@@ -107,7 +107,7 @@ The asynchronous action for completing this operation.
 
 ### CurvedEdgesDetectorDescriptor <a name="CurvedEdgesDetectorDescriptor"></a>
 
-``implements`` [ISkillDescriptor](./Microsoft.AI.Skills.SkillInterfacePreview.md#ISkillDescriptor)
+``implements`` [ISkillDescriptor](./Microsoft.AI.Skills.SkillInterface.md#ISkillDescriptor)
 
 -----
 
@@ -127,7 +127,7 @@ CurvedEdgesDetectorDescriptor()
 
 ### CurvedEdgesDetectorSkill <a name="CurvedEdgesDetectorSkill"></a>
 
-``implements`` [ISkill](./Microsoft.AI.Skills.SkillInterfacePreview.md#ISkill)
+``implements`` [ISkill](./Microsoft.AI.Skills.SkillInterface.md#ISkill)
 
 -----
 
@@ -137,7 +137,7 @@ CurvedEdgesDetectorDescriptor()
 
 ### ImageCleanerBinding <a name="ImageCleanerBinding"></a>
 
-``implements`` [ISkillBinding](./Microsoft.AI.Skills.SkillInterfacePreview.md#ISkillBinding)
+``implements`` [ISkillBinding](./Microsoft.AI.Skills.SkillInterface.md#ISkillBinding)
 
 -----
 
@@ -206,7 +206,7 @@ The asynchronous action for completing this operation.
 
 ### ImageCleanerDescriptor <a name="ImageCleanerDescriptor"></a>
 
-``implements`` [ISkillDescriptor](./Microsoft.AI.Skills.SkillInterfacePreview.md#ISkillDescriptor)
+``implements`` [ISkillDescriptor](./Microsoft.AI.Skills.SkillInterface.md#ISkillDescriptor)
 
 -----
 
@@ -226,7 +226,7 @@ ImageCleanerDescriptor()
 
 ### ImageCleanerSkill <a name="ImageCleanerSkill"></a>
 
-``implements`` [ISkill](./Microsoft.AI.Skills.SkillInterfacePreview.md#ISkill)
+``implements`` [ISkill](./Microsoft.AI.Skills.SkillInterface.md#ISkill)
 
 -----
 
@@ -235,7 +235,7 @@ ImageCleanerDescriptor()
 ---
 ### ImageRectifierBinding <a name="ImageRectifierBinding"></a>
 
-``implements`` [ISkillBinding](./Microsoft.AI.Skills.SkillInterfacePreview.md#ISkillBinding)
+``implements`` [ISkillBinding](./Microsoft.AI.Skills.SkillInterface.md#ISkillBinding)
 
 -----
 
@@ -325,7 +325,7 @@ The asynchronous action for completing this operation.
 
 ### ImageRectifierDescriptor <a name="ImageRectifierDescriptor"></a>
 
-``implements`` [ISkillDescriptor](./Microsoft.AI.Skills.SkillInterfacePreview.md#ISkillDescriptor)
+``implements`` [ISkillDescriptor](./Microsoft.AI.Skills.SkillInterface.md#ISkillDescriptor)
 
 -----
 
@@ -345,7 +345,7 @@ ImageRectifierDescriptor()
 
 ### ImageRectifierSkill <a name="ImageRectifierSkill"></a>
 
-``implements`` [ISkill](./Microsoft.AI.Skills.SkillInterfacePreview.md#ISkill)
+``implements`` [ISkill](./Microsoft.AI.Skills.SkillInterface.md#ISkill)
 
 -----
 
@@ -353,7 +353,7 @@ ImageRectifierDescriptor()
 ---
 ### LiveQuadDetectorBinding <a name="LiveQuadDetectorBinding"></a>
 
-``implements`` [ISkillBinding](./Microsoft.AI.Skills.SkillInterfacePreview.md#ISkillBinding)
+``implements`` [ISkillBinding](./Microsoft.AI.Skills.SkillInterface.md#ISkillBinding)
 
 -----
 
@@ -407,7 +407,7 @@ The corners of a quadrangle in normalized coordinates [0,1].
 
 ### LiveQuadDetectorDescriptor <a name="LiveQuadDetectorDescriptor"></a>
 
-``implements`` [ISkillDescriptor](./Microsoft.AI.Skills.SkillInterfacePreview.md#ISkillDescriptor)
+``implements`` [ISkillDescriptor](./Microsoft.AI.Skills.SkillInterface.md#ISkillDescriptor)
 
 -----
 
@@ -454,7 +454,7 @@ The [ISkill](#ISkill) created.
 
 ### LiveQuadDetectorSkill <a name="LiveQuadDetectorSkill"></a>
 
-``implements`` [ISkill](./Microsoft.AI.Skills.SkillInterfacePreview.md#ISkill)
+``implements`` [ISkill](./Microsoft.AI.Skills.SkillInterface.md#ISkill)
 
 -----
 
@@ -462,7 +462,7 @@ The [ISkill](#ISkill) created.
 ---
 ### QuadDetectorBinding <a name="QuadDetectorBinding"></a>
 
-``implements`` [ISkillBinding](./Microsoft.AI.Skills.SkillInterfacePreview.md#ISkillBinding)
+``implements`` [ISkillBinding](./Microsoft.AI.Skills.SkillInterface.md#ISkillBinding)
 
 -----
 
@@ -580,7 +580,7 @@ The normalized coordinates [0,1] of the corners of a quadrangle.
 
 ### QuadDetectorDescriptor <a name="QuadDetectorDescriptor"></a>
 
-``implements`` [ISkillDescriptor](./Microsoft.AI.Skills.SkillInterfacePreview.md#ISkillDescriptor)
+``implements`` [ISkillDescriptor](./Microsoft.AI.Skills.SkillInterface.md#ISkillDescriptor)
 
 -----
 
@@ -600,7 +600,7 @@ QuadDetectorDescriptor()
 
 ### QuadDetectorSkill <a name="QuadDetectorSkill"></a>
 
-``implements`` [ISkill](./Microsoft.AI.Skills.SkillInterfacePreview.md#ISkill)
+``implements`` [ISkill](./Microsoft.AI.Skills.SkillInterface.md#ISkill)
 
 -----
 
@@ -608,7 +608,7 @@ QuadDetectorDescriptor()
 ---
 ### QuadEdgesDetectorBinding <a name="QuadEdgesDetectorBinding"></a>
 
-``implements`` [ISkillBinding](./Microsoft.AI.Skills.SkillInterfacePreview.md#ISkillBinding)
+``implements`` [ISkillBinding](./Microsoft.AI.Skills.SkillInterface.md#ISkillBinding)
 
 -----
 
@@ -682,7 +682,7 @@ The amount of quad edges.
 
 ### QuadEdgesDetectorDescriptor <a name="QuadEdgesDetectorDescriptor"></a>
 
-``implements`` [ISkillDescriptor](./Microsoft.AI.Skills.SkillInterfacePreview.md#ISkillDescriptor)
+``implements`` [ISkillDescriptor](./Microsoft.AI.Skills.SkillInterface.md#ISkillDescriptor)
 
 -----
 
@@ -702,7 +702,7 @@ QuadEdgesDetectorDescriptor()
 
 ### QuadEdgesDetectorSkill <a name="QuadEdgesDetectorSkill"></a>
 
-``implements`` [ISkill](./Microsoft.AI.Skills.SkillInterfacePreview.md#ISkill)
+``implements`` [ISkill](./Microsoft.AI.Skills.SkillInterface.md#ISkill)
 
 -----
 

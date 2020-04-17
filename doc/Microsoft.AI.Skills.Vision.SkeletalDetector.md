@@ -1,4 +1,4 @@
-# Microsoft.AI.Skills.Vision.SkeletalDetectorPreview API documentation
+# Microsoft.AI.Skills.Vision.SkeletalDetector API documentation
 
 + [Enums](#Enums)
   + [JointLabel](#JointLabel)
@@ -51,7 +51,7 @@
 The type of joint
 
 ```csharp
-Microsoft.AI.Skills.Vision.SkeletalDetectorPreview.JointLabel Label
+Microsoft.AI.Skills.Vision.SkeletalDetector.JointLabel Label
 ```
 
 -----
@@ -133,7 +133,7 @@ SkeletalDetectorResult(IReadOnlyList<Limb> limbs)
 
 ### SkeletalDetectorResultListDescriptor
 
-``implements`` [ISkillFeatureDescriptor](./Microsoft.AI.Skills.SkillInterfacePreview.md#ISkillFeatureDescriptor)
+``implements`` [ISkillFeatureDescriptor](./Microsoft.AI.Skills.SkillInterface.md#ISkillFeatureDescriptor)
 
 -----
 
@@ -167,7 +167,7 @@ Whether this particular feature is required or not.
 
 ### SkeletalDetectorResultListValue
 
-``implements`` [ISkillFeatureValue](./Microsoft.AI.Skills.SkillInterfacePreview.md#ISkillFeatureValue), [IClosable](https://docs.microsoft.com/en-us/uwp/api/windows.foundation.iclosable)
+``implements`` [ISkillFeatureValue](./Microsoft.AI.Skills.SkillInterface.md#ISkillFeatureValue), [IClosable](https://docs.microsoft.com/en-us/uwp/api/windows.foundation.iclosable)
 
 -----
 
@@ -193,7 +193,7 @@ A list of detected bodies from the input.
 
 ### SkeletalDetectorBinding
 
-``implements`` [ISkillBinding](./Microsoft.AI.Skills.SkillInterfacePreview.md#ISkillBinding)
+``implements`` [ISkillBinding](./Microsoft.AI.Skills.SkillInterface.md#ISkillBinding)
 
 -----
 
@@ -237,7 +237,7 @@ IReadOnlyList<SkeletalDetectorResult> DetectedObjects { get; }
 
 ### SkeletalDetectorDescriptor
 
-``implements`` [ISkillDescriptor](./Microsoft.AI.Skills.SkillInterfacePreview.md#ISkillDescriptor)
+``implements`` [ISkillDescriptor](./Microsoft.AI.Skills.SkillInterface.md#ISkillDescriptor)
 
 -----
 
@@ -257,7 +257,7 @@ SkeletalDetectorDescriptor()
 
 ### SkeletalDetectorSkill
 
-``implements`` [ISkill](./Microsoft.AI.Skills.SkillInterfacePreview.md#ISkill)
+``implements`` [ISkill](./Microsoft.AI.Skills.SkillInterface.md#ISkill)
 
 -----
 

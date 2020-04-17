@@ -1,23 +1,23 @@
-# Object Detector Windows Vision Skill samples
+# Object Detector AI Skill for Windows samples
 
-These samples will show how to use the Object Detector Vision Skill NuGet package to create apps that can detect and classify objects in a video feed
+These samples will show how to use the Object Detector AI Skill for Windows NuGet package to create apps that can detect and classify objects in a video feed
 
 ![Screenshot of object detector skill in action in the UWP sample](./doc/sample_app.jpg)
 
 Follow these sample links:
 - [C# UWP sample app](./cs/ObjectDetectorSample_UWP)
 - [Win32 C++/Winrt Desktop console app](./cpp/ObjectDetectorSample_Desktop)
-- [.Net Core 3.0 C# console app](./cs/ObjectDetectorSample_NetCore3)
+- [.Net Core 3.0+ C# console app](./cs/ObjectDetectorSample_NetCore3)
 
 ## Build samples
 - refer to the [sample guidelines](../README.md)
-- make sure the Microsoft.AI.Skills.Vision.ObjectDetectorPreview and Microsoft.AI.Skills.SkillInterfacePreview NuGet packages are installed on your app projects
+- make sure the Microsoft.AI.Skills.Vision.ObjectDetector and Microsoft.AI.Skills.SkillInterface NuGet packages are installed on your app projects
 
 ## Related topics
 
-- [Microsoft.AI.Skills.SkillInterfacePreview API document](../../doc/Microsoft.AI.Skills.SkillInterfacePreview.md)
-- [Microsoft.AI.Skills.Vision.ObjectDetectorPreview API document](../../doc/Microsoft.AI.Skills.Vision.ObjectDetectorPreview.md)
-- [Creating a custom Windows Vision Skill](../SentimentAnalyzerCustomSkill)
+- [Microsoft.AI.Skills.SkillInterface API document](../../doc/Microsoft.AI.Skills.SkillInterface.md)
+- [Microsoft.AI.Skills.Vision.ObjectDetector API document](../../doc/Microsoft.AI.Skills.Vision.ObjectDetector.md)
+- [Creating a custom Windows AI Skill for Windows](../SentimentAnalyzerCustomSkill)
 
 ## Run the UWP sample
 
@@ -25,7 +25,7 @@ The app supports three types of media inputs: webcam, video file and image file.
 
 ### Using the ObjectDetector skill
 
-As with all Vision Skills, the Object Detector skill is composed of an `ISkillDescriptor` (which holds general skill information), the `ISkill` instance (which is bound to a specific `ISkillExecutionDevice`), and the skill's `ISkillBinding` (which holds skill inputs, outputs, and any state information). You can instantiate your Object Detector skill as follows.
+As with all AI Skills for Windows, the Object Detector skill is composed of an `ISkillDescriptor` (which holds general skill information), the `ISkill` instance (which is bound to a specific `ISkillExecutionDevice`), and the skill's `ISkillBinding` (which holds skill inputs, outputs, and any state information). You can instantiate your Object Detector skill as follows.
 
 ```csharp
 ObjectDetectorDescriptor descriptor = new ObjectDetectorDescriptor();
@@ -48,7 +48,7 @@ IReadOnlyList<ObjectDetectorResult> detections = binding.DetectedObjects;
 foreach (ObjectDetectorResult detection in detections)
 {
     Windows.Foundation.Rect boundingRect = detection.Rect;
-    ObjectKind objectKind = detection.Kind; // This enum is defined in the ObjectDetectorPreview namespace
+    ObjectKind objectKind = detection.Kind; // This enum is defined in the ObjectDetector namespace
     // Use results as desired
 }
 ```
