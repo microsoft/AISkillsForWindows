@@ -1,11 +1,11 @@
-﻿# Sentiment Analyzer Windows Vision Skill sample
+﻿# Sentiment Analyzer AI Skill sample
 
-Provides an end-to-end sample to show how to write a Windows Vision Skill by extending the [Microsoft.AI.Skills.SkillInterfacePreview](../../doc/Microsoft.AI.Skills.SkillInterfacePreview.md) base API.
+Provides an end-to-end sample to show how to write an AI Skill for Windows by extending the [Microsoft.AI.Skills.SkillInterface](../../doc/Microsoft.AI.Skills.SkillInterface.md) base API.
 This skill's implementation leverages the Windows built-in `FaceDetector` and `Windows.AI` APIs along a Machine Learning model in ONNX format to identify a face in an image and infer its sentiment.
 This sample also contains scripts to package the skill's Windows Runtime Component and its assets to a NuGet package (.nupkg). It also provides sample applications written in C++ and C# targetting UWP, Win32 Desktop and .NetCore 3.0 Desktop that ingest this NuGet package and exercise the skill against images.
 
 ## Scenario
-A developer wants to expose a functionality to his/her users that infers the sentiment of a person from an image.
+A developer wants to expose a functionality to his/her users that infers the sentiment of persons from an image.
 
 ![TestApp1](./doc/TestApp1.jpg)
 
@@ -25,8 +25,8 @@ Specifically, this sample shows how to:
 2. **Create and implement a skill class** inherited from ISkill that executes the skill logic and produces output given a set of input, and acts as a factory object for the skill binding.
 3. **Create and implement a skill binding class** inherited from ISkillBinding that contains input and output variables as well as expose adapter to ease usage by developers.
 4. **Obfuscate files as pre-build step and deobfuscate files at runtime** to deter your skill consumers from tempering or accessing your resource files. Note that this part is shown only in this C++/WinRT version of the skill to keep the other C# version simpler. Obfuscation is handled as a pre-build step using a dedicated compiled tool (Obfuscator.exe) and deobfuscation is exposed via a simple helper Windows Runtime Component ingested by the skill (DeobfuscationHelper).
-5. **Create a NuGet package** that is dependent on the Microsoft.AI.Skills.SkillInterfacePreview NuGet package that ecapsulates a Windows Runtime Component along its assets so that an app can ingest it. This NuGet package also links to a license and triggers a request for its approval before ingestion.
-6. **Create a set of apps that ingest a custom Windows Vision Skill** to execute sentiment analysis againt images from a camera by binding VideoFrame instances and displaying results by retrieving them from the binding.
+5. **Create a NuGet package** that is dependent on the Microsoft.AI.Skills.SkillInterface NuGet package that ecapsulates a Windows Runtime Component along its assets so that an app can ingest it. This NuGet package also links to a license and triggers a request for its approval before ingestion.
+6. **Create a set of apps that ingest a custom AI Skill for Windows** to execute sentiment analysis againt images from a camera by binding VideoFrame instances and displaying results by retrieving them from the binding.
     1. **C# UWP** app with a UI
     2. **C++/WinRT** Desktop console app
     3. **C++ WRL** Desktop console app

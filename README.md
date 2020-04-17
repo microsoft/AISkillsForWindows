@@ -6,9 +6,9 @@ Implementing and integrating efficient AI and Computer Vision (CV) solutions is 
 
 While this release focuses on vision-oriented scenarios and primitives, this API is meant to accommodate any kind of input and output variable and a wide range of scenarios (Vision, Audio, Text, etc.). Any developer can extend this API set and expose their own AI skills. [See skills released by Intel](#IntelSkills)
 
-## How To Use
+## Creating a skill of your own
 
-For how to use the framework to author a Skill to be consumed, and creating an app to consume the skill, see the [SentimentAnalyzerCustomSkill](samples/SentimentAnalyzerCustomSkill) Sample. 
+For how to use the framework to author a new Skill of your own exposing your AI solution to other app developers, and creating an actual app to consume this new skill, see the [SentimentAnalyzerCustomSkill](samples/SentimentAnalyzerCustomSkill) Sample. 
 
 ## Samples for AI skills [published by Microsoft on nuget.org](https://www.nuget.org/profiles/VisionSkills)
 

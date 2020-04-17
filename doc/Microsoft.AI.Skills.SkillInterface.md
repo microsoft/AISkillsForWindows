@@ -1,6 +1,6 @@
-# Windows Skill Interface Documentation
+ # Windows Skill Interface Documentation
 
- The *Microsoft.AI.Skills.SkillInterfacePreview* namespace provides a set of base interfaces to be extended by all *skills* as well as classes and helper methods for skill implementers 
+ The *Microsoft.AI.Skills.SkillInterface* namespace provides a set of base interfaces to be extended by all *skills* as well as classes and helper methods for skill implementers 
  on Windows.
 
  ### Important concepts
@@ -22,7 +22,7 @@ from which this interface also defines multiple common derivatives of (tensor, i
  conversion to the appropriate format occurs when attempting to set a value that does not match the predefined format (i.e. when binding an image
 in a different format than the one required).
 
-# Microsoft.AI.Skills.SkillInterfacePreview API documentation
+# Microsoft.AI.Skills.SkillInterface API documentation
 
 *For code see: [Microsoft.AI.Skills.SkillInterface.idl](../common/VisionSkillBase/Microsoft.AI.Skills.SkillInterface.idl)*
 
@@ -32,7 +32,9 @@ in a different format than the one required).
   + [SkillElementKind](#SkillElementKind)
   + [D3DFeatureLevelKind](#D3DFeatureLevelKind)
 + [Interfaces](#Interfaces)
+  + [ID3D12CommandQueueWrapperNative](#ID3D12CommandQueueWrapperNative)
   + [ISkillExecutionDevice](#ISkillExecutionDevice)
+  + [ISkillExecutionDeviceDX](#ISkillExecutionDeviceDX)
   + [ISkillFeature](#ISkillFeature)
   + [ISkillFeatureValue](#ISkillFeatureValue)
   + [ISkillFeatureTensorValue](#ISkillFeatureTensorValue)
@@ -44,15 +46,17 @@ in a different format than the one required).
   + [ISkillBinding](#ISkillBinding)
   + [ISkill](#ISkill)
 + [Classes](#Classes)
+  + [D3D12CommandQueueWrapper](#D3D12CommandQueueWrapper)
   + [SkillInformation](#SkillInformation)
   + [SkillExecutionDeviceCPU](#SkillExecutionDeviceCPU)
+  + [SkillExecutionDeviceDXHelper](#SkillExecutionDeviceDXHelper)
   + [SkillExecutionDeviceDirectX](#SkillExecutionDeviceDirectX)
+  + [SkillExecutionDeviceDXCore](#SkillExecutionDeviceDXCore)
   + [SkillFeature](#SkillFeature)
   + [SkillFeatureTensorFloatValue](#SkillFeatureTensorFloatValue)
   + [SkillFeatureTensorIntValue](#SkillFeatureTensorIntValue)
   + [SkillFeatureTensorStringValue](#SkillFeatureTensorStringValue)  
   + [SkillFeatureTensorBooleanValue](#SkillFeatureTensorBooleanValue)
-  + [SkillFeatureTensorInt8Value](#SkillFeatureTensorInt8Value)
   + [SkillFeatureTensorInt16Value](#SkillFeatureTensorInt16Value)
   + [SkillFeatureTensorInt64Value](#SkillFeatureTensorInt64Value)
   + [SkillFeatureTensorUInt8Value](#SkillFeatureTensorUInt8Value)
@@ -61,6 +65,7 @@ in a different format than the one required).
   + [SkillFeatureTensorUInt64Value](#SkillFeatureTensorUInt64Value)
   + [SkillFeatureTensorFloat16Value](#SkillFeatureTensorFloat16Value)
   + [SkillFeatureTensorDoubleValue](#SkillFeatureTensorDoubleValue)
+  + [SkillFeatureTensorCustomValue](#SkillFeatureTensorCustomValue)
   + [SkillFeatureImageValue](#SkillFeatureImageValue)
   + [SkillFeatureMapValue](#SkillFeatureMapValue)
   + [SkillFeatureTensorDescriptor](#SkillFeatureTensorDescriptor)
@@ -79,7 +84,6 @@ to be bound and processed by the skill. This API defines [ISkillFeatureValue](#I
 + [SkillFeatureTensorIntValue](#SkillFeatureTensorIntValue) 
 + [SkillFeatureTensorStringValue](#SkillFeatureTensorStringValue)
 + [SkillFeatureTensorBooleanValue](#SkillFeatureTensorBooleanValue)
-+ [SkillFeatureTensorInt8Value](#SkillFeatureTensorInt8Value)
 + [SkillFeatureTensorInt16Value](#SkillFeatureTensorInt16Value)
 + [SkillFeatureTensorInt64Value](#SkillFeatureTensorInt64Value)
 + [SkillFeatureTensorUInt8Value](#SkillFeatureTensorUInt8Value)
@@ -103,7 +107,7 @@ The *Undefined* value can be leveraged by skill developers to declare a custom k
 
 ### SkillExecutionDeviceKind <a name="SkillExecutionDeviceKind"></a>
 Type of execution device where execution of a skill can take place
-This device factors into the instatiation of the skill and the memory placement of SkillFeatureValues.
+This device factors into the instantiation of the skill and the memory placement of SkillFeatureValues.
 
 | Fields      | Values
 | ----------- |--------|
@@ -113,6 +117,10 @@ This device factors into the instatiation of the skill and the memory placement 
 | Vpu         |3|
 | Fpga        |4|
 | Cloud       |5|
+| Tpu         |6|
+| Npu         |7|
+| Dsp         |8|
+| Gna         |9|
 
 
 ### SkillElementKind <a name="SkillElementKind"></a>
@@ -125,15 +133,14 @@ Type of element found in composite [ISkillFeatureValue](#ISkillFeatureValue)s li
 | Int32       |2|
 | String      |3|
 | Boolean     |4|
-| Int8        |5|
-| Int16       |6|
-| Int64       |7|
-| UInt8       |8|
-| UInt16      |9|
-| UInt32      |10|
-| UInt64      |11|
-| Float16     |12|
-| Double      |13|
+| Int16       |5|
+| Int64       |6|
+| UInt8       |7|
+| UInt16      |8|
+| UInt32      |9|
+| UInt64      |10|
+| Float16     |11|
+| Double      |12|
 
 
 ### D3DFeatureLevelKind <a name="D3DFeatureLevelKind"></a>
@@ -154,6 +161,34 @@ Note that field values correlate with the native [D3D_FEATURE_LEVEL Enumeration]
 
 
 ## Interfaces<a name="Interfaces"></a>
+
+### ID3D12CommandQueueWrapperNative <a name="ID3D12CommandQueueWrapperNative"></a>
+
+Wraps a ID3D12CommandQueue, which can be used in native code to schedule work on the D3D12 device.
+
+#### Methods
+-----
+##### GetD3D12CommandQueue([out] ID3D12CommandQueue** value);
+
+Retrieve the wrapped [ID3D12CommandQueue][ID3D12CommandQueue] from native code.
+```csharp
+HRESULT GetD3D12CommandQueue([out] ID3D12CommandQueue** value);
+```
+
+###### Parameters
+**`value`** : ID3D12CommandQueue**
+
+The ID3D12CommandQueue** that gets initialized with the [ID3D12CommandQueue][ID3D12CommandQueue]. 
+
+###### Returns
+[HRESULT][HRESULT]
+
+The error code indicating either success or a defined failure.
+
+-----
+
+
+-----
 
 ### ISkillExecutionDevice <a name="ISkillExecutionDevice"></a>
 
@@ -177,6 +212,41 @@ The [SkillExecutionDeviceKind](#SkillExecutionDeviceKind) of this device.
 
 ```csharp
 SkillExecutionDeviceKind ExecutionDeviceKind { get; }
+```
+-----
+
+
+### ISkillExecutionDeviceDX <a name="ISkillExecutionDeviceDX"></a>
+``requires`` [ISkillExecutionDevice](#ISkillExecutionDevice)
+
+Base interface for a DX based execution device with which a skill can be run
+
+#### Properties
+-----
+##### AdapterId
+
+The adapter ID of this DX device.
+
+```csharp
+long AdapterId { get; }
+```
+-----
+
+##### DedicatedVideoMemory
+
+The amount of dedicated video memory of this DX device (bytes).
+
+```csharp
+long DedicatedVideoMemory { get; }
+```
+-----
+
+##### MaxSupportedFeatureLevel
+
+The maximum supported [D3DFeatureLevelKind](#D3DFeatureLevelKind) by this DX device.
+
+```csharp
+D3DFeatureLevelKind MaxSupportedFeatureLevel { get; }
 ```
 -----
 
@@ -210,6 +280,16 @@ The value set on this feature.
 
 ```csharp
 ISkillFeatureValue FeatureValue{ get; }
+```
+----- 
+##### CustomFeatureId
+
+Retrieve an identifier for this feature type if this interface is customized.
+This is usefull to know if 2 features are compatible or need additional processing for example when
+sourcing from a feature in runtime class that inherits from this interface.
+
+```csharp
+Guid CustomFeatureId{ get; }
 ```
 ----- 
 
@@ -271,6 +351,22 @@ The asynchronous action for completing this operation
 
 -----
 
+##### SourceFromOtherFeature(ISkillFeature)
+
+Source this feature from another existing feature. If null is passed, then the feature sourcing is removed. 
+When sourcing from another feature, this feature's value cannot be set.
+
+```csharp
+void SourceFromOtherFeature(ISkillFeature sourceFeature);
+```
+###### Parameters
+**`sourceFeature`** : ISkillFeature
+
+The feature to source from.
+Note that source feature needs to be coherent with this feature (i.e. of the same SkillElementKind) otherwise an exception can be thrown.
+
+-----
+
 
 ### ISkillFeatureValue <a name="ISkillFeatureValue"></a>
 
@@ -301,7 +397,7 @@ Defines a SkillFeatureValue of [SkillFeatureKind](#SkillFeatureKind) Tensor.
 Retrieve the shape of the tensor.
 
 ```csharp
-IReadOnlyList <long> Shape{ get; }
+IReadOnlyList <int> Shape{ get; }
 ```
 -----
 
@@ -398,7 +494,7 @@ SkillElementKind ElementKind { get; }
 The dimensions required for this tensor feature as [IReadOnlyList][IReadOnlyList]
 
 ```csharp
-IReadOnlyList <long> Shape{ get; }
+IReadOnlyList <int> Shape{ get; }
 ```
 -----
 
@@ -451,7 +547,9 @@ Provides information about a [ISkillFeatureValue](#ISkillFeatureValue) derivativ
 
 ##### Height
 
-The required image height (in pixels).
+The required image height (in pixels) to avoid resize. 
+Note that a negative value indicates that there is no predetermined required value. 
+A negative value below -1 indicates that the value needs to be a multiple of the value specified (i.e. -1 can be any value, -8 means the value must be a multiple of 8).
 
 ```csharp
 int Height { get; }
@@ -460,21 +558,15 @@ int Height { get; }
 
 ##### Width
 
-The required image width (in pixels).
+The required image width (in pixels) to avoid resize. 
+Note that a negative value indicates that there is no predetermined required value. 
+A negative value below -1 indicates that the value needs to be a multiple of the value specified (i.e. -1 can be any value, -8 means the value must be a multiple of 8).
 
 ```csharp
 int Width { get; }
 ```
 -----
 
-##### MaxDimension
-
-The maximum image width or height allowed (in pixels).
-
-```csharp
-int MaxDimension { get; }
-```
------
 
 ##### SupportedBitmapPixelFormat
 
@@ -680,6 +772,28 @@ The [ISkill](#ISkill) created.
 
 ## Classes <a name="Classes"></a>
 
+### D3D12CommandQueueWrapper <a name="D3D12CommandQueueWrapper"></a>
+
+Provides a WinRT wrapper class to manage [D3D12CommandQueue][ID3D12CommandQueue] native object. Use as a ID3D12CommandQueueWrapperNative from C++ to access command queue.
+
+#### Methods
+-----
+##### CreateLearningModelDevice()
+
+Retrieve a [Windows.AI.MachineLearning.LearningModelDevice][LearningModelDevice] that corresponds to this wrapped [D3D12CommandQueue][ID3D12CommandQueue].
+
+```csharp
+Windows.AI.MachineLearning.LearningModelDevice CreateLearningModelDevice();;
+```
+
+###### Returns
+Windows.AI.MachineLearning.LearningModelDevice
+
+LearningModelDevice that corresponds to this D3D12CommandQueue.
+
+-----
+
+
 ### SkillInformation <a name="SkillInformation"></a>
 
 Contains all descriptive information about the skill and its origins.
@@ -820,31 +934,13 @@ The SkillExecutionDeviceCPU instantiated.
 
 
 ### SkillExecutionDeviceDirectX <a name="SkillExecutionDeviceDirectX"></a>
-``implements`` [ISkillExecutionDevice](#ISkillExecutionDevice)
+``implements`` [ISkillExecutionDeviceDX](#ISkillExecutionDeviceDX)
 
 Provides a DirectX execution device and its information useful to infer if a skill could be run with it appropriately in the consumer's context. 
 Also acts as a static factory for itself.
 
 #### Properties
 -----
-##### AdapterId
-
-The adapter ID of this DirectX device.
-
-```csharp
-long AdapterId { get; }
-```
------
-
-##### DedicatedVideoMemory
-
-The amount of dedicated video memory of this DirectX device (bytes).
-
-```csharp
-long DedicatedVideoMemory { get; }
-```
------
-
 ##### IsDefault
 
 Tells if this DirectX device is considered the default one.
@@ -872,21 +968,20 @@ ushort PowerSavingIndex { get; }
 ```
 -----
 
-##### MaxSupportedFeatureLevel
-
-The maximum supported [D3DFeatureLevelKind](#D3DFeatureLevelKind) by this DirectX device.
-
-```csharp
-D3DFeatureLevelKind MaxSupportedFeatureLevel { get; }
-```
------
-
 ##### Direct3D11Device
 
 The [IDirect3DDevice][IDirect3DDevice] associated with this DirectX.
 
 ```csharp
 Windows.Graphics.DirectX.Direct3D11.IDirect3DDevice Direct3D11Device { get; };
+```
+-----
+
+##### IsD3D12Supported
+Defines if [D3D12][CreateD3D12Device] API can be used with this adapter.
+
+```csharp
+bool IsD3D12Supported { get; };
 ```
 -----
 
@@ -927,6 +1022,87 @@ static IReadOnlyList<SkillExecutionDeviceDirectX> GetAvailableDirectXExecutionDe
 All SkillExecutionDeviceDirectX available on the system.
 
 *``Note : This includes only hardware devices and excludes WARP``*
+
+-----
+
+
+### SkillExecutionDeviceDXCore <a name="SkillExecutionDeviceDXCore"></a>
+``implements`` [ISkillExecutionDeviceDX](#ISkillExecutionDeviceDX)
+
+Provides a DirectX execution device based on [DXCore][DXCore] API set and its information useful to infer if a skill could be run with it appropriately in the consumer's context. 
+Also acts as a static factory for itself.
+
+#### Properties
+-----
+##### D3D12CommandQueue
+
+Retrieve the associated [D3D12CommandQueueWrapper](#D3D12CommandQueueWrapper)
+
+```csharp
+D3D12CommandQueueWrapper D3D12CommandQueue{ get; }
+```
+-----
+
+#### Methods
+-----
+##### Create(D3D12CommandQueueWrapper)
+
+Creates a SkillExecutionDeviceDXCore instance from a D3D12CommandQueueWrapper.
+
+```csharp
+static SkillExecutionDeviceDXCore Create(D3D12CommandQueueWrapper direct3D12CommandQueueWrapper);
+```
+###### Parameters
+**`direct3D12CommandQueueWrapper`** : [D3D12CommandQueueWrapper][D3D12CommandQueueWrapper]
+
+The [D3D12CommandQueueWrapper][D3D12CommandQueueWrapper] corresponding to this DXCore device.
+
+###### Returns
+[SkillExecutionDeviceDXCore](#SkillExecutionDeviceDXCore)
+
+The SkillExecutionDeviceDXCore instantiated.
+
+-----
+
+##### GetAvailableDXCoreExecutionDevices()
+
+Obtain all SkillExecutionDeviceDXCore available on the system so that they can be filtered out appropriately given the 
+skill requirements by the skill developer and exposed accordingly when calling 
+[ISkillDescriptor.GetSupportedExecutionDevicesAsync()](#ISkillDescriptor.GetSupportedExecutionDevicesAsync).
+
+```csharp
+static IReadOnlyList<SkillExecutionDeviceDXCore> GetAvailableDXCoreExecutionDevices();
+```
+
+###### Returns
+[IReadOnlyList][IReadOnlyList]<[SkillExecutionDeviceDXCore](#SkillExecutionDeviceDXCore)>
+
+All SkillExecutionDeviceDXCore available on the system.
+
+*``Note : This includes only hardware devices and excludes WARP``*
+
+-----
+
+
+### SkillExecutionDeviceDXHelper <a name="SkillExecutionDeviceDXHelper"></a>
+
+Acts as a static factory to enumerate available DX based execution devices. (Prefers use of DXGI APIs if available, else uses DXCore APIs if available to enumerate GPUs. 
+Always uses DXcore to enumerate non-GPU hardware.
+
+#### Methods
+-----
+##### GetAvailableDXExecutionDevices()
+        
+Retrieve all available DirectX devices on the system. The list can contain [DXGI](#SkillExecutionDeviceDirectX) and/or [DXCore](#SkillExecutionDeviceDXCore) execution devices depending upon supported API set on the target and type of hardware (i.e. VPU, GPU, etc.)
+
+```csharp
+static Windows.Foundation.Collections.IVectorView<ISkillExecutionDeviceDX> GetAvailableDXExecutionDevices();
+```
+
+###### Returns
+[ISkillExecutionDeviceDX](#ISkillExecutionDeviceDX)
+
+The available [ISkillExecutionDeviceDX](#ISkillExecutionDeviceDX) on the system.
 
 -----
 
@@ -976,7 +1152,7 @@ Defines a SkillFeatureValue of [SkillFeatureKind](#SkillFeatureKind) Tensor of [
 Retrieve the shape of the tensor.
 
 ```csharp
-IReadOnlyList <long> Shape{ get; }
+IReadOnlyList <int> Shape{ get; }
 ```
 -----
 
@@ -1010,7 +1186,7 @@ Defines a SkillFeatureValue of [SkillFeatureKind](#SkillFeatureKind) Tensor of [
 Retrieve the shape of the tensor.
 
 ```csharp
-IReadOnlyList <long> Shape{ get; }
+IReadOnlyList <int> Shape{ get; }
 ```
 -----
 
@@ -1044,7 +1220,7 @@ Defines a SkillFeatureValue of [SkillFeatureKind](#SkillFeatureKind) Tensor of [
 Retrieve the shape of the tensor.
 
 ```csharp
-IReadOnlyList <long> Shape{ get; }
+IReadOnlyList <int> Shape{ get; }
 ```
 -----
 
@@ -1078,7 +1254,7 @@ Defines a SkillFeatureValue of [SkillFeatureKind](#SkillFeatureKind) Tensor of [
 Retrieve the shape of the tensor.
 
 ```csharp
-IReadOnlyList <long> Shape{ get; }
+IReadOnlyList <int> Shape{ get; }
 ```
 -----
 
@@ -1100,40 +1276,6 @@ The value contained within this instance.
 -----
 
 
-### SkillFeatureTensorInt8Value <a name="SkillFeatureTensorInt8Value"></a>
-``implements`` [ISkillFeatureTensorValue](#ISkillFeatureTensorValue), [IClosable][IClosable]
-
-Defines a SkillFeatureValue of [SkillFeatureKind](#SkillFeatureKind) Tensor of [SkillElementKind](#SkillElementKind) Int8.
-
-#### Properties
------
-##### Shape
-
-Retrieve the shape of the tensor.
-
-```csharp
-IReadOnlyList <long> Shape{ get; }
-```
------
-
-#### Methods
-
-##### GetAsVectorView()
-
-Retrieve the readonly view of the tensor.
-
-```csharp
-IReadOnlyList <Byte> GetAsVectorView();
-```
-
-###### Returns
-[IReadOnlyList][IReadOnlyList]< Byte >
-
-The value contained within this instance.
-
------
-
-
 ### SkillFeatureTensorInt16Value <a name="SkillFeatureTensorInt16Value"></a>
 ``implements`` [ISkillFeatureTensorValue](#ISkillFeatureTensorValue), [IClosable][IClosable]
 
@@ -1146,7 +1288,7 @@ Defines a SkillFeatureValue of [SkillFeatureKind](#SkillFeatureKind) Tensor of [
 Retrieve the shape of the tensor.
 
 ```csharp
-IReadOnlyList <long> Shape{ get; }
+IReadOnlyList <int> Shape{ get; }
 ```
 -----
 
@@ -1180,7 +1322,7 @@ Defines a SkillFeatureValue of [SkillFeatureKind](#SkillFeatureKind) Tensor of [
 Retrieve the shape of the tensor.
 
 ```csharp
-IReadOnlyList <long> Shape{ get; }
+IReadOnlyList <int> Shape{ get; }
 ```
 -----
 
@@ -1214,7 +1356,7 @@ Defines a SkillFeatureValue of [SkillFeatureKind](#SkillFeatureKind) Tensor of [
 Retrieve the shape of the tensor.
 
 ```csharp
-IReadOnlyList <long> Shape{ get; }
+IReadOnlyList <int> Shape{ get; }
 ```
 -----
 
@@ -1248,7 +1390,7 @@ Defines a SkillFeatureValue of [SkillFeatureKind](#SkillFeatureKind) Tensor of [
 Retrieve the shape of the tensor.
 
 ```csharp
-IReadOnlyList <long> Shape{ get; }
+IReadOnlyList <int> Shape{ get; }
 ```
 -----
 
@@ -1282,7 +1424,7 @@ Defines a SkillFeatureValue of [SkillFeatureKind](#SkillFeatureKind) Tensor of [
 Retrieve the shape of the tensor.
 
 ```csharp
-IReadOnlyList <long> Shape{ get; }
+IReadOnlyList <int> Shape{ get; }
 ```
 -----
 
@@ -1316,7 +1458,7 @@ Defines a SkillFeatureValue of [SkillFeatureKind](#SkillFeatureKind) Tensor of [
 Retrieve the shape of the tensor.
 
 ```csharp
-IReadOnlyList <long> Shape{ get; }
+IReadOnlyList <int> Shape{ get; }
 ```
 -----
 
@@ -1350,7 +1492,7 @@ Defines a SkillFeatureValue of [SkillFeatureKind](#SkillFeatureKind) Tensor of [
 Retrieve the shape of the tensor.
 
 ```csharp
-IReadOnlyList <long> Shape{ get; }
+IReadOnlyList <int> Shape{ get; }
 ```
 -----
 
@@ -1372,7 +1514,7 @@ The value contained within this instance.
 -----
 
 
-### SkillFeatureTensorDoubleValue <a name="SkillFeatureTensorFloat16Value"></a>
+### SkillFeatureTensorDoubleValue <a name="SkillFeatureTensorDoubleValue"></a>
 ``implements`` [ISkillFeatureTensorValue](#ISkillFeatureTensorValue), [IClosable][IClosable]
 
 Defines a SkillFeatureValue of [SkillFeatureKind](#SkillFeatureKind) Tensor of [SkillElementKind](#SkillElementKind) Double.
@@ -1384,7 +1526,7 @@ Defines a SkillFeatureValue of [SkillFeatureKind](#SkillFeatureKind) Tensor of [
 Retrieve the shape of the tensor.
 
 ```csharp
-IReadOnlyList <long> Shape{ get; }
+IReadOnlyList <int> Shape{ get; }
 ```
 -----
 
@@ -1402,6 +1544,40 @@ IReadOnlyList <Double> GetAsVectorView();
 [IReadOnlyList][IReadOnlyList]< Double >
 
 The value contained within this instance.
+
+-----
+
+
+### SkillFeatureTensorCustomValue <a name="SkillFeatureTensorCustomValue"></a>
+``implements`` [ISkillFeatureTensorValue](#ISkillFeatureTensorValue), [IClosable][IClosable]
+
+Defines a SkillFeatureValue of [SkillFeatureKind](#SkillFeatureKind) Tensor of [SkillElementKind](#SkillElementKind) Undefined that have to be cast to their type upon usage.
+
+#### Properties
+-----
+##### Shape
+
+Retrieve the shape of the tensor.
+
+```csharp
+IReadOnlyList <int> Shape{ get; }
+```
+-----
+
+#### Methods
+
+##### GetAsVectorView()
+
+Retrieve the readonly view of the tensor.
+
+```csharp
+IReadOnlyList <Object> GetAsVectorView();
+```
+
+###### Returns
+[IReadOnlyList][IReadOnlyList]< Object >
+
+The value contained within this instance that can be cast to its expected type.
 
 -----
 
@@ -1537,7 +1713,7 @@ SkillFeatureTensorDescriptor(
             string name,
             string description,
             bool isRequired,
-            IReadOnlyList<long> shape, 
+            IReadOnlyList<int> shape, 
             SkillElementKind elementKind);
 ```
 
@@ -1574,6 +1750,7 @@ The SkillFeatureTensorDescriptor instantiated.
 ##### CreateValueAsync() <a name="SkillFeatureTensorDescriptor.CreateValueAsync"></a>
 
 Create a [ISkillFeatureValue](#ISkillFeatureValue) of [SkillFeatureKind](#SkillFeatureKind) *Tensor* according to the shape specified with the specified input value argument.
+Acceptable value types are IVector, IVectorView, ISkillFeatureTensorValue.
 
 ```csharp
 IAsyncOperation<ISkillFeatureValue> CreateValueAsync(Object value, ISkillExecutionDevice device);
@@ -1664,6 +1841,7 @@ The SkillFeatureImageDescriptor instantiated.
 ##### CreateValueAsync() <a name="SkillFeatureImageDescriptor.CreateValueAsync"></a>
 
 Create a [ISkillFeatureValue](#ISkillFeatureValue) of [SkillFeatureKind](#SkillFeatureKind) *Image* according to the format specified.
+Acceptable value types are [VideoFrame][VideoFrame], ISkillFeatureImageValue.
 
 ```csharp
 IAsyncOperation<ISkillFeatureValue> CreateValueAsync(Object value, ISkillExecutionDevice device);
@@ -1742,7 +1920,7 @@ The SkillFeatureMapDescriptor instantiated.
 ##### CreateValueAsync() <a name="SkillFeatureMapDescriptor.CreateValueAsync"></a>
 
 Create a [ISkillFeatureValue](#ISkillFeatureValue) of [SkillFeatureKind](#SkillFeatureKind) *Map* according to the key and value [SkillElementKind](#SkillElementKind)s specified.
-
+Acceptable value types are IMapView, IMap, ISkillFeatureMapValue.
 ```csharp
 IAsyncOperation<ISkillFeatureValue> CreateValueAsync(Object value, ISkillExecutionDevice device);
 ```
@@ -1775,6 +1953,10 @@ The [ISkillFeatureValue](#ISkillFeatureValue) created from the value passed as a
 [BitmapAlphaMode]: https://docs.microsoft.com/en-us/uwp/api/windows.graphics.imaging.bitmapalphamode
 [IClosable]: https://docs.microsoft.com/en-us/uwp/api/windows.foundation.iclosable
 [VideoFrame]: https://docs.microsoft.com/en-us/uwp/api/Windows.Media.VideoFrame
-[PackageVersion]: https://docs.microsoft.com/en-us/uwp/api/Windows.ApplicationModel.PackageVersion
+[ID3D12CommandQueue]: https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nn-d3d12-id3d12commandqueue
+[CreateD3D12Device]: https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-d3d12createdevice
+[LearningModelDevice]: https://docs.microsoft.com/en-us/uwp/api/windows.ai.machinelearning.learningmodeldevice
+[HRESULT]: https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/0642cb2f-2075-4469-918c-4441e69c548a
+[DXCore][https://docs.microsoft.com/en-us/windows/win32/dxcore/dxcore]
 
 ###### Copyright (c) Microsoft Corporation. All rights reserved.
