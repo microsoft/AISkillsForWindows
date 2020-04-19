@@ -176,9 +176,9 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
                 BitmapBounds faceBounds = faceDetectionResult.FaceBox();
 
                 // Retrieve the face bound and enlarge it by a factor of 1.5x to be sure to cover the whole facial area, while also ensuring clamping to frame dimensions
-                auto additionalOffset = faceBounds.Width / 2;
-                faceBounds.X = max(0, faceBounds.X - additionalOffset);
-                faceBounds.Y = max(0, faceBounds.Y - additionalOffset);
+                int additionalOffset = faceBounds.Width / 2;
+                faceBounds.X = max(0, (int)faceBounds.X - additionalOffset);
+                faceBounds.Y = max(0, (int)faceBounds.Y - additionalOffset);
                 faceBounds.Width = (uint32_t)min(faceBounds.Width + 2 * additionalOffset, softwareBitmapInput.PixelWidth() - faceBounds.X);
                 faceBounds.Height = (uint32_t)min(faceBounds.Height + 2 * additionalOffset, softwareBitmapInput.PixelHeight() - faceBounds.Y);
 

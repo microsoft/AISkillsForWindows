@@ -42,11 +42,13 @@
         <file src="..\cpp\Skill\FaceSentimentAnalyzer\x64\Release\Contoso.FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer.dll" target="runtimes\win10-x64\native" />
         <file src="..\cpp\Skill\FaceSentimentAnalyzer\Win32\Release\Contoso.FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer.dll" target="runtimes\win10-x86\native" />
         <file src="..\cpp\Skill\FaceSentimentAnalyzer\arm\Release\Contoso.FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer.dll" target="runtimes\win10-arm\native" />
+		<file src="..\cpp\Skill\FaceSentimentAnalyzer\arm64\Release\Contoso.FaceSentimentAnalyzer\Contoso.FaceSentimentAnalyzer.dll" target="runtimes\win10-arm64\native" />
         
         <!-- Deobfuscation DLLs -->
         <file src="..\cpp\Skill\Deobfuscator\x64\Release\DeobfuscationHelper\DeobfuscationHelper.dll" target="runtimes\win10-x64\native" />
         <file src="..\cpp\Skill\Deobfuscator\Win32\Release\DeobfuscationHelper\DeobfuscationHelper.dll" target="runtimes\win10-x86\native" />
         <file src="..\cpp\Skill\Deobfuscator\arm\Release\DeobfuscationHelper\DeobfuscationHelper.dll" target="runtimes\win10-arm\native" />
+		<file src="..\cpp\Skill\Deobfuscator\arm64\Release\DeobfuscationHelper\DeobfuscationHelper.dll" target="runtimes\win10-arm64\native" />
 
         <!-- .targets -->
         <file src="Contoso.FaceSentimentAnalyzer_CPP.targets" target="build\native"/>

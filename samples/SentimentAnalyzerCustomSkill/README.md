@@ -78,7 +78,7 @@ In order for local NuGet packages to be available to your app project, you need 
 - [Using the Face Detection effect](https://docs.microsoft.com/en-us/uwp/api/Windows.Media.FaceAnalysis.FaceDetector)
 - [Using Windows ML](https://docs.microsoft.com/en-us/windows/ai/)
 - [Using CryptographicEngine to obfuscate and deobfuscate files at runtime](https://docs.microsoft.com/en-us/uwp/api/windows.security.cryptography.core.symmetrickeyalgorithmprovider)
-- [Acquiring the sentiment analysis ONNX model](https://github.com/onnx/models/tree/master/emotion_ferplus)
+- [Acquiring the sentiment analysis ONNX model](https://github.com/onnx/models/tree/master/vision/body_analysis/emotion_ferplus)
 - [C++/Winrt reference documentation](https://docs.microsoft.com/en-us/windows/uwp/cpp-and-winrt-apis/)
 - [MIDL 3.0 syntax reference guide for authoring .idl files](https://docs.microsoft.com/en-us/uwp/midl-3/intro)
 - [Reg-Free WinRT component activation for Win32 apps and linking dependencies](https://blogs.windows.com/buildingapps/2019/04/30/enhancing-non-packaged-desktop-apps-using-windows-runtime-components)
