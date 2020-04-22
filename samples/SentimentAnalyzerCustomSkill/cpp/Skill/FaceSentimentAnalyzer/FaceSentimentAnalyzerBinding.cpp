@@ -31,7 +31,7 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
     }
 
     //
-    // Returns the sentiment with the highest score
+    // Returns the sentiments with the highest score
     //
     Windows::Foundation::Collections::IVectorView<FaceSentimentAnalyzer::SentimentType> FaceSentimentAnalyzerBinding::PredominantSentiments()
     {

@@ -46,7 +46,7 @@ namespace FaceSentimentAnalysisTestApp
         private enum FrameSourceToggledType { None, ImageFile, Camera};
         private FrameSourceToggledType m_currentFrameSourceToggled = FrameSourceToggledType.None;
 
-        private Stopwatch m_perfStowatch = new Stopwatch();
+        private Stopwatch m_perfStopwatch = new Stopwatch();
 
         // Synchronization
         private SemaphoreSlim m_lock = new SemaphoreSlim(1);
@@ -328,14 +328,14 @@ namespace FaceSentimentAnalysisTestApp
         /// <returns></returns>
         private async Task RunSkillAsync(VideoFrame frame)
         {
-            m_perfStowatch.Restart();
+            m_perfStopwatch.Restart();
             // Update input image and run the skill against it
             await m_binding.SetInputImageAsync(frame);
-            var bindTime = (float)m_perfStowatch.ElapsedTicks / Stopwatch.Frequency * 1000F;
+            var bindTime = (float)m_perfStopwatch.ElapsedTicks / Stopwatch.Frequency * 1000F;
 
             await m_skill.EvaluateAsync(m_binding);
-            var evalTime = (float)m_perfStowatch.ElapsedTicks / Stopwatch.Frequency * 1000F - bindTime;
-            m_perfStowatch.Stop();
+            var evalTime = (float)m_perfStopwatch.ElapsedTicks / Stopwatch.Frequency * 1000F - bindTime;
+            m_perfStopwatch.Stop();
 
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
@@ -445,7 +445,7 @@ namespace FaceSentimentAnalysisTestApp
         }
 
         /// <summary>
-        /// Update coordinates of face bounding boxes and predominant sentiments passsed as parameter
+        /// Update coordinates of face bounding boxes and predominant sentiments passed as parameter
         /// </summary>
         /// <param name="coordinates"></param>
         public void Update(IReadOnlyList<float> bounds, IReadOnlyList<SentimentType> sentiments, IReadOnlyList<float> sentimentScores)
@@ -454,9 +454,9 @@ namespace FaceSentimentAnalysisTestApp
             {
                 return;
             }
-            int sentimentTypeOffest = m_emojis.Count;
+            int sentimentTypeOffset = m_emojis.Count;
             if (bounds.Count / 4 != sentiments.Count 
-                || sentimentScores.Count / sentimentTypeOffest != sentiments.Count)
+                || sentimentScores.Count / sentimentTypeOffset != sentiments.Count)
             {
                 throw new Exception("Must supply a matching count of bounds, sentiments and set of sentiment scores");
             }
@@ -490,13 +490,13 @@ namespace FaceSentimentAnalysisTestApp
 
                 // Update face sentiment scores tooltip
                 string rawScores = "";
-                for(int j = 0; j < sentimentTypeOffest; j++)
+                for(int j = 0; j < sentimentTypeOffset; j++)
                 {
                     if(j == (int)sentiment)
                     {
                         rawScores += "-->";
                     }
-                    rawScores += $"{m_sentimentTypesStrings[j]} : {sentimentScores[sentimentTypeOffest * index + j]}\n";
+                    rawScores += $"{m_sentimentTypesStrings[j]} : {sentimentScores[sentimentTypeOffset * index + j]}\n";
                 }
                 m_controlToolTips[index].Content = rawScores;
                 ToolTipService.SetToolTip(m_sentimentControls[index], m_controlToolTips[index]);

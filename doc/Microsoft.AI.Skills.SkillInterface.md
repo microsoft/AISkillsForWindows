@@ -285,7 +285,7 @@ ISkillFeatureValue FeatureValue{ get; }
 ##### CustomFeatureId
 
 Retrieve an identifier for this feature type if this interface is customized.
-This is usefull to know if 2 features are compatible or need additional processing for example when
+This is useful to know if 2 features are compatible or need additional processing for example when
 sourcing from a feature in runtime class that inherits from this interface.
 
 ```csharp
@@ -1029,7 +1029,7 @@ All SkillExecutionDeviceDirectX available on the system.
 ### SkillExecutionDeviceDXCore <a name="SkillExecutionDeviceDXCore"></a>
 ``implements`` [ISkillExecutionDeviceDX](#ISkillExecutionDeviceDX)
 
-Provides a DirectX execution device based on [DXCore][DXCore] API set and its information useful to infer if a skill could be run with it appropriately in the consumer's context. 
+Provides a [DXCore][DXCore] execution device and its information useful useful to infer if a skill could be run with it appropriately in the consumer's context. 
 Also acts as a static factory for itself.
 
 #### Properties

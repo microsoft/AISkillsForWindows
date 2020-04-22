@@ -40,7 +40,7 @@
         </member>
         <member name="P:Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerBinding.FaceBoundingBoxes">
             <summary>
-            Returns the bounding box around each detected faces
+            Returns the bounding boxes around each detected face
             </summary>
             <returns></returns>
         </member>

@@ -41,7 +41,7 @@ For how to use the AI Skills interface to author a new AI Skill of your own expo
 | ![ConceptTagger logo](./doc/ConceptTaggerLogo.png) | Obtaining classification scores of concepts in images |
 | -- | -- |
 
-### **[ImageScanning](samples/ImageScanning)**
+### **[Image Scanning](samples/ImageScanning)**
 
 | ![ImageScanning logo](./doc/ImageScanningLogo.png) | A set of AI skills to achieve content scanning scenarios such as the ones featured in *OfficeLens* |
 | -- | -- |

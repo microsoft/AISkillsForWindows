@@ -109,7 +109,7 @@ namespace Contoso.FaceSentimentAnalyzer
         }
 
         /// <summary>
-        /// Returns the bounding box around each detected faces
+        /// Returns the bounding boxes around each detected face
         /// </summary>
         /// <returns></returns>
         public IReadOnlyList<float> FaceBoundingBoxes
