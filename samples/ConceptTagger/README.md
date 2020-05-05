@@ -4,6 +4,269 @@ These samples will show how to use the Concept Tagger Vision Skill NuGet package
 
 ![Screenshot of concept tagger skill in action in the UWP sample](./doc/sample_app.jpg)
 
+<details>
+<summary>This concept tagger skill can identify the following 256 concepts:</summary>
+<p>
+
+- airplane;aircraft;airliner;airplanes;plane;planes
+- animal;animals
+- aquarium;aquariums
+- archery;archer;archers
+- art gallery
+- aurora;aurora borealis;auroras;northern lights
+- baby;babies;infant;infants;newborn;newborns
+- backpack;backpacks;knapsack
+- backyard;backyards;yard;yards
+- baking;bake
+- ballroom dance;ballroom dancing
+- bar
+- barn;barns
+- baseball
+- basketball
+- beach;beaches;beachfront;beachside;sandy beach;coast;shore
+- beard;beards;facial hair
+- beer;beers
+- bicycle;bicycles
+- bike;bikes
+- bird;birds
+- birthday;birthdays
+- black and white
+- board game;board games
+- boat;boats
+- bonfire
+- book;books
+- bowling
+- branch
+- bread
+- bridge;bridges
+- building;buildings
+- bus;buses
+- butterfly;butterflies
+- cable car;cable cars
+- cake;cakes
+- camera;cameras
+- camp;camps;camping
+- canoe;canoes
+- canyon;canyons
+- car;cars
+- casino;casinos;gambling
+- castle;castles
+- cat;cats
+- cave;caves;cavern;caverns
+- celebration;celebrations
+- cellphone;cellphones;mobile phone
+- cheerleading;cheerleader;cheerleaders
+- chess
+- chocolate;chocolates
+- Christmas;Xmas
+- Christmas decor
+- cliff;cliffs
+- climb;climbing;climbs
+- clock
+- clown;clowns
+- collage;collages
+- computer;computers
+- concert;concerts
+- cook;cooked;cooking;cooks
+- cricket
+- crowd;crowds;people;crowded
+- cruise ship;cruise liner;cruise ships;cruiseship;cruiseships
+- dance;dancers;dances;dancing
+- deck;decks;patio;patios
+- desert;deserts
+- Diwali;Deewali;Deepawali
+- dog;dogs;puppy
+- draw;drawing;paint;painting
+- dress;attire;dresses
+- duck;ducks
+- dune
+- easter
+- eat;eats;ate;eating
+- factory;factories
+- fair
+- group
+- farm;farms
+- ferris wheel
+- fire;blaze;fires
+- fire department
+- fireplace;fireplaces;hearth;wood stove;woodstove
+- fireworks;firecrackers;firework
+- fish;marine life
+- flower;floral;flowers
+- fog;foggy;mist
+- food
+- football
+- forest;forests
+- fruit;fruits
+- glacier;glaciers
+- glass
+- golf;golfing
+- graduation
+- guitar;guitars
+- gymnast;gymnastics;gymnasts
+- halloween
+- hanukkah;Hannukah;Hanukah;Hanukka;Chanukah
+- helicopter;helicopters
+- hike;hikes;hiking
+- field hockey
+- home
+- horse;horses
+- hot tub;jacuzzi;hot tubs
+- hotel;hotels
+- house;houses
+- hummingbird;hummingbirds
+- ice hockey
+- ice skating;skating
+- icicle;icicles
+- jungle
+- kayak;kayaking;kayaks
+- kid;children;child;kids
+- kiss;kisses;kissing
+- kitchen;kitchens
+- kitten
+- lake;lakes;pond
+- landmark
+- lego;block;blocks
+- lighthouse;lighthouses;beacon
+- lightning
+- martial art
+- mask;masks
+- menu;menus
+- miniature golf;mini golf
+- monument;monuments
+- moon;lunar
+- motorcycle;motorbike;motorcycles
+- mountain;mountains
+- mountain range
+- museum;museums
+- musical theatre
+- nebula
+- newspaper;newspapers
+- night;nights;dark;darkness
+- office;workplace;offices
+- palace;palaces;mansion;mansions
+- park;parks;recreation
+- pen;pens
+- penguin;penguins
+- person
+- piano
+- picnic;picnics
+- pier;piers;dock;docks;wharf
+- pizza;pizzas
+- playground;playgrounds
+- pool;pools
+- portrait;portraits
+- poster;flyer;posters;flyers
+- prom;proms
+- purple
+- race track;race tracks;racetrack;racetracks;raceway;track
+- rainbow
+- ranch;ranches
+- receipt;receipts;bill
+- reef;coral reef;reefs
+- restaurant;eatery;restaurants
+- rock climbing
+- rowing;rowers
+- run;running;ran;jogging;sprint;jog
+- safari;safaris
+- sail
+- sailboat;sailboats;sailing
+- saint Patrick's Day
+- screenshot;screencap;screengrab;screenshots
+- scuba diving;scuba;scuba dive;diving
+- selfies;selfie
+- ship;ships
+- silhouette;silhouettes;shadow;shadows
+- skateboard;skateboarding;skateboards;skate;skater
+- ski;skis;skier;skiers;skiing
+- sky
+- skyline;cityscape;skylines
+- skyscraper;skyscrapers
+- snow;snows
+- softball
+- sport;sports
+- stadium;stadiums
+- stained glass
+- star;stars
+- statue;statues
+- storm;storms
+- street;streets;road;roads
+- stuffed toy
+- sunglasses
+- sunset
+- surf;surfer;surfers;surfing
+- swamp;swamps
+- swim;swam;swimmers;swimming;swims
+- swimming pool;swimming pools
+- table;tables;desk;desks
+- telephone
+- tennis
+- thanksgiving
+- theatre;theatres;theater;theaters
+- tower;towers
+- tractor;tractors
+- train;trains
+- tree;trees
+- truck;trucks
+- trunk
+- tubing
+- turtle;turtles;tortoise;tortoises
+- umbrella
+- vacation
+- valentine's Day;valentine;valentines
+- vehicle;vehicles;transit
+- vineyard;vineyards;winery
+- volleyball;volley ball
+- wakeboard;wakeboarders;wakeboarding
+- water
+- water park
+- waterfall;waterfalls
+- waterski
+- wedding;nuptials;weddings
+- wedding dress
+- wedding reception
+- whiteboard;whiteboards
+- wine;wines
+- wrestle;wrestled;wrestling
+- yacht;yachts
+- zoo
+- barcode;UPC
+- document;documents
+- identification;identifications;ID
+- meme
+- outdoor;outside;outdoors
+- parking;parked;parking lot
+- presentation;presenting;slide;slides
+- smile;smiling;smiles;grin;grins;grinning
+- soccer
+- holiday;holidays
+- winter
+- ice
+- pet;pets
+- hockey
+- ball
+- nature
+- dessert;desserts
+- drink;drinks
+- black
+- phone;phones
+- art
+- music
+- paper;papers
+- toy;toys
+- yellow
+- white
+- teal
+- red
+- pink
+- orange
+- grey
+- green
+- brown
+- blue
+</p>
+</details>
+
 Follow these sample links:
 - [C# UWP sample app](./cs/ConceptTaggerSample_UWP)
 - [Win32 C++/Winrt Desktop console app](./cpp/ConceptTaggerSample_Desktop)
