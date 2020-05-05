@@ -8,18 +8,22 @@ These samples will show how to use the Concept Tagger Vision Skill NuGet package
 <summary>This concept tagger skill can identify the following 256 concepts:</summary>
 <p>
 
+Column1
 - airplane;aircraft;airliner;airplanes;plane;planes
 - animal;animals
 - aquarium;aquariums
 - archery;archer;archers
+- art
 - art gallery
 - aurora;aurora borealis;auroras;northern lights
 - baby;babies;infant;infants;newborn;newborns
 - backpack;backpacks;knapsack
 - backyard;backyards;yard;yards
 - baking;bake
+- ball
 - ballroom dance;ballroom dancing
 - bar
+- barcode;UPC
 - barn;barns
 - baseball
 - basketball
@@ -30,7 +34,9 @@ These samples will show how to use the Concept Tagger Vision Skill NuGet package
 - bike;bikes
 - bird;birds
 - birthday;birthdays
+- black
 - black and white
+- blue
 - board game;board games
 - boat;boats
 - bonfire
@@ -39,6 +45,7 @@ These samples will show how to use the Concept Tagger Vision Skill NuGet package
 - branch
 - bread
 - bridge;bridges
+- brown
 - building;buildings
 - bus;buses
 - butterfly;butterflies
@@ -58,8 +65,8 @@ These samples will show how to use the Concept Tagger Vision Skill NuGet package
 - cheerleading;cheerleader;cheerleaders
 - chess
 - chocolate;chocolates
-- Christmas;Xmas
 - Christmas decor
+- Christmas;Xmas
 - cliff;cliffs
 - climb;climbing;climbs
 - clock
@@ -74,21 +81,24 @@ These samples will show how to use the Concept Tagger Vision Skill NuGet package
 - dance;dancers;dances;dancing
 - deck;decks;patio;patios
 - desert;deserts
+- dessert;desserts
 - Diwali;Deewali;Deepawali
+- document;documents
 - dog;dogs;puppy
 - draw;drawing;paint;painting
 - dress;attire;dresses
+- drink;drinks
 - duck;ducks
 - dune
 - easter
 - eat;eats;ate;eating
 - factory;factories
 - fair
-- group
 - farm;farms
 - ferris wheel
-- fire;blaze;fires
+- field hockey
 - fire department
+- fire;blaze;fires
 - fireplace;fireplaces;hearth;wood stove;woodstove
 - fireworks;firecrackers;firework
 - fish;marine life
@@ -102,22 +112,28 @@ These samples will show how to use the Concept Tagger Vision Skill NuGet package
 - glass
 - golf;golfing
 - graduation
+- green
+- grey
+- group
 - guitar;guitars
 - gymnast;gymnastics;gymnasts
 - halloween
 - hanukkah;Hannukah;Hanukah;Hanukka;Chanukah
 - helicopter;helicopters
 - hike;hikes;hiking
-- field hockey
+- hockey
+- holiday;holidays
 - home
 - horse;horses
 - hot tub;jacuzzi;hot tubs
 - hotel;hotels
 - house;houses
 - hummingbird;hummingbirds
+- ice
 - ice hockey
 - ice skating;skating
 - icicle;icicles
+- identification;identifications;ID
 - jungle
 - kayak;kayaking;kayaks
 - kid;children;child;kids
@@ -131,38 +147,50 @@ These samples will show how to use the Concept Tagger Vision Skill NuGet package
 - lightning
 - martial art
 - mask;masks
+- meme
 - menu;menus
 - miniature golf;mini golf
 - monument;monuments
 - moon;lunar
 - motorcycle;motorbike;motorcycles
-- mountain;mountains
 - mountain range
+- mountain;mountains
 - museum;museums
+- music
 - musical theatre
+- nature
 - nebula
 - newspaper;newspapers
 - night;nights;dark;darkness
 - office;workplace;offices
+- orange
+- outdoor;outside;outdoors
 - palace;palaces;mansion;mansions
+- paper;papers
 - park;parks;recreation
+- parking;parked;parking lot
 - pen;pens
 - penguin;penguins
 - person
+- pet;pets
+- phone;phones
 - piano
 - picnic;picnics
 - pier;piers;dock;docks;wharf
+- pink
 - pizza;pizzas
 - playground;playgrounds
 - pool;pools
 - portrait;portraits
 - poster;flyer;posters;flyers
+- presentation;presenting;slide;slides
 - prom;proms
 - purple
 - race track;race tracks;racetrack;racetracks;raceway;track
 - rainbow
 - ranch;ranches
 - receipt;receipts;bill
+- red
 - reef;coral reef;reefs
 - restaurant;eatery;restaurants
 - rock climbing
@@ -182,7 +210,9 @@ These samples will show how to use the Concept Tagger Vision Skill NuGet package
 - sky
 - skyline;cityscape;skylines
 - skyscraper;skyscrapers
+- smile;smiling;smiles;grin;grins;grinning
 - snow;snows
+- soccer
 - softball
 - sport;sports
 - stadium;stadiums
@@ -199,11 +229,13 @@ These samples will show how to use the Concept Tagger Vision Skill NuGet package
 - swim;swam;swimmers;swimming;swims
 - swimming pool;swimming pools
 - table;tables;desk;desks
+- teal
 - telephone
 - tennis
 - thanksgiving
 - theatre;theatres;theater;theaters
 - tower;towers
+- toy;toys
 - tractor;tractors
 - train;trains
 - tree;trees
@@ -222,48 +254,17 @@ These samples will show how to use the Concept Tagger Vision Skill NuGet package
 - water park
 - waterfall;waterfalls
 - waterski
-- wedding;nuptials;weddings
 - wedding dress
 - wedding reception
+- wedding;nuptials;weddings
+- white
 - whiteboard;whiteboards
 - wine;wines
+- winter
 - wrestle;wrestled;wrestling
 - yacht;yachts
-- zoo
-- barcode;UPC
-- document;documents
-- identification;identifications;ID
-- meme
-- outdoor;outside;outdoors
-- parking;parked;parking lot
-- presentation;presenting;slide;slides
-- smile;smiling;smiles;grin;grins;grinning
-- soccer
-- holiday;holidays
-- winter
-- ice
-- pet;pets
-- hockey
-- ball
-- nature
-- dessert;desserts
-- drink;drinks
-- black
-- phone;phones
-- art
-- music
-- paper;papers
-- toy;toys
 - yellow
-- white
-- teal
-- red
-- pink
-- orange
-- grey
-- green
-- brown
-- blue
+- zoo
 </p>
 </details>
 
