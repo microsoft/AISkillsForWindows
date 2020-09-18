@@ -4,6 +4,94 @@ These samples will show how to use the Object Detector AI Skill for Windows NuGe
 
 ![Screenshot of object detector skill in action in the UWP sample](./doc/sample_app.jpg)
 
+<details><summary>The object detector skill can detect the following 80 objects:
+</summary>
+<p>
+
+[see *ObjectKind* in API doc](https://github.com/microsoft/AISkillsForWindows/blob/master/doc/Microsoft.AI.Skills.Vision.ObjectDetectorPreview.md#ObjectKind)
+- Aeroplane
+- Apple
+- Backpack
+- Banana
+- BaseballBat
+- BaseballGlove
+- Bear
+- Bed
+- Bench
+- Bicycle
+- Bird
+- Boat
+- Book
+- Bottle
+- Bowl
+- Broccoli
+- Bus
+- Cake
+- Car
+- Carrot
+- Cat
+- CellPhone
+- Chair
+- Clock
+- Cow
+- Cup
+- DiningTable
+- Dog
+- Donut
+- Elephant
+- FireHydrant
+- Fork
+- Frisbee
+- Giraffe
+- HairDryer
+- Handbag
+- Horse
+- HotDog
+- Keyboard
+- Kite
+- Knife
+- Laptop
+- Microwave
+- Motorbike
+- Mouse
+- Orange
+- Oven
+- ParkingMeter
+- Person
+- Pizza
+- PottedPlant
+- Refrigerator
+- Remote
+- Sandwich
+- Scissors
+- Sheep
+- Sink
+- Skateboard
+- Skis
+- Snowboard
+- Sofa
+- Spoon
+- SportsBall
+- StopSign
+- Suitcase
+- Surfboard
+- TeddyBear
+- TennisRacket
+- Tie
+- Toaster
+- Toilet
+- Toothbrush
+- TrafficLight
+- Train
+- Truck
+- Tvmonitor
+- Umbrella
+- Vase
+- WineGlass
+- Zebra
+</p>
+</details>
+
 Follow these sample links:
 - [C# UWP sample app](./cs/ObjectDetectorSample_UWP)
 - [Win32 C++/Winrt Desktop console app](./cpp/ObjectDetectorSample_Desktop)
