@@ -1,9 +1,9 @@
 ﻿// Copyright (C) Microsoft Corporation. All rights reserved.
 
 using FrameSourceHelper_UWP;
-using Microsoft.AI.Skills.SkillInterfacePreview;
-using Microsoft.AI.Skills.Vision.ObjectDetectorPreview;
-using Microsoft.AI.Skills.Vision.ObjectTrackerPreview;
+using Microsoft.AI.Skills.SkillInterface;
+using Microsoft.AI.Skills.Vision.ObjectDetector;
+using Microsoft.AI.Skills.Vision.ObjectTracker;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using ObjectTrackerSkillSample;
 using System;

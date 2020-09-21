@@ -37,10 +37,11 @@ static const std::map<SkillExecutionDeviceKind, std::string> SkillExecutionDevic
     { SkillExecutionDeviceKind::Cloud, "Cloud" }
 };
 
-// enum to string lookup table for ImageRectifierInterpolationKind
-static const std::map<ImageRectifierInterpolationKind, std::string> ImageRectifierInterpolationKindLookup = {
-    { ImageRectifierInterpolationKind::Bilinear, "Bilinear" },
-    { ImageRectifierInterpolationKind::Bicubic, "Bicubic" }
+// enum to string lookup table for ImageInterpolationKind
+static const std::map<ImageInterpolationKind, std::string> ImageInterpolationKindLookup = {
+    { ImageInterpolationKind::Bilinear, "Bilinear" },
+    { ImageInterpolationKind::Bicubic, "Bicubic" },
+    { ImageInterpolationKind::HighQuality, "HighQuality" }
 };
 
 // enum to string lookup table for ImageCleaningKind
@@ -129,7 +130,7 @@ hstring SaveModifiedVideoFrameToFile(hstring imageFilePath, VideoFrame frame)
 int main()
 {
     hstring fileName;
-    ImageRectifierInterpolationKind imageRectifierInterpolationKind = ImageRectifierInterpolationKind::Bilinear; // default value if none specified as argument
+    ImageInterpolationKind imageInterpolationKind = ImageInterpolationKind::Bilinear; // default value if none specified as argument
     ImageCleaningKind imageCleaningPreset = ImageCleaningKind::WhiteboardOrDocument; // default value if none specified as argument
 
     std::cout << "Image Scanning C++/WinRT Non-packaged(win32) Console App - "
@@ -155,8 +156,9 @@ int main()
             std::string errorMessage = "Allowed command arguments: <file path to .jpg or .png>";
             errorMessage = errorMessage
                 + " <optional image rectifier interpolation to apply to the rectified image:\n"
-                + "\t1. " + ImageRectifierInterpolationKindLookup.at(ImageRectifierInterpolationKind::Bilinear) + "\n"
-                + "\t2. " + ImageRectifierInterpolationKindLookup.at(ImageRectifierInterpolationKind::Bicubic) + "\n"
+                + "\t1. " + ImageInterpolationKindLookup.at(ImageInterpolationKind::Bilinear) + "\n"
+                + "\t2. " + ImageInterpolationKindLookup.at(ImageInterpolationKind::Bicubic) + "\n"
+                + "\t3. " + ImageInterpolationKindLookup.at(ImageInterpolationKind::HighQuality) + "\n"
                 + "<optional image cleaning preset to apply to the rectified image:\n"
                 + "\t1. " + ImageCleaningKindLookup.at(ImageCleaningKind::WhiteboardOrDocument) + "\n"
                 + "\t2. " + ImageCleaningKindLookup.at(ImageCleaningKind::Whiteboard) + "\n"
@@ -188,10 +190,10 @@ int main()
             if (selection < 1 || selection > 2)
             {
                 std::cout << "Invalid image rectifier interpolation specified, defaulting to Bilinear";
-                selection = (int)ImageRectifierInterpolationKind::Bilinear + 1;
+                selection = (int)ImageInterpolationKind::Bilinear + 1;
             }
         }
-        imageRectifierInterpolationKind = (ImageRectifierInterpolationKind)(selection - 1);
+        imageInterpolationKind = (ImageInterpolationKind)(selection - 1);
 
         // Parse optional image cleaning preset argument
         selection = 0;
@@ -234,7 +236,7 @@ int main()
             std::cout << "Running Skill on : " << SkillExecutionDeviceKindLookup.at(skillDevice.ExecutionDeviceKind());
             std::wcout << L" : " << skillDevice.Name().c_str() << std::endl;
             std::wcout << L"Image file: " << fileName.c_str() << std::endl;
-            std::cout << "ImageRectifierInterpolationKind: " << ImageRectifierInterpolationKindLookup.at(imageRectifierInterpolationKind) << std::endl;
+            std::cout << "ImageInterpolationKind: " << ImageInterpolationKindLookup.at(imageInterpolationKind) << std::endl;
             std::cout << "ImageCleaningPreset: " << ImageCleaningKindLookup.at(imageCleaningPreset) << std::endl;
 
             // ### 1. Quad detection ###
@@ -250,7 +252,7 @@ int main()
             auto imageRectifierBinding = imageRectifierSkill.CreateSkillBindingAsync().get().as<ImageRectifierBinding>();
             imageRectifierBinding.SetInputImageAsync(videoFrame).get();
             imageRectifierBinding.SetInputQuadAsync(quadDetectorBinding.DetectedQuads()).get();
-            imageRectifierBinding.SetInterpolationKind(imageRectifierInterpolationKind);
+            imageRectifierBinding.SetInterpolationKind(imageInterpolationKind);
 
             // Run ImageRectifierSkill
             imageRectifierSkill.EvaluateAsync(imageRectifierBinding).get();

@@ -198,13 +198,13 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AI.Skills.Vision.SkeletalDetector">
-      <Version>1.0.0</Version>
+      <Version>1.1.0-preview</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.10</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
-      <Version>6.0.0</Version>
+      <Version>6.1.1</Version>
     </PackageReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

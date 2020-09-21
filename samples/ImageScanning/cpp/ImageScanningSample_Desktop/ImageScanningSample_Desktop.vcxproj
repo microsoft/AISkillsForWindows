@@ -149,15 +149,15 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\..\..\packages\Microsoft.VCRTForwarders.140.1.0.6\build\native\Microsoft.VCRTForwarders.140.targets" Condition="Exists('..\..\..\packages\Microsoft.VCRTForwarders.140.1.0.6\build\native\Microsoft.VCRTForwarders.140.targets')" />
-    <Import Project="..\..\..\packages\Microsoft.AI.Skills.SkillInterface.1.0.0\build\native\Microsoft.AI.Skills.SkillInterface.targets" Condition="Exists('..\..\..\packages\Microsoft.AI.Skills.SkillInterface.1.0.0\build\native\Microsoft.AI.Skills.SkillInterface.targets')" />
-    <Import Project="..\..\..\packages\Microsoft.AI.Skills.Vision.ImageScanning.1.0.0\build\native\Microsoft.AI.Skills.Vision.ImageScanning.targets" Condition="Exists('..\..\..\packages\Microsoft.AI.Skills.Vision.ImageScanning.1.0.0\build\native\Microsoft.AI.Skills.Vision.ImageScanning.targets')" />
+    <Import Project="..\..\..\packages\Microsoft.AI.Skills.SkillInterface.1.1.0-preview\build\native\Microsoft.AI.Skills.SkillInterface.targets" Condition="Exists('..\..\..\packages\Microsoft.AI.Skills.SkillInterface.1.1.0-preview\build\native\Microsoft.AI.Skills.SkillInterface.targets')" />
+    <Import Project="..\..\..\packages\Microsoft.AI.Skills.Vision.ImageScanning.1.1.0-preview\build\native\Microsoft.AI.Skills.Vision.ImageScanning.targets" Condition="Exists('..\..\..\packages\Microsoft.AI.Skills.Vision.ImageScanning.1.1.0-preview\build\native\Microsoft.AI.Skills.Vision.ImageScanning.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\..\..\packages\Microsoft.VCRTForwarders.140.1.0.6\build\native\Microsoft.VCRTForwarders.140.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.VCRTForwarders.140.1.0.6\build\native\Microsoft.VCRTForwarders.140.targets'))" />
-    <Error Condition="!Exists('..\..\..\packages\Microsoft.AI.Skills.SkillInterface.1.0.0\build\native\Microsoft.AI.Skills.SkillInterface.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.AI.Skills.SkillInterface.1.0.0\build\native\Microsoft.AI.Skills.SkillInterface.targets'))" />
-    <Error Condition="!Exists('..\..\..\packages\Microsoft.AI.Skills.Vision.ImageScanning.1.0.0\build\native\Microsoft.AI.Skills.Vision.ImageScanning.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.AI.Skills.Vision.ImageScanning.1.0.0\build\native\Microsoft.AI.Skills.Vision.ImageScanning.targets'))" />
+    <Error Condition="!Exists('..\..\..\packages\Microsoft.AI.Skills.SkillInterface.1.1.0-preview\build\native\Microsoft.AI.Skills.SkillInterface.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.AI.Skills.SkillInterface.1.1.0-preview\build\native\Microsoft.AI.Skills.SkillInterface.targets'))" />
+    <Error Condition="!Exists('..\..\..\packages\Microsoft.AI.Skills.Vision.ImageScanning.1.1.0-preview\build\native\Microsoft.AI.Skills.Vision.ImageScanning.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.AI.Skills.Vision.ImageScanning.1.1.0-preview\build\native\Microsoft.AI.Skills.Vision.ImageScanning.targets'))" />
   </Target>
 </Project>

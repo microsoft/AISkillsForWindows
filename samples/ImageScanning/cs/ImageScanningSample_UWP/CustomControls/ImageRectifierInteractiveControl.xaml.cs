@@ -25,7 +25,7 @@ namespace ImageScanningSample
     /// </summary>
     public class ImageRectifierBindingInputFeatureValues
     {
-        public ImageRectifierInterpolationKind InterpolationType;
+        public ImageInterpolationKind InterpolationType;
         public List<Point> InputQuad = new List<Point>()
         {
             new Point(0.2, 0.2),
@@ -42,7 +42,7 @@ namespace ImageScanningSample
     {
         private SoftwareBitmapSource m_resultImageSource = new SoftwareBitmapSource();
         private VideoFrame m_cachedRectifiedImage = null;
-        public delegate void InterpolationTypeChangedHandler(ImageRectifierInterpolationKind type);
+        public delegate void InterpolationTypeChangedHandler(ImageInterpolationKind type);
         public event InterpolationTypeChangedHandler InterpolationTypeChanged;
 
         /// <summary>
@@ -95,10 +95,10 @@ namespace ImageScanningSample
         }
 
         /// <summary>
-        /// Update displayed input ImageRectifierInterpolationKind values
+        /// Update displayed input ImageInterpolationKind values
         /// </summary>
         /// <param name="interpolationType"></param>
-        public void UpdateInterpolationType(ImageRectifierInterpolationKind interpolationType)
+        public void UpdateInterpolationType(ImageInterpolationKind interpolationType)
         {
             UIInterpolationType.SelectedIndex = (int)interpolationType;
         }
@@ -108,7 +108,7 @@ namespace ImageScanningSample
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            UIInterpolationType.ItemsSource = Enum.GetNames(typeof(ImageRectifierInterpolationKind));
+            UIInterpolationType.ItemsSource = Enum.GetNames(typeof(ImageInterpolationKind));
             UIResultImage.Source = m_resultImageSource;
         }
 
@@ -118,7 +118,7 @@ namespace ImageScanningSample
             {
                 if (InterpolationTypeChanged != null)
                 {
-                    InterpolationTypeChanged.Invoke((ImageRectifierInterpolationKind)UIInterpolationType.SelectedIndex);
+                    InterpolationTypeChanged.Invoke((ImageInterpolationKind)UIInterpolationType.SelectedIndex);
                 }
             }
         }
@@ -189,7 +189,7 @@ namespace ImageScanningSample
             m_interactiveControl.UpdateInterpolationType(m_ImageRectifierBindingFeatureValues.InterpolationType);
         }
 
-        private void ImageRectifierInteractiveControl_InterpolationTypeChanged(ImageRectifierInterpolationKind type)
+        private void ImageRectifierInteractiveControl_InterpolationTypeChanged(ImageInterpolationKind type)
         {
             m_ImageRectifierBindingFeatureValues.InterpolationType = type;
         }
@@ -210,7 +210,7 @@ namespace ImageScanningSample
             }
             var interpolationType = binding["InterpolationType"].FeatureValue;
             var interpolationTypeFeatureValue = (interpolationType as SkillFeatureTensorStringValue).GetAsVectorView();
-            result.InterpolationType = (ImageRectifierInterpolationKind)Enum.GetNames(typeof(ImageRectifierInterpolationKind)).ToList().IndexOf(interpolationTypeFeatureValue[0]);
+            result.InterpolationType = (ImageInterpolationKind)Enum.GetNames(typeof(ImageInterpolationKind)).ToList().IndexOf(interpolationTypeFeatureValue[0]);
 
             return result;
         }
