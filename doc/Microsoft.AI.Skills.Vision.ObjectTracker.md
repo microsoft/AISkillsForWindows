@@ -1,8 +1,5 @@
 # Microsoft.AI.Skills.Vision.ObjectTracker API documentation
 
-> **NOTE**  
-> The ObjectTracker skill currently only supports CPU execution
-
 + [Classes](#Classes)
   + [ObjectTrackerBinding](#ObjectTrackerBinding)
   + [ObjectTrackerDescriptor](#ObjectTrackerDescriptor)

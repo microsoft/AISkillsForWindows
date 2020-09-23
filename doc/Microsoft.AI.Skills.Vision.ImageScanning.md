@@ -2,7 +2,6 @@
 
 + [Enums](#Enum)
   + [ImageCleaningKind](#ImageCleaningKind)
-  + [ImageRectifierInterpolationKind](#ImageRectifierInterpolationKind)
 + [Classes](#Classes)
   + [CurvedEdgeDetector](#CurvedEdgeDetector)CurvedEdgeDetector
     + [CurvedEdgesDetectorBinding](#CurvedEdgesDetectorBinding)
@@ -43,14 +42,6 @@ Kinds of image interpolation that can be used when rectifying an image using the
 | Picture              |3|
 -----
 
-### ImageRectifierInterpolationKind <a name="ImageRectifierInterpolationKind"></a>
-Kinds of image interpolation that can be used when rectifying an image using the [ImageRectifierSkill](#ImageRectifierSkill) and specified by binding the associated enum value to a [ImageRectifierBinding](#ImageRectifierBinding) instance. 
- 
-| Fields   | Values
-| ---------|--------|
-| Bilinear |0|
-| Bicubic  |1|
------
 
 ## Classes <a name="Classes"></a>
 
@@ -245,7 +236,7 @@ ImageCleanerDescriptor()
 
 ##### OutputImage
 
-Get the result of executing the skill against bound inputs: the resulting image from cropping and rectifying the content of the image within the input bounds onto a rectangle plane using the [ImageRectifierInterpolationKind](#ImageRectifierInterpolationKind) specified.
+Get the result of executing the skill against bound inputs: the resulting image from cropping and rectifying the content of the image within the input bounds onto a rectangle plane using the [ImageInterpolationKind](./Microsoft.AI.Skills.SkillInterface.md#ImageInterpolationKind) specified.
 
 ```csharp
 VideoFrame OutputImage{ get; }
@@ -301,17 +292,17 @@ The asynchronous action for completing this operation.
 
 -----
 
-##### SetInterpolationKind(ImageRectifierInterpolationKind)
+##### SetInterpolationKind(ImageInterpolationKind)
 
-Specify an [ImageRectifierInterpolationKind](#ImageRectifierInterpolationKind) to rectify the bound input image upon skill evaluation.
+Specify an [ImageInterpolationKind](./Microsoft.AI.Skills.SkillInterface.md#ImageInterpolationKind) to rectify the bound input image upon skill evaluation.
 
 ```csharp
-Windows::Foundation::IAsyncAction SetInterpolationKind(ImageRectifierInterpolationKind interpolationKind)
+Windows::Foundation::IAsyncAction SetInterpolationKind(ImageInterpolationKind interpolationKind)
 ```
 
 ###### Parameters
 
-**`interpolationKind`** : [ImageRectifierInterpolationKind](#ImageRectifierInterpolationKind)
+**`interpolationKind`** : [ImageInterpolationKind](./Microsoft.AI.Skills.SkillInterface.md#ImageInterpolationKind)
 
 The image interpolation kind to use.
 

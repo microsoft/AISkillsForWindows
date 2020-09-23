@@ -31,6 +31,9 @@ in a different format than the one required).
   + [SkillExecutionDeviceKind](#SkillExecutionDeviceKind)
   + [SkillElementKind](#SkillElementKind)
   + [D3DFeatureLevelKind](#D3DFeatureLevelKind)
+  + [SIMDInstructionSetKind](#SIMDInstructionSetKind)
+  + [ImageStretchKind](#ImageStretchKind)
+  + [ImageInterpolationKind](#ImageInterpolationKind)
 + [Interfaces](#Interfaces)
   + [ID3D12CommandQueueWrapperNative](#ID3D12CommandQueueWrapperNative)
   + [ISkillExecutionDevice](#ISkillExecutionDevice)
@@ -103,7 +106,7 @@ The *Undefined* value can be leveraged by skill developers to declare a custom k
 | Tensor      |1|
 | Map         |2|
 | Image       |3|
-
+-----
 
 ### SkillExecutionDeviceKind <a name="SkillExecutionDeviceKind"></a>
 Type of execution device where execution of a skill can take place
@@ -121,7 +124,7 @@ This device factors into the instantiation of the skill and the memory placement
 | Npu         |7|
 | Dsp         |8|
 | Gna         |9|
-
+-----
 
 ### SkillElementKind <a name="SkillElementKind"></a>
 Type of element found in composite [ISkillFeatureValue](#ISkillFeatureValue)s like tensor and map.
@@ -141,7 +144,7 @@ Type of element found in composite [ISkillFeatureValue](#ISkillFeatureValue)s li
 | UInt64      |10|
 | Float16     |11|
 | Double      |12|
-
+-----
 
 ### D3DFeatureLevelKind <a name="D3DFeatureLevelKind"></a>
 Feature level support of an [IDirect3DDevice][IDirect3DDevice].
@@ -158,6 +161,66 @@ Note that field values correlate with the native [D3D_FEATURE_LEVEL Enumeration]
 | D3D_FEATURE_LEVEL_11_1  |45312|
 | D3D_FEATURE_LEVEL_12_0  |49152|
 | D3D_FEATURE_LEVEL_12_1  |49408|
+-----
+
+### SIMDInstructionSetKind <a name="SIMDInstructionSetKind"></a>
+SIMD instruction set support of a CPU [SkillExecutionDeviceCPU][SkillExecutionDeviceCPU].
+
+| Fields      | Values
+| ------------|--------|
+| NEON        | 0|
+| MMX         | 1|
+| SSE1        | 2|
+| SSE2        | 3|
+| SSE3        | 4|
+| SSSE3       | 5|
+| SSE4_1      | 6|
+| SSE4_2      | 7|
+| SSE4_a      | 8|
+| FMA3        | 9|
+| FMA4        | 10|
+| XOP         | 11|
+| F16C        | 12|
+| AES         | 13|
+| SHA         | 14|
+| ADX         | 15|
+| ABM         | 16|
+| BMI1        | 17|
+| BMI2        | 18|
+| AVX         | 19|
+| AVX2        | 20|
+| AVX512_F    | 21|
+| AVX512_CD   | 22|
+| AVX512_PF   | 23|
+| AVX512_ER   | 24|
+| AVX512_VL   | 25|
+| AVX512_BW   | 26|
+| AVX512_DQ   | 27|
+| AVX512_IFMA | 28|
+| AVX512_VBMI | 29|
+-----
+
+### ImageStretchKind <a name="ImageStretchKind"></a>
+Type of stretch applied to an image.
+
+| Fields        | Values | Comment |
+| --------------|--------| ------- |
+| None          | 0      | The source content is not resized. If the desired dimensions are bigger than the source dimension, black bars will fill the gap along its dimensions the bigger dimensions. If the desired dimensions are smaller than the source dimension, a center-crop is obtained.
+| Fill          | 1      | The content is resized to fill the destination dimensions. The aspect ratio is not preserved.
+| Uniform       | 2      | The content is resized to fit in the destination dimensions while it preserves its native aspect ratio.
+| UniformToFill | 3      | The content is resized to fill the destination dimensions while it preserves its native aspect ratio. If the aspect ratio of the destination rectangle differs from the source, the source content is clipped to fit in the destination dimensions.
+-----
+
+### ImageInterpolationKind <a name="ImageInterpolationKind"></a>
+Type of interpolation applied to an image
+
+| Fields        | Values |
+| --------------|--------|
+| Bilinear      | 0 |
+| Bicubic       | 1 |
+| HighQuality   | 2 |
+
+-----
 
 
 ## Interfaces<a name="Interfaces"></a>
@@ -187,8 +250,6 @@ The error code indicating either success or a defined failure.
 
 -----
 
-
------
 
 ### ISkillExecutionDevice <a name="ISkillExecutionDevice"></a>
 
@@ -285,7 +346,7 @@ ISkillFeatureValue FeatureValue{ get; }
 ##### CustomFeatureId
 
 Retrieve an identifier for this feature type if this interface is customized.
-This is useful to know if 2 features are compatible or need additional processing for example when
+This is usefull to know if 2 features are compatible or need additional processing for example when
 sourcing from a feature in runtime class that inherits from this interface.
 
 ```csharp
@@ -585,7 +646,6 @@ The required image [BitmapAlphaMode][BitmapAlphaMode].
 Windows.Graphics.Imaging.BitmapAlphaMode SupportedBitmapAlphaMode{ get; }
 ```
 -----
-
 
 ### ISkillDescriptor <a name="ISkillDescriptor"></a>
 
@@ -932,6 +992,21 @@ The SkillExecutionDeviceCPU instantiated.
 
 -----
 
+##### IsSIMDInstructionSetKindSupported()
+
+ Tells if a specific [SIMDInstructionSetKind](#SIMDInstructionSetKind) is supported.
+
+```csharp
+ bool IsSIMDInstructionSetKindSupported(SIMDInstructionSetKind instructionSetKind)
+```
+
+###### Returns
+bool
+
+If the SIMD instruction specified set is supported.
+
+-----
+
 
 ### SkillExecutionDeviceDirectX <a name="SkillExecutionDeviceDirectX"></a>
 ``implements`` [ISkillExecutionDeviceDX](#ISkillExecutionDeviceDX)
@@ -1029,7 +1104,7 @@ All SkillExecutionDeviceDirectX available on the system.
 ### SkillExecutionDeviceDXCore <a name="SkillExecutionDeviceDXCore"></a>
 ``implements`` [ISkillExecutionDeviceDX](#ISkillExecutionDeviceDX)
 
-Provides a [DXCore][DXCore] execution device and its information useful useful to infer if a skill could be run with it appropriately in the consumer's context. 
+Provides a DirectX execution device based on [DXCore][DXCore] API set and its information useful to infer if a skill could be run with it appropriately in the consumer's context. 
 Also acts as a static factory for itself.
 
 #### Properties
@@ -1778,6 +1853,27 @@ The [ISkillFeatureValue](#ISkillFeatureValue) created from the value passed as a
 
 Describes a [ISkillFeatureImageValue](#ISkillFeatureImageValue).
 
+#### Properties
+-----
+
+##### ImageStretchKindApplied
+
+The [ImageStretchKind](#ImageStretchKind) applied to the input value upon calling [*CreateValueAsync()*](SkillFeatureImageDescriptor.CreateValueAsync). The default value is UniformToFill
+
+```csharp
+ImageStretchKind ImageStretchKindApplied{ get;  set;}
+```
+-----
+
+##### ImageInterpolationKindApplied
+
+The [ImageInterpolationKind](#ImageInterpolationKind) applied to the input value upon scaling [*CreateValueAsync()*](SkillFeatureImageDescriptor.CreateValueAsync) if ImageStretchKindApplied is set to Fill. The default value is HighQuality
+
+```csharp
+ImageInterpolationKind ImageInterpolationKindApplied { get;  set;}
+```
+-----
+
 #### Methods
 -----
 ##### SkillFeatureImageDescriptor(string, string, bool, int, int, int, BitmapPixelFormat, BitmapAlphaMode)
@@ -1791,7 +1887,6 @@ SkillFeatureImageDescriptor(
             bool isRequired,
             int width,
             int height,
-            int maxDimension,
             BitmapPixelFormat supportedBitmapPixelFormat,
             BitmapAlphaMode supportedBitmapAlphaMode);
 ```
@@ -1819,9 +1914,60 @@ The required image width (in pixels).
 
 The required image height (in pixels).
 
-**`maxDimension`** : int
+**`supportedBitmapPixelFormat`** : [BitmapPixelFormat][BitmapPixelFormat]
 
-The maximum image width or height allowed (in pixels).
+The required image [BitmapPixelFormat][BitmapPixelFormat].
+
+**`supportedBitmapAlphaMode`** : [BitmapAlphaMode][BitmapAlphaMode]
+
+The required image [BitmapAlphaMode][BitmapAlphaMode].
+
+###### Returns
+[SkillFeatureImageDescriptor](#SkillFeatureImageDescriptor)
+
+The SkillFeatureImageDescriptor instantiated.
+
+-----
+
+##### SkillFeatureImageDescriptor(string, string, bool, int, int, int, BitmapPixelFormat, BitmapAlphaMode)
+
+SkillFeatureImageDescriptor constructor
+
+```csharp
+SkillFeatureImageDescriptor(
+            string name,
+            string description,
+            bool isRequired,
+            int width,
+            int height,
+            BitmapPixelFormat supportedBitmapPixelFormat,
+            BitmapAlphaMode supportedBitmapAlphaMode,
+            ImageStretchKind imageStretchKindApplied,
+            ImageInterpolationKind imageInterpolationKind);
+```
+
+###### Parameters
+
+**`name`** : string
+
+The name of this feature.
+
+**`description`** : string
+
+The description of this feature.
+
+**`isRequired`** : bool
+
+Whether or not this feature is required to be bound in a [ISkillBinding](#ISkillBinding) to proceed to evaluation 
+with the related [ISkill](#ISkill).
+
+**`width`** : int
+
+The required image width (in pixels).
+
+**`height`** : int
+
+The required image height (in pixels).
 
 **`supportedBitmapPixelFormat`** : [BitmapPixelFormat][BitmapPixelFormat]
 
@@ -1830,6 +1976,14 @@ The required image [BitmapPixelFormat][BitmapPixelFormat].
 **`supportedBitmapAlphaMode`** : [BitmapAlphaMode][BitmapAlphaMode]
 
 The required image [BitmapAlphaMode][BitmapAlphaMode].
+
+**`imageStretchKindApplied`** : [ImageStretchKind](#ImageStretchKind)
+
+The image stretch applied.
+
+**`imageInterpolationKindApplied`** : [imageInterpolationKind](#imageInterpolationKind)
+
+The image interpolation leveraged when using a *Fill* [ImageStretchKind](#ImageStretchKind).
 
 ###### Returns
 [SkillFeatureImageDescriptor](#SkillFeatureImageDescriptor)
@@ -1860,6 +2014,8 @@ The execution device to be used by the skill which dictates the memory space.
 [IAsyncOperation][IAsyncOperation]<[ISkillFeatureValue](#ISkillFeatureValue)>
 
 The [ISkillFeatureValue](#ISkillFeatureValue) created from the value passed as argument.
+
+---
 
 
 ### SkillFeatureMapDescriptor <a name="SkillFeatureMapDescriptor"></a>
