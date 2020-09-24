@@ -11,12 +11,12 @@ Follow these sample links:
 
 ## Build samples
 - refer to the [sample guidelines](../README.md)
-- make sure the Microsoft.AI.Skills.Vision.SkeletalDetectorPreview and Microsoft.AI.Skills.SkillInterfacePreview NuGet packages are installed on your app projects
+- make sure the Microsoft.AI.Skills.Vision.SkeletalDetector and Microsoft.AI.Skills.SkillInterface NuGet packages are installed on your app projects
 
 ## Related topics
 
-- [Microsoft.AI.Skills.SkillInterfacePreview API document](../../doc/Microsoft.AI.Skills.SkillInterfacePreview.md)
-- [Microsoft.AI.Skills.Vision.SkeletalDetectorPreview API document](../../doc/Microsoft.AI.Skills.Vision.SkeletalDetectorPreview.md)
+- [Microsoft.AI.Skills.SkillInterface API document](../../doc/Microsoft.AI.Skills.SkillInterface.md)
+- [Microsoft.AI.Skills.Vision.SkeletalDetector API document](../../doc/Microsoft.AI.Skills.Vision.SkeletalDetector.md)
 - [Creating a custom Windows Vision Skill](../SentimentAnalyzerCustomSkill)
 
 ## Run the UWP sample
