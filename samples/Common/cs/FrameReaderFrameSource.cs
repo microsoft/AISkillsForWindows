@@ -1,6 +1,6 @@
 ﻿// Copyright (C) Microsoft Corporation. All rights reserved.
 
-using Microsoft.AI.Skills.SkillInterfacePreview;
+using Microsoft.AI.Skills.SkillInterface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -168,12 +168,12 @@ namespace FrameSourceHelper_UWP
             int preferredFrameWidth = 1920;
             if (m_desiredImageDescriptor != null && m_desiredImageDescriptor.Width != -1)
             {
-                preferredFrameWidth = m_desiredImageDescriptor.Width;
+                preferredFrameWidth = Math.Abs(m_desiredImageDescriptor.Width);
             }
             int preferredFrameHeight = 1080;
             if(m_desiredImageDescriptor != null && m_desiredImageDescriptor.Height != -1)
             {
-                preferredFrameHeight = m_desiredImageDescriptor.Height;
+                preferredFrameHeight = Math.Abs(m_desiredImageDescriptor.Height);
             }
             string preferredMediaEncodingSubtype = MediaEncodingSubtypes.Bgra8;
             if (m_desiredImageDescriptor != null)

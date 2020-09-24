@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\packages\Microsoft.Windows.CppWinRT.2.0.190730.2\build\native\Microsoft.Windows.CppWinRT.props" Condition="Exists('..\..\packages\Microsoft.Windows.CppWinRT.2.0.190730.2\build\native\Microsoft.Windows.CppWinRT.props')" />
+  <Import Project="..\..\packages\Microsoft.Windows.CppWinRT.2.0.200316.3\build\native\Microsoft.Windows.CppWinRT.props" Condition="Exists('..\..\packages\Microsoft.Windows.CppWinRT.2.0.200316.3\build\native\Microsoft.Windows.CppWinRT.props')" />
   <PropertyGroup Label="Globals">
     <MinimalCoreWin>true</MinimalCoreWin>
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -19,7 +19,7 @@
   </ItemGroup>
   <PropertyGroup Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Debug'" Label="Configuration">
@@ -68,6 +68,9 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </Command>
     </PostBuildEvent>
+    <Link>
+      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">OleAut32.lib;kernel32.lib;user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ObfuscationHelper.h" />
@@ -85,44 +88,13 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\..\packages\Microsoft.Windows.CppWinRT.2.0.190730.2\build\native\Microsoft.Windows.CppWinRT.targets" Condition="Exists('..\..\packages\Microsoft.Windows.CppWinRT.2.0.190730.2\build\native\Microsoft.Windows.CppWinRT.targets')" />
+    <Import Project="..\..\packages\Microsoft.Windows.CppWinRT.2.0.200316.3\build\native\Microsoft.Windows.CppWinRT.targets" Condition="Exists('..\..\packages\Microsoft.Windows.CppWinRT.2.0.200316.3\build\native\Microsoft.Windows.CppWinRT.targets')" />
   </ImportGroup>
-  <Target Name="CppWinRTMergeProjectWinMDInputs" DependsOnTargets="Midl;GetCppWinRTDirectWinMDReferences;GetCppWinRTStaticWinMDReferences;GetCppWinRTDynamicWinMDReferences;$(CppWinRTMergeProjectWinMDInputsDependsOn)" Inputs="@(Midl->'%(OutputDirectory)%(MetadataFileName)');@(CppWinRTStaticWinMDReferences)" Outputs="$(CppWinRTProjectWinMD)">
-    <ItemGroup>
-      <_MdMergeInputs Remove="@(_MdMergeInputs)" />
-      <_MdMergeInputs Include="@(Midl)">
-        <WinMDPath>%(Midl.OutputDirectory)%(Midl.MetadataFileName)</WinMDPath>
-      </_MdMergeInputs>
-      <_MdMergeInputs Include="@(CppWinRTStaticWinMDReferences)" />
-      <_MdMergeReferences Remove="@(_MdMergeReferences)" />
-      <_MdMergeReferences Include="@(CppWinRTDirectWinMDReferences)" />
-      <_MdMergeReferences Include="@(CppWinRTDynamicWinMDReferences)" />
-      <_MdMergeReferences Include="@(CppWinRTPlatformWinMDReferences)" />
-      <_MdMergeRefsDistinct Remove="@(_MdMergeRefsDistinct)" />
-      <_MdMergeRefsDistinct Include="@(_MdMergeReferences-&gt;'%(RelativeDir)'-&gt;Distinct())" />
-    </ItemGroup>
-    <PropertyGroup>
-      <_MdMergeCommand>mdmerge.exe -v @(_MdMergeRefsDistinct->'-metadata_dir "%(RelativeDir)."',' ') -o "$(CppWinRTMergedDir)" -i "$(CppWinRTUnmergedDir)" -partial </_MdMergeCommand>
-    </PropertyGroup>
-    <Copy SourceFiles="@(_MdMergeInputs->'%(WinMDPath)')" DestinationFolder="$(CppWinRTUnmergedDir)\" />
-    <Message Text="$(_MdMergeCommand)" Importance="$(CppWinRTVerbosity)" />
-    <Exec Command="$(_MdMergeCommand)" />
-    <ItemGroup>
-      <_MdMergedOutput Remove="@(_MdMergedOutput)" />
-      <_MdMergedOutput Include="$(CppWinRTMergedDir)\*.winmd" />
-    </ItemGroup>
-    <Copy SourceFiles="@(_MdMergedOutput)" DestinationFolder="$(OutDir)" />
-    <ItemGroup>
-      <MdMergeOutput Remove="@(MdMergeOutput)" />
-      <MdMergeOutput Include="$(OutDir)*.winmd" />
-    </ItemGroup>
-    <Message Text="CppWinRTMdMerge output: @(MdMergeOutput)" Importance="$(CppWinRTVerbosity)" />
-  </Target>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\Microsoft.Windows.CppWinRT.2.0.190730.2\build\native\Microsoft.Windows.CppWinRT.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Windows.CppWinRT.2.0.190730.2\build\native\Microsoft.Windows.CppWinRT.props'))" />
-    <Error Condition="!Exists('..\..\packages\Microsoft.Windows.CppWinRT.2.0.190730.2\build\native\Microsoft.Windows.CppWinRT.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Windows.CppWinRT.2.0.190730.2\build\native\Microsoft.Windows.CppWinRT.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.Windows.CppWinRT.2.0.200316.3\build\native\Microsoft.Windows.CppWinRT.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Windows.CppWinRT.2.0.200316.3\build\native\Microsoft.Windows.CppWinRT.props'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.Windows.CppWinRT.2.0.200316.3\build\native\Microsoft.Windows.CppWinRT.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Windows.CppWinRT.2.0.200316.3\build\native\Microsoft.Windows.CppWinRT.targets'))" />
   </Target>
 </Project>

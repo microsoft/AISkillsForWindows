@@ -4,11 +4,11 @@ Performs all steps necessary to build the C# SentimentAnalysis WinRTComponent.
 #>
 <#
 .DESCRIPTION
--BuildArch: You can build for a specific architecture (i.e. "All" or "Win32" or "x64" or "ARM", "All" is default)
+-BuildArch: You can build for a specific architecture (i.e. "All" or "Win32" or "x64" or "ARM" or "ARM64", "All" is default)
 #>
 Param
 (
-	# Specific architecture to build or all of them (i.e. "All" or "Win32" or "x64" or "ARM")
+	# Specific architecture to build or all of them (i.e. "All" or "Win32" or "x64" or "ARM" or "ARM64")
     [string]$BuildArch = "All"
 )
 
@@ -36,7 +36,7 @@ RunCommand "$PSScriptRoot\SetBuildEnv.ps1"
 
 if($BuildArch -like "All")
 {
-    $BuildArchs = @("Win32","x64","ARM")
+    $BuildArchs = @("Win32","x64","ARM","ARM64")
 }
 else
 {

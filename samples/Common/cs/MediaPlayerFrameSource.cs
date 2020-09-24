@@ -1,6 +1,6 @@
 ﻿// Copyright (C) Microsoft Corporation. All rights reserved.
 
-using Microsoft.AI.Skills.SkillInterfacePreview;
+using Microsoft.AI.Skills.SkillInterface;
 using System;
 using System.Threading;
 using System.Threading.Tasks;

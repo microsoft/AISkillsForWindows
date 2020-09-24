@@ -1,6 +1,6 @@
 ﻿// Copyright (C) Microsoft Corporation. All rights reserved.
 
-using Microsoft.AI.Skills.Vision.ObjectDetectorPreview;
+using Microsoft.AI.Skills.Vision.ObjectDetector;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.Foundation;

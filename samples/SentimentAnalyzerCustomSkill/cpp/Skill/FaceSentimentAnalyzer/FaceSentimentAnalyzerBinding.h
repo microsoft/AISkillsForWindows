@@ -4,14 +4,15 @@
 
 #include "FaceSentimentAnalyzerBinding.g.h"
 #include "FaceSentimentAnalyzerSkill.h"
+#include "winrt/Windows.Graphics.Imaging.h"
 
 namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
 {
     struct FaceSentimentAnalyzerBinding : FaceSentimentAnalyzerBindingT<FaceSentimentAnalyzerBinding>
     {
         FaceSentimentAnalyzerBinding(
-            Microsoft::AI::Skills::SkillInterfacePreview::ISkillDescriptor descriptor,
-            Microsoft::AI::Skills::SkillInterfacePreview::ISkillExecutionDevice device,
+            Microsoft::AI::Skills::SkillInterface::ISkillDescriptor descriptor,
+            Microsoft::AI::Skills::SkillInterface::ISkillExecutionDevice device,
             Windows::AI::MachineLearning::LearningModelSession session);
 
         Windows::Foundation::IAsyncAction SetInputImageAsync(Windows::Media::VideoFrame videoFrame)
@@ -20,15 +21,15 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
         }
 
         bool IsFaceFound();
-        Contoso::FaceSentimentAnalyzer::SentimentType PredominantSentiment();
-        Windows::Foundation::Collections::IVectorView<float> FaceRectangle();
+        Windows::Foundation::Collections::IVectorView<Contoso::FaceSentimentAnalyzer::SentimentType> PredominantSentiments();
+        Windows::Foundation::Collections::IVectorView<float> FaceBoundingBoxes();
 
         // interface implementation via the VisionSkillBindingHelper member instance
 #pragma region InterfaceImpl
         using KeyValuePair =
-            Windows::Foundation::Collections::IKeyValuePair<hstring, Microsoft::AI::Skills::SkillInterfacePreview::ISkillFeature>;
+            Windows::Foundation::Collections::IKeyValuePair<hstring, Microsoft::AI::Skills::SkillInterface::ISkillFeature>;
 
-        Microsoft::AI::Skills::SkillInterfacePreview::ISkillExecutionDevice Device()
+        Microsoft::AI::Skills::SkillInterface::ISkillExecutionDevice Device()
         {
             return m_bindingHelper.Device();
         }
@@ -40,7 +41,7 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
             return m_bindingHelper.First();
         }
 
-        Microsoft::AI::Skills::SkillInterfacePreview::ISkillFeature Lookup(hstring const& key)
+        Microsoft::AI::Skills::SkillInterface::ISkillFeature Lookup(hstring const& key)
         {
             return m_bindingHelper.Lookup(key);
         }
@@ -52,8 +53,8 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
             return m_bindingHelper.HasKey(key);
         }
         void Split(
-            Windows::Foundation::Collections::IMapView<hstring, Microsoft::AI::Skills::SkillInterfacePreview::ISkillFeature>& first,
-            Windows::Foundation::Collections::IMapView<hstring, Microsoft::AI::Skills::SkillInterfacePreview::ISkillFeature>& second)
+            Windows::Foundation::Collections::IMapView<hstring, Microsoft::AI::Skills::SkillInterface::ISkillFeature>& first,
+            Windows::Foundation::Collections::IMapView<hstring, Microsoft::AI::Skills::SkillInterface::ISkillFeature>& second)
         {
             m_bindingHelper.GetView().Split(first, second);
         }
@@ -61,7 +62,7 @@ namespace winrt::Contoso::FaceSentimentAnalyzer::implementation
 
     private:
         Windows::AI::MachineLearning::LearningModelBinding m_winmlBinding = nullptr;
-        Microsoft::AI::Skills::SkillInterfacePreview::VisionSkillBindingHelper m_bindingHelper = nullptr;
+        Microsoft::AI::Skills::SkillInterface::VisionSkillBindingHelper m_bindingHelper = nullptr;
 
         friend struct winrt::Contoso::FaceSentimentAnalyzer::implementation::FaceSentimentAnalyzerSkill;
     };

@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 
-using Microsoft.AI.Skills.Vision.ConceptTaggerPreview;
+using Microsoft.AI.Skills.Vision.ConceptTagger;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using System;
 using System.Collections.Generic;

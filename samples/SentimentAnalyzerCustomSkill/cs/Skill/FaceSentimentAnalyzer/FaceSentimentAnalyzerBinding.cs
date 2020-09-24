@@ -2,7 +2,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using Microsoft.AI.Skills.SkillInterfacePreview;
+using Microsoft.AI.Skills.SkillInterface;
 using Windows.AI.MachineLearning;
 using System.Linq;
 using Windows.Foundation;
@@ -68,68 +68,56 @@ namespace Contoso.FaceSentimentAnalyzer
         {
             get
             {
-                ISkillFeature feature = null;
-                if (m_bindingHelper.TryGetValue(FaceSentimentAnalyzerConst.SKILL_OUTPUTNAME_FACERECTANGLE, out feature))
-                {
-                    var faceRect = (feature.FeatureValue as SkillFeatureTensorFloatValue).GetAsVectorView();
-                    return !(faceRect[0] == 0.0f &&
-                        faceRect[1] == 0.0f &&
-                        faceRect[2] == 0.0f &&
-                        faceRect[3] == 0.0f);
-                }
-                else
-                {
-                    return false;
-                }
+                ISkillFeature feature = m_bindingHelper[FaceSentimentAnalyzerConst.SKILL_OUTPUTNAME_FACEBOUNDINGBOXES];
+                var faceBoundingBoxes = (feature.FeatureValue as SkillFeatureTensorFloatValue).GetAsVectorView();
+                return faceBoundingBoxes.Count > 0;
             }
         }
 
         /// <summary>
-        /// Returns the sentiment with the highest score
+        /// Returns the sentiments with the highest score for each face detected
         /// </summary>
         /// <returns></returns>
-        public SentimentType PredominantSentiment
+        public IReadOnlyList<SentimentType> PredominantSentiments
         {
             get
             {
-                SentimentType predominantSentiment = SentimentType.neutral;
-                ISkillFeature feature = null;
-                if (m_bindingHelper.TryGetValue(FaceSentimentAnalyzerConst.SKILL_OUTPUTNAME_FACESENTIMENTSCORES, out feature))
+                var faceSentimentScores = (m_bindingHelper[FaceSentimentAnalyzerConst.SKILL_OUTPUTNAME_FACESENTIMENTSSCORES].FeatureValue as SkillFeatureTensorFloatValue).GetAsVectorView();
+                var predominantSentiments = new List<SentimentType>();
+               
+                for (int i = 0; i < faceSentimentScores.Count; i += ((int)SentimentType.contempt + 1))
                 {
-                    var faceSentimentScores = (feature.FeatureValue as SkillFeatureTensorFloatValue).GetAsVectorView();
-
                     float maxScore = float.MinValue;
-                    for (int i = 0; i < faceSentimentScores.Count; i++)
+                    var predominantSentiment = SentimentType.neutral;
+                    for (int j = 0; j < ((int)SentimentType.contempt + 1); j++)
                     {
-                        if (faceSentimentScores[i] > maxScore)
+                        float score = faceSentimentScores[i + j];
+                        if (score > maxScore)
                         {
-                            predominantSentiment = (SentimentType)i;
-                            maxScore = faceSentimentScores[i];
+                            predominantSentiment = (SentimentType)j;
+                            if (score >= 0.5f) // since scores are softmax, there can't be 2 scores above 0.5, early break opportunity
+                            {
+                                break;
+                            }
+                            maxScore = score;
                         }
                     }
+                    predominantSentiments.Add(predominantSentiment);
                 }
-                
-                return predominantSentiment;
+                return predominantSentiments;
             }
         }
 
         /// <summary>
-        /// Returns the face rectangle
+        /// Returns the bounding boxes around each detected face
         /// </summary>
         /// <returns></returns>
-        public IReadOnlyList<float> FaceRectangle
+        public IReadOnlyList<float> FaceBoundingBoxes
         {
             get
             {
-                ISkillFeature feature = null;
-                if (m_bindingHelper.TryGetValue(FaceSentimentAnalyzerConst.SKILL_OUTPUTNAME_FACERECTANGLE, out feature))
-                {
-                    return (feature.FeatureValue as SkillFeatureTensorFloatValue).GetAsVectorView();
-                }
-                else
-                {
-                    return null;
-                }
+                ISkillFeature feature = m_bindingHelper[FaceSentimentAnalyzerConst.SKILL_OUTPUTNAME_FACEBOUNDINGBOXES];
+                return (feature.FeatureValue as SkillFeatureTensorFloatValue).GetAsVectorView();
             }
         }
 

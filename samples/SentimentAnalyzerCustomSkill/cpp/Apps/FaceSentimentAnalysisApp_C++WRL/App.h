@@ -21,7 +21,7 @@ using namespace ABI::Windows::Foundation::Collections;
 using namespace Microsoft::WRL;
 using namespace Microsoft::WRL::Wrappers;
 using namespace ABI::Contoso::FaceSentimentAnalyzer;
-using namespace ABI::Microsoft::AI::Skills::SkillInterfacePreview;
+using namespace ABI::Microsoft::AI::Skills::SkillInterface;
 using namespace ABI::Windows::System::Threading;
 using namespace ABI::Windows::Devices::Enumeration;
 using namespace ABI::Windows::Media;

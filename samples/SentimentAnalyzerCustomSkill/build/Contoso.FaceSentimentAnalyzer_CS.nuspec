@@ -4,20 +4,19 @@
         <!-- Required elements-->
         <id>Contoso.FaceSentimentAnalyzer_CS</id>
 		<title>Contoso.FaceSentimentAnalyzer_CS</title>
-        <version>0.0.0.8</version>
-        <description>Face Sentiment Analyzer skill sample that extends the Microsoft.AI.Skills.SkillInterfacePreview APIs</description>
+        <version>0.0.1.0</version>
+        <description>Face Sentiment Analyzer AI Skill for Windows sample that extends the Microsoft.AI.Skills.SkillInterface APIs</description>
         <authors>Contoso</authors>
         <owners>Contoso</owners>
         <copyright>Copyright (c) Microsoft Corporation.  All rights reserved.</copyright>
-		<requireLicenseAcceptance>true</requireLicenseAcceptance>
-		<licenseUrl>https://github.com/Microsoft/WindowsVisionSkillsPreview/blob/master/license/doc/LICENSE_package.md</licenseUrl>
-		<projectUrl>https://github.com/Microsoft/WindowsVisionSkillsPreview</projectUrl>
-		<iconUrl>https://github.com/Microsoft/WindowsVisionSkillsPreview/blob/master/doc/Logo.png?raw=true</iconUrl>
-		<releaseNotes>v0.0.0.7 release https://github.com/Microsoft/WindowsVisionSkillsPreview/releases</releaseNotes>
-		<dependencies>
-            <dependency id="Microsoft.AI.Skills.SkillInterfacePreview" version="0.6.0.0" />
+        <requireLicenseAcceptance>true</requireLicenseAcceptance>
+        <licenseUrl>https://github.com/microsoft/AISkillsForWindows/blob/master/doc/LICENSE_package.md</licenseUrl>
+		<projectUrl>https://github.com/microsoft/AISkillsForWindows/</projectUrl>
+		<iconUrl>https://github.com/microsoft/AISkillsForWindows/blob/master/doc/Logo.png?raw=true</iconUrl>
+        <tags>AISkillsForWindows AISkills Contoso SentimentAnalysis</tags>
+        <dependencies>
+            <dependency id="Microsoft.AI.Skills.SkillInterface" version="1.1.0-preview" />
         </dependencies>
-        <tags>ComputerVision AI VisionSkill</tags>
     </metadata>
     <files>
 

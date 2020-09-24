@@ -27,7 +27,7 @@ if (!$VSWherePath)
 }
 
 # Run vswhere.exe to get path to VS installation.
-$VSPath = ((& $VSWherePath -format json) | ConvertFrom-Json).InstallationPath | Select-Object -First 1
+$VSPath = ((& $VSWherePath -latest -format json) | ConvertFrom-Json).InstallationPath | Select-Object -First 1
 
 # Set VS variables for building on the command line.
 cmd /c "`"$VSPath\Common7\Tools\VsDevCmd.bat`" & set" | 

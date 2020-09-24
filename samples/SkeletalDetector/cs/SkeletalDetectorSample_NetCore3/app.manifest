@@ -25,7 +25,7 @@
     <dependentAssembly>
       <assemblyIdentity
           type="win32"
-          name="Microsoft.AI.Skills.SkillInterfacePreview"
+          name="Microsoft.AI.Skills.SkillInterface"
           version="1.0.0.0"/>
     </dependentAssembly>
   </dependency>
@@ -34,7 +34,7 @@
     <dependentAssembly>
       <assemblyIdentity
           type="win32"
-          name="Microsoft.AI.Skills.Vision.SkeletalDetectorPreview"
+          name="Microsoft.AI.Skills.Vision.SkeletalDetector"
           version="1.0.0.0"/>
     </dependentAssembly>
   </dependency>

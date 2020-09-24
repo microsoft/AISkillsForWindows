@@ -47,8 +47,7 @@ HRESULT App::FrameArrivedHandler(IMediaFrameReader* pFrameReader, IMediaFrameArr
     CHECKHR_GOTO(m_spFaceSentimentSkillBinding->get_IsFaceFound(&bIsFaceFound), cleanup);
     if (bIsFaceFound)
     {
-        SentimentType sentiment;
-        static const std::string sentiments[] = {
+        static const std::string classifiedSentiments[] = {
             "neutral ",
             "happiness ",
             "surprise ",
@@ -58,8 +57,11 @@ HRESULT App::FrameArrivedHandler(IMediaFrameReader* pFrameReader, IMediaFrameArr
             "fear",
             "contempt"
         };
-        CHECKHR_GOTO(m_spFaceSentimentSkillBinding->get_PredominantSentiment(&sentiment), cleanup);
-        std::string outText = " Your sentiment looks like:  " + sentiments[sentiment] + "\t\t\t\t\r";
+        ComPtr<IVectorView<SentimentType>> sentiments;
+        SentimentType sentiment;
+        CHECKHR_GOTO(m_spFaceSentimentSkillBinding->get_PredominantSentiments(&sentiments), cleanup);
+        CHECKHR_GOTO(sentiments->GetAt(0, &sentiment), cleanup);
+        std::string outText = " Your sentiment looks like:  " + classifiedSentiments[(int)(sentiment)] + "\t\t\t\t\r";
 
         std::cout << outText;
     }

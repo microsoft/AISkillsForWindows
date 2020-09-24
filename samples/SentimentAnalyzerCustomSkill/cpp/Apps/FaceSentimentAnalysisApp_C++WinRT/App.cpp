@@ -24,8 +24,8 @@ winrt::Windows::Foundation::IAsyncAction App::FrameArrivedHandler(MediaFrameRead
             m_Skill.EvaluateAsync(m_FaceSentimentSkillBinding).get();
             if (m_FaceSentimentSkillBinding.IsFaceFound())
             {
-                auto sentiment = m_FaceSentimentSkillBinding.PredominantSentiment();
-                static const std::string sentiments[] = {
+                auto sentiments = m_FaceSentimentSkillBinding.PredominantSentiments();
+                static const std::string classifiedSentiments[] = {
                     "neutral ",
                     "happiness ",
                     "surprise ",
@@ -35,7 +35,7 @@ winrt::Windows::Foundation::IAsyncAction App::FrameArrivedHandler(MediaFrameRead
                     "fear",
                     "contempt"
                 };
-                std::string outText = "\tYour sentiment looks like:  " + sentiments[(int)sentiment] + "\t\t\t\t\r";
+                std::string outText = "\tYour sentiment looks like:  " + classifiedSentiments[(int)sentiments.GetAt(0)] + "\t\t\t\t\r";
                 std::cout << outText;
             }
             else

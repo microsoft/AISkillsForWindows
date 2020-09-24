@@ -11,7 +11,7 @@ namespace Contoso.FaceSentimentAnalyzer
     /// </summary>
     [contract(Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerSkillAPI, 1)]
     [interface_name("Contoso.FaceSentimentAnalyzer.FaceSentimentAnalyzerSkill", 4C78F6A3-3F20-4D88-91BC-F98D8804F34A)]
-    runtimeclass FaceSentimentAnalyzerSkill : Microsoft.AI.Skills.SkillInterfacePreview.ISkill
+    runtimeclass FaceSentimentAnalyzerSkill : Microsoft.AI.Skills.SkillInterface.ISkill
     {
         
     }

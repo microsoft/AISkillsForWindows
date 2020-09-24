@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Windows.Media;
 using Windows.Media.Capture;
 using Windows.Media.Capture.Frames;
-using Microsoft.AI.Skills.Vision.ConceptTaggerPreview;
+using Microsoft.AI.Skills.Vision.ConceptTagger;
 using System.Diagnostics;
 using Windows.Media.MediaProperties;
 using Windows.Graphics.Imaging;

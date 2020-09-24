@@ -3,7 +3,8 @@
 using System;
 using System.Threading.Tasks;
 using Windows.Media;
-using Microsoft.AI.Skills.Vision.ImageScanningPreview;
+using Microsoft.AI.Skills.SkillInterface;
+using Microsoft.AI.Skills.Vision.ImageScanning;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
@@ -92,7 +93,7 @@ namespace ImageScanningSample_NetCore3
             Task.Run(async () =>
             {
                 string fileName;
-                ImageRectifierInterpolationKind imageRectifierInterpolationKind = ImageRectifierInterpolationKind.Bilinear; // default value if none specified as argument
+                ImageInterpolationKind imageInterpolationKind = ImageInterpolationKind.Bilinear; // default value if none specified as argument
                 ImageCleaningKind imageCleaningPreset = ImageCleaningKind.WhiteboardOrDocument; // default value if none specified as argument
                 bool skipQuadDetectionImageRectification = false;
 
@@ -108,8 +109,9 @@ namespace ImageScanningSample_NetCore3
                     {
                         Console.WriteLine($"Allowed command arguments: <file path to .jpg or .png>" +
                                             " <optional image rectifier interpolation to apply to the rectified image:\n" +
-                                            $"\t1. {ImageRectifierInterpolationKind.Bilinear}\n" +
-                                            $"\t2. {ImageRectifierInterpolationKind.Bicubic}>\n" +
+                                            $"\t1. {ImageInterpolationKind.Bilinear}\n" +
+                                            $"\t2. {ImageInterpolationKind.Bicubic}>\n" +
+                                            $"\t3. {ImageInterpolationKind.HighQuality}>\n" +
                                             "<optional image cleaning preset to apply to the rectified image:\n" +
                                             $"\t1. {ImageCleaningKind.WhiteboardOrDocument}\n" +
                                             $"\t2. {ImageCleaningKind.Whiteboard}\n" +
@@ -130,8 +132,9 @@ namespace ImageScanningSample_NetCore3
                         while (selection < 1 || selection > 3)
                         {
                             Console.WriteLine($"Select the image rectifier interpolation to apply to the rectified image:\n" +
-                                            $"\t1. {ImageRectifierInterpolationKind.Bilinear}\n" +
-                                            $"\t2. {ImageRectifierInterpolationKind.Bicubic}\n" +
+                                            $"\t1. {ImageInterpolationKind.Bilinear}\n" +
+                                            $"\t2. {ImageInterpolationKind.Bicubic}\n" +
+                                            $"\t2. {ImageInterpolationKind.HighQuality}\n" +
                                             $"\t3. Skip Quad Detection and Image Rectification\n");
                             selection = int.Parse(Console.ReadLine());
                         }
@@ -141,14 +144,14 @@ namespace ImageScanningSample_NetCore3
                         selection = int.Parse(args[1]);
                         if (selection < 1 || selection > 3)
                         {
-                            Console.WriteLine($"Invalid image rectifier interpolation specified, defaulting to {ImageRectifierInterpolationKind.Bilinear.ToString()}");
-                            selection = (int)ImageRectifierInterpolationKind.Bilinear + 1;
+                            Console.WriteLine($"Invalid image rectifier interpolation specified, defaulting to {ImageInterpolationKind.Bilinear.ToString()}");
+                            selection = (int)ImageInterpolationKind.Bilinear + 1;
                         }
                     }
                     skipQuadDetectionImageRectification = (selection == 3);
                     if (!skipQuadDetectionImageRectification)
                     {
-                        imageRectifierInterpolationKind = (ImageRectifierInterpolationKind)(selection - 1);
+                        imageInterpolationKind = (ImageInterpolationKind)(selection - 1);
                     }
 
                     // Parse optional image cleaning preset argument
@@ -216,7 +219,7 @@ namespace ImageScanningSample_NetCore3
                         var imageRectifierBinding = await imageRectifierSkill.CreateSkillBindingAsync() as ImageRectifierBinding;
                         await imageRectifierBinding.SetInputImageAsync(videoFrame);
                         await imageRectifierBinding.SetInputQuadAsync(quadDetectorBinding.DetectedQuads);
-                        imageRectifierBinding.SetInterpolationKind(imageRectifierInterpolationKind);
+                        imageRectifierBinding.SetInterpolationKind(imageInterpolationKind);
 
                         // Run ImageRectifierSkill
                         await imageRectifierSkill.EvaluateAsync(imageRectifierBinding);

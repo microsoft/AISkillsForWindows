@@ -1,6 +1,6 @@
-# Object Tracker Windows Vision Skill samples
+# Object Tracker AI Skill for Windows samples
 
-These samples will show how to use the Object Tracker Vision Skill NuGet package to create apps that can track objects in a video feed
+These samples will show how to use the Object Tracker AI Skill for Windows NuGet package to create apps that can track objects in a video feed
 
 ![Screenshot of object tracker skill in action in the UWP sample](./doc/sample_app.jpg)
 
@@ -9,13 +9,13 @@ Follow these sample links:
 
 ## Build samples
 - refer to the [sample guidelines](../README.md)
-- make sure the Microsoft.AI.Skills.Vision.ObjectTrackerPreview and Microsoft.AI.Skills.SkillInterfacePreview NuGet packages are installed on your app projects
+- make sure the Microsoft.AI.Skills.Vision.ObjectTracker and Microsoft.AI.Skills.SkillInterface NuGet packages are installed on your app projects
 
 ## Related topics
 
-- [Microsoft.AI.Skills.SkillInterfacePreview API document](../../doc/Microsoft.AI.Skills.SkillInterfacePreview.md)
-- [Microsoft.AI.Skills.Vision.ObjectTrackerPreview API document](../../doc/Microsoft.AI.Skills.Vision.ObjectTrackerPreview.md)
-- [Creating a custom Windows Vision Skill](../SentimentAnalyzerCustomSkill)
+- [Microsoft.AI.Skills.SkillInterface API document](../../doc/Microsoft.AI.Skills.SkillInterface.md)
+- [Microsoft.AI.Skills.Vision.ObjectTracker API document](../../doc/Microsoft.AI.Skills.Vision.ObjectTracker.md)
+- [Creating a custom Windows AI Skill for Windows](../SentimentAnalyzerCustomSkill)
 
 ## Run the UWP sample
 
@@ -23,7 +23,7 @@ The app supports two types of media inputs: webcam and video file. Use the butto
 
 ### Using the ObjectTracker skill
 
-As with all Vision Skills, the Object Tracker skill is composed of an `ISkillDescriptor` (which holds general skill information), the `ISkill` instance (which is bound to a specific `ISkillExecutionDevice`), and the skill's `ISkillBinding` (which holds skill inputs, outputs, and any state information). You can instantiate your Object Tracker skill as follows.
+As with all AI Skills for Windows, the Object Tracker skill is composed of an `ISkillDescriptor` (which holds general skill information), the `ISkill` instance (which is bound to a specific `ISkillExecutionDevice`), and the skill's `ISkillBinding` (which holds skill inputs, outputs, and any state information). You can instantiate your Object Tracker skill as follows.
 
 ```csharp
 ObjectTrackerDescriptor descriptor = new ObjectTrackerDescriptor();
@@ -50,7 +50,7 @@ await skill.EvaluateAsync(binding);
 // Results are saved to binding object
 ```
 
-Note that there is an optional input which enables/disables expanding search area in the event of tracking failure (see [ObjectTrackerPreview's API documentation](../../doc/Microsoft.AI.Skills.Vision.ObjectTrackerPreview.md#SetEnableExpandingSearchAreaAsync) for more details). The input is on a per-binding basis and can be set as:
+Note that there is an optional input which enables/disables expanding search area in the event of tracking failure (see [ObjectTracker's API documentation](../../doc/Microsoft.AI.Skills.Vision.ObjectTracker.md#SetEnableExpandingSearchAreaAsync) for more details). The input is on a per-binding basis and can be set as:
 
 ```csharp
 await binding.SetEnableExpandingSearchAreaAsync(enableExpandingSearchArea); // enableExpandingSearchArea is a bool

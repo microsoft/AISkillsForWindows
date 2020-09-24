@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Windows.Media;
 using Windows.Media.Capture;
 using Windows.Media.Capture.Frames;
-using Microsoft.AI.Skills.Vision.SkeletalDetectorPreview;
+using Microsoft.AI.Skills.Vision.SkeletalDetector;
 using System.Diagnostics;
 using Windows.Media.MediaProperties;
 using CameraHelper_NetCore3;
@@ -71,7 +71,7 @@ namespace SkeletalDetectorSample_NetCore3
                                 m_evalPerfStopwatch.Stop();
 
                                 // Display bind and eval time
-                                string outText = $"bind: {inputBindTime.ToString("F2")}ms, eval: {detectionRunTime.ToString("F2")}ms | ";
+                                string outText = DateTime.Now.ToString() + $" | bind: {inputBindTime.ToString("F2")}ms, eval: {detectionRunTime.ToString("F2")}ms | ";
                                 if (binding.Bodies == null)
                                 {
                                     // If no face found, hide the rectangle in the UI
