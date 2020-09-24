@@ -275,19 +275,19 @@ Follow these sample links:
 
 ## Build samples
 - refer to the [sample guidelines](../README.md)
-- make sure the Microsoft.AI.Skills.Vision.ConceptTaggerPreview and Microsoft.AI.Skills.SkillInterfacePreview NuGet packages are installed on your app projects
+- make sure the Microsoft.AI.Skills.Vision.ConceptTagger and Microsoft.AI.Skills.SkillInterface NuGet packages are installed on your app projects
 
 ## Related topics
 
-- [Microsoft.AI.Skills.SkillInterfacePreview API document](../../doc/Microsoft.AI.Skills.SkillInterfacePreview.md)
-- [Microsoft.AI.Skills.Vision.ConceptTaggerPreview API document](../../doc/Microsoft.AI.Skills.Vision.ConceptTaggerPreview.md)
+- [Microsoft.AI.Skills.SkillInterface API document](../../doc/Microsoft.AI.Skills.SkillInterface.md)
+- [Microsoft.AI.Skills.Vision.ConceptTagger API document](../../doc/Microsoft.AI.Skills.Vision.ConceptTagger.md)
 - [Creating a custom Windows Vision Skill](../SentimentAnalyzerCustomSkill)
 
 ## Run the UWP sample
 
 The app allows you to select multiple image files and process them with the skill. Use the buttons at the top of the window to select one or more .jpg or .png image files. Click the "Details and options" expander to view more details about the ConceptTagger skill as well as configure options such as the `ISkillExecutionDevice` to run the skill on.
 
-Additionally, the app shows you how you can instantiate multiple `ISkill`and `ISkillBinding` and use them in parallel to distribute the computation across the available computing cores of a CPU. The app reads the amount of CPU cores available from the [SkillExecutionDeviceCPU](../../doc/Microsoft.AI.Skills.Vision.ConceptTaggerPreview.md#SkillExecutionDeviceCPU) returned from [ISkillDescriptor.GetSupportedExecutionDevicesAsync()](../../doc/Microsoft.AI.Skills.Vision.ConceptTaggerPreview.md#ISkillDescriptor.GetSupportedExecutionDevicesAsync)
+Additionally, the app shows you how you can instantiate multiple `ISkill`and `ISkillBinding` and use them in parallel to distribute the computation across the available computing cores of a CPU. The app reads the amount of CPU cores available from the [SkillExecutionDeviceCPU](../../doc/Microsoft.AI.Skills.Vision.ConceptTagger.md#SkillExecutionDeviceCPU) returned from [ISkillDescriptor.GetSupportedExecutionDevicesAsync()](../../doc/Microsoft.AI.Skills.Vision.ConceptTagger.md#ISkillDescriptor.GetSupportedExecutionDevicesAsync)
 
 ### Using the ConceptTagger skill
 
