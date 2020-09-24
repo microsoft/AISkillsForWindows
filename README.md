@@ -16,7 +16,7 @@ For a guide on how to use the *AI Skills for Windows* interfaces to author a new
 
 ### **[Sentiment Analyzer Sample Skill](samples/SentimentAnalyzerSampleSkill)**
 
-| ![FaceSentimentAnalyzer sample skill logo](./doc/FaceSentimentAnalyzerLogo.png) | Walking through the steps to create, in C++ or in C#, a sample *AI Skill for Windows* that leverages the Windows [FaceDetector](https://docs.microsoft.com/en-us/uwp/api/Windows.Media.FaceAnalysis.FaceDetector) to extract sub-images of face area and [Windows ML](https://docs.microsoft.com/en-us/windows/ai/windows-ml/) to run inference with a sentiment classifier model that takes images as inputs and returns predictions. Theres are also examples of Win32, .Net Core 3.0 and UWP applications that ingest this *AI Skill for Windows* and use MediaFoundation APIs to feed it with frames from a camera or file. |
+| ![FaceSentimentAnalyzer sample skill logo](./doc/FaceSentimentAnalyzerLogo.png)____________ | Walking through the steps to create, in C++ or in C#, a sample *AI Skill for Windows* that leverages the Windows [FaceDetector](https://docs.microsoft.com/en-us/uwp/api/Windows.Media.FaceAnalysis.FaceDetector) to extract sub-images of face area and [Windows ML](https://docs.microsoft.com/en-us/windows/ai/windows-ml/) to run inference with a sentiment classifier model that takes images as inputs and returns predictions. Theres are also examples of Win32, .Net Core 3.0 and UWP applications that ingest this *AI Skill for Windows* and use MediaFoundation APIs to feed it with frames from a camera or file. |
 | -- | -- |
 
 ## Code samples for using *AI skills for Windows* [published by Microsoft on nuget.org](https://www.nuget.org/profiles/VisionSkills) <a name="MicrosoftSkills"></a>
