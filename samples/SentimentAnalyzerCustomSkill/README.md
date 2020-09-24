@@ -1,11 +1,11 @@
 ﻿# Sentiment Analyzer AI Skill sample
 
 Provides an end-to-end sample to show how to write an AI Skill for Windows by extending the [Microsoft.AI.Skills.SkillInterface](../../doc/Microsoft.AI.Skills.SkillInterface.md) base API.
-This skill's implementation leverages the Windows built-in `FaceDetector` and `Windows.AI` APIs along a Machine Learning model in ONNX format to identify a face in an image and infer its sentiment.
-This sample also contains scripts to package the skill's Windows Runtime Component and its assets to a NuGet package (.nupkg). It also provides sample applications written in C++ and C# targetting UWP, Win32 Desktop and .NetCore 3.0 Desktop that ingest this NuGet package and exercise the skill against images.
+This skill's implementation leverages the Windows built-in `FaceDetector` and `Windows.AI` APIs along a Machine Learning model in ONNX format to identify a face in an image, segment the portion of the image where the face is, feed it to the ml model and infer its sentiment.
+This sample also contains scripts to package the skill's Windows Runtime Component and its assets to a NuGet package (.nupkg). It also provides sample applications written in C++ and C# targetting UWP, Win32 Desktop and .NetCore 3.0 Desktop that ingest this NuGet package and execute the skill against images.
 
 ## Scenario
-A developer wants to expose a functionality to his/her users that infers the sentiments of persons from an image.
+A developer wants to expose a functionality to his/her users that infers the sentiments of persons from an image like so:
 
 ![TestApp1](./doc/TestApp1.jpg)
 
@@ -44,13 +44,22 @@ Specifically, this sample shows how to:
 2. Open a powershell command line and navigate to the *<root>/build/* folder.
 
 3. To build and package the **C# version** of the sample skill:
-    1. Run the included powershell script named *BuildSentimentAnalyzer_CS.ps1*
-    2. Once the sample is built, to generate a NuGet package from it, you can run the included powershell script named *PackageSentimentAnalyzer_CS.ps1*. You should see a *Contoso.FaceSentimentAnalyzer_CS\*.nupkg* file generated.
+    1. Run the included powershell script named *BuildSentimentAnalyzer_CS.ps1* which will build the C# version of the FaceDetection AI Skill for all architectures (x64, x86, ARM64, ARM)
+    2. Once the sample is built, to generate a NuGet package from it, you can run the included powershell script named *PackageSentimentAnalyzer_CS.ps1* or run manualy from a cmd window opened in this folder the following:
+        ````
+        .\nuget.exe pack Contoso.FaceSentimentAnalyzer_CS.nuspec
+        ````
+        You should see a *Contoso.FaceSentimentAnalyzer_CS\*.nupkg* NuGet package file generated.
 
 4. To build and package the **C++/WinRT version** of the skill:
-    1. Run the included powershell script named *BuildSentimentAnalyzer_CPP.ps1* <a name="ManifestGeneration"></a>
+    1. Run the included powershell script named *BuildSentimentAnalyzer_CPP.ps1* which will build the C++ version of the FaceDetection AI Skill for all architectures (x64, x86, ARM64, ARM) 
+        <a name="ManifestGeneration"></a>
         - This version of the skill will run a script as a post-build step that generates a [manifest file](https://docs.microsoft.com/en-us/windows/desktop/sbscs/manifests) (.manifest). This enables a mechanism that provides interoperability with **Win32** and **.NetCore 3.0** apps by activating COM components exposed in our skill Windows Runtime Component we just built.
-    2. Once the sample is built, to generate a NuGet package from it, you can run the included powershell script named *PackageSentimentAnalyzer_CPP.ps1*. You should see a *FaceSentimentAnalyzer_CPP\*.nupkg* file generated.
+    2. Once the sample is built, to generate a NuGet package from it, you can run the included powershell script named *PackageSentimentAnalyzer_CPP.ps1*. 
+        ````
+        .\nuget.exe pack Contoso.FaceSentimentAnalyzer_CPP.nuspec
+        ````
+        You should see a *FaceSentimentAnalyzer_CPP\*.nupkg* NuGet package file generated.
 
 ### 2. Build and run the sample apps
 
@@ -72,6 +81,7 @@ In order for local NuGet packages to be available to your app project, you need 
 
 3. From your test app project, make sure you install the skill NuGet package by right-clicking on your project \> *Manage NuGet Packages*, then make sure the *Package Source* points to your custom NuGet source, then click *Install*
 ![LocalNugetHowTo3](./doc/localNugetHowTo3.jpg)
+    >**Important to note:** make sure you check the box named "*include prerelease*" to see the preview versions of NuGet packages such as the version of the *Microsoft.AI.Skills.SkillInterface* leveraged by the FaceDetection AI Skill this app ingests.
 
 ## Related topics
 **Reference**

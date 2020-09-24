@@ -15,7 +15,7 @@
 		<iconUrl>https://github.com/microsoft/AISkillsForWindows/blob/master/doc/Logo.png?raw=true</iconUrl>
         <tags>AISkillsForWindows AISkills Contoso SentimentAnalysis</tags>
         <dependencies>
-            <dependency id="Microsoft.AI.Skills.SkillInterface" version="1.0.0.0" />
+            <dependency id="Microsoft.AI.Skills.SkillInterface" version="1.1.0-preview" />
         </dependencies>
     </metadata>
     <files>

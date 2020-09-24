@@ -2,24 +2,24 @@
 
 ## Summary
 
-Implementing and integrating efficient AI and Computer Vision (CV) solutions is a hard task for developers. The industry is moving at a fast pace and the amount of custom-tailored solutions coming out makes it almost impossible for app developers to keep up easily. 
+Implementing and integrating efficient AI and Computer Vision (CV) solutions is a hard task for developers. The industry is moving at a fast pace and the amount of custom-tailored solutions coming out makes it almost impossible for app developers to keep up easily. We provide a base framework to expose AI solutions called *AI Skills for Windows* as well as pre-built common solutions (i.e. detection, classification, segmentation, etc.) developed by [Microsoft](*MicrosoftSkills) and [partners](#IntelSkills).
 
-This framework is meant to standardize the way AI and CV is put to use within a Windows application (i.e.: UWP, Desktop Win32, .Net Core 3.0+) running on the edge. It aims to abstract away the complexity of AI techniques by simply defining the concept of *skills* which are modular pieces of code that process input(s) and produce output(s). The implementation that contains the complex details is encapsulated by extended WinRT API that inherits the base class present in the Microsoft.AI.Skills.SkillInterface namespace, which leverages built-in Windows primitives which in-turn eases interop with built-in hardware acceleration leveraged by frameworks such as *[Windows ML](https://docs.microsoft.com/en-us/windows/ai/windows-ml/)*.
+The *AI Skills for Windows* framework is meant to standardize the way AI and CV is put to use within a Windows application (i.e.: UWP, Desktop Win32, .Net Core 3.0+) running on the edge. It aims to abstract away the complexity of AI techniques by simply defining the concept of *skills* which are modular pieces of code that process input(s) and produce output(s). The implementation that contains the complex details (i.e. pre and post processing of data, model inference, algorithm, transcoding, applying the right heuristics, etc.) is encapsulated by WinRT APIs that inherits the base class present in the [Microsoft.AI.Skills.SkillInterface](./doc/Microsoft.AI.Skills.SkillInterface.md) namespace, which leverages built-in Windows primitives which in-turn eases interop with built-in hardware acceleration leveraged by frameworks such as *[Windows ML](https://docs.microsoft.com/en-us/windows/ai/windows-ml/)*. All *AI Skills for Windows* derivatives follow the same programatic paradigm and flow from a developer consumer standpoint: if you understand how to use one *AI Skill for Windows*, you understand how to use them all. 
 
 While this release focuses on vision-oriented scenarios and primitives, this API is meant to accommodate any kind of input and output variable and a wide range of scenarios (Vision, Audio, Text, etc.). Any developer can extend this API set and expose their own AI skills. [See skills released by Intel](#IntelSkills)
 
-If you are looking for the preview release samples a doc, we archived them in a branch here: *[Preview branch](https://github.com/microsoft/AISkillsForWindows/tree/Preview)*
+If you are looking for the earlier preview release samples and documentation, we archived them in a branch here: *[Preview branch](https://github.com/microsoft/AISkillsForWindows/tree/Preview)*
 
-## Creating a skill of your own
+## Creating your own *AI Skill for Windows* to empower others
 
-For how to use the AI Skills interface to author a new AI Skill of your own exposing your AI solution to other Windows app developers, and creating an actual app to consume this crafted skill, see this sample:
+For a guide on how to use the *AI Skills for Windows* interfaces to author a new *AI Skill for Windows* of your own exposing your AI solution to other Windows app developers, and creating an actual app to consume this crafted skill, see this complete end-to-end sample:
 
 ### **[Sentiment Analyzer Sample Skill](samples/SentimentAnalyzerSampleSkill)**
 
-| ![FaceSentimentAnalyzer sample skill logo](./doc/FaceSentimentAnalyzerLogo.png) | Walking through the steps to create, in C++ or in C#, a sample AI Skill that leverages WinML and MediaFoundation as well as how to consume it in a Win32 Dektop, .Net Core 3.0+ or UWP app|
+| ![FaceSentimentAnalyzer sample skill logo](./doc/FaceSentimentAnalyzerLogo.png) | Walking through the steps to create, in C++ or in C#, a sample *AI Skill for Windows* that leverages the Windows [FaceDetector](https://docs.microsoft.com/en-us/uwp/api/Windows.Media.FaceAnalysis.FaceDetector) to extract sub-images of face area and [Windows ML](https://docs.microsoft.com/en-us/windows/ai/windows-ml/) to run inference with a sentiment classifier model that takes images as inputs and returns predictions. Theres are also examples of Win32, .Net Core 3.0 and UWP applications that ingest this *AI Skill for Windows* and use MediaFoundation APIs to feed it with frames from a camera or file. |
 | -- | -- |
 
-## Code samples for using AI skills [published by Microsoft on nuget.org](https://www.nuget.org/profiles/VisionSkills)
+## Code samples for using *AI skills for Windows* [published by Microsoft on nuget.org](https://www.nuget.org/profiles/VisionSkills) <a name="MicrosoftSkills"></a>
 
 ### **[Object Detector](samples/ObjectDetector)**
 
