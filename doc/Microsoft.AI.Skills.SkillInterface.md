@@ -95,6 +95,7 @@ to be bound and processed by the skill. This API defines [ISkillFeatureValue](#I
 + [SkillFeatureTensorUInt64Value](#SkillFeatureTensorUInt64Value)
 + [SkillFeatureTensorFloat16Value](#SkillFeatureTensorFloat16Value)
 + [SkillFeatureTensorDoubleValue](#SkillFeatureTensorDoubleValue)
++ [SkillFeatureTensorCustomValue](#SkillFeatureTensorCustomValue)
 + [SkillFeatureImageValue](#SkillFeatureImageValue)
 + [SkillFeatureMapValue](#SkillFeatureMapValue))
  
@@ -627,7 +628,6 @@ A negative value below -1 indicates that the value needs to be a multiple of the
 int Width { get; }
 ```
 -----
-
 
 ##### SupportedBitmapPixelFormat
 
