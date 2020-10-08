@@ -49,4 +49,4 @@ Since all *AI Skills* derive the same set of base interfaces from [Microsoft.AI.
 
 8) Rinse and repeat from step 5 using the same binding object and new primitives.
 
-To see this in action, refer to the tutorial on ingesting a [the object detector AI Skill from an app](../samples/ObjectDetector/Readme.md#using-the-objectdetector-skill).
+To see this in action, refer to the tutorial on ingesting [the object detector AI Skill from an app](../samples/ObjectDetector/Readme.md#using-the-objectdetector-skill).
