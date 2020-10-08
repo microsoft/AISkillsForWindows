@@ -1,4 +1,4 @@
- # Windows Skill Interface Documentation
+ # AI Skills for Windows Interface Documentation
 
  The *Microsoft.AI.Skills.SkillInterface* namespace provides a set of base interfaces to be extended by all *skills* as well as classes and helper methods for skill implementers 
  on Windows.
