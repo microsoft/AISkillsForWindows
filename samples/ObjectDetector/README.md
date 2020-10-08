@@ -111,7 +111,7 @@ Follow these sample links:
 
 The app supports three types of media inputs: webcam, video file and image file. Use the buttons at the top of the window to select the media source you would like to use. Click the "Details and options" expander to view more details about the ObjectDetector skill as well as configure options such as the `ISkillExecutionDevice` to run the skill on as well as `ObjectKind` filters (more on that below).
 
-### Using the ObjectDetector skill
+### Using the ObjectDetector skill <a name="using-the-objectdetector-skill"></a>
 
 As with all AI Skills for Windows, the Object Detector skill is composed of an `ISkillDescriptor` (which holds general skill information), the `ISkill` instance (which is bound to a specific `ISkillExecutionDevice`), and the skill's `ISkillBinding` (which holds skill inputs, outputs, and any state information). You can instantiate your Object Detector skill as follows.
 
