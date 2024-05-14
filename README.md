@@ -13,15 +13,6 @@ While this release focuses on vision-oriented scenarios and primitives, this API
 
 If you are looking for the earlier preview release samples and documentation, we archived them in a branch here: *[Preview branch](https://github.com/microsoft/AISkillsForWindows/tree/Preview)*
 
-## Creating your own *AI Skill for Windows* to empower others
-
-For a guide on how to use the *AI Skills for Windows* interfaces to author a new *AI Skill for Windows* of your own exposing your AI solution to other Windows app developers, and creating an actual app to consume this crafted skill, see this complete end-to-end sample:
-
-### **[Sentiment Analyzer Sample Skill](samples/SentimentAnalyzerCustomSkill)**
-
-| ![FaceSentimentAnalyzer sample skill logo](./doc/FaceSentimentAnalyzerLogo.png)____________ | Walking through the steps to create, in C++ or in C#, a sample *AI Skill for Windows* that leverages the Windows [FaceDetector](https://docs.microsoft.com/en-us/uwp/api/Windows.Media.FaceAnalysis.FaceDetector) to extract sub-images of face area and [Windows ML](https://docs.microsoft.com/en-us/windows/ai/windows-ml/) to run inference with a sentiment classifier model that takes images as inputs and returns predictions. Theres are also examples of Win32, .Net Core 3.0 and UWP applications that ingest this *AI Skill for Windows* and use MediaFoundation APIs to feed it with frames from a camera or file. |
-| -- | -- |
-
 ## Code samples for using *AI skills for Windows* [published by Microsoft on nuget.org](https://www.nuget.org/profiles/VisionSkills) <a name="MicrosoftSkills"></a>
 
 ### **[Object Detector](samples/ObjectDetector)**
