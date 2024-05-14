@@ -1,3 +1,6 @@
+# This code repo is now deprecated and the project is unsupported
+
+
 # ![ImageScanning logo](./doc/Logo.png) AI Skills for Windows
 
 ## Summary
